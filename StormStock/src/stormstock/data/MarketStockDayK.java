@@ -25,18 +25,20 @@ public class MarketStockDayK {
 		try
 		{
 			String urlStr = "http://table.finance.yahoo.com/table.csv?s=000001.sz";
+			urlStr = "http://biz.finance.sina.com.cn/stock/flash_hq/kline_data.php?symbol=sz300163&begin_date=20080101&end_date=20151010";
 			URL url = new URL(urlStr);    
 	        HttpURLConnection conn = (HttpURLConnection)url.openConnection();    
 	                //设置超时间为3秒  
-	        conn.setConnectTimeout(3*1000);  
+	        conn.setConnectTimeout(20*1000);  
 	        //防止屏蔽程序抓取而返回403错误  
 	        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");  
 	  
 	        //得到输入流  
 	        InputStream inputStream = conn.getInputStream();    
 	        //获取自己数组  
-	        byte[] getData = readInputStream(inputStream);      
-	  
+	        byte[] getData = readInputStream(inputStream);    
+	        String data = new String(getData, "gbk");  
+	        System.out.println(data.toString()); 
 	        //文件保存位置  
 	        File file = new File("D:/test.txt");      
 	        FileOutputStream fos = new FileOutputStream(file);       
