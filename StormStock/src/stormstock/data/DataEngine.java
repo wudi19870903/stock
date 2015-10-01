@@ -17,6 +17,16 @@ import java.util.Iterator;
 import java.util.List;
 
 public class DataEngine {
+	public static class StockKData {
+		// eg: 2008-01-02 09:35:00
+		public String datetime;
+		public float open;
+		public float close;
+		public float low;
+		public float high;
+		public float volume;
+		public float amount; 
+	}
 	public static List<StockKData> getStock(String id) {
 		Formatter fmt = new Formatter(System.out);
 		String dataFileName = "";
