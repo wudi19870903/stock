@@ -11,15 +11,22 @@ import java.io.RandomAccessFile;
 import java.io.Reader;
 
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.List;
 
 public class DataEngine {
 	public static List<StockKData> getStock(String id) {
+		Formatter fmt = new Formatter(System.out);
 		String dataFileName = "";
 		File root = new File("data");
 		File[] fs = root.listFiles();
+		if(fs == null)
+		{
+			fmt.format("[ERROR] not found stock file data [%s] in dir:data\n", id);
+			return null;
+		}
 		for(int i=0; i<fs.length; i++){
 			if(!fs[i].isDirectory()){
 				if(fs[i].getName().contains(id))
@@ -40,6 +47,11 @@ public class DataEngine {
         int iposAmount = -1;
         int iIndex = -1;
 		File file = new File(dataFileName);  
+		if(!file.exists())
+		{
+			fmt.format("[ERROR] not found stock file data [%s] in dir:data\n", id);
+			return null;
+		}
         BufferedReader reader = null;  
         try {   
             reader = new BufferedReader(new FileReader(file));  

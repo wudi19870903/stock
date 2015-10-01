@@ -1,15 +1,13 @@
 package stormstock.test;
 
-import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import stormstock.analysis.ANLPolicy;
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
 import stormstock.analysis.ANLStockPool;
+
+import java.util.ArrayList;
+import java.util.Formatter;
+import java.util.List;
 
 public class TestSuccRate {
 	public static class ProfitResult
@@ -68,9 +66,13 @@ public class TestSuccRate {
 			ProfitResult cProfitResult = new ProfitResult();
 			
 			String stockId = stockIdList.get(i);
-			fmt.format("--->Stock Checking: %s\n", stockId);
-			
+		
 			ANLStock cANLStock = ANLStockPool.getANLStock(stockId);
+			if(null == cANLStock)
+			{
+				continue;
+			}
+			fmt.format("--->Stock Checking: %s\n", stockId);
 			cProfitResult.id = stockId;
 			int lenlist = cANLStock.historyData.size();
 			if(lenlist < 200)

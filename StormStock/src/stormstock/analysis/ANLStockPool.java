@@ -10,6 +10,10 @@ public class ANLStockPool {
 	public static ANLStock getANLStock(String id)
 	{
 		List<StockKData> listStockKData =  DataEngine.getStock(id);
+		if(null == listStockKData)
+		{
+			return null;
+		}
 		
 		ANLStock cANLStock = new ANLStock();
 		cANLStock.id = id;

@@ -1,8 +1,8 @@
 package stormstock.test;
 
-import java.util.Formatter;
-
 import stormstock.capi.CATHSAccount;
+
+import java.util.Formatter;
 
 public class TestCATHSAccount {
 
