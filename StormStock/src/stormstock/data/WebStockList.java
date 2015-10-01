@@ -24,7 +24,9 @@ import org.htmlparser.util.NodeList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class MarketStockList {
+import stormstock.data.WebStockDayK.DayKData;
+
+public class WebStockList {
 	public static class StockItem
 	{
 		public String name;
@@ -83,7 +85,7 @@ public class MarketStockList {
              	{
              		if(id.length() == 6)
              		{
-                 		System.out.println(name + "," + id);
+                 		// System.out.println(name + "," + id);
                  		allCount++;
                  		StockItem cStockItem = new StockItem();
                  		cStockItem.name = name;
@@ -129,5 +131,11 @@ public class MarketStockList {
 //    }
 	public static void main(String[] args) {
 		List<StockItem> cList = getAllStockList();
+		for(int i = 0; i < cList.size(); i++)  
+        {  
+			StockItem cStockItem = cList.get(i);  
+            System.out.println(cStockItem.name + "," + cStockItem.id);  
+        } 
+		System.out.println("count:" + cList.size()); 
 	}
 }
