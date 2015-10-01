@@ -25,6 +25,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import stormstock.data.WebStockDayK.DayKData;
+import stormstock.data.WebStockDividendPayout.DividendPayout;
 
 public class WebStockList {
 	public static class StockItem
@@ -32,9 +33,8 @@ public class WebStockList {
 		public String name;
 		public String id;
 	}
-	public static List<StockItem> getAllStockList()
+	public static int getAllStockList(List<StockItem> out_list)
 	{
-		List<StockItem> retList = new ArrayList<StockItem>();
 		try{  
 			String allStockListUrl = "http://quote.eastmoney.com/stocklist.html";
 //            URL url = new URL(allStockListUrl);  
@@ -97,7 +97,7 @@ public class WebStockList {
                  		StockItem cStockItem = new StockItem();
                  		cStockItem.name = name;
                  		cStockItem.id = id;
-                 		retList.add(cStockItem);
+                 		out_list.add(cStockItem);
              		}
              	}
              }
@@ -106,8 +106,9 @@ public class WebStockList {
         }catch (Exception e) {  
         	System.out.println(e.getMessage()); 
             // TODO: handle exception  
+        	return -1;
         }  
-		return retList;
+		return 0;
 	}
 //	private static String ENCODE = "GBK";
 //    private static void message( String szMsg ) {
@@ -137,12 +138,20 @@ public class WebStockList {
 //        fw.close();
 //    }
 	public static void main(String[] args) {
-		List<StockItem> cList = getAllStockList();
-		for(int i = 0; i < cList.size(); i++)  
-        {  
-			StockItem cStockItem = cList.get(i);  
-            System.out.println(cStockItem.name + "," + cStockItem.id);  
-        } 
-		System.out.println("count:" + cList.size()); 
+		List<StockItem> retList = new ArrayList<StockItem>();
+		int ret = getAllStockList(retList);
+		if(0 == ret)
+		{
+			for(int i = 0; i < retList.size(); i++)  
+	        {  
+				StockItem cStockItem = retList.get(i);  
+	            System.out.println(cStockItem.name + "," + cStockItem.id);  
+	        } 
+			System.out.println("count:" + retList.size()); 
+		}
+		else
+		{
+			System.out.println("ERROR:" + ret);
+		}
 	}
 }

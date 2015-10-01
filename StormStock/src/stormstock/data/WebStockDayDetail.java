@@ -29,10 +29,8 @@ public class WebStockDayDetail {
 		public float volume; // µ•Œª  ÷
 	}
 	// 300163 2015-02-16
-	public static List<DayDetailItem> getDayDetail(String id, String date)
+	public static int getDayDetail(String id, String date, List<DayDetailItem> out_list)
 	{
-		List<DayDetailItem> retList = new ArrayList<DayDetailItem>();
-		
 		// e.g "http://market.finance.sina.com.cn/downxls.php?date=2015-02-16&symbol=sz300163"
 		String urlStr = "http://market.finance.sina.com.cn/downxls.php?";
 		String tmpId = "";
@@ -43,6 +41,10 @@ public class WebStockDayDetail {
 		else if((id.startsWith("00") ||  id.startsWith("30")) && 6 == id.length())
 		{
 			tmpId = "sz" + id;
+		}
+		else
+		{
+			return -10;
 		}
 		
 		try
@@ -72,17 +74,18 @@ public class WebStockDayDetail {
 	        	cDayDetailItem.price = Float.parseFloat(cols[1]);
 	        	cDayDetailItem.volume = Float.parseFloat(cols[3]);
 	        	
-	        	retList.add(cDayDetailItem);
+	        	out_list.add(cDayDetailItem);
 	        }
 	        
 		}
 		catch(Exception e)
 		{
 			System.out.println(e.getMessage()); 
+			return -1;
 		}
 		
-		Collections.reverse(retList);
-		return retList;
+		Collections.reverse(out_list);
+		return 0;
 	}
     public static  byte[] readInputStream(InputStream inputStream) throws IOException {    
         byte[] buffer = new byte[1024];    
@@ -95,12 +98,20 @@ public class WebStockDayDetail {
         return bos.toByteArray();    
     }  
 	public static void main(String[] args){
-		List<DayDetailItem> retList = getDayDetail("300163", "2015-02-16");
-		for(int i = 0; i < retList.size(); i++)  
-        {  
-			DayDetailItem cDayDetailItem = retList.get(i);  
-            System.out.println(cDayDetailItem.time + "," 
-            		+ cDayDetailItem.price + "," + cDayDetailItem.volume);  
-        } 
+		List<DayDetailItem> retList = new ArrayList<DayDetailItem>();
+		int ret = getDayDetail("300163", "2015-02-16", retList);
+		if(0 == ret)
+		{
+			for(int i = 0; i < retList.size(); i++)  
+	        {  
+				DayDetailItem cDayDetailItem = retList.get(i);  
+	            System.out.println(cDayDetailItem.time + "," 
+	            		+ cDayDetailItem.price + "," + cDayDetailItem.volume);  
+	        } 
+		}
+		else
+		{
+			System.out.println("ERROR:" + ret);
+		}
 	}
 }

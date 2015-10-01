@@ -34,10 +34,8 @@ public class WebStockDayK {
 		public float volume;
 	}
 	// 600001 20080101 20151010
-	public static List<DayKData> getDayKData(String id, String begin_date, String end_date)
+	public static int getDayKData(String id, String begin_date, String end_date, List<DayKData> out_list)
 	{
-		List<DayKData> retList = new ArrayList<DayKData>();
-		
 		// e.g "http://biz.finance.sina.com.cn/stock/flash_hq/kline_data.php?symbol=sz300163&begin_date=20080101&end_date=20151010"
 		String urlStr = "http://biz.finance.sina.com.cn/stock/flash_hq/kline_data.php?";
 		String tmpId = "";
@@ -51,7 +49,7 @@ public class WebStockDayK {
 		}
 		else
 		{
-			return null;
+			return -10;
 		}
 		urlStr = urlStr + "symbol=" + tmpId + "&begin_date=" + begin_date + "&end_date=" + end_date;
 		
@@ -103,15 +101,16 @@ public class WebStockDayK {
 	        	cDayKData.high = Float.parseFloat(high);
 	        	cDayKData.low = Float.parseFloat(low);
 	        	cDayKData.volume = Float.parseFloat(volume);
-	        	retList.add(cDayKData);
+	        	out_list.add(cDayKData);
 	        }
 		}
 		catch(Exception e)
 		{
 			System.out.println(e.getMessage()); 
+			return -1;
 		}
 		
-		return retList;
+		return 0;
 	}
     public static  byte[] readInputStream(InputStream inputStream) throws IOException {    
         byte[] buffer = new byte[1024];    
@@ -124,12 +123,20 @@ public class WebStockDayK {
         return bos.toByteArray();    
     }  
 	public static void main(String[] args){
-		List<DayKData> retList = getDayKData("600030", "20150901", "20151001");
-		for(int i = 0; i < retList.size(); i++)  
-        {  
-			DayKData cDayKData = retList.get(i);  
-            System.out.println(cDayKData.datetime + "," 
-            		+ cDayKData.open + "," + cDayKData.close);  
-        }  
+		List<DayKData> retList = new ArrayList<DayKData>();
+		int ret = getDayKData("600030", "20150901", "20151001", retList);
+		if(0 == ret)
+		{
+			for(int i = 0; i < retList.size(); i++)  
+	        {  
+				DayKData cDayKData = retList.get(i);  
+	            System.out.println(cDayKData.datetime + "," 
+	            		+ cDayKData.open + "," + cDayKData.close);  
+	        } 
+		}
+		else
+		{
+			System.out.println("ERROR:" + ret);
+		}
 	}
 }

@@ -4,8 +4,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
@@ -21,10 +27,19 @@ import org.htmlparser.visitors.HtmlPage;
 import stormstock.data.WebStockList.StockItem;
 
 public class WebStockDividendPayout {
-	public static void getDividendPayout()
+	public static class DividendPayout
 	{
+		public String date;
+		public int songGu;
+		public int zhuanGu;
+		public float paiXi;
+	}
+	public static int getDividendPayout(String id, List<DividendPayout> out_list)
+	{
+		// e.g http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/300163.phtml
+		String urlStr = "http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/";
 		try{  
-			String urlStr = "http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/300163.phtml";
+			urlStr = urlStr + id + ".phtml";
 			
 			URL url = new URL(urlStr);    
 	        HttpURLConnection conn = (HttpURLConnection)url.openConnection();    
@@ -53,76 +68,96 @@ public class WebStockDividendPayout {
 //	        	if (nodeList.elementAt(i) instanceof TableTag) {     
 //	        		  
 //                    TableTag tag = (TableTag)nodeList.elementAt(i);     
-//                       
-//                     System.out.println(tag.getChildrenHTML());  
+//                     
+//                    Node cNodeFenHong = nodeList.elementAt(0);
+//                    System.out.println(cNodeFenHong.getText());
+////                     System.out.println(tag.getChildrenHTML());  
 //                     System.out.println("-----------------------------------------------------");  
 //	        	}
 //	        }
 			
-	        Parser parser = Parser.createParser(data, "utf-8"); 
- 
-            TagNameFilter filter1 = new TagNameFilter("tbody");  
-            NodeList list1 = parser.parse(filter1);  
-            System.out.println(list1.size());
-            if(list1.size() != 2)
+	        Parser parser = Parser.createParser(data, "utf-8");
+            TagNameFilter filter1 = new TagNameFilter("table");  
+            NodeList tablelist = parser.parse(filter1); 
+            Node cNodeFenHong = null;
+            Node cNodePeiGu = null;
+            //System.out.println(tablelist.size());
+            for (int i = 0; i < tablelist.size(); i++) {  
+                    Node cTmpNode = tablelist.elementAt(i);
+                    if(cTmpNode.getText().contains("sharebonus_1"))
+                    {
+                    	cNodeFenHong = cTmpNode;
+                    }
+                    if(cTmpNode.getText().contains("sharebonus_2"))
+                    {
+                    	cNodePeiGu = cTmpNode;
+                    }
+	        }
+            //System.out.println(cNodeFenHong.toHtml());
+            //System.out.println(cNodePeiGu.toHtml());
             {
-            	return;
+            	Parser parser2 = Parser.createParser(cNodeFenHong.toHtml(), "utf-8");
+                TagNameFilter filter2 = new TagNameFilter("tr");
+                NodeList tablelist2 = parser2.parse(filter2); 
+                for (int i = 0; i < tablelist2.size(); i++) { 
+                	if(i<3) continue;
+                	DividendPayout cDividendPayout = new DividendPayout();
+                	
+                	Node cTmpNode = tablelist2.elementAt(i);
+                	//System.out.println(cTmpNode.toHtml());
+                	
+                	Parser parser3 = Parser.createParser(cTmpNode.toHtml(), "utf-8");
+                    TagNameFilter filter3 = new TagNameFilter("td");
+                    NodeList tablelist3 = parser3.parse(filter3); 
+                    for (int j = 0; j < tablelist3.size(); j++) {
+                    	Node cTmpNodecol = tablelist3.elementAt(j);
+                    	String tmpStr = cTmpNodecol.toPlainTextString();
+                    	//System.out.println(tmpStr);
+                    	if(5 == j)
+                    		cDividendPayout.date = tmpStr;
+                    	if(1 == j)
+                    		cDividendPayout.songGu = Integer.parseInt(tmpStr);
+                    	if(2 == j)
+                    		cDividendPayout.zhuanGu = Integer.parseInt(tmpStr);
+                    	if(3 == j)
+                    		cDividendPayout.paiXi = Float.parseFloat(tmpStr);
+                    }
+                    out_list.add(cDividendPayout);
+                    //System.out.println("--------------------------------");
+                }
             }
-            
-            Node cNodeFenHong = list1.elementAt(0);
-            System.out.println(cNodeFenHong.toHtml());
-            
-//            
-//            Node cNodeFenHong = list1.elementAt(0);
-//            TableTag tag = (TableTag)cNodeFenHong; 
-//            System.out.println(tag.getChildrenHTML());
-//            System.out.println(cNodeFenHong.getFirstChild());
-//            
-//            System.out.println(list1.size());
-//            {
-//            	Node nodet = cNodeFenHong;
-//
-//            	System.out.println("XXX");
-//    			System.out.println(cNodeFenHong.toHtml());
-//    			System.out.println("XXX");
-//            }
-
-            
-            
-//            Node cNodePeiGu = list1.elementAt(1);
-             
-            
-//			 TagNameFilter filter2=new TagNameFilter ("li");  
-//	         Parser p = Parser.createParser(cQoxNode.toHtml(), "gbk");
-//			 NodeList list2=p.extractAllNodesThatMatch(filter2);
-// 					
-//			 int allCount=0;
-//             for(int i=0;i<list2.size();i++)  
-//             {
-//             	Node cNode = list2.elementAt(i);
-//             	String tmpStr = cNode.toPlainTextString();
-//             	int il = tmpStr.indexOf("(");
-//             	int ir = tmpStr.indexOf(")");
-//             	String name = tmpStr.substring(0, il);
-//             	String id = tmpStr.substring(il+1,ir);
-//             	if(id.startsWith("60") || id.startsWith("00") || id.startsWith("30"))
-//             	{
-//             		if(id.length() == 6)
-//             		{
-//                 		// System.out.println(name + "," + id);
-//                 		allCount++;
-//                 		StockItem cStockItem = new StockItem();
-//                 		cStockItem.name = name;
-//                 		cStockItem.id = id;
-//             		}
-//             	}
-//             }
-             // System.out.println(allCount); 
+            {
+            	Parser parser2 = Parser.createParser(cNodePeiGu.toHtml(), "utf-8");
+                TagNameFilter filter2 = new TagNameFilter("tr");
+                NodeList tablelist2 = parser2.parse(filter2); 
+                for (int i = 0; i < tablelist2.size(); i++) { 
+                	if(i<2) continue;
+                	DividendPayout cDividendPayout = new DividendPayout();
+                	
+                	Node cTmpNode = tablelist2.elementAt(i);
+                	//System.out.println(cTmpNode.toHtml());
+                	
+                	Parser parser3 = Parser.createParser(cTmpNode.toHtml(), "utf-8");
+                    TagNameFilter filter3 = new TagNameFilter("td");
+                    NodeList tablelist3 = parser3.parse(filter3); 
+                    if(tablelist3.size()>1) 
+                    	return -20;
+                    for (int j = 0; j < tablelist3.size(); j++) {
+                    	Node cTmpNodecol = tablelist3.elementAt(j);
+                    	String tmpStr = cTmpNodecol.toPlainTextString();
+                    	//System.out.println(tmpStr);
+                    }
+                    //System.out.println("--------------------------------");
+                }
+            }
+              
 
         }catch (Exception e) {  
         	System.out.println(e.getMessage()); 
             // TODO: handle exception  
+        	return -1;
         }  
+		return 0;
 	}
     public static  byte[] readInputStream(InputStream inputStream) throws IOException {    
         byte[] buffer = new byte[1024];    
@@ -135,6 +170,22 @@ public class WebStockDividendPayout {
         return bos.toByteArray();    
     }  
 	public static void main(String[] args){
-		getDividendPayout();
+		List<DividendPayout> retList = new ArrayList<DividendPayout>();
+		int ret = getDividendPayout("300163", retList);
+		if(0 == ret)
+		{
+			for(int i = 0; i < retList.size(); i++)  
+	        {  
+				DividendPayout cDividendPayout = retList.get(i);  
+	            System.out.println(cDividendPayout.date 
+	            		+ "," + cDividendPayout.songGu
+	            		+ "," + cDividendPayout.zhuanGu
+	            		+ "," + cDividendPayout.paiXi);  
+	        } 
+		}
+		else
+		{
+			System.out.println("ERROR:" + ret);
+		}
 	}
 }
