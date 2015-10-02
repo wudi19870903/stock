@@ -8,6 +8,7 @@ import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -24,13 +25,21 @@ import org.htmlparser.util.NodeIterator;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.visitors.HtmlPage;
 
+import stormstock.data.WebStockDayK.DayKData;
+
 public class WebStockDividendPayout {
-	public static class DividendPayout
+	public static class DividendPayout implements Comparable
 	{
 		public String date;
 		public float songGu;
 		public float zhuanGu;
 		public float paiXi;
+		@Override
+		public int compareTo(Object o) {
+			// TODO Auto-generated method stub
+			DividendPayout sdto = (DividendPayout)o;
+		    return this.date.compareTo(sdto.date);
+		}
 	}
 	public static int getDividendPayout(String id, List<DividendPayout> out_list)
 	{
@@ -161,6 +170,8 @@ public class WebStockDividendPayout {
             // TODO: handle exception  
         	return -1;
         }  
+		
+		Collections.sort(out_list);
 		return 0;
 	}
     public static  byte[] readInputStream(InputStream inputStream) throws IOException {    

@@ -22,11 +22,17 @@ import org.xml.sax.InputSource;
 import stormstock.data.WebStockDayK.DayKData;
 
 public class WebStockDayDetail {
-	public static class DayDetailItem
+	public static class DayDetailItem implements Comparable
 	{
 		public String time;
 		public float price;
 		public float volume; // µ•Œª  ÷
+		@Override
+		public int compareTo(Object o) {
+			// TODO Auto-generated method stub
+			DayDetailItem sdto = (DayDetailItem)o;
+		    return this.time.compareTo(sdto.time);
+		}
 	}
 	// 300163 2015-02-16
 	public static int getDayDetail(String id, String date, List<DayDetailItem> out_list)
@@ -86,8 +92,8 @@ public class WebStockDayDetail {
 			System.out.println("Exception[WebStockDayDetail]:" + e.getMessage()); 
 			return -1;
 		}
-		
-		Collections.reverse(out_list);
+	
+		Collections.sort(out_list);
 		return 0;
 	}
     public static  byte[] readInputStream(InputStream inputStream) throws IOException {    

@@ -11,12 +11,17 @@ import java.io.RandomAccessFile;
 import java.io.Reader;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Formatter;
 import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.List;
 
-public class DataEngine {
+import stormstock.data.WebStockDayK.DayKData;
+import stormstock.data.WebStockDividendPayout.DividendPayout;
+
+public class DataEngine extends DataEngineBase
+{
 	public static class StockKData {
 		// eg: 2008-01-02 09:35:00
 		public String datetime;
@@ -136,5 +141,98 @@ public class DataEngine {
         }  
         
 		return listStockKData;
+	}
+	
+	public static int getDayKDataQianFuQuan(String id, List<DayKData> out_list)
+	{
+		int retgetDayKData = getDayKData(id, out_list);
+		List<DividendPayout> retDividendPayoutList = new ArrayList<DividendPayout>();
+		int retgetDividendPayout = getDividendPayout(id, retDividendPayoutList);
+		if(0 != retgetDayKData || 0 != retgetDividendPayout) return -10;
+		for(int i = retDividendPayoutList.size() -1; i >= 0 ; i--)  
+        {  
+			DividendPayout cDividendPayout = retDividendPayoutList.get(i);    
+//			System.out.println(cDividendPayout.date);
+//			System.out.println(cDividendPayout.songGu);
+//			System.out.println(cDividendPayout.zhuanGu);
+//			System.out.println(cDividendPayout.paiXi);
+			
+			boolean bChangeFlag = false;
+			float moreGu = cDividendPayout.songGu + cDividendPayout.zhuanGu;
+			float paiXi = cDividendPayout.paiXi;
+            
+    		for(int j = out_list.size()-1; j >=0; j--)  
+            {  
+    			DayKData cDayKData = out_list.get(j);  
+    			
+    			if(!bChangeFlag)
+    			{
+        			if(cDayKData.date.compareTo(cDividendPayout.date) <= 0)
+        			{
+//        				System.out.println("----------------------- ");
+//        				System.out.println("date:" + cDividendPayout.date);
+//        				System.out.println("moreGu:  " + moreGu);
+//        				System.out.println("paiXi:  " + paiXi);
+        				bChangeFlag = true;
+        			}
+    			}
+
+    			
+    			if(cDayKData.date.compareTo(cDividendPayout.date) < 0)
+    			{
+    				// pre days need change
+    				// System.out.println("X  " + cDayKData.date);
+    				
+    				cDayKData.open = ((cDayKData.open*10)-paiXi)/(10 + moreGu);
+    				cDayKData.open = (int)(cDayKData.open*1000)/(float)1000.0;
+    				
+    				cDayKData.close = ((cDayKData.close*10)-paiXi)/(10 + moreGu);
+    				cDayKData.close = (int)(cDayKData.close*1000)/(float)1000.0;
+    				
+    				cDayKData.low = ((cDayKData.low*10)-paiXi)/(10 + moreGu);
+    				cDayKData.low = (int)(cDayKData.low*1000)/(float)1000.0;
+    				
+    				cDayKData.high = ((cDayKData.high*10)-paiXi)/(10 + moreGu);
+    				cDayKData.high = (int)(cDayKData.high*1000)/(float)1000.0;
+    			}
+            }
+        }
+		// checking
+		for(int i = 0; i < out_list.size()-1; i++)  
+        {  
+			DayKData cDayKData = out_list.get(i);  
+			DayKData cDayKDataNext = out_list.get(i+1);  
+            float close = cDayKData.close;
+            float opennext = cDayKDataNext.open;
+            float changeper = Math.abs((opennext-close)/close);
+            if(changeper > 0.15) 
+        	{
+            	System.out.println("XXXXXXXXXXXXXXXXXXXXXXXX");
+            	System.out.println(cDayKData.date);
+            	System.out.println(close);
+            	System.out.println(opennext);
+            	System.out.println(Math.abs(changeper));
+            	return -100;
+        	}
+        } 
+		return 0;
+	}
+	
+	public static void main(String[] args) {
+		List<DayKData> retList = new ArrayList<DayKData>();
+		int ret = getDayKDataQianFuQuan("600600", retList);
+		if(0 == ret)
+		{
+			for(int i = 0; i < retList.size(); i++)  
+	        {  
+				DayKData cDayKData = retList.get(i);  
+	            System.out.println(cDayKData.date + "," 
+	            		+ cDayKData.open + "," + cDayKData.close);  
+	        } 
+		}
+		else
+		{
+			System.out.println("ERROR:" + ret);
+		}
 	}
 }

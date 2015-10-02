@@ -11,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -22,7 +23,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 public class WebStockDayK {
-	public static class DayKData
+	public static class DayKData implements Comparable
 	{
 		// 2015-09-18
 		public String date;
@@ -31,6 +32,12 @@ public class WebStockDayK {
 		public float low;
 		public float high;
 		public float volume;
+		@Override
+		public int compareTo(Object arg0) {
+			// TODO Auto-generated method stub
+			DayKData sdto = (DayKData)arg0;
+		    return this.date.compareTo(sdto.date);
+		}
 	}
 	// 600001 20080101 20151010
 	public static int getDayKData(String id, String begin_date, String end_date, List<DayKData> out_list)
@@ -112,6 +119,8 @@ public class WebStockDayK {
 			System.out.println("Exception[WebStockDayK]:" + e.getMessage()); 
 			return -1;
 		}
+		
+		Collections.sort(out_list);
 		
 		return 0;
 	}
