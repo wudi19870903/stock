@@ -99,8 +99,8 @@ public class WebStockDayK {
 	        	cDayKData.date = date;
 	        	cDayKData.open = Float.parseFloat(open);
 	        	cDayKData.close = Float.parseFloat(close);
-	        	cDayKData.high = Float.parseFloat(high);
 	        	cDayKData.low = Float.parseFloat(low);
+	        	cDayKData.high = Float.parseFloat(high);
 	        	cDayKData.volume = Float.parseFloat(volume);
 	        	out_list.add(cDayKData);
 	        }
