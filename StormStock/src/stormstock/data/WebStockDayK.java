@@ -53,6 +53,8 @@ public class WebStockDayK {
 		}
 		urlStr = urlStr + "symbol=" + tmpId + "&begin_date=" + begin_date + "&end_date=" + end_date;
 		
+		if(out_list.size() > 0) return -20;
+		
 		try
 		{
 			URL url = new URL(urlStr);    
@@ -103,6 +105,8 @@ public class WebStockDayK {
 	        	cDayKData.volume = Float.parseFloat(volume);
 	        	out_list.add(cDayKData);
 	        }
+	        
+	        if(out_list.size() <= 0) return -30;
 		}
 		catch(Exception e)
 		{

@@ -38,6 +38,9 @@ public class WebStockDividendPayout {
 	{
 		// e.g http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/300163.phtml
 		String urlStr = "http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/";
+		
+		if(out_list.size() > 0) return -20;
+		
 		try{  
 			urlStr = urlStr + id + ".phtml";
 			
@@ -141,7 +144,7 @@ public class WebStockDividendPayout {
                     TagNameFilter filter3 = new TagNameFilter("td");
                     NodeList tablelist3 = parser3.parse(filter3); 
                     if(tablelist3.size()>1) 
-                    	return -20;
+                    	return -110;
                     for (int j = 0; j < tablelist3.size(); j++) {
                     	Node cTmpNodecol = tablelist3.elementAt(j);
                     	String tmpStr = cTmpNodecol.toPlainTextString();
@@ -151,7 +154,8 @@ public class WebStockDividendPayout {
                 }
             }
               
-
+            if(out_list.size() <= 0) return -30;
+            
         }catch (Exception e) {  
         	System.out.println(e.getMessage()); 
             // TODO: handle exception  

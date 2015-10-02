@@ -35,6 +35,8 @@ public class WebStockList {
 	}
 	public static int getAllStockList(List<StockItem> out_list)
 	{
+		if(out_list.size() > 0) return -20;
+		
 		try{  
 			String allStockListUrl = "http://quote.eastmoney.com/stocklist.html";
 //            URL url = new URL(allStockListUrl);  
@@ -102,6 +104,8 @@ public class WebStockList {
              	}
              }
              // System.out.println(allCount); 
+             
+             if(out_list.size() <= 0) return -30;
 
         }catch (Exception e) {  
         	System.out.println(e.getMessage()); 

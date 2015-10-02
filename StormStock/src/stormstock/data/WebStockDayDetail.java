@@ -47,6 +47,8 @@ public class WebStockDayDetail {
 			return -10;
 		}
 		
+		if(out_list.size() > 0) return -20;
+		
 		try
 		{
 			urlStr = urlStr + "date=" + date + "&symbol=" + tmpId;
@@ -77,6 +79,7 @@ public class WebStockDayDetail {
 	        	out_list.add(cDayDetailItem);
 	        }
 	        
+	        if(out_list.size() <= 0) return -30;
 		}
 		catch(Exception e)
 		{
