@@ -17,33 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class DataEngine {
-	public static class DayKData
-	{
-		// 2015-09-18
-		public String date;
-		public float open;
-		public float close;
-		public float low;
-		public float high;
-		public float volume;
-	}
-	public static int updateStockData(String id) {
-		File dataDir =new File("data");
-		if  (!dataDir .exists() && !dataDir.isDirectory())      
-		{        
-			dataDir.mkdir();    
-		}
-		File stockIdDir =new File("data/" + id);
-		if  (!stockIdDir .exists() && !stockIdDir.isDirectory())      
-		{        
-			stockIdDir.mkdir();    
-		}
-		String stockDayKDataFile = "data/" + id + "/dayk.txt";
-		
-		
-		return 0;
-	}
-	
 	public static class StockKData {
 		// eg: 2008-01-02 09:35:00
 		public String datetime;
