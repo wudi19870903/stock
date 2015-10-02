@@ -133,29 +133,7 @@ public class DataEngineBase {
 		}
 		return 0;
 	}
-
-	private static int mkStocDataDir(String id)
-	{
-		File dataDir =new File(s_DataDir);
-		if  (!dataDir .exists() && !dataDir.isDirectory())      
-		{        
-			dataDir.mkdir();    
-		}
-		File stockIdDir =new File(s_DataDir + "/" + id);
-		if  (!stockIdDir .exists() && !stockIdDir.isDirectory())      
-		{        
-			stockIdDir.mkdir();    
-		}
-		if(stockIdDir.exists())
-		{
-			return 0;
-		}
-		else
-		{
-			return -1;
-		}
-	}
-	private static int downloadStockDayk(String id)
+	public static int downloadStockDayk(String id)
 	{
 		if(0 != mkStocDataDir(id)) return -10;
 		String stockDayKFileName = s_DataDir + "/" + id + "/" + s_daykFile;
@@ -202,7 +180,7 @@ public class DataEngineBase {
 		}
 		return 0;
 	}
-	private static int downloadStockDividendPayout(String id)
+	public static int downloadStockDividendPayout(String id)
 	{
 		if(0 != mkStocDataDir(id)) return -10;
 		String stockDividendPayoutFileName = s_DataDir + "/" + id + "/" + s_DividendPayoutFile;
@@ -246,7 +224,7 @@ public class DataEngineBase {
 		}
 		return 0;
 	}
-	private static int downloadStockDataDetail(String id, String date) {
+	public static int downloadStockDataDetail(String id, String date) {
 		if(0 != mkStocDataDir(id)) return -20;
 		String stockDataDetailFileName = s_DataDir + "/" + id + "/" + date + ".txt";
 		
@@ -287,6 +265,28 @@ public class DataEngineBase {
 			return -30;
 		}
 		return 0;
+	}
+	
+	private static int mkStocDataDir(String id)
+	{
+		File dataDir =new File(s_DataDir);
+		if  (!dataDir .exists() && !dataDir.isDirectory())      
+		{        
+			dataDir.mkdir();    
+		}
+		File stockIdDir =new File(s_DataDir + "/" + id);
+		if  (!stockIdDir .exists() && !stockIdDir.isDirectory())      
+		{        
+			stockIdDir.mkdir();    
+		}
+		if(stockIdDir.exists())
+		{
+			return 0;
+		}
+		else
+		{
+			return -1;
+		}
 	}
 	private static void test_getDayKData()
 	{
@@ -371,6 +371,7 @@ public class DataEngineBase {
 	private static String s_DataDir = "data";
 	private static String s_daykFile = "dayk.txt";
 	private static String s_DividendPayoutFile = "dividendPayout.txt";
+	
 	public static void main(String[] args) {
 		test_getDayKData();
 		test_getDividendPayout();
