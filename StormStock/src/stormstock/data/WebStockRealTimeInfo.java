@@ -23,7 +23,7 @@ public class WebStockRealTimeInfo {
 		public String time;
 		public float curPrice;
 	}
-	public static int getDividendPayout(String id, RealTimeInfo out_obj)
+	public static int getRealTimeInfo(String id, RealTimeInfo out_obj)
 	{
 		// e.g http://hq.sinajs.cn/list=sz300163
 		String urlStr = "http://hq.sinajs.cn/list=";
@@ -65,7 +65,7 @@ public class WebStockRealTimeInfo {
 			out_obj.time = cols[31];
 			
         }catch (Exception e) {  
-        	System.out.println(e.getMessage()); 
+        	System.out.println("Exception[WebStockRealTimeInfo]:" + e.getMessage()); 
             // TODO: handle exception  
         	return -1;
         }  
@@ -83,7 +83,7 @@ public class WebStockRealTimeInfo {
     }  
 	public static void main(String[] args){
 		RealTimeInfo cRealTimeInfo = new RealTimeInfo();
-		int ret = getDividendPayout("300163", cRealTimeInfo);
+		int ret = getRealTimeInfo("300163", cRealTimeInfo);
 		if(0 == ret)
 		{ 
 			System.out.println(cRealTimeInfo.name);

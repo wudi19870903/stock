@@ -83,7 +83,7 @@ public class WebStockDayDetail {
 		}
 		catch(Exception e)
 		{
-			System.out.println(e.getMessage()); 
+			System.out.println("Exception[WebStockDayDetail]:" + e.getMessage()); 
 			return -1;
 		}
 		

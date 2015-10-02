@@ -108,7 +108,7 @@ public class WebStockAllList {
              if(out_list.size() <= 0) return -30;
 
         }catch (Exception e) {  
-        	System.out.println(e.getMessage()); 
+        	System.out.println("Exception[WebStockAllList]:" + e.getMessage()); 
             // TODO: handle exception  
         	return -1;
         }  

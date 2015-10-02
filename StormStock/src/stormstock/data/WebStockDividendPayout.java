@@ -28,8 +28,8 @@ public class WebStockDividendPayout {
 	public static class DividendPayout
 	{
 		public String date;
-		public int songGu;
-		public int zhuanGu;
+		public float songGu;
+		public float zhuanGu;
 		public float paiXi;
 	}
 	public static int getDividendPayout(String id, List<DividendPayout> out_list)
@@ -117,9 +117,9 @@ public class WebStockDividendPayout {
                     	if(5 == j)
                     		cDividendPayout.date = tmpStr;
                     	if(1 == j)
-                    		cDividendPayout.songGu = Integer.parseInt(tmpStr);
+                    		cDividendPayout.songGu = Float.parseFloat(tmpStr);
                     	if(2 == j)
-                    		cDividendPayout.zhuanGu = Integer.parseInt(tmpStr);
+                    		cDividendPayout.zhuanGu = Float.parseFloat(tmpStr);
                     	if(3 == j)
                     		cDividendPayout.paiXi = Float.parseFloat(tmpStr);
                     }
@@ -142,7 +142,9 @@ public class WebStockDividendPayout {
                     TagNameFilter filter3 = new TagNameFilter("td");
                     NodeList tablelist3 = parser3.parse(filter3); 
                     if(tablelist3.size()>1) 
-                    	return -110;
+                    {
+                    	//System.out.println("WebStockDividendPayout PeiGu");
+                    }
                     for (int j = 0; j < tablelist3.size(); j++) {
                     	Node cTmpNodecol = tablelist3.elementAt(j);
                     	String tmpStr = cTmpNodecol.toPlainTextString();
@@ -155,7 +157,7 @@ public class WebStockDividendPayout {
             if(out_list.size() <= 0) return -30;
             
         }catch (Exception e) {  
-        	System.out.println(e.getMessage()); 
+        	System.out.println("Exception[WebStockDividendPayout]:" + e.getMessage()); 
             // TODO: handle exception  
         	return -1;
         }  
