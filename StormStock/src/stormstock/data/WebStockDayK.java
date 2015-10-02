@@ -21,12 +21,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import stormstock.data.WebStockList.StockItem;
-
 public class WebStockDayK {
 	public static class DayKData
 	{
-		public String datetime;
+		// 2015-09-18
+		public String date;
 		public float open;
 		public float close;
 		public float low;
@@ -97,7 +96,7 @@ public class WebStockDayK {
 	        	String close = ((Element)cnode).getAttribute("c");
 	        	String low = ((Element)cnode).getAttribute("l");
 	        	String volume = ((Element)cnode).getAttribute("v");
-	        	cDayKData.datetime = date;
+	        	cDayKData.date = date;
 	        	cDayKData.open = Float.parseFloat(open);
 	        	cDayKData.close = Float.parseFloat(close);
 	        	cDayKData.high = Float.parseFloat(high);
@@ -134,7 +133,7 @@ public class WebStockDayK {
 			for(int i = 0; i < retList.size(); i++)  
 	        {  
 				DayKData cDayKData = retList.get(i);  
-	            System.out.println(cDayKData.datetime + "," 
+	            System.out.println(cDayKData.date + "," 
 	            		+ cDayKData.open + "," + cDayKData.close);  
 	        } 
 		}

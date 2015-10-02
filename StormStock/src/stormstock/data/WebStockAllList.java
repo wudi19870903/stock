@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
 import stormstock.data.WebStockDayK.DayKData;
 import stormstock.data.WebStockDividendPayout.DividendPayout;
 
-public class WebStockList {
+public class WebStockAllList {
 	public static class StockItem
 	{
 		public String name;

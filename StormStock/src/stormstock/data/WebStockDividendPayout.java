@@ -24,8 +24,6 @@ import org.htmlparser.util.NodeIterator;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.visitors.HtmlPage;
 
-import stormstock.data.WebStockList.StockItem;
-
 public class WebStockDividendPayout {
 	public static class DividendPayout
 	{
