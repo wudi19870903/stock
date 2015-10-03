@@ -73,7 +73,7 @@ public class ANLStockPool {
 	// æ…≤‚ ‘ ˝æ›º”‘ÿ
 	public static ANLStock getANLStock(String id)
 	{
-		List<DataEngine.StockKData> listStockKData =  DataEngine.getStock(id);
+		List<DataEngine.ExKData> listStockKData =  DataEngine.getStock(id);
 		if(null == listStockKData)
 		{
 			return null;
@@ -82,16 +82,16 @@ public class ANLStockPool {
 		ANLStock cANLStock = new ANLStock();
 		cANLStock.id = id;
 		
-		List<DataEngine.StockKData> tmpLisStockKData =new ArrayList<DataEngine.StockKData>();
+		List<DataEngine.ExKData> tmpLisStockKData =new ArrayList<DataEngine.ExKData>();
 		
 		for(int iIndex = 0; iIndex < listStockKData.size(); iIndex++)  
 		{  
-			DataEngine.StockKData cStockKData = listStockKData.get(iIndex);  
+			DataEngine.ExKData cStockKData = listStockKData.get(iIndex);  
 			String currentdate = cStockKData.datetime.split(" ")[0].replace("-","");
 			tmpLisStockKData.add(cStockKData);
 			if(iIndex != listStockKData.size()-1)
 			{
-				DataEngine.StockKData cStockKDataNext = listStockKData.get(iIndex+1); 
+				DataEngine.ExKData cStockKDataNext = listStockKData.get(iIndex+1); 
 				String nextlinedate = cStockKDataNext.datetime.split(" ")[0].replace("-","");
 				if(!currentdate.equals(nextlinedate))
 				{
@@ -110,14 +110,14 @@ public class ANLStockPool {
 		
 		return cANLStock;
 	}
-	private static ANLStockDayKData getANLStockDayKDataFromSession(List<DataEngine.StockKData> listStockKData)
+	private static ANLStockDayKData getANLStockDayKDataFromSession(List<DataEngine.ExKData> listStockKData)
 	{
 		
 		ANLStockDayKData cANLStockDayKData = new ANLStockDayKData();
 		float curVolume = 0;
 		for(int iIndex = 0; iIndex < listStockKData.size(); iIndex++)  
 		{
-			DataEngine.StockKData cStockKData = listStockKData.get(iIndex);  
+			DataEngine.ExKData cStockKData = listStockKData.get(iIndex);  
 			if(0 == iIndex)
 			{
 				cANLStockDayKData.date = cStockKData.datetime.split(" ")[0].replace("-","");

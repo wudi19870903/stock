@@ -17,22 +17,23 @@ import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.List;
 
+import stormstock.data.WebStockDayDetail.DayDetailItem;
 import stormstock.data.WebStockDayK.DayKData;
 import stormstock.data.WebStockDividendPayout.DividendPayout;
 
 public class DataEngine extends DataEngineBase
 {
-	public static class StockKData {
-		// eg: 2008-01-02 09:35:00
+	public static class ExKData {
+		// eg: "2008-01-02 09:35:00"
 		public String datetime;
 		public float open;
 		public float close;
 		public float low;
 		public float high;
 		public float volume;
-		public float amount; 
 	}
-	public static List<StockKData> getStock(String id) {
+
+	public static List<ExKData> getStock(String id) {
 		Formatter fmt = new Formatter(System.out);
 		String dataFileName = "";
 		File root = new File("data");
@@ -51,7 +52,7 @@ public class DataEngine extends DataEngineBase
 			}
 		}
 		
-		List<StockKData> listStockKData =new ArrayList<StockKData>();
+		List<ExKData> listStockKData =new ArrayList<ExKData>();
 		
         int iposDate = -1;
         int iposOpen = -1;
@@ -114,7 +115,7 @@ public class DataEngine extends DataEngineBase
             	}
             	else
             	{
-                	StockKData cStockKData = new StockKData();
+            		ExKData cStockKData = new ExKData();
                     String[] cols = tempString.split(",");
                     
                     cStockKData.datetime = cols[iposDate];
@@ -123,7 +124,7 @@ public class DataEngine extends DataEngineBase
                     cStockKData.low = Float.parseFloat(cols[iposLow]);
                     cStockKData.high = Float.parseFloat(cols[iposHigh]);
                     cStockKData.volume = Float.parseFloat(cols[iposVolume]);
-                    cStockKData.amount = Float.parseFloat(cols[iposAmount]);
+                    //cStockKData.amount = Float.parseFloat(cols[iposAmount]);
 
                     listStockKData.add(cStockKData); 
             	}
@@ -217,8 +218,170 @@ public class DataEngine extends DataEngineBase
         } 
 		return 0;
 	}
+	public static int get5MinKDataOneDay(String id, String date, List<ExKData> out_list)
+	{
+		List<DayDetailItem> retListDetail = new ArrayList<DayDetailItem>();
+		int ret = getDayDetail(id, date, retListDetail);
+		if(0 == ret && retListDetail.size() != 0)
+		{
+			int iSec093000 = 9*3600 + 30*60 + 0;
+			int iSec130000 = 13*3600 + 0*60 + 0;
+            int i5Min = 5*60;
+            int iSecBegin = 0;
+            int iSecEnd = 0;
+            int iStdSecEnd = 0;
+            // add 上午
+            for(int i = 0; i < 24; i++)
+            {
+            	if(0 == i)
+            	{
+                    iSecBegin = iSec093000 + i5Min*i - i5Min*2;
+                    iSecEnd = iSec093000 + i5Min*(i+1);
+                    iStdSecEnd = iSecEnd;
+            	}
+            	else if(i < 23)
+            	{
+                    iSecBegin = iSec093000 + i5Min*i;
+                    iSecEnd = iSec093000 + i5Min*(i+1);
+                    iStdSecEnd = iSecEnd;
+            	}
+            	else if(i == 23)
+            	{
+            		iSecBegin = iSec093000 + i5Min*i;
+                    iSecEnd = iSec093000 + i5Min*(i+1) + i5Min*2;
+                    iStdSecEnd = iSec093000 + i5Min*(i+1);
+            	}
+            	//System.out.println("iSecBegin:" + iSecBegin + " -- iSecEnd:" + iSecEnd );
+    			List<DayDetailItem> tmpList = new ArrayList<DayDetailItem>();
+    			for(int j = 0; j < retListDetail.size(); j++)  
+    	        {  
+    				DayDetailItem cDayDetailItem = retListDetail.get(j);  
+//    	            System.out.println(cDayDetailItem.time + "," 
+//    	            		+ cDayDetailItem.price + "," + cDayDetailItem.volume);  
+    	            int iSec = Integer.parseInt(cDayDetailItem.time.split(":")[0])*3600
+    	            		+ Integer.parseInt(cDayDetailItem.time.split(":")[1])*60
+    	            		+ Integer.parseInt(cDayDetailItem.time.split(":")[2]);
+    	            if(iSec >= iSecBegin && iSec < iSecEnd)
+    	            {
+    	            	tmpList.add(cDayDetailItem);
+    	            }
+    	        } 
+    			// 计算5mink后添加到总表
+    			//System.out.println("==================================================");
+    			String StdEndTimeStr = String.format("%02d:%02d:%02d", 
+    					iStdSecEnd/3600, (iStdSecEnd%3600)/60, (iStdSecEnd%3600)%60);
+    			float K5MinOpen = 0.0f;
+    			float K5MinClose = 0.0f;
+    			float K5MinLow = 0.0f;
+    			float K5MinHigh = 0.0f;
+    			float K5MinVolume = 0.0f;
+    			for(int k = 0; k < tmpList.size(); k++) 
+    			{
+    				DayDetailItem cDayDetailItem = tmpList.get(k);  
+    				if(0 == k) {
+    					K5MinOpen = cDayDetailItem.price;
+    					K5MinClose = cDayDetailItem.price;
+    					K5MinLow = cDayDetailItem.price;
+    					K5MinHigh = cDayDetailItem.price;
+    				}
+    				if(tmpList.size()-1 == k) K5MinClose = cDayDetailItem.price;
+    				if(cDayDetailItem.price > K5MinHigh) K5MinHigh = cDayDetailItem.price;
+    				if(cDayDetailItem.price < K5MinLow) K5MinLow = cDayDetailItem.price;
+    				K5MinVolume = K5MinVolume + cDayDetailItem.volume;
+    				//System.out.println(cDayDetailItem.time);
+    			}
+    			ExKData cExKData = new ExKData();
+    			cExKData.datetime = date + " " + StdEndTimeStr;
+    			cExKData.open = K5MinOpen;
+    			cExKData.close = K5MinClose;
+    			cExKData.low = K5MinLow;
+    			cExKData.high = K5MinHigh;
+    			cExKData.volume = K5MinVolume;
+    			tmpList.clear();
+    			out_list.add(cExKData);
+    			//System.out.println("cExKData.datetime:" + cExKData.datetime);
+            }
+            // add 下午
+            for(int i = 0; i < 24; i++)
+            {
+            	if(0 == i)
+            	{
+                    iSecBegin = iSec130000 + i5Min*i - i5Min*2;
+                    iSecEnd = iSec130000 + i5Min*(i+1);
+                    iStdSecEnd = iSecEnd;
+            	}
+            	else if(i < 23)
+            	{
+                    iSecBegin = iSec130000 + i5Min*i;
+                    iSecEnd = iSec130000 + i5Min*(i+1);
+                    iStdSecEnd = iSecEnd;
+            	}
+            	else if(i == 23)
+            	{
+            		iSecBegin = iSec130000 + i5Min*i;
+                    iSecEnd = iSec130000 + i5Min*(i+1) + i5Min*2;
+                    iStdSecEnd = iSec130000 + i5Min*(i+1);
+            	}
+            	//System.out.println("iSecBegin:" + iSecBegin + " -- iSecEnd:" + iSecEnd );
+    			List<DayDetailItem> tmpList = new ArrayList<DayDetailItem>();
+    			for(int j = 0; j < retListDetail.size(); j++)  
+    	        {  
+    				DayDetailItem cDayDetailItem = retListDetail.get(j);  
+//    	            System.out.println(cDayDetailItem.time + "," 
+//    	            		+ cDayDetailItem.price + "," + cDayDetailItem.volume);  
+    	            int iSec = Integer.parseInt(cDayDetailItem.time.split(":")[0])*3600
+    	            		+ Integer.parseInt(cDayDetailItem.time.split(":")[1])*60
+    	            		+ Integer.parseInt(cDayDetailItem.time.split(":")[2]);
+    	            if(iSec >= iSecBegin && iSec < iSecEnd)
+    	            {
+    	            	tmpList.add(cDayDetailItem);
+    	            }
+    	        } 
+    			// 计算5mink后添加到总表
+    			//System.out.println("==================================================");
+    			String StdEndTimeStr = String.format("%02d:%02d:%02d", 
+    					iStdSecEnd/3600, (iStdSecEnd%3600)/60, (iStdSecEnd%3600)%60);
+    			float K5MinOpen = 0.0f;
+    			float K5MinClose = 0.0f;
+    			float K5MinLow = 0.0f;
+    			float K5MinHigh = 0.0f;
+    			float K5MinVolume = 0.0f;
+    			for(int k = 0; k < tmpList.size(); k++) 
+    			{
+    				DayDetailItem cDayDetailItem = tmpList.get(k);  
+    				if(0 == k) {
+    					K5MinOpen = cDayDetailItem.price;
+    					K5MinClose = cDayDetailItem.price;
+    					K5MinLow = cDayDetailItem.price;
+    					K5MinHigh = cDayDetailItem.price;
+    				}
+    				if(tmpList.size()-1 == k) K5MinClose = cDayDetailItem.price;
+    				if(cDayDetailItem.price > K5MinHigh) K5MinHigh = cDayDetailItem.price;
+    				if(cDayDetailItem.price < K5MinLow) K5MinLow = cDayDetailItem.price;
+    				K5MinVolume = K5MinVolume + cDayDetailItem.volume;
+    				//System.out.println(cDayDetailItem.time);
+    			}
+    			ExKData cExKData = new ExKData();
+    			cExKData.datetime = date + " " + StdEndTimeStr;
+    			cExKData.open = K5MinOpen;
+    			cExKData.close = K5MinClose;
+    			cExKData.low = K5MinLow;
+    			cExKData.high = K5MinHigh;
+    			cExKData.volume = K5MinVolume;
+    			tmpList.clear();
+    			out_list.add(cExKData);
+    			//System.out.println("cExKData.datetime:" + cExKData.datetime);
+            }
+		}
+		else
+		{
+			return -10;
+		}
+		return 0;
+	}
 	
-	public static void main(String[] args) {
+	private static void test_getDayKDataQianFuQuan()
+	{
 		List<DayKData> retList = new ArrayList<DayKData>();
 		int ret = getDayKDataQianFuQuan("600600", retList);
 		if(0 == ret)
@@ -234,5 +397,29 @@ public class DataEngine extends DataEngineBase
 		{
 			System.out.println("ERROR:" + ret);
 		}
+	}
+	private static void test_get5MinKDataOneDay()
+	{
+		List<ExKData> retList = new ArrayList<ExKData>();
+		int ret = get5MinKDataOneDay("300163", "2015-09-30", retList);
+		if(0 == ret)
+		{
+			for(int i = 0; i < retList.size(); i++)  
+	        {  
+				ExKData cExKData = retList.get(i);  
+	            System.out.println(cExKData.datetime + "," 
+	            		+ cExKData.open + "," + cExKData.close + "," 
+	            		+ cExKData.low + "," + cExKData.high + "," 
+	            		+ cExKData.volume);  
+	        } 
+		}
+		else
+		{
+			System.out.println("ERROR:" + ret);
+		}
+	}
+	public static void main(String[] args) {
+		//test_getDayKDataQianFuQuan();
+		test_get5MinKDataOneDay();
 	}
 }
