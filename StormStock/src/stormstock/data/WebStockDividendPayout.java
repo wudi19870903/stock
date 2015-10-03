@@ -132,6 +132,10 @@ public class WebStockDividendPayout {
                     	if(3 == j)
                     		cDividendPayout.paiXi = Float.parseFloat(tmpStr);
                     }
+                    if(cDividendPayout.date.replace("-", "").trim().length()==0)
+                    {
+                    	continue;
+                    }
                     out_list.add(cDividendPayout);
                     //System.out.println("--------------------------------");
                 }
@@ -186,7 +190,7 @@ public class WebStockDividendPayout {
     }  
 	public static void main(String[] args){
 		List<DividendPayout> retList = new ArrayList<DividendPayout>();
-		int ret = getDividendPayout("300163", retList);
+		int ret = getDividendPayout("600060", retList);
 		if(0 == ret)
 		{
 			for(int i = 0; i < retList.size(); i++)  

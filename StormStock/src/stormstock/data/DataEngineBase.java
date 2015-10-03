@@ -28,7 +28,8 @@ public class DataEngineBase {
 		File cfile=new File(stockDayKFileName);
 		if(!cfile.exists())
 		{
-			downloadStockDayk(id);
+			//downloadStockDayk(id);
+			return 0;
 		}
 		if(!cfile.exists()) return -10;
 		try
@@ -60,13 +61,42 @@ public class DataEngineBase {
 		}
 		return 0;
 	}
+	public static int setDayKData(String id, List<DayKData> in_list)
+	{
+		String stockDayKFileName = s_DataDir + "/" + id + "/" + s_daykFile;
+		File cfile=new File(stockDayKFileName);
+		try
+		{
+			FileOutputStream cOutputStream = new FileOutputStream(cfile);
+			for(int i = 0; i < in_list.size(); i++)  
+	        {  
+				DayKData cDayKData = in_list.get(i);  
+//		            System.out.println(cDayKData.date + "," 
+//		            		+ cDayKData.open + "," + cDayKData.close);  
+	            cOutputStream.write((cDayKData.date + ",").getBytes());
+	            cOutputStream.write((cDayKData.open + ",").getBytes());
+	            cOutputStream.write((cDayKData.close + ",").getBytes());
+	            cOutputStream.write((cDayKData.low + ",").getBytes());
+	            cOutputStream.write((cDayKData.high + ",").getBytes());
+	            cOutputStream.write((cDayKData.volume + "\n").getBytes());
+	        } 
+			cOutputStream.close();
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.getMessage()); 
+			return -1;
+		}
+		return 0;
+	}
 	public static int getDividendPayout(String id, List<DividendPayout> out_list)
 	{
 		String stockDividendPayoutFileName = s_DataDir + "/" + id + "/" + s_DividendPayoutFile;
 		File cfile=new File(stockDividendPayoutFileName);
 		if(!cfile.exists())
 		{
-			downloadStockDividendPayout(id);
+			//downloadStockDividendPayout(id);
+			return 0;
 		}
 		if(!cfile.exists()) return -10;
 		try
@@ -102,7 +132,8 @@ public class DataEngineBase {
 		File cfile=new File(stockDataDetailFileName);
 		if(!cfile.exists())
 		{
-			downloadStockDataDetail(id, date);
+			//downloadStockDataDetail(id, date);
+			return 0;
 		}
 		if(!cfile.exists()) return -10;
 		try
