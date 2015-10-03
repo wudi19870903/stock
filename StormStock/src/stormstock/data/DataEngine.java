@@ -207,11 +207,11 @@ public class DataEngine extends DataEngineBase
             float changeper = Math.abs((opennext-close)/close);
             if(changeper > 0.15) 
         	{
-            	System.out.println("XXXXXXXXXXXXXXXXXXXXXXXX");
-            	System.out.println(cDayKData.date);
-            	System.out.println(close);
-            	System.out.println(opennext);
-            	System.out.println(Math.abs(changeper));
+            	System.out.println("Check Data Error : XXXXXXXXXXXXXXXXXXXXXXXX");
+            	System.out.println("date:" + cDayKData.date);
+            	System.out.println("close:" + close);
+            	System.out.println("opennext:" + opennext);
+            	System.out.println("changeper:" + Math.abs(changeper));
             	return -100;
         	}
         } 

@@ -72,7 +72,7 @@ public class TestSuccRate {
 			{
 				continue;
 			}
-			fmt.format("--->Stock Checking: %s\n", stockId);
+			fmt.format("=======================>Stock Checking: %s\n", stockId);
 			cProfitResult.id = stockId;
 			int lenlist = cANLStock.historyData.size();
 			if(lenlist < 200)
@@ -83,7 +83,7 @@ public class TestSuccRate {
 			{
 				List<ANLStockDayKData> cTmpCheckList = cANLStock.historyData.subList(iIndex-60, iIndex+1);
 				ANLStockDayKData checkday = cTmpCheckList.get(cTmpCheckList.size()-1);
-				if(ANLPolicy.enterCheck(cTmpCheckList))
+				if(ANLPolicy.enterCheck(stockId, cTmpCheckList))
 				{
 					//System.out.println(checkday.date);
 					fmt.format("    EnterDate: %s", checkday.date);

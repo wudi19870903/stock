@@ -132,7 +132,7 @@ public class DataEngineBase {
 		File cfile=new File(stockDataDetailFileName);
 		if(!cfile.exists())
 		{
-			//downloadStockDataDetail(id, date);
+			downloadStockDataDetail(id, date);
 			return 0;
 		}
 		if(!cfile.exists()) return -10;

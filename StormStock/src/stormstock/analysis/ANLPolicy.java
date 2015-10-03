@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ANLPolicy {
 	 
-	public static boolean enterCheck(List<ANLStockDayKData> cListANLStockDayKData) {
+	public static boolean enterCheck(String id, List<ANLStockDayKData> cListANLStockDayKData) {
         int lenlist = cListANLStockDayKData.size();
         if(lenlist < 60)
         {
@@ -24,16 +24,11 @@ public class ANLPolicy {
         			&& cRetPriceTuPo.zhangFu > 0.03 && cRetPriceTuPo.zhangFu < 0.09)
             {
             	boolean paramLiangTuPo = ANLPolicy.paramLiangTuPo(cTmpCheckListX);
-        		float paramGaoZhiInDay = ANLPolicy.paramGaoZhiInDay(cCheckDayKData);
         		int paramWeiQuShi = ANLPolicy.paramWeiQuShi(cTmpCheckListY);
         		ANLPolicy.RetZhenDang cRetZhenDang = ANLPolicy.paramZhenDang(cTmpCheckListY);
         		if(!paramLiangTuPo)
         		{
         			break;
-        		}
-        		if(paramGaoZhiInDay<0.6)
-        		{
-        			continue;
         		}
         		if(paramWeiQuShi>0)
         		{
@@ -43,7 +38,23 @@ public class ANLPolicy {
         		{
         			continue;
         		}
-            	//System.out.println(cCheckDayKData.date);
+        		// 细节信息加载延后
+        		// ANLStockPool.getANLStockDayDetailNF(id, cCheckDayKData.date, cCheckDayKData);
+        		float paramGaoZhiInDay = ANLPolicy.paramGaoZhiInDay(cCheckDayKData);
+        		if(paramGaoZhiInDay<0.6)
+        		{
+        			continue;
+        		}
+        		
+            	System.out.println("[TuPo Date] " + cCheckDayKData.date);
+        		System.out.println("paramLiangTuPo:" + paramLiangTuPo);
+        		System.out.println("paramGaoZhiInDay:" + paramGaoZhiInDay);
+        		System.out.println("paramWeiQuShi:" + paramWeiQuShi);
+        		System.out.println("RetZhenDang:");
+        		System.out.println("    zhenFu:" + cRetZhenDang.zhenFu);
+        		System.out.println("    fangCha:" + cRetZhenDang.fangCha);
+        		System.out.println("    crossTimes:" + cRetZhenDang.crossTimes);
+        		
             	return true;
             }	
         }

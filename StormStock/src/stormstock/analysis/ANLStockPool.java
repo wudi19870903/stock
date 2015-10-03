@@ -4,8 +4,73 @@ import java.util.ArrayList;
 import java.util.List;
 
 import stormstock.data.DataEngine;
+import stormstock.data.WebStockDayDetail.DayDetailItem;
+import stormstock.data.WebStockDayK.DayKData;
+import stormstock.data.WebStockRealTimeInfo.RealTimeInfo;
 
 public class ANLStockPool {
+	// 新数据加载
+	public static ANLStock getANLStockNF(String id)
+	{
+		List<DayKData> retList = new ArrayList<DayKData>();
+		int ret = DataEngine.getDayKDataQianFuQuan(id, retList);
+		if(0 != ret || retList.size() == 0)
+		{
+			return null;
+		}
+			
+		ANLStock cANLStock = new ANLStock();
+		cANLStock.id = id;
+		
+		for(int i = 0; i < retList.size(); i++)  
+        {  
+			ANLStockDayKData cANLStockDayKData = new ANLStockDayKData();
+			DayKData cDayKData = retList.get(i);  
+			cANLStockDayKData.date = cDayKData.date;
+			cANLStockDayKData.open = cDayKData.open;
+			cANLStockDayKData.close = cDayKData.close;
+			cANLStockDayKData.low = cDayKData.low;
+			cANLStockDayKData.high = cDayKData.high;
+			cANLStockDayKData.volume = cDayKData.volume;
+//            System.out.println(cDayKData.date + "," 
+//            		+ cDayKData.open + "," + cDayKData.close); 
+			cANLStock.historyData.add(cANLStockDayKData);
+        } 
+		
+		return cANLStock;
+	}
+	public static int getANLStockDayDetailNF(String id, String date, ANLStockDayKData in_ANLStockDayKData)
+	{
+		in_ANLStockDayKData.priceList.clear();
+		in_ANLStockDayKData.volumeList.clear();
+		List<DayDetailItem> retList = new ArrayList<DayDetailItem>();
+		int ret = DataEngine.getDayDetail(id, date, retList);
+		if(0 == ret  && retList.size() != 0)
+		{
+			float baseOpenPrice = in_ANLStockDayKData.open;
+			
+			float actruaFirstPrice = retList.get(0).price;
+			
+			for(int i = 0; i < retList.size(); i++)  
+	        {  
+				DayDetailItem cDayDetailItem = retList.get(i);  
+				float actrualprice = cDayDetailItem.price;
+				float changeper = (actrualprice - actruaFirstPrice)/actruaFirstPrice;
+				float changedprice = baseOpenPrice + baseOpenPrice * changeper;
+//	            System.out.println(cDayDetailItem.time + "," 
+//	            		+ cDayDetailItem.price + "," + cDayDetailItem.volume); 
+				in_ANLStockDayKData.priceList.add(changedprice);
+				in_ANLStockDayKData.volumeList.add(cDayDetailItem.volume);
+	        } 
+		}
+		else
+		{
+			return -10;
+		}
+		return 0;
+	}
+	
+	// 旧测试数据加载
 	public static ANLStock getANLStock(String id)
 	{
 		List<DataEngine.StockKData> listStockKData =  DataEngine.getStock(id);
@@ -79,5 +144,12 @@ public class ANLStockPool {
 		}
 		cANLStockDayKData.volume = curVolume;
 		return cANLStockDayKData;
+	}
+	
+	public static void main(String[] args){
+		System.out.println("main begin");
+		ANLStockDayKData cANLStockDayKData = new ANLStockDayKData();
+		ANLStockPool.getANLStockDayDetailNF("601766", "2010-12-08", cANLStockDayKData);
+		System.out.println("main end");
 	}
 }
