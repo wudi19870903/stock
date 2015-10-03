@@ -67,7 +67,7 @@ public class TestSuccRate {
 			
 			String stockId = stockIdList.get(i);
 		
-			ANLStock cANLStock = ANLStockPool.getANLStock(stockId);
+			ANLStock cANLStock = ANLStockPool.getANLStockNF(stockId);
 			if(null == cANLStock)
 			{
 				continue;
@@ -81,12 +81,10 @@ public class TestSuccRate {
 			int iCheckDayEnd = lenlist-60;
 			for(int iIndex = iCheckDayBegin; iIndex < iCheckDayEnd; iIndex++) 
 			{
-				List<ANLStockDayKData> cTmpCheckList = cANLStock.historyData.subList(iIndex-60, iIndex+1);
-				ANLStockDayKData checkday = cTmpCheckList.get(cTmpCheckList.size()-1);
-				if(ANLPolicy.enterCheck(stockId, cTmpCheckList))
+				ANLStockDayKData cCheckDayKData = cANLStock.historyData.get(iIndex);
+				if(ANLPolicy.enterCheck(cANLStock, iIndex))
 				{
-					//System.out.println(checkday.date);
-					fmt.format("    EnterDate: %s", checkday.date);
+					fmt.format("    EnterDate: %s", cCheckDayKData.date);
 					if(CheckProfit(cANLStock, iIndex, cProfitResult))
 					{
 						fmt.format(" OK!\n");

@@ -4,28 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ANLPolicy {
-	 
-	public static boolean enterCheck(String id, List<ANLStockDayKData> cListANLStockDayKData) {
-        int lenlist = cListANLStockDayKData.size();
-        if(lenlist < 60)
-        {
-        	return false;
-        }
-        int iCheckDay = lenlist-1;
-        ANLStockDayKData cCheckDayKData = cListANLStockDayKData.get(iCheckDay);
-
-        List<ANLStockDayKData> cTmpCheckListX = cListANLStockDayKData.subList(iCheckDay-8, iCheckDay+1);
-        List<ANLStockDayKData> cTmpCheckListY = cListANLStockDayKData.subList(iCheckDay-8, iCheckDay);
+	public static boolean enterCheck(ANLStock cANLStock, int iCheckDay) {
+		if(iCheckDay < 10 || iCheckDay >= cANLStock.historyData.size()-1)
+		{
+			return false;
+		}
+		
+		ANLStockDayKData cCheckDayKData = cANLStock.historyData.get(iCheckDay);
+        List<ANLStockDayKData> cTmpCheckListX = cANLStock.historyData.subList(iCheckDay-8, iCheckDay+1);
+        List<ANLStockDayKData> cTmpCheckListY = cANLStock.historyData.subList(iCheckDay-8, iCheckDay);
         
         for(int i=0; i<1; i++)
         {
         	ANLPolicy.RetPriceTuPo cRetPriceTuPo = ANLPolicy.paramPriceTuPo(cTmpCheckListX);
             if(cRetPriceTuPo.yangShiTi > 0.03 && cRetPriceTuPo.yangShiTi < 0.08
-        			&& cRetPriceTuPo.zhangFu > 0.03 && cRetPriceTuPo.zhangFu < 0.09)
+        			&& cRetPriceTuPo.zhangFu > 0.03 /*&& cRetPriceTuPo.zhangFu < 0.09*/)
             {
             	boolean paramLiangTuPo = ANLPolicy.paramLiangTuPo(cTmpCheckListX);
         		int paramWeiQuShi = ANLPolicy.paramWeiQuShi(cTmpCheckListY);
         		ANLPolicy.RetZhenDang cRetZhenDang = ANLPolicy.paramZhenDang(cTmpCheckListY);
+        		
         		if(!paramLiangTuPo)
         		{
         			break;
@@ -40,15 +38,15 @@ public class ANLPolicy {
         		}
         		// 细节信息加载延后
         		// ANLStockPool.getANLStockDayDetailNF(id, cCheckDayKData.date, cCheckDayKData);
-        		float paramGaoZhiInDay = ANLPolicy.paramGaoZhiInDay(cCheckDayKData);
-        		if(paramGaoZhiInDay<0.6)
-        		{
-        			continue;
-        		}
+//        		float paramGaoZhiInDay = ANLPolicy.paramGaoZhiInDay(cCheckDayKData);
+//        		if(paramGaoZhiInDay<0.6)
+//        		{
+//        			continue;
+//        		}
         		
             	System.out.println("[TuPo Date] " + cCheckDayKData.date);
         		System.out.println("paramLiangTuPo:" + paramLiangTuPo);
-        		System.out.println("paramGaoZhiInDay:" + paramGaoZhiInDay);
+        		//System.out.println("paramGaoZhiInDay:" + paramGaoZhiInDay);
         		System.out.println("paramWeiQuShi:" + paramWeiQuShi);
         		System.out.println("RetZhenDang:");
         		System.out.println("    zhenFu:" + cRetZhenDang.zhenFu);

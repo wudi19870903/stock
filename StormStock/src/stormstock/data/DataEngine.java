@@ -212,7 +212,7 @@ public class DataEngine extends DataEngineBase
             	System.out.println("close:" + close);
             	System.out.println("opennext:" + opennext);
             	System.out.println("changeper:" + Math.abs(changeper));
-            	return -100;
+            	return 0;
         	}
         } 
 		return 0;
