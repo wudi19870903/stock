@@ -26,6 +26,7 @@ public class ANLStockPool {
         {  
 			ANLStockDayKData cANLStockDayKData = new ANLStockDayKData();
 			DayKData cDayKData = retList.get(i);  
+			cANLStockDayKData.ref_ANLStock = cANLStock;
 			cANLStockDayKData.date = cDayKData.date;
 			cANLStockDayKData.open = cDayKData.open;
 			cANLStockDayKData.close = cDayKData.close;
@@ -41,32 +42,32 @@ public class ANLStockPool {
 	}
 	public static int getANLStockDayDetailNF(String id, String date, ANLStockDayKData in_ANLStockDayKData)
 	{
-		in_ANLStockDayKData.priceList.clear();
-		in_ANLStockDayKData.volumeList.clear();
-		List<DayDetailItem> retList = new ArrayList<DayDetailItem>();
-		int ret = DataEngine.getDayDetail(id, date, retList);
-		if(0 == ret  && retList.size() != 0)
-		{
-			float baseOpenPrice = in_ANLStockDayKData.open;
-			
-			float actruaFirstPrice = retList.get(0).price;
-			
-			for(int i = 0; i < retList.size(); i++)  
-	        {  
-				DayDetailItem cDayDetailItem = retList.get(i);  
-				float actrualprice = cDayDetailItem.price;
-				float changeper = (actrualprice - actruaFirstPrice)/actruaFirstPrice;
-				float changedprice = baseOpenPrice + baseOpenPrice * changeper;
-//	            System.out.println(cDayDetailItem.time + "," 
-//	            		+ cDayDetailItem.price + "," + cDayDetailItem.volume); 
-				in_ANLStockDayKData.priceList.add(changedprice);
-				in_ANLStockDayKData.volumeList.add(cDayDetailItem.volume);
-	        } 
-		}
-		else
-		{
-			return -10;
-		}
+//		in_ANLStockDayKData.clearPriceList();
+//		in_ANLStockDayKData.clearVolumeList();
+//		List<DayDetailItem> retList = new ArrayList<DayDetailItem>();
+//		int ret = DataEngine.getDayDetail(id, date, retList);
+//		if(0 == ret  && retList.size() != 0)
+//		{
+//			float baseOpenPrice = in_ANLStockDayKData.open;
+//			
+//			float actruaFirstPrice = retList.get(0).price;
+//			
+//			for(int i = 0; i < retList.size(); i++)  
+//	        {  
+//				DayDetailItem cDayDetailItem = retList.get(i);  
+//				float actrualprice = cDayDetailItem.price;
+//				float changeper = (actrualprice - actruaFirstPrice)/actruaFirstPrice;
+//				float changedprice = baseOpenPrice + baseOpenPrice * changeper;
+////	            System.out.println(cDayDetailItem.time + "," 
+////	            		+ cDayDetailItem.price + "," + cDayDetailItem.volume); 
+//				in_ANLStockDayKData.priceList.add(changedprice);
+//				in_ANLStockDayKData.volumeList.add(cDayDetailItem.volume);
+//	        } 
+//		}
+//		else
+//		{
+//			return -10;
+//		}
 		return 0;
 	}
 	
@@ -96,6 +97,7 @@ public class ANLStockPool {
 				if(!currentdate.equals(nextlinedate))
 				{
 					ANLStockDayKData cANLStockDayKData = getANLStockDayKDataFromSession(tmpLisStockKData);
+					cANLStockDayKData.ref_ANLStock = cANLStock;
 					cANLStock.historyData.add(cANLStockDayKData);
 					tmpLisStockKData.clear();
 				}
@@ -103,6 +105,7 @@ public class ANLStockPool {
 			else
 			{
 				ANLStockDayKData cANLStockDayKData = getANLStockDayKDataFromSession(tmpLisStockKData);
+				cANLStockDayKData.ref_ANLStock = cANLStock;
 				cANLStock.historyData.add(cANLStockDayKData);
 				tmpLisStockKData.clear();
 			} 
