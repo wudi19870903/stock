@@ -4,10 +4,13 @@ import stormstock.analysis.ANLPolicy;
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
 import stormstock.analysis.ANLStockPool;
+import stormstock.data.WebStockAllList;
+import stormstock.data.WebStockAllList.StockItem;
 
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
+import java.util.Random;
 
 public class TestSuccRate {
 	public static class ProfitResult
@@ -48,24 +51,57 @@ public class TestSuccRate {
 		cProfitResult.failCnt = cProfitResult.failCnt + 1;
 		return false;
 	}
+	public static StockItem popRandomStock(List<StockItem> in_list)
+	{
+		if(in_list.size() == 0) return null;
+		Random random = new Random();
+		int randomInt = Math.abs(random.nextInt());
+		int randomIndex = randomInt % in_list.size();
+		StockItem cStockItem = new  StockItem(in_list.get(randomIndex));
+		in_list.remove(randomIndex);
+		return cStockItem;
+	}
+	public static List<StockItem> getRandomStock(int count)
+	{
+		List<StockItem> retList = new ArrayList<StockItem>();
+		
+		List<StockItem> retListAll = new ArrayList<StockItem>();
+		int ret = WebStockAllList.getAllStockList(retListAll);
+		if(0 == ret)
+		{
+			for(int i = 0; i < count; i++)  
+	        {  
+				StockItem cStockItem = popRandomStock(retListAll);
+				retList.add(cStockItem);
+	        } 
+		}
+		else
+		{
+		}
+		return retList;
+	}
+	
 	public static void Check()
 	{
+		List<StockItem> cStockList = getRandomStock(20);
+		
+//		cStockList.clear();
+//		cStockList.add(new StockItem("002246"));
+//		cStockList.add(new StockItem("000421"));
+//		cStockList.add(new StockItem("002118"));
+//		cStockList.add(new StockItem("600030"));
+//		cStockList.add(new StockItem("600818"));
+//		cStockList.add(new StockItem("601766"));
+		
 		Formatter fmt = new Formatter(System.out);
-		
-		List<String> stockIdList = new ArrayList<String>();
-		stockIdList.add("000421");
-		stockIdList.add("002118");
-		stockIdList.add("600030");
-		stockIdList.add("600818");
-		stockIdList.add("601766");
-		
+
 		List<ProfitResult> cListProfitResult = new ArrayList<ProfitResult>();
 		
-		for(int i=0; i<stockIdList.size();i++)
+		for(int i=0; i<cStockList.size();i++)
 		{
 			ProfitResult cProfitResult = new ProfitResult();
 			
-			String stockId = stockIdList.get(i);
+			String stockId = cStockList.get(i).id;
 		
 			ANLStock cANLStock = ANLStockPool.getANLStockNF(stockId);
 			if(null == cANLStock)

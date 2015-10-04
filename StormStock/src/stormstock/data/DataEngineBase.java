@@ -136,7 +136,6 @@ public class DataEngineBase {
 		if(!cfile.exists())
 		{
 			downloadStockDataDetail(id, date);
-			return 0;
 		}
 		if(!cfile.exists()) return -10;
 		try

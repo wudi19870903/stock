@@ -75,17 +75,18 @@ public class ANLPolicy {
         		else
         		{
         			System.out.println("[ERROR] cCheckDayKData.LoadDetail Faild date:" + cCheckDayKData.date);
+        			break;
         		}
 
         		
-            	System.out.println("[TuPo Date] " + cCheckDayKData.date);
-        		System.out.println("paramLiangTuPo:" + paramLiangTuPo);
-        		System.out.println("paramGaoZhiInDay:" + paramGaoZhiInDay);
-        		System.out.println("paramWeiQuShi:" + paramWeiQuShi);
-        		System.out.println("RetZhenDang:");
-        		System.out.println("    zhenFu:" + cRetZhenDang.zhenFu);
-        		System.out.println("    fangCha:" + cRetZhenDang.fangCha);
-        		System.out.println("    crossTimes:" + cRetZhenDang.crossTimes);
+            	System.out.println(" ########## [TuPo Date]" + cCheckDayKData.date);
+        		System.out.println("     paramLiangTuPo:" + paramLiangTuPo);
+        		System.out.println("     paramGaoZhiInDay:" + paramGaoZhiInDay);
+        		System.out.println("     paramWeiQuShi:" + paramWeiQuShi);
+        		System.out.println("     RetZhenDang:");
+        		System.out.println("         zhenFu:" + cRetZhenDang.zhenFu);
+        		System.out.println("         fangCha:" + cRetZhenDang.fangCha);
+        		System.out.println("         crossTimes:" + cRetZhenDang.crossTimes);
         		
             	return true;
             }	

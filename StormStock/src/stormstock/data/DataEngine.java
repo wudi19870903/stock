@@ -375,6 +375,7 @@ public class DataEngine extends DataEngineBase
 		}
 		else
 		{
+			System.out.println("[ERROR] get5MinKDataOneDay: " + id + " # " + date);
 			return -10;
 		}
 		return 0;
@@ -402,6 +403,7 @@ public class DataEngine extends DataEngineBase
 	{
 		List<ExKData> retList = new ArrayList<ExKData>();
 		int ret = get5MinKDataOneDay("300163", "2015-09-30", retList);
+		//int ret = get5MinKDataOneDay("600316", "2010-06-28", retList);
 		if(0 == ret)
 		{
 			for(int i = 0; i < retList.size(); i++)  

@@ -52,7 +52,7 @@ public class ANLStockDayKData {
 		}
 		else
 		{
-			System.out.println("ERROR: LoadDetail");
+			// System.out.println("ERROR: LoadDetail");
 			return -30;
 		}
 		return 0;
