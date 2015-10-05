@@ -28,7 +28,7 @@ public class TestSuccRate {
 	public static boolean CheckProfit(ANLStock cANLStock, int iEnter, ProfitResult cProfitResult)
 	{
 		int iCheckDayBegin = iEnter;
-		int iCheckDayEnd = iEnter+40;
+		int iCheckDayEnd = iEnter+60;
 		float currentPrice = cANLStock.historyData.get(iCheckDayBegin).close;
 		for(int iCheckDay = iCheckDayBegin; iCheckDay <iCheckDayEnd; iCheckDay++)
 		{
@@ -64,29 +64,29 @@ public class TestSuccRate {
 	public static List<StockItem> getRandomStock(int count)
 	{
 		List<StockItem> retList = new ArrayList<StockItem>();
-		
-		List<StockItem> retListAll = new ArrayList<StockItem>();
-		int ret = WebStockAllList.getAllStockList(retListAll);
-		if(0 == ret)
+		if(0 != count)
 		{
-			for(int i = 0; i < count; i++)  
-	        {  
-				StockItem cStockItem = popRandomStock(retListAll);
-				retList.add(cStockItem);
-	        } 
-		}
-		else
-		{
+			List<StockItem> retListAll = new ArrayList<StockItem>();
+			int ret = WebStockAllList.getAllStockList(retListAll);
+			if(0 == ret)
+			{
+				for(int i = 0; i < count; i++)  
+		        {  
+					StockItem cStockItem = popRandomStock(retListAll);
+					retList.add(cStockItem);
+		        } 
+			}
+			else
+			{
+			}
 		}
 		return retList;
 	}
 	
 	public static void Check()
 	{
-		List<StockItem> cStockList = getRandomStock(20);
-		
-//		cStockList.clear();
-//		cStockList.add(new StockItem("002246"));
+		List<StockItem> cStockList = getRandomStock(0);
+		cStockList.add(new StockItem("600030"));
 //		cStockList.add(new StockItem("000421"));
 //		cStockList.add(new StockItem("002118"));
 //		cStockList.add(new StockItem("600030"));
@@ -111,16 +111,14 @@ public class TestSuccRate {
 			fmt.format("=======================>Stock Checking: %s\n", stockId);
 			cProfitResult.id = stockId;
 			int lenlist = cANLStock.historyData.size();
-			if(lenlist < 200)
-			    continue;
-			int iCheckDayBegin = 100;
-			int iCheckDayEnd = lenlist-60;
+			int iCheckDayBegin = 0;
+			int iCheckDayEnd = lenlist-100;
 			for(int iIndex = iCheckDayBegin; iIndex < iCheckDayEnd; iIndex++) 
 			{
 				ANLStockDayKData cCheckDayKData = cANLStock.historyData.get(iIndex);
 				if(ANLPolicy.enterCheck(cANLStock, iIndex))
 				{
-					fmt.format("    EnterDate: %s", cCheckDayKData.date);
+					fmt.format("   # EnterDate: %s", cCheckDayKData.date);
 					if(CheckProfit(cANLStock, iIndex, cProfitResult))
 					{
 						fmt.format(" OK!\n");

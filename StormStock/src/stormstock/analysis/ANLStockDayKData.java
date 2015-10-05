@@ -14,6 +14,28 @@ public class ANLStockDayKData {
 		volumeList = new ArrayList<Float>();
 	} 
 	
+	public float getMA(int dayCnt)
+	{
+		int myIndex = 0;
+		for(int i = 0; i < ref_ANLStock.historyData.size(); i++)  
+        {  
+			ANLStockDayKData cANLStockDayKData = ref_ANLStock.historyData.get(i);
+			if(cANLStockDayKData.date.contains(date))
+			{
+				myIndex = i;
+			}
+        }
+		int beforeIndex = myIndex - dayCnt;
+		float avePriceMA = 0.0f;
+		for(int i = beforeIndex; i <= myIndex; i++)  
+        {
+			ANLStockDayKData cANLStockDayKData = ref_ANLStock.historyData.get(i);
+			avePriceMA = avePriceMA + cANLStockDayKData.close;
+        }
+		avePriceMA = avePriceMA/(myIndex-beforeIndex+1);
+		return avePriceMA;
+	}
+	
 	public int LoadDetail()
 	{
 		int iSizePriceList = priceList.size();
