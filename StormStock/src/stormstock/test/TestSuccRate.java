@@ -1,6 +1,8 @@
 package stormstock.test;
 
-import stormstock.analysis.ANLPolicy;
+import stormstock.analysis.ANLPolicyBase;
+import stormstock.analysis.ANLPolicyBase.RetExitCheck;
+import stormstock.analysis.ANLPolicyX1;
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
 import stormstock.analysis.ANLStockPool;
@@ -13,6 +15,9 @@ import java.util.List;
 import java.util.Random;
 
 public class TestSuccRate {
+	
+	public static Formatter fmt = new Formatter(System.out);
+	
 	public static class ProfitResult
 	{
 		public ProfitResult()
@@ -24,32 +29,6 @@ public class TestSuccRate {
 		public String id;
 		public int succCnt;
 		public int failCnt;
-	}
-	public static boolean CheckProfit(ANLStock cANLStock, int iEnter, ProfitResult cProfitResult)
-	{
-		int iCheckDayBegin = iEnter;
-		int iCheckDayEnd = iEnter+60;
-		float currentPrice = cANLStock.historyData.get(iCheckDayBegin).close;
-		for(int iCheckDay = iCheckDayBegin; iCheckDay <iCheckDayEnd; iCheckDay++)
-		{
-			ANLStockDayKData checkDayKData = cANLStock.historyData.get(iCheckDay);
-			float highDay = checkDayKData.high;
-			float lowDay = checkDayKData.low;
-			float midDay = (highDay + lowDay)/2;
-			float profit = (midDay-currentPrice)/currentPrice;
-			if(profit>0.1)
-			{
-				cProfitResult.succCnt = cProfitResult.succCnt + 1;
-				return true;
-			}
-			if(profit<-0.1)
-			{
-				cProfitResult.failCnt = cProfitResult.failCnt + 1;
-				return false;
-			}   	
-		}
-		cProfitResult.failCnt = cProfitResult.failCnt + 1;
-		return false;
 	}
 	public static StockItem popRandomStock(List<StockItem> in_list)
 	{
@@ -83,17 +62,22 @@ public class TestSuccRate {
 		return retList;
 	}
 	
-	public static void Check()
-	{
-		List<StockItem> cStockList = getRandomStock(0);
-		cStockList.add(new StockItem("600030"));
-//		cStockList.add(new StockItem("000421"));
-//		cStockList.add(new StockItem("002118"));
-//		cStockList.add(new StockItem("600030"));
-//		cStockList.add(new StockItem("600818"));
-//		cStockList.add(new StockItem("601766"));
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		System.out.println("### Main Begin");
 		
-		Formatter fmt = new Formatter(System.out);
+		ANLPolicyBase cPolicy = new ANLPolicyX1();
+		List<StockItem> cStockList = new ArrayList<StockItem>();
+//		cStockList.add(new StockItem("600452"));
+//		cStockList.add(new StockItem("600020"));
+// 		cStockList.add(new StockItem("002344"));
+//		cStockList.add(new StockItem("002695"));
+//		cStockList.add(new StockItem("300041"));
+//		cStockList.add(new StockItem("600030"));
+		if(cStockList.size() <= 0)
+		{
+			cStockList = getRandomStock(30);
+		}
 
 		List<ProfitResult> cListProfitResult = new ArrayList<ProfitResult>();
 		
@@ -116,17 +100,26 @@ public class TestSuccRate {
 			for(int iIndex = iCheckDayBegin; iIndex < iCheckDayEnd; iIndex++) 
 			{
 				ANLStockDayKData cCheckDayKData = cANLStock.historyData.get(iIndex);
-				if(ANLPolicy.enterCheck(cANLStock, iIndex))
+				if(cPolicy.enterCheck(cANLStock, iIndex))
 				{
-					fmt.format("   # EnterDate: %s", cCheckDayKData.date);
-					if(CheckProfit(cANLStock, iIndex, cProfitResult))
+					RetExitCheck cRetExitCheck = cPolicy.exitCheck(cANLStock, iIndex);
+					if(cRetExitCheck.profitPer < 0.0f)
 					{
-						fmt.format(" OK!\n");
+						cProfitResult.failCnt = cProfitResult.failCnt + 1;
+						fmt.format("   # EnterDate: %s  [NG] ExitDate:%s profit:%.3f\n", 
+								cCheckDayKData.date, 
+								cANLStock.historyData.get(cRetExitCheck.iExit).date,
+								cRetExitCheck.profitPer);
 					}
 					else
 					{
-						fmt.format(" NG!\n");
+						cProfitResult.succCnt = cProfitResult.succCnt + 1;
+						fmt.format("   # EnterDate: %s  [OK] ExitDate:%s profit:%.3f\n", 
+								cCheckDayKData.date, 
+								cANLStock.historyData.get(cRetExitCheck.iExit).date,
+								cRetExitCheck.profitPer);
 					}
+					iIndex = iIndex + 40;
 				}
 			}
 			
@@ -149,13 +142,6 @@ public class TestSuccRate {
 			succRate = (float)allSucc/(float)(allSucc+allFail)*100;
 		}
 		fmt.format("succRate:%.3f%%\n", succRate);
-	}
-	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		System.out.println("### Main Begin");
-		
-		Check();
 
 		System.out.println("### Main End");
 	}

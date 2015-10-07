@@ -558,10 +558,10 @@ public class DataEngineBase {
 	private static String s_DividendPayoutFile = "dividendPayout.txt";
 	
 	public static void main(String[] args) {
-		test_getDayKData();
-		test_getDividendPayout();
-		test_getDayDetail();
-//		test_downloadStockDayk();
+//		test_getDayKData();
+//		test_getDividendPayout();
+//		test_getDayDetail();
+		test_downloadStockDayk();
 //		test_downloadStockDividendPayout();
 //		test_downloadStockDataDetail();
 	}

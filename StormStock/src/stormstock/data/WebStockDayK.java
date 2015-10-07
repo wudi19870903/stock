@@ -53,6 +53,10 @@ public class WebStockDayK {
 		{
 			tmpId = "sz" + id;
 		}
+		else if(id.startsWith("99"))
+		{
+			tmpId = "sh" + "000001";
+		}
 		else
 		{
 			return -10;

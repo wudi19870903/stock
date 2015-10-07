@@ -24,6 +24,7 @@ public class RunUpdate {
 		int ret = WebStockAllList.getAllStockList(retList);
 		if(0 == ret)
 		{
+			retList.add(new StockItem("上证指数","999999"));
 			for(int i = 0; i < retList.size(); i++)  
 	        {  
 				StockItem cStockItem = retList.get(i);  
