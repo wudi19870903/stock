@@ -553,6 +553,15 @@ public class DataEngineBase {
 			System.out.println("downloadStockDataDetail ERROR:" + retdownloadStockDataDetail);	
 		}
 	}
+	private static void test_updateStock()
+	{
+		int retupdateStock = updateStock("300163");
+		if(0 != retupdateStock)
+		{
+			System.out.println("updateStock ERROR:" + retupdateStock);	
+		}
+	}
+	
 	private static String s_DataDir = "data";
 	private static String s_daykFile = "dayk.txt";
 	private static String s_DividendPayoutFile = "dividendPayout.txt";
@@ -561,8 +570,9 @@ public class DataEngineBase {
 //		test_getDayKData();
 //		test_getDividendPayout();
 //		test_getDayDetail();
-		test_downloadStockDayk();
+//		test_downloadStockDayk();
 //		test_downloadStockDividendPayout();
 //		test_downloadStockDataDetail();
+		test_updateStock();
 	}
 }

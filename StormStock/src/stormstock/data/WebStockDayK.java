@@ -96,6 +96,9 @@ public class WebStockDayK {
 	        InputSource is = new InputSource(sr);
 	        Document doc = builder.parse(is);
 	        Element rootElement = doc.getDocumentElement();
+	        // 检查返回数据有效性
+	        if(!rootElement.getTagName().contains("control")) return -30;
+
 	        NodeList contents = rootElement.getElementsByTagName("content");
 	        int lenList = contents.getLength();
 	        for (int i = 0; i < lenList; i++) {
@@ -115,8 +118,6 @@ public class WebStockDayK {
 	        	cDayKData.volume = Float.parseFloat(volume);
 	        	out_list.add(cDayKData);
 	        }
-	        
-	        if(out_list.size() <= 0) return -30;
 		}
 		catch(Exception e)
 		{
