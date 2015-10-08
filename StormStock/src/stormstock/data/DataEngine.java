@@ -381,47 +381,5 @@ public class DataEngine extends DataEngineBase
 		return 0;
 	}
 	
-	private static void test_getDayKDataQianFuQuan()
-	{
-		List<DayKData> retList = new ArrayList<DayKData>();
-		int ret = getDayKDataQianFuQuan("600600", retList);
-		if(0 == ret)
-		{
-			for(int i = 0; i < retList.size(); i++)  
-	        {  
-				DayKData cDayKData = retList.get(i);  
-	            System.out.println(cDayKData.date + "," 
-	            		+ cDayKData.open + "," + cDayKData.close);  
-	        } 
-		}
-		else
-		{
-			System.out.println("ERROR:" + ret);
-		}
-	}
-	private static void test_get5MinKDataOneDay()
-	{
-		List<ExKData> retList = new ArrayList<ExKData>();
-		int ret = get5MinKDataOneDay("300163", "2015-09-30", retList);
-		//int ret = get5MinKDataOneDay("600316", "2010-06-28", retList);
-		if(0 == ret)
-		{
-			for(int i = 0; i < retList.size(); i++)  
-	        {  
-				ExKData cExKData = retList.get(i);  
-	            System.out.println(cExKData.datetime + "," 
-	            		+ cExKData.open + "," + cExKData.close + "," 
-	            		+ cExKData.low + "," + cExKData.high + "," 
-	            		+ cExKData.volume);  
-	        } 
-		}
-		else
-		{
-			System.out.println("ERROR:" + ret);
-		}
-	}
-	public static void main(String[] args) {
-		//test_getDayKDataQianFuQuan();
-		test_get5MinKDataOneDay();
-	}
+
 }

@@ -189,23 +189,4 @@ public class DataWebStockDividendPayout {
         bos.close();    
         return bos.toByteArray();    
     }  
-	public static void main(String[] args){
-		List<DividendPayout> retList = new ArrayList<DividendPayout>();
-		int ret = getDividendPayout("600060", retList);
-		if(0 == ret)
-		{
-			for(int i = 0; i < retList.size(); i++)  
-	        {  
-				DividendPayout cDividendPayout = retList.get(i);  
-	            System.out.println(cDividendPayout.date 
-	            		+ "," + cDividendPayout.songGu
-	            		+ "," + cDividendPayout.zhuanGu
-	            		+ "," + cDividendPayout.paiXi);  
-	        } 
-		}
-		else
-		{
-			System.out.println("ERROR:" + ret);
-		}
-	}
 }

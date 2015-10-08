@@ -100,19 +100,4 @@ public class DataWebStockRealTimeInfo {
         bos.close();    
         return bos.toByteArray();    
     }  
-	public static void main(String[] args){
-		RealTimeInfo cRealTimeInfo = new RealTimeInfo();
-		int ret = getRealTimeInfo("300163", cRealTimeInfo);
-		if(0 == ret)
-		{ 
-			System.out.println(cRealTimeInfo.name);
-			System.out.println(cRealTimeInfo.curPrice);
-			System.out.println(cRealTimeInfo.date);
-	        System.out.println(cRealTimeInfo.time);
-		}
-		else
-		{
-			System.out.println("ERROR:" + ret);
-		}
-	}
 }

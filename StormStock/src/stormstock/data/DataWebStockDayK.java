@@ -139,21 +139,4 @@ public class DataWebStockDayK {
         bos.close();    
         return bos.toByteArray();    
     }  
-	public static void main(String[] args){
-		List<DayKData> retList = new ArrayList<DayKData>();
-		int ret = getDayKData("600030", "20150901", "20151001", retList);
-		if(0 == ret)
-		{
-			for(int i = 0; i < retList.size(); i++)  
-	        {  
-				DayKData cDayKData = retList.get(i);  
-	            System.out.println(cDayKData.date + "," 
-	            		+ cDayKData.open + "," + cDayKData.close);  
-	        } 
-		}
-		else
-		{
-			System.out.println("ERROR:" + ret);
-		}
-	}
 }
