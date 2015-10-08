@@ -24,10 +24,10 @@ import org.htmlparser.util.NodeList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import stormstock.data.WebStockDayK.DayKData;
-import stormstock.data.WebStockDividendPayout.DividendPayout;
+import stormstock.data.DataWebStockDayK.DayKData;
+import stormstock.data.DataWebStockDividendPayout.DividendPayout;
 
-public class WebStockAllList {
+public class DataWebStockAllList {
 	public static class StockItem
 	{
 		public StockItem(){}

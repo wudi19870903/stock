@@ -13,9 +13,9 @@ import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
 import stormstock.analysis.ANLStockPool;
 import stormstock.analysis.ANLPolicyBase.RetExitCheck;
-import stormstock.data.WebStockAllList;
-import stormstock.data.WebStockAllList.StockItem;
-import stormstock.data.WebStockDayK.DayKData;
+import stormstock.data.DataWebStockAllList;
+import stormstock.data.DataWebStockAllList.StockItem;
+import stormstock.data.DataWebStockDayK.DayKData;
 
 public class RunFindEnterStock {
 	public static Formatter fmt = new Formatter(System.out);
@@ -102,7 +102,7 @@ public class RunFindEnterStock {
 		int LatastDayCnt = 100;
 		DistributionResult cDistributionResult = new DistributionResult();
 		List<StockItem> retListAll = new ArrayList<StockItem>();
-		int retgetAllStockList = WebStockAllList.getAllStockList(retListAll);
+		int retgetAllStockList = DataWebStockAllList.getAllStockList(retListAll);
 		if(retListAll.size() != 0)
 		{
 			for(int iStock = 0; iStock < retListAll.size(); iStock++)  

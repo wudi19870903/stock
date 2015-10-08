@@ -22,7 +22,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-public class WebStockDayK {
+public class DataWebStockDayK {
 	public static class DayKData implements Comparable
 	{
 		// 2015-09-18

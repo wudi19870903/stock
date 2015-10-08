@@ -16,10 +16,10 @@ import stormstock.analysis.ANLStockDayKData;
 import stormstock.analysis.ANLStockPool;
 import stormstock.analysis.ANLPolicyBase.RetExitCheck;
 import stormstock.data.DataEngine;
-import stormstock.data.WebStockAllList;
-import stormstock.data.WebStockAllList.StockItem;
-import stormstock.data.WebStockDayDetail.DayDetailItem;
-import stormstock.data.WebStockDayK.DayKData;
+import stormstock.data.DataWebStockAllList;
+import stormstock.data.DataWebStockAllList.StockItem;
+import stormstock.data.DataWebStockDayDetail.DayDetailItem;
+import stormstock.data.DataWebStockDayK.DayKData;
 import stormstock.run.RunFindEnterStock.DistributionItem;
 
 public class TestDistribution {
@@ -182,7 +182,7 @@ public class TestDistribution {
 		if(0 != count)
 		{
 			List<StockItem> retListAll = new ArrayList<StockItem>();
-			int ret = WebStockAllList.getAllStockList(retListAll);
+			int ret = DataWebStockAllList.getAllStockList(retListAll);
 			if(0 == ret)
 			{
 				for(int i = 0; i < count; i++)  
@@ -208,7 +208,7 @@ public class TestDistribution {
 		retStockList = getRandomStock(30);
 		// 测试所有股票
 		//retStockList = new ArrayList<StockItem>();
-		//int retgetAllStockList = WebStockAllList.getAllStockList(retListAll);
+		//int retgetAllStockList = DataWebStockAllList.getAllStockList(retListAll);
 		// 是否更新上证指数交易日总分布
 		boolean bUpdate999999 = false;
 		

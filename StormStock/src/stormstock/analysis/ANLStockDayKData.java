@@ -5,7 +5,7 @@ import java.util.List;
 
 import stormstock.data.DataEngine;
 import stormstock.data.DataEngine.ExKData;
-import stormstock.data.WebStockAllList.StockItem;
+import stormstock.data.DataWebStockAllList.StockItem;
  
 public class ANLStockDayKData {
 	public ANLStockDayKData()

@@ -17,11 +17,11 @@ import org.htmlparser.Parser;
 import org.htmlparser.filters.TagNameFilter;
 import org.htmlparser.util.NodeList;
 
-import stormstock.data.WebStockAllList.StockItem;
-import stormstock.data.WebStockDayDetail.DayDetailItem;
-import stormstock.data.WebStockDayK.DayKData;
-import stormstock.data.WebStockDividendPayout.DividendPayout;
-import stormstock.data.WebStockRealTimeInfo.RealTimeInfo;
+import stormstock.data.DataWebStockAllList.StockItem;
+import stormstock.data.DataWebStockDayDetail.DayDetailItem;
+import stormstock.data.DataWebStockDayK.DayKData;
+import stormstock.data.DataWebStockDividendPayout.DividendPayout;
+import stormstock.data.DataWebStockRealTimeInfo.RealTimeInfo;
 
 public class DataEngineBase {
 
@@ -172,7 +172,7 @@ public class DataEngineBase {
 		String stockDayKFileName = s_DataDir + "/" + id + "/" + s_daykFile;
 		
 		RealTimeInfo cRealTimeInfo = new RealTimeInfo();
-		int retGetDividendPayout = WebStockRealTimeInfo.getRealTimeInfo(id, cRealTimeInfo);
+		int retGetDividendPayout = DataWebStockRealTimeInfo.getRealTimeInfo(id, cRealTimeInfo);
 		if(0 != retGetDividendPayout) return -20;
 		String curAvailidDate = cRealTimeInfo.date;
 		String curAvailidTime = cRealTimeInfo.time;
@@ -181,7 +181,7 @@ public class DataEngineBase {
 		//System.out.println("updateStocData_Dayk:" + id);
 		List<DayKData> retList = new ArrayList<DayKData>();
 		String paramToDate = curAvailidDate.replace("-", "");
-		int ret = WebStockDayK.getDayKData(id, "20080101", paramToDate, retList);
+		int ret = DataWebStockDayK.getDayKData(id, "20080101", paramToDate, retList);
 		if(0 == ret)
 		{
 			try
@@ -219,7 +219,7 @@ public class DataEngineBase {
 		String stockDividendPayoutFileName = s_DataDir + "/" + id + "/" + s_DividendPayoutFile;
 		
 		RealTimeInfo cRealTimeInfo = new RealTimeInfo();
-		int retGetDividendPayout = WebStockRealTimeInfo.getRealTimeInfo(id, cRealTimeInfo);
+		int retGetDividendPayout = DataWebStockRealTimeInfo.getRealTimeInfo(id, cRealTimeInfo);
 		if(0 != retGetDividendPayout) return -20;
 		String curAvailidDate = cRealTimeInfo.date;
 		String curAvailidTime = cRealTimeInfo.time;
@@ -227,7 +227,7 @@ public class DataEngineBase {
 		File cfile =new File(stockDividendPayoutFileName);
 		// System.out.println("updateStocData_DividendPayout:" + id);
 		List<DividendPayout> retList = new ArrayList<DividendPayout>();
-		int ret = WebStockDividendPayout.getDividendPayout(id, retList);
+		int ret = DataWebStockDividendPayout.getDividendPayout(id, retList);
 		if(0 == ret)
 		{
 			try
@@ -262,13 +262,13 @@ public class DataEngineBase {
 		String stockDataDetailFileName = s_DataDir + "/" + id + "/" + date + ".txt";
 		
 		RealTimeInfo cRealTimeInfo = new RealTimeInfo();
-		int retGetDividendPayout = WebStockRealTimeInfo.getRealTimeInfo(id, cRealTimeInfo);
+		int retGetDividendPayout = DataWebStockRealTimeInfo.getRealTimeInfo(id, cRealTimeInfo);
 		if(0 != retGetDividendPayout) return -20;
 		String curAvailidDate = cRealTimeInfo.date;
 		String curAvailidTime = cRealTimeInfo.time;
 		
 		List<DayDetailItem> retList = new ArrayList<DayDetailItem>();
-		int ret = WebStockDayDetail.getDayDetail(id, date, retList);
+		int ret = DataWebStockDayDetail.getDayDetail(id, date, retList);
 		if(0 == ret)
 		{
 			try
@@ -338,7 +338,7 @@ public class DataEngineBase {
 			if(curValiddateStr.compareTo(localDataLastDate) > 0)
 			{
 				RealTimeInfo cRealTimeInfo = new RealTimeInfo();
-				int retgetRealTimeInfo = WebStockRealTimeInfo.getRealTimeInfo(id, cRealTimeInfo);
+				int retgetRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfo(id, cRealTimeInfo);
 				if(0 == retgetRealTimeInfo)
 				{
 					String webValidLastDate = cRealTimeInfo.date;
@@ -382,7 +382,7 @@ public class DataEngineBase {
 						//System.out.println("toDateStr:" + toDateStr);
 						
 						List<DayKData> retListMore = new ArrayList<DayKData>();
-						int retgetDayKDataMore = WebStockDayK.getDayKData(id, fromDateStr, toDateStr, retListMore);
+						int retgetDayKDataMore = DataWebStockDayK.getDayKData(id, fromDateStr, toDateStr, retListMore);
 						if(0 == retgetDayKDataMore)
 						{
 							for(int i = 0; i < retListMore.size(); i++)  

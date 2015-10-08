@@ -17,9 +17,9 @@ import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.List;
 
-import stormstock.data.WebStockDayDetail.DayDetailItem;
-import stormstock.data.WebStockDayK.DayKData;
-import stormstock.data.WebStockDividendPayout.DividendPayout;
+import stormstock.data.DataWebStockDayDetail.DayDetailItem;
+import stormstock.data.DataWebStockDayK.DayKData;
+import stormstock.data.DataWebStockDividendPayout.DividendPayout;
 
 public class DataEngine extends DataEngineBase
 {

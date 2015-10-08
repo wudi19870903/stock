@@ -25,9 +25,9 @@ import org.htmlparser.util.NodeIterator;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.visitors.HtmlPage;
 
-import stormstock.data.WebStockDayK.DayKData;
+import stormstock.data.DataWebStockDayK.DayKData;
 
-public class WebStockDividendPayout {
+public class DataWebStockDividendPayout {
 	public static class DividendPayout implements Comparable
 	{
 		public String date;

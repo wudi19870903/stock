@@ -6,8 +6,8 @@ import stormstock.analysis.ANLPolicyX1;
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
 import stormstock.analysis.ANLStockPool;
-import stormstock.data.WebStockAllList;
-import stormstock.data.WebStockAllList.StockItem;
+import stormstock.data.DataWebStockAllList;
+import stormstock.data.DataWebStockAllList.StockItem;
 
 import java.util.ArrayList;
 import java.util.Formatter;
@@ -46,7 +46,7 @@ public class TestSuccRate {
 		if(0 != count)
 		{
 			List<StockItem> retListAll = new ArrayList<StockItem>();
-			int ret = WebStockAllList.getAllStockList(retListAll);
+			int ret = DataWebStockAllList.getAllStockList(retListAll);
 			if(0 == ret)
 			{
 				for(int i = 0; i < count; i++)  

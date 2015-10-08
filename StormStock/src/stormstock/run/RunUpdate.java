@@ -7,13 +7,13 @@ import java.util.Date;
 import java.util.List;
 
 import stormstock.data.DataEngineBase;
-import stormstock.data.WebStockAllList;
-import stormstock.data.WebStockAllList.StockItem;
-import stormstock.data.WebStockDayK;
-import stormstock.data.WebStockDayK.DayKData;
-import stormstock.data.WebStockDividendPayout.DividendPayout;
-import stormstock.data.WebStockRealTimeInfo;
-import stormstock.data.WebStockRealTimeInfo.RealTimeInfo;
+import stormstock.data.DataWebStockAllList;
+import stormstock.data.DataWebStockAllList.StockItem;
+import stormstock.data.DataWebStockDayK;
+import stormstock.data.DataWebStockDayK.DayKData;
+import stormstock.data.DataWebStockDividendPayout.DividendPayout;
+import stormstock.data.DataWebStockRealTimeInfo;
+import stormstock.data.DataWebStockRealTimeInfo.RealTimeInfo;
 
 public class RunUpdate {
 	
@@ -21,7 +21,7 @@ public class RunUpdate {
 	public static void main(String[] args) {
 
 		List<StockItem> retList = new ArrayList<StockItem>();
-		int ret = WebStockAllList.getAllStockList(retList);
+		int ret = DataWebStockAllList.getAllStockList(retList);
 		if(0 == ret)
 		{
 			retList.add(new StockItem("上证指数","999999"));

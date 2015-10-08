@@ -13,9 +13,9 @@ import org.htmlparser.Parser;
 import org.htmlparser.filters.TagNameFilter;
 import org.htmlparser.util.NodeList;
 
-import stormstock.data.WebStockDividendPayout.DividendPayout;
+import stormstock.data.DataWebStockDividendPayout.DividendPayout;
 
-public class WebStockRealTimeInfo {
+public class DataWebStockRealTimeInfo {
 	public static class RealTimeInfo implements Comparable
 	{
 		public String name;
@@ -84,7 +84,7 @@ public class WebStockRealTimeInfo {
 			out_obj.time = cols[31];
 			
         }catch (Exception e) {  
-        	System.out.println("Exception[WebStockRealTimeInfo]:" + e.getMessage()); 
+        	System.out.println("Exception[DataWebStockRealTimeInfo]:" + e.getMessage()); 
             // TODO: handle exception  
         	return -1;
         }  

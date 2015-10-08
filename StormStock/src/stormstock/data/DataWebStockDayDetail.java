@@ -19,9 +19,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import stormstock.data.WebStockDayK.DayKData;
+import stormstock.data.DataWebStockDayK.DayKData;
 
-public class WebStockDayDetail {
+public class DataWebStockDayDetail {
 	public static class DayDetailItem implements Comparable
 	{
 		public String time;
