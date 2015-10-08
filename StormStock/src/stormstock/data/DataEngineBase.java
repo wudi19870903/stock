@@ -396,7 +396,7 @@ public class DataEngineBase {
 								// 更新复权因子数据
 								if(0 == DataEngineBase.downloadStockDividendPayout(id))
 									// 追加成功
-									return 0;
+									return retListMore.size();
 								else
 									// 更新复权因子失败
 									return -80;
@@ -440,8 +440,10 @@ public class DataEngineBase {
 			if(0 == retdownloadStockDayk 
 					&& 0 == retdownloadStockDividendPayout)
 			{
+				retgetDayKData = DataEngineBase.getDayKData(id, retListLocal);
+				
 				//最新数据下载成功
-				return 0;
+				return retListLocal.size();
 			}
 			else
 			{

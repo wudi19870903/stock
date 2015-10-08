@@ -91,7 +91,7 @@ public class TestDataEngineBase {
 	private static void test_updateStock()
 	{
 		int retupdateStock = DataEngineBase.updateStock("300163");
-		if(0 != retupdateStock)
+		if(retupdateStock < 0)
 		{
 			System.out.println("updateStock ERROR:" + retupdateStock);	
 		}

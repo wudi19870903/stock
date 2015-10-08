@@ -39,9 +39,10 @@ public class RunUpdateData {
 	        {  
 				StockItem cStockItem = retList.get(i);  
 	            System.out.println(cStockItem.name + "," + cStockItem.id); 
-	            if(0 == DataEngineBase.updateStock(cStockItem.id))
+	            int iRetupdateStock = DataEngineBase.updateStock(cStockItem.id);
+	            if( iRetupdateStock >= 0)
 	            {
-	            	System.out.println("update success: " +  cStockItem.id);
+	            	System.out.println("update success: " +  cStockItem.id + " item:" + iRetupdateStock);
 	            }
 	            else
 	            {
