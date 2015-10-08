@@ -47,6 +47,7 @@ public class WebStockDividendPayout {
 		String urlStr = "http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/";
 		
 		if(out_list.size() > 0) return -20;
+		if(id.contains("999999")) return 0; // 上证指数
 		
 		try{  
 			urlStr = urlStr + id + ".phtml";

@@ -53,7 +53,7 @@ public class WebStockDayK {
 		{
 			tmpId = "sz" + id;
 		}
-		else if(id.startsWith("99"))
+		else if(id.startsWith("99")) // 上证指数
 		{
 			tmpId = "sh" + "000001";
 		}
