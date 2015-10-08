@@ -327,7 +327,7 @@ public class DataEngineBase {
 		if(0 == retgetDayKData 
 			&& 0 == retgetDividendPayout 
 			&& retListLocal.size() != 0 
-			&& retListLocalDividend.size() != 0 )
+			/*&& retListLocalDividend.size() != 0 */)
 		{
 			// 本地有数据
 			DayKData cDayKDataLast = retListLocal.get(retListLocal.size()-1);

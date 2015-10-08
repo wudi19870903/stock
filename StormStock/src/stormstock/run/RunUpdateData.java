@@ -21,7 +21,7 @@ public class RunUpdateData {
 	public static void main(String[] args) {
 
 		// 更新指数k
-		if(0 == DataEngineBase.updateStock("999999"))
+		if(DataEngineBase.updateStock("999999") >= 0)
 		{
 			System.out.println("update success: 999999 （上证指数  ）");
 		}
