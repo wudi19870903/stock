@@ -1,4 +1,4 @@
-package stormstock.test;
+package stormstock.run;
 
 import stormstock.analysis.ANLPolicyBase;
 import stormstock.analysis.ANLPolicyBase.RetExitCheck;
@@ -14,7 +14,7 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.Random;
 
-public class TestSuccRate {
+public class RunSuccRateCheckByStocks {
 	
 	public static Formatter fmt = new Formatter(System.out);
 	

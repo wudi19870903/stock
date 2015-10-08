@@ -1,4 +1,4 @@
-package stormstock.test;
+package stormstock.run;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,15 +20,14 @@ import stormstock.data.DataWebStockAllList;
 import stormstock.data.DataWebStockAllList.StockItem;
 import stormstock.data.DataWebStockDayDetail.DayDetailItem;
 import stormstock.data.DataWebStockDayK.DayKData;
-import stormstock.run.RunFindEnterStock.DistributionItem;
 
-public class TestDistribution {
+public class RunSuccRateCheckByDays {
 	public static Formatter fmt = new Formatter(System.out);
 	static class DistriStockItem
 	{
 		public String id;
-		public float profit;
-		public int costDayCnt;
+		public int iEnter;
+		public RetExitCheck cRetExitCheck;
 	}
 	public static class DistributionItem implements Comparable
 	{
@@ -46,20 +45,26 @@ public class TestDistribution {
 		    return this.date.compareTo(sdto.date);
 		}
 	}
-	public static class DistributionResult
+	public static class CheckResult
 	{
-		public DistributionResult()
+		public CheckResult()
 		{
 			distributionList = new ArrayList<DistributionItem>();
 		}
 		public List<DistributionItem> distributionList;
-		public void add(String date, String id, float protit, int costDayCnt)
+		public void add(ANLStock cANLStock, int iEnter, RetExitCheck cRetExitCheck)
 		{
+			String stockId = cANLStock.id;
+			String enterDate = cANLStock.historyData.get(iEnter).date;
+			float protit = cRetExitCheck.profitPer;
+			int costDayCnt = cRetExitCheck.iExit-iEnter;
+			
+			// 找到 对应日期的 DistributionItem 对象, 没有就创建
 			DistributionItem cDistributionItem = null;
 			for(int iDate=0; iDate<distributionList.size();iDate++)
 			{
-				// 找到 对应日期的 DistributionItem 对象
-				if(distributionList.get(iDate).date.contains(date))
+				// 
+				if(distributionList.get(iDate).date.contains(enterDate))
 				{
 					cDistributionItem =  distributionList.get(iDate);
 					break;
@@ -68,15 +73,16 @@ public class TestDistribution {
 			if(null == cDistributionItem)
 			{
 				cDistributionItem = new DistributionItem();
-				cDistributionItem.date = date;
+				cDistributionItem.date = enterDate;
 				distributionList.add(cDistributionItem);
 			}
 			
+			// 找到 对应日期的 DistriStockItem 对象, 没有就创建
 			DistriStockItem cDistriStockItem = null;
 			for(int iStockItem = 0; iStockItem< cDistributionItem.distriStockItemList.size();iStockItem++)
 			{
 				DistriStockItem tmpObj = cDistributionItem.distriStockItemList.get(iStockItem);
-				if(tmpObj.id.contains(id))
+				if(tmpObj.id.contains(stockId))
 				{
 					cDistriStockItem = tmpObj;
 					break;
@@ -85,13 +91,26 @@ public class TestDistribution {
 			if(null == cDistriStockItem)
 			{
 				cDistriStockItem = new DistriStockItem();
-				cDistriStockItem.id = id;
+				cDistriStockItem.id = stockId;
 				cDistributionItem.distriStockItemList.add(cDistriStockItem);
 			}
-			cDistriStockItem.profit = protit;
-			cDistriStockItem.costDayCnt = costDayCnt;
-			fmt.format("   # DistributionResult StockID:%s EnterDate: %s profit:%.3f costDayCnt:%d\n", 
-				id,date,protit,costDayCnt);
+			
+			// 赋值
+			cDistriStockItem.iEnter = iEnter;
+			cDistriStockItem.cRetExitCheck = new RetExitCheck(cRetExitCheck);
+			
+			if(cRetExitCheck.hasEnoughDays)
+			{
+				fmt.format("   # Check StockID:%s EnterDate: %s profit:%.3f costDayCnt:%d\n", 
+						stockId, enterDate, protit, costDayCnt);
+			}
+			else
+			{
+				fmt.format("   # Check StockID:%s EnterDate: %s Wait More day!!!\n", 
+						stockId, enterDate, protit, costDayCnt);
+			}
+			
+			
 		}
 		public void printResult(String FileName)
 		{
@@ -114,28 +133,39 @@ public class TestDistribution {
 				for(int iDate=0; iDate<distributionList.size();iDate++)
 				{
 					DistributionItem cDistributionItem = distributionList.get(iDate);
-					wLine = String.format("Distribution date:%s\n", cDistributionItem.date);
+					wLine = String.format("Check date:%s\n", cDistributionItem.date);
 					cOutputStream.write(wLine.getBytes());
 					for(int iStockItem = 0; iStockItem< cDistributionItem.distriStockItemList.size();iStockItem++)
 					{
 						DistriStockItem cDistriStockItem = cDistributionItem.distriStockItemList.get(iStockItem);
 						String SuccFlag = "";
-						if(cDistriStockItem.profit > 0)
+						if(cDistriStockItem.cRetExitCheck.hasEnoughDays)
 						{
-							SuccFlag = "[OK]";
-							iOKCntSum++;
-							iOKCostDayCntSum = iOKCostDayCntSum + cDistriStockItem.costDayCnt;
-							iOKProfitSum = iOKProfitSum + cDistriStockItem.profit;
+							if(cDistriStockItem.cRetExitCheck.profitPer > 0)
+							{
+								SuccFlag = "[OK]";
+								iOKCntSum++;
+								iOKCostDayCntSum = iOKCostDayCntSum + (cDistriStockItem.cRetExitCheck.iExit - cDistriStockItem.iEnter);
+								iOKProfitSum = iOKProfitSum + cDistriStockItem.cRetExitCheck.profitPer;
+							}
+							else
+							{
+								SuccFlag = "[NG]";
+								iNGCntSum++;
+								iNGCostDayCntSum = iNGCostDayCntSum +  (cDistriStockItem.cRetExitCheck.iExit - cDistriStockItem.iEnter);
+								iNGProfitSum = iNGProfitSum + cDistriStockItem.cRetExitCheck.profitPer;
+							}
+							wLine = String.format("    StockId:%s %s Profit:%f costDayCnt:%d\n", 
+									cDistriStockItem.id, 
+									SuccFlag, 
+									cDistriStockItem.cRetExitCheck.profitPer, 
+									(cDistriStockItem.cRetExitCheck.iExit - cDistriStockItem.iEnter));
 						}
 						else
 						{
-							SuccFlag = "[NG]";
-							iNGCntSum++;
-							iNGCostDayCntSum = iNGCostDayCntSum + cDistriStockItem.costDayCnt;
-							iNGProfitSum = iNGProfitSum + cDistriStockItem.profit;
+							wLine = String.format("    StockId:%s Wait More day!!!\n", cDistriStockItem.id);
 						}
-						wLine = String.format("    StockId:%s %s Profit:%f costDayCnt:%d\n", 
-								cDistriStockItem.id, SuccFlag, cDistriStockItem.profit, cDistriStockItem.costDayCnt);
+						
 						cOutputStream.write(wLine.getBytes());
 					}
 				}
@@ -205,20 +235,18 @@ public class TestDistribution {
 		ANLPolicyBase cPolicy = new ANLPolicyX1();
 		List<StockItem> retStockList = null;
 		// 只测试若干
-		retStockList = getRandomStock(30);
+		retStockList = getRandomStock(100);
 		// 测试所有股票
-		//retStockList = new ArrayList<StockItem>();
-		//int retgetAllStockList = DataWebStockAllList.getAllStockList(retListAll);
-		// 是否更新上证指数交易日总分布
-		boolean bUpdate999999 = false;
-		
+//		retStockList = new ArrayList<StockItem>();
+//		DataWebStockAllList.getAllStockList(retStockList);
+		// 测试向前最大天数
+		int iTestMaxDaysCnt = 250;
 		///////////////////////////////////////////////////////////////////////////////////
 
-		DistributionResult cDistributionResult = new DistributionResult();
+		CheckResult cCheckResult = new CheckResult();
 		
 		// 初始化分布列表，根据上证指数
 		List<DayKData> retList999999 = new ArrayList<DayKData>();
-		if(bUpdate999999)DataEngine.updateStock("999999");
 		int retgetDayKDataQianFuQuan = DataEngine.getDayKDataQianFuQuan("999999", retList999999);
 		if(0 == retgetDayKDataQianFuQuan)
 		{
@@ -229,7 +257,7 @@ public class TestDistribution {
 				//fmt.format("date:%s \n", cDayKData.date);  
 				DistributionItem cDistributionItem = new DistributionItem();
 				cDistributionItem.date = cDayKData.date;
-				cDistributionResult.distributionList.add(cDistributionItem);
+				cCheckResult.distributionList.add(cDistributionItem);
 	        } 
 		}
 		else
@@ -246,7 +274,7 @@ public class TestDistribution {
 				String stockId = cStockItem.id;
 				
 				// 对单只股票进行计算
-				fmt.format("check for stockId:%s\n", stockId);
+				fmt.format("check for stockId:%s ...\n", stockId);
 				ANLStock cANLStock = ANLStockPool.getANLStockNF(stockId);
 				if(null == cANLStock)
 				{
@@ -254,26 +282,21 @@ public class TestDistribution {
 				}
 				
 				int lenlist = cANLStock.historyData.size();
-				int iCheckDayBegin = 0;
-				int iCheckDayEnd = lenlist-100;
-				for(int iIndex = iCheckDayBegin; iIndex < iCheckDayEnd; iIndex++) 
+				int iBegin = 0;
+				if(lenlist > iTestMaxDaysCnt)
 				{
-					ANLStockDayKData cCheckDayKData = cANLStock.historyData.get(iIndex);
-					if(cPolicy.enterCheck(cANLStock, iIndex))
+					iBegin = lenlist-iTestMaxDaysCnt;
+				}
+				for(; iBegin < lenlist; iBegin++) 
+				{
+					ANLStockDayKData cCheckDayKData = cANLStock.historyData.get(iBegin);
+					if(cPolicy.enterCheck(cANLStock, iBegin))
 					{
-						RetExitCheck cRetExitCheck = cPolicy.exitCheck(cANLStock, iIndex);
-						int costDayCnt = cRetExitCheck.iExit -iIndex;
-						if(cRetExitCheck.profitPer < 0.0f)
-						{
-							cDistributionResult.add(cCheckDayKData.date, 
-									stockId, cRetExitCheck.profitPer, costDayCnt);
-						}
-						else
-						{
-							cDistributionResult.add(cCheckDayKData.date, 
-									stockId, cRetExitCheck.profitPer, costDayCnt);
-						}
-						iIndex = iIndex + 40;
+						RetExitCheck cRetExitCheck = cPolicy.exitCheck(cANLStock, iBegin);
+
+						cCheckResult.add(cANLStock, iBegin, cRetExitCheck);
+						
+						iBegin = iBegin + 20;
 					}
 				}
 	        } 
@@ -283,7 +306,7 @@ public class TestDistribution {
 			fmt.format("ERROR retgetAllStockList: NULL");
 		}
 		
-		cDistributionResult.printResult("TestDistribution.txt");
+		cCheckResult.printResult("TestDistribution.txt");
 		
 		System.out.println("### Main End");
 	}

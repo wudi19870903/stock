@@ -1,6 +1,4 @@
-package stormstock.test;
-
-import stormstock.capi.CATHSAccount;
+package stormstock.capi;
 
 import java.util.Formatter;
 
@@ -33,5 +31,4 @@ public class TestCATHSAccount {
         
         fmt.format("### main end\n");
     }
-
 }

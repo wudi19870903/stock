@@ -85,9 +85,15 @@ public class ANLPolicyX1 extends ANLPolicyBase {
 	public RetExitCheck exitCheck(ANLStock cANLStock, int iEnter)
 	{
 		int maxWaitDay = 20;
+		
+		// 后面没有足够天数检查
+		if(iEnter >= cANLStock.historyData.size() - maxWaitDay - 1)
+		{
+			return new RetExitCheck(false, -1, 0.0f);
+		}
+		
 		float expectPer = 0.08f;
 		int iCheckDay = iEnter+1;
-		
 		float currentPrice = cANLStock.historyData.get(iEnter).close;
 		float profit = 0.0f;
 		for(; iCheckDay < iEnter + maxWaitDay; iCheckDay++)
@@ -115,7 +121,7 @@ public class ANLPolicyX1 extends ANLPolicyBase {
 				profit = profitClose;
 			}
 		}
-		return new RetExitCheck(iCheckDay, profit);
+		return new RetExitCheck(true, iCheckDay, profit);
 	}
 
 	/////////////////////////////////////////////////////////////

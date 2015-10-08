@@ -15,16 +15,26 @@ import stormstock.data.DataWebStockDividendPayout.DividendPayout;
 import stormstock.data.DataWebStockRealTimeInfo;
 import stormstock.data.DataWebStockRealTimeInfo.RealTimeInfo;
 
-public class RunUpdate {
+public class RunUpdateData {
 	
 	
 	public static void main(String[] args) {
 
+		// 更新指数k
+		if(0 == DataEngineBase.updateStock("999999"))
+		{
+			System.out.println("update success: 999999 （上证指数  ）");
+		}
+		else
+		{
+			System.out.println("update success: 999999 （上证指数  ） ERROR");
+		}
+		
+		// 更新所有k
 		List<StockItem> retList = new ArrayList<StockItem>();
 		int ret = DataWebStockAllList.getAllStockList(retList);
 		if(0 == ret)
 		{
-			retList.add(new StockItem("上证指数","999999"));
 			for(int i = 0; i < retList.size(); i++)  
 	        {  
 				StockItem cStockItem = retList.get(i);  
