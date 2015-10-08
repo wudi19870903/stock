@@ -30,43 +30,19 @@ public class RunSuccRateCheckByStocks {
 		public int succCnt;
 		public int failCnt;
 	}
-	public static StockItem popRandomStock(List<StockItem> in_list)
-	{
-		if(in_list.size() == 0) return null;
-		Random random = new Random();
-		int randomInt = Math.abs(random.nextInt());
-		int randomIndex = randomInt % in_list.size();
-		StockItem cStockItem = new  StockItem(in_list.get(randomIndex));
-		in_list.remove(randomIndex);
-		return cStockItem;
-	}
-	public static List<StockItem> getRandomStock(int count)
-	{
-		List<StockItem> retList = new ArrayList<StockItem>();
-		if(0 != count)
-		{
-			List<StockItem> retListAll = new ArrayList<StockItem>();
-			int ret = DataWebStockAllList.getAllStockList(retListAll);
-			if(0 == ret)
-			{
-				for(int i = 0; i < count; i++)  
-		        {  
-					StockItem cStockItem = popRandomStock(retListAll);
-					retList.add(cStockItem);
-		        } 
-			}
-			else
-			{
-			}
-		}
-		return retList;
-	}
 	
+	// 测试股票全数据的策略成功率
+	// 结果可以查看某只股票的成功失败数 与 整体成功率
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		System.out.println("### Main Begin");
 		
+		///////////////////////////////////////////////////////////////////////////////////
+		// run param 
+		
+		// param1: 策略
 		ANLPolicyBase cPolicy = new ANLPolicyX1();
+		// param2: 股票列表
 		List<StockItem> cStockList = new ArrayList<StockItem>();
 //		cStockList.add(new StockItem("600452"));
 //		cStockList.add(new StockItem("600020"));
@@ -76,8 +52,10 @@ public class RunSuccRateCheckByStocks {
 //		cStockList.add(new StockItem("600030"));
 		if(cStockList.size() <= 0)
 		{
-			cStockList = getRandomStock(30);
+			cStockList = DataWebStockAllList.getRandomStock(30);
 		}
+		
+		///////////////////////////////////////////////////////////////////////////////////
 
 		List<ProfitResult> cListProfitResult = new ArrayList<ProfitResult>();
 		

@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,10 +25,14 @@ import org.htmlparser.util.NodeList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import stormstock.data.DataWebStockAllList.StockItem;
 import stormstock.data.DataWebStockDayK.DayKData;
 import stormstock.data.DataWebStockDividendPayout.DividendPayout;
 
 public class DataWebStockAllList {
+	
+	public static Random random = new Random();
+	
 	public static class StockItem
 	{
 		public StockItem(){}
@@ -130,6 +135,40 @@ public class DataWebStockAllList {
         }  
 		return 0;
 	}
+
+	public static List<StockItem> getRandomStock(int count)
+	{
+		List<StockItem> retList = new ArrayList<StockItem>();
+		if(0 != count)
+		{
+			List<StockItem> retListAll = new ArrayList<StockItem>();
+			int ret = DataWebStockAllList.getAllStockList(retListAll);
+			if(0 == ret)
+			{
+				for(int i = 0; i < count; i++)  
+		        {  
+					StockItem cStockItem = popRandomStock(retListAll);
+					retList.add(cStockItem);
+		        } 
+			}
+			else
+			{
+			}
+		}
+		return retList;
+	}
+	
+	private static StockItem popRandomStock(List<StockItem> in_list)
+	{
+		if(in_list.size() == 0) return null;
+		
+		int randomInt = Math.abs(random.nextInt());
+		int randomIndex = randomInt % in_list.size();
+		StockItem cStockItem = new  StockItem(in_list.get(randomIndex));
+		in_list.remove(randomIndex);
+		return cStockItem;
+	}
+	
 //	private static String ENCODE = "GBK";
 //    private static void message( String szMsg ) {
 //        try{ 

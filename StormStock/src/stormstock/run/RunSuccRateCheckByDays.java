@@ -22,6 +22,7 @@ import stormstock.data.DataWebStockDayDetail.DayDetailItem;
 import stormstock.data.DataWebStockDayK.DayKData;
 
 public class RunSuccRateCheckByDays {
+	public static Random random = new Random();
 	public static Formatter fmt = new Formatter(System.out);
 	static class DistriStockItem
 	{
@@ -196,53 +197,9 @@ public class RunSuccRateCheckByDays {
 		}
 	}
 	
-	public static StockItem popRandomStock(List<StockItem> in_list)
+	public static CheckResult generateSuccDistribution(ANLPolicyBase cANLPolicyBase,
+			List<StockItem> cStockList, int maxBeforeDayCnt)
 	{
-		if(in_list.size() == 0) return null;
-		Random random = new Random();
-		int randomInt = Math.abs(random.nextInt());
-		int randomIndex = randomInt % in_list.size();
-		StockItem cStockItem = new  StockItem(in_list.get(randomIndex));
-		in_list.remove(randomIndex);
-		return cStockItem;
-	}
-	public static List<StockItem> getRandomStock(int count)
-	{
-		List<StockItem> retList = new ArrayList<StockItem>();
-		if(0 != count)
-		{
-			List<StockItem> retListAll = new ArrayList<StockItem>();
-			int ret = DataWebStockAllList.getAllStockList(retListAll);
-			if(0 == ret)
-			{
-				for(int i = 0; i < count; i++)  
-		        {  
-					StockItem cStockItem = popRandomStock(retListAll);
-					retList.add(cStockItem);
-		        } 
-			}
-			else
-			{
-			}
-		}
-		return retList;
-	}
-	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		System.out.println("### Main Begin");
-		// 策略
-		ANLPolicyBase cPolicy = new ANLPolicyX1();
-		List<StockItem> retStockList = null;
-		// 只测试若干
-		retStockList = getRandomStock(100);
-		// 测试所有股票
-//		retStockList = new ArrayList<StockItem>();
-//		DataWebStockAllList.getAllStockList(retStockList);
-		// 测试向前最大天数
-		int iTestMaxDaysCnt = 250;
-		///////////////////////////////////////////////////////////////////////////////////
-
 		CheckResult cCheckResult = new CheckResult();
 		
 		// 初始化分布列表，根据上证指数
@@ -263,14 +220,14 @@ public class RunSuccRateCheckByDays {
 		else
 		{
 			fmt.format("ERROR retgetDayKDataQianFuQuan:%d", retgetDayKDataQianFuQuan);
-			return;
+			return cCheckResult;
 		}
 
-		if(retStockList.size() != 0)
+		if(cStockList.size() != 0)
 		{
-			for(int iStock = 0; iStock < retStockList.size(); iStock++)  
+			for(int iStock = 0; iStock < cStockList.size(); iStock++)  
 	        {  
-				StockItem cStockItem = retStockList.get(iStock);
+				StockItem cStockItem = cStockList.get(iStock);
 				String stockId = cStockItem.id;
 				
 				// 对单只股票进行计算
@@ -283,16 +240,16 @@ public class RunSuccRateCheckByDays {
 				
 				int lenlist = cANLStock.historyData.size();
 				int iBegin = 0;
-				if(lenlist > iTestMaxDaysCnt)
+				if(lenlist > maxBeforeDayCnt)
 				{
-					iBegin = lenlist-iTestMaxDaysCnt;
+					iBegin = lenlist-maxBeforeDayCnt;
 				}
 				for(; iBegin < lenlist; iBegin++) 
 				{
 					ANLStockDayKData cCheckDayKData = cANLStock.historyData.get(iBegin);
-					if(cPolicy.enterCheck(cANLStock, iBegin))
+					if(cANLPolicyBase.enterCheck(cANLStock, iBegin))
 					{
-						RetExitCheck cRetExitCheck = cPolicy.exitCheck(cANLStock, iBegin);
+						RetExitCheck cRetExitCheck = cANLPolicyBase.exitCheck(cANLStock, iBegin);
 
 						cCheckResult.add(cANLStock, iBegin, cRetExitCheck);
 						
@@ -306,7 +263,142 @@ public class RunSuccRateCheckByDays {
 			fmt.format("ERROR retgetAllStockList: NULL");
 		}
 		
-		cCheckResult.printResult("TestDistribution.txt");
+		return cCheckResult;
+	}
+	
+	
+	
+	public static void MockTrasection(CheckResult cCheckResult, String filename)
+	{
+		fmt.format("\nMockTrasection ------------------------------------->>>> \n");
+		
+		String curSelectStockID = "";
+		ANLStock curANLStock = null;
+		String curEnterDate = "";
+		String curExitDate = "";
+		int curCostDayCnt = 0;
+		float curProfit = 0.0f;
+		
+		float myAcc = 1.0f;
+		int myMockTrasectionOKCnt = 0;
+		int myMockTrasectionNGCnt = 0;
+		
+		for(int i=0; i< cCheckResult.distributionList.size(); i++)
+		{
+			DistributionItem cDistributionItem = cCheckResult.distributionList.get(i);
+			if(cDistributionItem.distriStockItemList.size() > 3)
+			{
+				List<Integer> cRandIntList = MoreRandomInt(cDistributionItem.distriStockItemList.size(),3);
+
+				float onepartMyAcc = myAcc/3;
+				myAcc = 0.0f;
+				int curmaxCostCnt = 0;
+				for(int cc =0; cc<3; cc++)
+				{
+					int randomIndex = cRandIntList.get(cc);
+					DistriStockItem cDistriStockItem = cDistributionItem.distriStockItemList.get(randomIndex);
+					curSelectStockID = cDistriStockItem.id;
+					curANLStock = ANLStockPool.getANLStockNF(curSelectStockID);
+					curEnterDate = curANLStock.historyData.get(cDistriStockItem.iEnter).date;
+					curExitDate = curANLStock.historyData.get(cDistriStockItem.cRetExitCheck.iExit).date;
+					curProfit = cDistriStockItem.cRetExitCheck.profitPer;
+					curCostDayCnt =cDistriStockItem.cRetExitCheck.iExit - cDistriStockItem.iEnter +1;
+					if(curCostDayCnt > curmaxCostCnt)
+						curmaxCostCnt = curCostDayCnt;
+					fmt.format("Transection stock:%s enter:%s exit:%s profit:%.3f\n", 
+							curSelectStockID, curEnterDate, curExitDate, curProfit);
+					
+					onepartMyAcc = onepartMyAcc*(1+curProfit);
+					myAcc = myAcc + onepartMyAcc;
+					
+					if(curProfit>0)
+					{
+						myMockTrasectionOKCnt++;
+					}
+					else
+					{
+						myMockTrasectionNGCnt++;
+					}
+				}
+				i = i + curmaxCostCnt;
+			}
+		}
+		
+		fmt.format("Transection End: myAcc: %.3f\n", myAcc);
+		fmt.format("                 MockTrasection myMockTrasectionOKCnt: %d\n", myMockTrasectionOKCnt);
+		fmt.format("                 MockTrasection myMockTrasectionNGCnt: %d\n", myMockTrasectionNGCnt);
+		fmt.format("                 MockTrasection SuccRate: %.3f\n", 
+				(float)myMockTrasectionOKCnt/(myMockTrasectionOKCnt+myMockTrasectionNGCnt));
+	}
+	
+	static List<Integer> MoreRandomInt(int max, int cnt)
+	{
+		List<Integer> retList = new ArrayList<Integer>() ;
+		
+		//一共选择3个
+		for(int i=0 ;i<cnt;i++)
+		{
+			//随机向后选取空位
+			int randomInt = Math.abs(random.nextInt());
+			int randomMoveCnt = randomInt % max;
+			
+			int icheckNum = 0;
+			while(true)
+			{
+				// 检查当前这个数字是否未被选
+				boolean bInList = false;
+				for(int ick =0; ick<retList.size();ick++)
+				{
+					int tmpNb = retList.get(ick);
+					if(tmpNb == icheckNum)
+					{
+						bInList = true;
+						break;
+					}
+				}
+				
+				if(!bInList)
+				{
+					if(randomMoveCnt == 0)
+					{
+						retList.add(icheckNum);
+						break;
+					}
+					randomMoveCnt--;
+				}
+				//检查下一个
+				icheckNum++;
+				icheckNum = icheckNum % max;
+			}
+		}
+		return retList;
+	}
+	// 测试若干股票后iTestMaxDaysCnt天的成功率
+	// 结果可以查看每天的进入点分布  与 最近的策略进入点
+	public static void main(String[] args) {
+		System.out.println("### Main Begin");
+		
+		///////////////////////////////////////////////////////////////////////////////////
+		// run param 
+		
+		// param1: 策略
+		ANLPolicyBase cPolicy = new ANLPolicyX1();
+		// param2: 股票列表
+		List<StockItem> retStockList = null;
+		retStockList = DataWebStockAllList.getRandomStock(200); // 只测试若干随机
+		//retStockList = new ArrayList<StockItem>(); // 测试所有股票
+		//DataWebStockAllList.getAllStockList(retStockList);
+		// param3: 测试向前最大天数
+		int iTestMaxDaysCnt = 1000;
+		
+		///////////////////////////////////////////////////////////////////////////////////
+
+		CheckResult cCheckResult = generateSuccDistribution(cPolicy, retStockList, iTestMaxDaysCnt);
+		
+		// 模拟交易
+		MockTrasection(cCheckResult, "MockTrasection.txt");
+		
+		cCheckResult.printResult("SuccRate.txt");
 		
 		System.out.println("### Main End");
 	}
