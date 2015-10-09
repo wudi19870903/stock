@@ -26,7 +26,7 @@ public class RunSuccRateCheckByDays {
 	public static Formatter fmt = new Formatter(System.out);
 	static class DistriStockItem
 	{
-		public String id;
+		public ANLStock cANLStock;
 		public int iEnter;
 		public RetExitCheck cRetExitCheck;
 	}
@@ -83,7 +83,7 @@ public class RunSuccRateCheckByDays {
 			for(int iStockItem = 0; iStockItem< cDistributionItem.distriStockItemList.size();iStockItem++)
 			{
 				DistriStockItem tmpObj = cDistributionItem.distriStockItemList.get(iStockItem);
-				if(tmpObj.id.contains(stockId))
+				if(tmpObj.cANLStock.id.contains(stockId))
 				{
 					cDistriStockItem = tmpObj;
 					break;
@@ -92,7 +92,8 @@ public class RunSuccRateCheckByDays {
 			if(null == cDistriStockItem)
 			{
 				cDistriStockItem = new DistriStockItem();
-				cDistriStockItem.id = stockId;
+				cDistriStockItem.cANLStock = cANLStock;
+				cDistriStockItem.cANLStock.id = stockId;
 				cDistributionItem.distriStockItemList.add(cDistriStockItem);
 			}
 			
@@ -157,14 +158,14 @@ public class RunSuccRateCheckByDays {
 								iNGProfitSum = iNGProfitSum + cDistriStockItem.cRetExitCheck.profitPer;
 							}
 							wLine = String.format("    StockId:%s %s Profit:%f costDayCnt:%d\n", 
-									cDistriStockItem.id, 
+									cDistriStockItem.cANLStock.id, 
 									SuccFlag, 
 									cDistriStockItem.cRetExitCheck.profitPer, 
 									(cDistriStockItem.cRetExitCheck.iExit - cDistriStockItem.iEnter));
 						}
 						else
 						{
-							wLine = String.format("    StockId:%s Wait More day!!!\n", cDistriStockItem.id);
+							wLine = String.format("    StockId:%s Wait More day!!!\n", cDistriStockItem.cANLStock.id);
 						}
 						
 						cOutputStream.write(wLine.getBytes());
@@ -266,113 +267,6 @@ public class RunSuccRateCheckByDays {
 		return cCheckResult;
 	}
 	
-	
-	
-	public static void MockTrasection(CheckResult cCheckResult, String filename)
-	{
-		fmt.format("\nMockTrasection ------------------------------------->>>> \n");
-		
-		String curSelectStockID = "";
-		ANLStock curANLStock = null;
-		String curEnterDate = "";
-		String curExitDate = "";
-		int curCostDayCnt = 0;
-		float curProfit = 0.0f;
-		
-		float myAcc = 1.0f;
-		int myMockTrasectionOKCnt = 0;
-		int myMockTrasectionNGCnt = 0;
-		
-		for(int i=0; i< cCheckResult.distributionList.size(); i++)
-		{
-			DistributionItem cDistributionItem = cCheckResult.distributionList.get(i);
-			if(cDistributionItem.distriStockItemList.size() > 3)
-			{
-				List<Integer> cRandIntList = MoreRandomInt(cDistributionItem.distriStockItemList.size(),3);
-
-				float onepartMyAcc = myAcc/3;
-				myAcc = 0.0f;
-				int curmaxCostCnt = 0;
-				for(int cc =0; cc<3; cc++)
-				{
-					int randomIndex = cRandIntList.get(cc);
-					DistriStockItem cDistriStockItem = cDistributionItem.distriStockItemList.get(randomIndex);
-					curSelectStockID = cDistriStockItem.id;
-					curANLStock = ANLStockPool.getANLStockNF(curSelectStockID);
-					curEnterDate = curANLStock.historyData.get(cDistriStockItem.iEnter).date;
-					curExitDate = curANLStock.historyData.get(cDistriStockItem.cRetExitCheck.iExit).date;
-					curProfit = cDistriStockItem.cRetExitCheck.profitPer;
-					curCostDayCnt =cDistriStockItem.cRetExitCheck.iExit - cDistriStockItem.iEnter +1;
-					if(curCostDayCnt > curmaxCostCnt)
-						curmaxCostCnt = curCostDayCnt;
-					fmt.format("Transection stock:%s enter:%s exit:%s profit:%.3f\n", 
-							curSelectStockID, curEnterDate, curExitDate, curProfit);
-					
-					onepartMyAcc = onepartMyAcc*(1+curProfit);
-					myAcc = myAcc + onepartMyAcc;
-					
-					if(curProfit>0)
-					{
-						myMockTrasectionOKCnt++;
-					}
-					else
-					{
-						myMockTrasectionNGCnt++;
-					}
-				}
-				i = i + curmaxCostCnt;
-			}
-		}
-		
-		fmt.format("Transection End: myAcc: %.3f\n", myAcc);
-		fmt.format("                 MockTrasection myMockTrasectionOKCnt: %d\n", myMockTrasectionOKCnt);
-		fmt.format("                 MockTrasection myMockTrasectionNGCnt: %d\n", myMockTrasectionNGCnt);
-		fmt.format("                 MockTrasection SuccRate: %.3f\n", 
-				(float)myMockTrasectionOKCnt/(myMockTrasectionOKCnt+myMockTrasectionNGCnt));
-	}
-	
-	static List<Integer> MoreRandomInt(int max, int cnt)
-	{
-		List<Integer> retList = new ArrayList<Integer>() ;
-		
-		//一共选择3个
-		for(int i=0 ;i<cnt;i++)
-		{
-			//随机向后选取空位
-			int randomInt = Math.abs(random.nextInt());
-			int randomMoveCnt = randomInt % max;
-			
-			int icheckNum = 0;
-			while(true)
-			{
-				// 检查当前这个数字是否未被选
-				boolean bInList = false;
-				for(int ick =0; ick<retList.size();ick++)
-				{
-					int tmpNb = retList.get(ick);
-					if(tmpNb == icheckNum)
-					{
-						bInList = true;
-						break;
-					}
-				}
-				
-				if(!bInList)
-				{
-					if(randomMoveCnt == 0)
-					{
-						retList.add(icheckNum);
-						break;
-					}
-					randomMoveCnt--;
-				}
-				//检查下一个
-				icheckNum++;
-				icheckNum = icheckNum % max;
-			}
-		}
-		return retList;
-	}
 	// 测试若干股票后iTestMaxDaysCnt天的成功率
 	// 结果可以查看每天的进入点分布  与 最近的策略进入点
 	public static void main(String[] args) {
@@ -385,20 +279,17 @@ public class RunSuccRateCheckByDays {
 		ANLPolicyBase cPolicy = new ANLPolicyX1();
 		// param2: 股票列表
 		List<StockItem> retStockList = null;
-		retStockList = DataWebStockAllList.getRandomStock(200); // 只测试若干随机
-		//retStockList = new ArrayList<StockItem>(); // 测试所有股票
-		//DataWebStockAllList.getAllStockList(retStockList);
+		retStockList = DataWebStockAllList.getRandomStock(500); // 只测试若干随机
+//		retStockList = new ArrayList<StockItem>(); // 测试所有股票
+//		DataWebStockAllList.getAllStockList(retStockList);
 		// param3: 测试向前最大天数
-		int iTestMaxDaysCnt = 1000;
+		int iTestMaxDaysCnt = 1250;
 		
 		///////////////////////////////////////////////////////////////////////////////////
 
-		CheckResult cCheckResult = generateSuccDistribution(cPolicy, retStockList, iTestMaxDaysCnt);
+		CheckResult cCheckResult = RunSuccRateCheckByDays.generateSuccDistribution(cPolicy, retStockList, iTestMaxDaysCnt);
 		
-		// 模拟交易
-		MockTrasection(cCheckResult, "MockTrasection.txt");
-		
-		cCheckResult.printResult("SuccRate.txt");
+		cCheckResult.printResult("SuccRateCheck.txt");
 		
 		System.out.println("### Main End");
 	}
