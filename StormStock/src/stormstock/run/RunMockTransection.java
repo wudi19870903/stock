@@ -1,5 +1,7 @@
 package stormstock.run;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
@@ -256,79 +258,105 @@ public class RunMockTransection {
 	// 根据账户分仓介入
 	public static void MockTrasection_withMockAccount(CheckResult cCheckResult, String filename)
 	{
-		fmt.format("\nMockTrasection_withMockAccount ------------------------------------->>>> \n");
-		
-		Account cAccount = new Account();
-		
-		String curSelectStockID = "";
-		ANLStock curANLStock = null;
-		String curEnterDate = "";
-		String curExitDate = "";
-		float curProfit = 0.0f;
-		
-		int myMockTrasectionOKCnt = 0;
-		int myMockTrasectionNGCnt = 0;
-		int curGenCnt = 0;
-		for(int i=0; i< cCheckResult.distributionList.size(); i++)
+		try
 		{
-			DistributionItem cDistributionItem = cCheckResult.distributionList.get(i);
+			File cfile =new File(filename);
+			cfile.delete();
+			FileOutputStream cOutputStream = new FileOutputStream(cfile);
+			String wLine = "";
 			
-			if(cDistributionItem.distriStockItemList.size()>5)
+			wLine = String.format("\nMockTrasection_withMockAccount ------------------------------------->>>> \n");
+			cOutputStream.write(wLine.getBytes());
+			fmt.format(wLine);
+			
+			Account cAccount = new Account();
+			
+			String curSelectStockID = "";
+			ANLStock curANLStock = null;
+			String curEnterDate = "";
+			String curExitDate = "";
+			float curProfit = 0.0f;
+			
+			int myMockTrasectionOKCnt = 0;
+			int myMockTrasectionNGCnt = 0;
+			int curGenCnt = 0;
+			for(int i=0; i< cCheckResult.distributionList.size(); i++)
 			{
-			for(int j =0; j< cDistributionItem.distriStockItemList.size(); j ++)
-			{
-				curGenCnt++;
+				DistributionItem cDistributionItem = cCheckResult.distributionList.get(i);
 				
-				if(curGenCnt%5==0)
-				if(true)
+				for(int j =0; j< cDistributionItem.distriStockItemList.size(); j ++)
 				{
-					DistriStockItem cDistriStockItem = cDistributionItem.distriStockItemList.get(j);
+					curGenCnt++;
 					
-					curSelectStockID = cDistriStockItem.cANLStock.id;
-					curANLStock = cDistriStockItem.cANLStock;
-					curEnterDate = curANLStock.historyData.get(cDistriStockItem.iEnter).date;
-					curExitDate = curANLStock.historyData.get(cDistriStockItem.cRetExitCheck.iExit).date;
-					curProfit = cDistriStockItem.cRetExitCheck.profitPer;
-					
-					float OneAvailablePartAcc = cAccount.getOneAvailablePartAcc();
-					if(OneAvailablePartAcc > 0)
+					if(curGenCnt%5==0)
+					if(true)
 					{
-						OneStockAcc cStockAcc = new OneStockAcc();
-						cStockAcc.id = curSelectStockID;
-						cStockAcc.beginDate = curEnterDate;
-						cStockAcc.endDate = curExitDate;
-						cStockAcc.profit = curProfit;
-						cStockAcc.beginMoney = OneAvailablePartAcc;
+						DistriStockItem cDistriStockItem = cDistributionItem.distriStockItemList.get(j);
 						
-						cAccount.useOnePartBuyStock(cStockAcc);
+						curSelectStockID = cDistriStockItem.cANLStock.id;
+						curANLStock = cDistriStockItem.cANLStock;
+						curEnterDate = curANLStock.historyData.get(cDistriStockItem.iEnter).date;
+						curExitDate = curANLStock.historyData.get(cDistriStockItem.cRetExitCheck.iExit).date;
+						curProfit = cDistriStockItem.cRetExitCheck.profitPer;
 						
-						
-						fmt.format("Transection stock:%s enter:%s exit:%s profit:%.3f myAcc:%.3f\n", 
-								curSelectStockID, curEnterDate, curExitDate, curProfit, cAccount.getAllAss());
-						
-						if(curProfit>0)
+						float OneAvailablePartAcc = cAccount.getOneAvailablePartAcc();
+						if(OneAvailablePartAcc > 0)
 						{
-							myMockTrasectionOKCnt++;
+							OneStockAcc cStockAcc = new OneStockAcc();
+							cStockAcc.id = curSelectStockID;
+							cStockAcc.beginDate = curEnterDate;
+							cStockAcc.endDate = curExitDate;
+							cStockAcc.profit = curProfit;
+							cStockAcc.beginMoney = OneAvailablePartAcc;
+							
+							cAccount.useOnePartBuyStock(cStockAcc);
+							
+							
+							wLine = String.format("Transection stock:%s enter:%s exit:%s profit:%.3f myAcc:%.3f\n", 
+									curSelectStockID, curEnterDate, curExitDate, curProfit, cAccount.getAllAss());
+							cOutputStream.write(wLine.getBytes());
+							fmt.format(wLine);
+							
+							if(curProfit>0)
+							{
+								myMockTrasectionOKCnt++;
+							}
+							else
+							{
+								myMockTrasectionNGCnt++;
+							}
+							
 						}
-						else
-						{
-							myMockTrasectionNGCnt++;
-						}
-						
 					}
 				}
 				
+				cAccount.updateDate(cDistributionItem.date);
+				
 			}
-			}
-			cAccount.updateDate(cDistributionItem.date);
 			
+			wLine = String.format("Transection End: myAcc: %.3f\n", cAccount.asset);
+			cOutputStream.write(wLine.getBytes());
+			fmt.format(wLine);
+			
+			wLine = String.format("                 MockTrasection myMockTrasectionOKCnt: %d\n", myMockTrasectionOKCnt);
+			cOutputStream.write(wLine.getBytes());
+			fmt.format(wLine);
+			
+			wLine = String.format("                 MockTrasection myMockTrasectionNGCnt: %d\n", myMockTrasectionNGCnt);
+			cOutputStream.write(wLine.getBytes());
+			fmt.format(wLine);
+			
+			wLine = String.format("                 MockTrasection SuccRate: %.3f\n", 
+					(float)myMockTrasectionOKCnt/(myMockTrasectionOKCnt+myMockTrasectionNGCnt));
+			cOutputStream.write(wLine.getBytes());
+			fmt.format(wLine);
+			
+			cOutputStream.close();
 		}
-		
-		fmt.format("Transection End: myAcc: %.3f\n", cAccount.asset);
-		fmt.format("                 MockTrasection myMockTrasectionOKCnt: %d\n", myMockTrasectionOKCnt);
-		fmt.format("                 MockTrasection myMockTrasectionNGCnt: %d\n", myMockTrasectionNGCnt);
-		fmt.format("                 MockTrasection SuccRate: %.3f\n", 
-				(float)myMockTrasectionOKCnt/(myMockTrasectionOKCnt+myMockTrasectionNGCnt));
+		catch(Exception e)
+		{
+			System.out.println("Exception:" + e.getMessage()); 
+		}
 	}
 
 	// 模拟交易
@@ -345,7 +373,7 @@ public class RunMockTransection {
 		ANLPolicyBase cPolicy = new ANLPolicyX1();
 		// param2: 股票列表
 		List<StockItem> retStockList = null;
-		retStockList = DataWebStockAllList.getRandomStock(500); // 只测试若干随机
+		retStockList = DataWebStockAllList.getRandomStock(200); // 只测试若干随机
 //		retStockList = new ArrayList<StockItem>(); // 测试所有股票
 //		DataWebStockAllList.getAllStockList(retStockList);
 		// param3: 测试向前最大天数
