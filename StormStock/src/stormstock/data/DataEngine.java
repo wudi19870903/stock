@@ -16,13 +16,18 @@ import java.util.Formatter;
 import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
+import stormstock.data.DataWebStockAllList.StockItem;
 import stormstock.data.DataWebStockDayDetail.DayDetailItem;
 import stormstock.data.DataWebStockDayK.DayKData;
 import stormstock.data.DataWebStockDividendPayout.DividendPayout;
 
 public class DataEngine extends DataEngineBase
 {
+	public static Random random = new Random();
+	public static Formatter fmt = new Formatter(System.out);
+	
 	public static class ExKData {
 		// eg: "2008-01-02 09:35:00"
 		public String datetime;
@@ -382,4 +387,56 @@ public class DataEngine extends DataEngineBase
 	}
 	
 
+	public static List<StockItem> getLocalRandomStock(int count)
+	{
+		List<StockItem> retList = new ArrayList<StockItem>();
+		if(0 != count)
+		{
+			List<StockItem> retListAll = new ArrayList<StockItem>();
+			
+			// emu local
+			File root = new File("data");
+			File[] fs = root.listFiles();
+			if(fs == null)
+			{
+				fmt.format("[ERROR] not found dir:data\n");
+				return null;
+			}
+			for(int i=0; i<fs.length; i++){
+				if(fs[i].isDirectory()){
+					String dirName = fs[i].getName();
+					if(dirName.length()==6 
+						&& (dirName.startsWith("6") || dirName.startsWith("3") || dirName.startsWith("0"))
+							)
+					{
+						StockItem cStockItem = new StockItem();
+						cStockItem.id = dirName;
+						retListAll.add(cStockItem);
+					}
+					
+				}
+			}
+			
+			if(retListAll.size()!=0)
+			{
+				for(int i = 0; i < count; i++)  
+		        {  
+					StockItem cStockItem = popRandomStock(retListAll);
+					retList.add(cStockItem);
+		        } 
+			}
+		}
+		return retList;
+	}
+	
+	private static StockItem popRandomStock(List<StockItem> in_list)
+	{
+		if(in_list.size() == 0) return null;
+		
+		int randomInt = Math.abs(random.nextInt());
+		int randomIndex = randomInt % in_list.size();
+		StockItem cStockItem = new  StockItem(in_list.get(randomIndex));
+		in_list.remove(randomIndex);
+		return cStockItem;
+	}
 }

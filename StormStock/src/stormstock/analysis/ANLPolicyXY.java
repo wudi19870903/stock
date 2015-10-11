@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
-public class ANLPolicyX1 extends ANLPolicyBase {
+public class ANLPolicyXY extends ANLPolicyBase {
 	public static Formatter fmt = new Formatter(System.out);
 
 	public boolean enterCheck(ANLStock cANLStock, 
@@ -15,39 +15,40 @@ public class ANLPolicyX1 extends ANLPolicyBase {
 			return false;
 		}
 		
-		ANLStockDayKData cCheckDayKData = cANLStock.historyData.get(iCheckDay);
+		int iBeginCheck = iCheckDay - 10;
+		int iEndCheck = iCheckDay - 0;
 		
 		//if(!cCheckDayKData.date.replace("-", "").contains("20130117")) return false;
 		//fmt.format("master cur_date: %s close:%f\n", cCheckDayKData.date,cCheckDayKData.close);
 		
 		float leftMidPos = 0.0f;
 		//fmt.format(" L1: %s \n", cANLStock.historyData.get(iCheckDay-20).date);
-		for(int i=iCheckDay-20; i<iCheckDay-15;i++)
+		for(int i=iBeginCheck; i<iBeginCheck+3;i++)
 		{
 			ANLStockDayKData tmp = cANLStock.historyData.get(i);
 			leftMidPos = leftMidPos + (tmp.open + tmp.close)/2;
 		}
-		leftMidPos = leftMidPos/5;
+		leftMidPos = leftMidPos/3;
 		//fmt.format(" leftMidPos: %f \n", leftMidPos);
 		
 		float rightMidPos = 0.0f;
 		//fmt.format(" R1: %s \n", cANLStock.historyData.get(iCheckDay-4).date);
-		for(int i=iCheckDay-4; i<iCheckDay+1;i++)
+		for(int i=iEndCheck-2; i<=iEndCheck;i++)
 		{
 			ANLStockDayKData tmp = cANLStock.historyData.get(i);
 			rightMidPos = rightMidPos + (tmp.open + tmp.close)/2;
 		}
-		rightMidPos = rightMidPos/5;
+		rightMidPos = rightMidPos/3;
 		//fmt.format(" rightMidPos: %f \n", rightMidPos);
 		
-		float baseAdd = (rightMidPos - leftMidPos)/16;
+		float baseAdd = (rightMidPos - leftMidPos)/(iEndCheck-iBeginCheck-2);
 		if(baseAdd < 0) return false;
-		float base0 = leftMidPos - baseAdd*2;
+		float base0 = leftMidPos - baseAdd*1;
 		
 		//fmt.format(" base0: %f \n", base0);
 		
 		int index = 0;
-		for(int i = iCheckDay-20; i<iCheckDay+1;i++)
+		for(int i = iBeginCheck; i<=iEndCheck;i++)
 		{
 			float CurBaseMid = base0 + baseAdd*index;
 			ANLStockDayKData tmp = cANLStock.historyData.get(i);
@@ -61,23 +62,14 @@ public class ANLPolicyX1 extends ANLPolicyBase {
 				return false;
 			}
 			
-			if(i == iCheckDay)
-			{
-				float pl = (tmp.close - CurBaseMid)/CurBaseMid;
-				float p2 = (tmp.close - tmp.open)/tmp.open;
-				if(pl > 0) return false;
-//				if(p2 > -0.03) return false;
+//			if(i == iCheckDay)
+//			{
+//				float pl = (tmp.close - CurBaseMid)/CurBaseMid;
+//				float p2 = (tmp.close - tmp.open)/tmp.open;
+//				if(pl > 0 || p2 > -0.03) return false;
 //				if(p2 < -0.07) return false;
-			}
+//			}
 			
-			if(i > iCheckDay-13)
-			{
-				float ma5 = tmp.getMA(5);
-				float ma10 = tmp.getMA(10);
-				float ma20 = tmp.getMA(20);
-				if(ma5<ma10 || ma5<ma20) return false;
-				if( ma10<ma20) return false;
-			}
 			index++;
 		}
 		return true;
@@ -93,8 +85,7 @@ public class ANLPolicyX1 extends ANLPolicyBase {
 			return new RetExitCheck(false, -1, 0.0f);
 		}
 		
-		float expectPerZhiYing = 0.08f;
-		float expectPerZhiSun = 0.08f;
+		float expectPer = 0.08f;
 		int iCheckDay = iEnter+1;
 		float currentPrice = cANLStock.historyData.get(iEnter).close;
 		float profit = 0.0f;
@@ -108,14 +99,14 @@ public class ANLPolicyX1 extends ANLPolicyBase {
 			float profitHigh = (highDay-currentPrice)/currentPrice;
 			float profitClose = (closeDay-currentPrice)/currentPrice;
 			//fmt.format("CheckProfit date:%s profit:%f\n", checkDayKData.date, profit);
-			if(profitLow < -expectPerZhiSun)
+			if(profitLow < -expectPer)
 			{
-				profit = -expectPerZhiSun;
+				profit = -expectPer;
 				break;
 			}   
-			if(profitHigh > expectPerZhiYing)
+			if(profitHigh > expectPer)
 			{
-				profit = expectPerZhiYing;
+				profit = expectPer;
 				break;
 			}
 			if(iCheckDay == iEnter + maxWaitDay - 1)

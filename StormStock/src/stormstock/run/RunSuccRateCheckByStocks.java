@@ -3,9 +3,11 @@ package stormstock.run;
 import stormstock.analysis.ANLPolicyBase;
 import stormstock.analysis.ANLPolicyBase.RetExitCheck;
 import stormstock.analysis.ANLPolicyX1;
+import stormstock.analysis.ANLPolicyXY;
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
 import stormstock.analysis.ANLStockPool;
+import stormstock.data.DataEngine;
 import stormstock.data.DataWebStockAllList;
 import stormstock.data.DataWebStockAllList.StockItem;
 
@@ -44,7 +46,7 @@ public class RunSuccRateCheckByStocks {
 		ANLPolicyBase cPolicy = new ANLPolicyX1();
 		// param2: ¹ÉÆ±ÁÐ±í
 		List<StockItem> cStockList = new ArrayList<StockItem>();
-//		cStockList.add(new StockItem("600452"));
+//		cStockList.add(new StockItem("600770"));
 //		cStockList.add(new StockItem("600020"));
 // 		cStockList.add(new StockItem("002344"));
 //		cStockList.add(new StockItem("002695"));
@@ -52,7 +54,7 @@ public class RunSuccRateCheckByStocks {
 //		cStockList.add(new StockItem("600030"));
 		if(cStockList.size() <= 0)
 		{
-			cStockList = DataWebStockAllList.getRandomStock(30);
+			cStockList =  DataEngine.getLocalRandomStock(30);
 		}
 		
 		///////////////////////////////////////////////////////////////////////////////////
@@ -97,7 +99,7 @@ public class RunSuccRateCheckByStocks {
 								cANLStock.historyData.get(cRetExitCheck.iExit).date,
 								cRetExitCheck.profitPer);
 					}
-					iIndex = iIndex + 40;
+					iIndex = iIndex + 20;
 				}
 			}
 			

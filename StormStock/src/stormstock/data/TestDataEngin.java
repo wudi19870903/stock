@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import stormstock.data.DataEngine.ExKData;
+import stormstock.data.DataWebStockAllList.StockItem;
 import stormstock.data.DataWebStockDayK.DayKData;
 
 public class TestDataEngin {
@@ -46,8 +47,18 @@ public class TestDataEngin {
 			System.out.println("ERROR:" + ret);
 		}
 	}
+	private static void test_getLocalRandomStock()
+	{
+		List<StockItem> retList = DataEngine.getLocalRandomStock(3);
+		for(int i = 0; i < retList.size(); i++)  
+        {  
+			StockItem cStockItem = retList.get(i);  
+            System.out.println("cStockItem: id:" + cStockItem.id);  
+        } 
+	}
 	public static void main(String[] args) {
-		test_getDayKDataQianFuQuan();
-		test_get5MinKDataOneDay();
+		//test_getDayKDataQianFuQuan();
+		//test_get5MinKDataOneDay();
+		test_getLocalRandomStock();
 	}
 }

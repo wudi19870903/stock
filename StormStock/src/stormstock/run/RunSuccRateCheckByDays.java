@@ -11,6 +11,7 @@ import java.util.Random;
 
 import stormstock.analysis.ANLPolicyBase;
 import stormstock.analysis.ANLPolicyX1;
+import stormstock.analysis.ANLPolicyXY;
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
 import stormstock.analysis.ANLStockPool;
@@ -26,7 +27,8 @@ public class RunSuccRateCheckByDays {
 	public static Formatter fmt = new Formatter(System.out);
 	static class DistriStockItem
 	{
-		public ANLStock cANLStock;
+		//public ANLStock cANLStock;
+		public String stockId;
 		public int iEnter;
 		public RetExitCheck cRetExitCheck;
 	}
@@ -83,7 +85,7 @@ public class RunSuccRateCheckByDays {
 			for(int iStockItem = 0; iStockItem< cDistributionItem.distriStockItemList.size();iStockItem++)
 			{
 				DistriStockItem tmpObj = cDistributionItem.distriStockItemList.get(iStockItem);
-				if(tmpObj.cANLStock.id.contains(stockId))
+				if(tmpObj.stockId.contains(stockId))
 				{
 					cDistriStockItem = tmpObj;
 					break;
@@ -92,8 +94,7 @@ public class RunSuccRateCheckByDays {
 			if(null == cDistriStockItem)
 			{
 				cDistriStockItem = new DistriStockItem();
-				cDistriStockItem.cANLStock = cANLStock;
-				cDistriStockItem.cANLStock.id = stockId;
+				cDistriStockItem.stockId = stockId;
 				cDistributionItem.distriStockItemList.add(cDistriStockItem);
 			}
 			
@@ -158,14 +159,14 @@ public class RunSuccRateCheckByDays {
 								iNGProfitSum = iNGProfitSum + cDistriStockItem.cRetExitCheck.profitPer;
 							}
 							wLine = String.format("    StockId:%s %s Profit:%f costDayCnt:%d\n", 
-									cDistriStockItem.cANLStock.id, 
+									cDistriStockItem.stockId, 
 									SuccFlag, 
 									cDistriStockItem.cRetExitCheck.profitPer, 
 									(cDistriStockItem.cRetExitCheck.iExit - cDistriStockItem.iEnter));
 						}
 						else
 						{
-							wLine = String.format("    StockId:%s Wait More day!!!\n", cDistriStockItem.cANLStock.id);
+							wLine = String.format("    StockId:%s Wait More day!!!\n", cDistriStockItem.stockId);
 						}
 						
 						cOutputStream.write(wLine.getBytes());
@@ -279,11 +280,11 @@ public class RunSuccRateCheckByDays {
 		ANLPolicyBase cPolicy = new ANLPolicyX1();
 		// param2: 股票列表
 		List<StockItem> retStockList = null;
-		retStockList = DataWebStockAllList.getRandomStock(500); // 只测试若干随机
-//		retStockList = new ArrayList<StockItem>(); // 测试所有股票
-//		DataWebStockAllList.getAllStockList(retStockList);
+//		retStockList = DataWebStockAllList.getRandomStock(500); // 只测试若干随机
+		retStockList = new ArrayList<StockItem>(); // 测试所有股票
+		DataWebStockAllList.getAllStockList(retStockList);
 		// param3: 测试向前最大天数
-		int iTestMaxDaysCnt = 1250;
+		int iTestMaxDaysCnt = 250;
 		
 		///////////////////////////////////////////////////////////////////////////////////
 

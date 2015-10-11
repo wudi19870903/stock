@@ -97,7 +97,7 @@ public class RunMockTransection {
 				{
 					int randomIndex = cRandIntList.get(cc);
 					DistriStockItem cDistriStockItem = cDistributionItem.distriStockItemList.get(randomIndex);
-					curSelectStockID = cDistriStockItem.cANLStock.id;
+					curSelectStockID = cDistriStockItem.stockId;
 					curANLStock = ANLStockPool.getANLStockNF(curSelectStockID);
 					curEnterDate = curANLStock.historyData.get(cDistriStockItem.iEnter).date;
 					curExitDate = curANLStock.historyData.get(cDistriStockItem.cRetExitCheck.iExit).date;
@@ -159,7 +159,7 @@ public class RunMockTransection {
 				{
 					DistriStockItem cDistriStockItem = cDistributionItem.distriStockItemList.get(j);
 					
-					curSelectStockID = cDistriStockItem.cANLStock.id;
+					curSelectStockID = cDistriStockItem.stockId;
 					curANLStock = ANLStockPool.getANLStockNF(curSelectStockID);
 					curEnterDate = curANLStock.historyData.get(cDistriStockItem.iEnter).date;
 					curExitDate = curANLStock.historyData.get(cDistriStockItem.cRetExitCheck.iExit).date;
@@ -293,8 +293,8 @@ public class RunMockTransection {
 					{
 						DistriStockItem cDistriStockItem = cDistributionItem.distriStockItemList.get(j);
 						
-						curSelectStockID = cDistriStockItem.cANLStock.id;
-						curANLStock = cDistriStockItem.cANLStock;
+						curSelectStockID = cDistriStockItem.stockId;
+						curANLStock = ANLStockPool.getANLStockNF(curSelectStockID);
 						curEnterDate = curANLStock.historyData.get(cDistriStockItem.iEnter).date;
 						curExitDate = curANLStock.historyData.get(cDistriStockItem.cRetExitCheck.iExit).date;
 						curProfit = cDistriStockItem.cRetExitCheck.profitPer;
