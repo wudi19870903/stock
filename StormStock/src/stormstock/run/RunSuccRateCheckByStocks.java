@@ -43,10 +43,10 @@ public class RunSuccRateCheckByStocks {
 		// run param 
 		
 		// param1: 策略
-		ANLPolicyBase cPolicy = new ANLPolicyX1();
+		ANLPolicyBase cPolicy = new ANLPolicyXY();
 		// param2: 股票列表
 		List<StockItem> cStockList = new ArrayList<StockItem>();
-//		cStockList.add(new StockItem("600770"));
+//		cStockList.add(new StockItem("600795"));
 //		cStockList.add(new StockItem("600020"));
 // 		cStockList.add(new StockItem("002344"));
 //		cStockList.add(new StockItem("002695"));

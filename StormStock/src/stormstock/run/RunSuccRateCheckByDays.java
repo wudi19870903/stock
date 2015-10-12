@@ -277,7 +277,7 @@ public class RunSuccRateCheckByDays {
 		// run param 
 		
 		// param1: 策略
-		ANLPolicyBase cPolicy = new ANLPolicyX1();
+		ANLPolicyBase cPolicy = new ANLPolicyXY();
 		// param2: 股票列表
 		List<StockItem> retStockList = null;
 //		retStockList = DataWebStockAllList.getRandomStock(500); // 只测试若干随机

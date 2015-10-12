@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
+import stormstock.analysis.ANLPolicyBase.RetExitCheck;
+
 public class ANLPolicyXY extends ANLPolicyBase {
 	public static Formatter fmt = new Formatter(System.out);
 
@@ -15,10 +17,11 @@ public class ANLPolicyXY extends ANLPolicyBase {
 			return false;
 		}
 		
-		int iBeginCheck = iCheckDay - 10;
+		int iBeginCheck = iCheckDay - 15;
 		int iEndCheck = iCheckDay - 0;
 		
-		//if(!cCheckDayKData.date.replace("-", "").contains("20130117")) return false;
+		ANLStockDayKData cCheckDayKData = cANLStock.historyData.get(iCheckDay);
+		//if(!cCheckDayKData.date.replace("-", "").contains("20120308")) return false;
 		//fmt.format("master cur_date: %s close:%f\n", cCheckDayKData.date,cCheckDayKData.close);
 		
 		float leftMidPos = 0.0f;
@@ -48,30 +51,25 @@ public class ANLPolicyXY extends ANLPolicyBase {
 		//fmt.format(" base0: %f \n", base0);
 		
 		int index = 0;
+		int iCross = 0;
 		for(int i = iBeginCheck; i<=iEndCheck;i++)
 		{
 			float CurBaseMid = base0 + baseAdd*index;
 			ANLStockDayKData tmp = cANLStock.historyData.get(i);
 			float midprice = (tmp.open + tmp.close)/2;
 			float check = Math.abs((midprice-CurBaseMid)/CurBaseMid);
+			float checkhigh = (tmp.high-CurBaseMid)/CurBaseMid;
+			float checklow = (tmp.low-CurBaseMid)/CurBaseMid;
+			if(checkhigh*checklow<0) iCross++;
+			//fmt.format(" cDate:%s CurBaseMid: %f checkval:%d \n", tmp.date, CurBaseMid, iCross);
 			
-			//fmt.format(" cDate:%s CurBaseMid: %f check:%f \n", tmp.date, CurBaseMid, check);
-			if(check > 0.05)
-			{
-				//fmt.format(" False cDate:%s\n", tmp.date);
-				return false;
-			}
-			
-//			if(i == iCheckDay)
-//			{
-//				float pl = (tmp.close - CurBaseMid)/CurBaseMid;
-//				float p2 = (tmp.close - tmp.open)/tmp.open;
-//				if(pl > 0 || p2 > -0.03) return false;
-//				if(p2 < -0.07) return false;
-//			}
+			if(Math.abs(checkhigh) > 0.05 ) return false;
+			if(Math.abs(checklow) > 0.05 ) return false;
 			
 			index++;
 		}
+		//if(iCross < (iEndCheck-iBeginCheck)*0.7) return false;
+
 		return true;
 	}
 	
@@ -85,7 +83,8 @@ public class ANLPolicyXY extends ANLPolicyBase {
 			return new RetExitCheck(false, -1, 0.0f);
 		}
 		
-		float expectPer = 0.08f;
+		float expectPerZhiYing = 0.05f;
+		float expectPerZhiSun = 0.05f;
 		int iCheckDay = iEnter+1;
 		float currentPrice = cANLStock.historyData.get(iEnter).close;
 		float profit = 0.0f;
@@ -99,14 +98,14 @@ public class ANLPolicyXY extends ANLPolicyBase {
 			float profitHigh = (highDay-currentPrice)/currentPrice;
 			float profitClose = (closeDay-currentPrice)/currentPrice;
 			//fmt.format("CheckProfit date:%s profit:%f\n", checkDayKData.date, profit);
-			if(profitLow < -expectPer)
+			if(profitLow < -expectPerZhiSun)
 			{
-				profit = -expectPer;
+				profit = -expectPerZhiSun;
 				break;
 			}   
-			if(profitHigh > expectPer)
+			if(profitHigh > expectPerZhiYing)
 			{
-				profit = expectPer;
+				profit = expectPerZhiYing;
 				break;
 			}
 			if(iCheckDay == iEnter + maxWaitDay - 1)
