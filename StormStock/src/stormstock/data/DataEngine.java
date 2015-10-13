@@ -386,7 +386,34 @@ public class DataEngine extends DataEngineBase
 		return 0;
 	}
 	
-
+	public static List<StockItem> getLocalAllStock()
+	{
+		List<StockItem> retListAll = new ArrayList<StockItem>();
+			
+		// emu local
+		File root = new File("data");
+		File[] fs = root.listFiles();
+		if(fs == null)
+		{
+			fmt.format("[ERROR] not found dir:data\n");
+			return null;
+		}
+		for(int i=0; i<fs.length; i++){
+			if(fs[i].isDirectory()){
+				String dirName = fs[i].getName();
+				if(dirName.length()==6 
+					&& (dirName.startsWith("6") || dirName.startsWith("3") || dirName.startsWith("0"))
+						)
+				{
+					StockItem cStockItem = new StockItem();
+					cStockItem.id = dirName;
+					retListAll.add(cStockItem);
+				}
+				
+			}
+		}
+		return retListAll;
+	}
 	public static List<StockItem> getLocalRandomStock(int count)
 	{
 		List<StockItem> retList = new ArrayList<StockItem>();

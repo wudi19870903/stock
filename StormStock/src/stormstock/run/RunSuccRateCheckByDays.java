@@ -280,9 +280,8 @@ public class RunSuccRateCheckByDays {
 		ANLPolicyBase cPolicy = new ANLPolicyXY();
 		// param2: 股票列表
 		List<StockItem> retStockList = null;
-//		retStockList = DataWebStockAllList.getRandomStock(500); // 只测试若干随机
-		retStockList = new ArrayList<StockItem>(); // 测试所有股票
-		DataWebStockAllList.getAllStockList(retStockList);
+//		retStockList = DataEngine.getLocalRandomStock(500); // 只测试若干随机
+		retStockList = DataEngine.getLocalAllStock(); // 测试本地所有股票
 		// param3: 测试向前最大天数
 		int iTestMaxDaysCnt = 250;
 		
