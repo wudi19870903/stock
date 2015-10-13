@@ -93,8 +93,8 @@ public class ANLPolicyX1 extends ANLPolicyBase {
 			return new RetExitCheck(false, -1, 0.0f);
 		}
 		
-		float expectPerZhiYing = 0.01f;
-		float expectPerZhiSun = 0.2f;
+		float expectPerZhiYing = 0.08f;
+		float expectPerZhiSun = 0.08f;
 		int iCheckDay = iEnter+1;
 		float currentPrice = cANLStock.historyData.get(iEnter).close;
 		float profit = 0.0f;
