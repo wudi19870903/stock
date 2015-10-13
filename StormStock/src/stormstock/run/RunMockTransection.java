@@ -384,9 +384,9 @@ public class RunMockTransection {
 		CheckResult cCheckResult = RunSuccRateCheckByDays.generateSuccDistribution(cPolicy, retStockList, iTestMaxDaysCnt);
 		
 		// Ä£Äâ½»Ò×
-		MockTrasection_withMockAccount(cCheckResult, "MockTransection.txt");
+		MockTrasection_withMockAccount(cCheckResult, "LOG_MockTransection.txt");
 		
-		cCheckResult.printResult("MockTransection_SuccRateCheck.txt");
+		cCheckResult.printResult("LOG_MockTransection_SuccRateCheck.txt");
 		
 		System.out.println("### Main End");
 		

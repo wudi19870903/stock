@@ -290,7 +290,7 @@ public class RunSuccRateCheckByDays {
 
 		CheckResult cCheckResult = RunSuccRateCheckByDays.generateSuccDistribution(cPolicy, retStockList, iTestMaxDaysCnt);
 		
-		cCheckResult.printResult("SuccRateCheck.txt");
+		cCheckResult.printResult("LOG_SuccRateCheck.txt");
 		
 		System.out.println("### Main End");
 	}
