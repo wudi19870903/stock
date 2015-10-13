@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: stormstock.run.RunUpdateData
+Class-Path: lib/htmlparser-1.6.jar lib/servlet-api.jar lib/xmlParserAPIs-2.0.2.jar

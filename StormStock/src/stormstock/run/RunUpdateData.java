@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.List;
 
 import stormstock.data.DataEngineBase;
@@ -16,18 +17,20 @@ import stormstock.data.DataWebStockRealTimeInfo;
 import stormstock.data.DataWebStockRealTimeInfo.RealTimeInfo;
 
 public class RunUpdateData {
-	
-	
+	public static Formatter fmt = new Formatter(System.out);
 	public static void main(String[] args) {
-
+		int iRetupdateStock = 0;
 		// 更新指数k
-		if(DataEngineBase.updateStock("999999") >= 0)
+		String ShangZhiId = "999999";
+		String ShangZhiName = "上证指数";
+		iRetupdateStock = DataEngineBase.updateStock(ShangZhiId);
+		if(iRetupdateStock >= 0)
 		{
-			System.out.println("update success: 999999 （上证指数  ）");
+			fmt.format("update success: %s (%s) item:%d\n", ShangZhiId, ShangZhiName, iRetupdateStock);
 		}
 		else
 		{
-			System.out.println("update success: 999999 （上证指数  ） ERROR");
+			fmt.format("update ERROR: %s (%s) item:%d\n", ShangZhiId, ShangZhiName, iRetupdateStock);
 		}
 		
 		// 更新所有k
@@ -38,15 +41,14 @@ public class RunUpdateData {
 			for(int i = 0; i < retList.size(); i++)  
 	        {  
 				StockItem cStockItem = retList.get(i);  
-	            System.out.println(cStockItem.name + "," + cStockItem.id); 
-	            int iRetupdateStock = DataEngineBase.updateStock(cStockItem.id);
+	            iRetupdateStock = DataEngineBase.updateStock(cStockItem.id);
 	            if( iRetupdateStock >= 0)
 	            {
-	            	System.out.println("update success: " +  cStockItem.id + " item:" + iRetupdateStock);
+	            	fmt.format("update success: %s (%s) item:%d\n", cStockItem.id, cStockItem.name, iRetupdateStock);
 	            }
 	            else
 	            {
-	            	System.out.println("update ERROR:" + cStockItem.id);
+	            	fmt.format("update ERROR: %s (%s) item:%d\n", cStockItem.id, cStockItem.name, iRetupdateStock);
 	            }
 	            
 	        } 
