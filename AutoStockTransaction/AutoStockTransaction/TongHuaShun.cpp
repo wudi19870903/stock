@@ -340,6 +340,12 @@ int THSAPI_BuyStock(const char* stockId, const int buyAmount, const float price)
 		{
 			break;
 		}
+		HWND hJiaoYiShiBai = Find_TijiaoShiBai();
+		if (NULL!= hJiaoYiShiBai)
+		{
+			CloseTijiaoShiBai();
+			return -25;
+		}
 		Sleep(10);
 	}
 
@@ -551,6 +557,12 @@ int THSAPI_SellStock(const char* stockId, const int sellAmount, const float pric
 		if (NULL!=hZhangDieXianZhiCheck || NULL!=hWeiTuoQueRenCheck)
 		{
 			break;
+		}
+		HWND hJiaoYiShiBai = Find_TijiaoShiBai();
+		if (NULL!= hJiaoYiShiBai)
+		{
+			CloseTijiaoShiBai();
+			return -25;
 		}
 		Sleep(10);
 	}

@@ -20,7 +20,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			UseOfMFC="1"
 			CharacterSet="2"
 			>
@@ -209,6 +209,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\stormstock_capi_CATHSAccount.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TongHuaShun.cpp"
 				>
 			</File>
@@ -236,6 +240,10 @@
 			</File>
 			<File
 				RelativePath=".\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\stormstock_capi_CATHSAccount.h"
 				>
 			</File>
 			<File
