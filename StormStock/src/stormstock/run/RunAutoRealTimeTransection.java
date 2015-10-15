@@ -79,9 +79,26 @@ public class RunAutoRealTimeTransection {
 			int ret = DataWebStockRealTimeInfo.getRealTimeInfo(m_stockID, cRealTimeInfo);
 			if(0 == ret)
 			{
-				logstr = String.format("RealTimeInfo: stockId[%s] name[%s] webAvaliableTime[%s] webAvaliablePrice[%.3f]\n", 
+				logstr = String.format("Update: Id[%s] name[%s] TranTime[%s] TranPrice[%.3f]\n", 
 						m_stockID, cRealTimeInfo.name, cRealTimeInfo.time, cRealTimeInfo.curPrice);
 				outputLog(logstr);
+				
+				if((cRealTimeInfo.time.compareTo("09:30:00") > 0 
+						&& cRealTimeInfo.time.compareTo("11:30:00") < 0)
+						||
+						(cRealTimeInfo.time.compareTo("13:00:00") > 0 
+								&& cRealTimeInfo.time.compareTo("15:00:00") < 0)
+						)
+				{
+					// 交易时间
+				}
+				else
+				{
+					logstr = String.format("[Warning] not transection time!\n");
+					outputLog(logstr);
+					//非交易时间
+					return -8;
+				}
 
 				if(m_bSelledFlag)
 				{
