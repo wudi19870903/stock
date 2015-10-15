@@ -38,6 +38,10 @@ public class RunMain {
 		{
 			RunSuccRateCheckByDays.main(null);
 		}
+		else if(MainCallOpe.equals("RealTransection"))
+		{
+			RunAutoRealTimeTransection.main(null);
+		}
 		else
 		{
 			printInfo();

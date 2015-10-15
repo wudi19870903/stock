@@ -23,10 +23,10 @@ public class TestCATHSAccount {
         float allStockMarketValue = CATHSAccount.getAllStockMarketValue();
         fmt.format("CATHSAccount.getAllStockMarketValue = %.2f\n", allStockMarketValue);
         
-        int iBuyRet = CATHSAccount.buyStock("601988", 100, 1.0f);
+        int iBuyRet = CATHSAccount.buyStock("601988", 100, 3.7f);
         fmt.format("CATHSAccount.buyStock = %d\n", iBuyRet);
         
-        int iSellRet = CATHSAccount.sellStock("601988", 100, 3.99f);
+        int iSellRet = CATHSAccount.sellStock("601988", 100, 3.7f);
         fmt.format("CATHSAccount.sellStock = %d\n", iSellRet);
         
         fmt.format("### main end\n");

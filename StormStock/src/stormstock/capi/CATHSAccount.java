@@ -1,12 +1,33 @@
 package stormstock.capi;
 
+import java.lang.reflect.Field;
 import java.util.Formatter;
  
 public class CATHSAccount {
 	
 	static{
-		//
-        System.loadLibrary("AutoStockTransaction");
+		String libraryName = "AutoStockTransaction";
+		String yourPath = "lib";
+		
+		System.setProperty("java.library.path", yourPath);
+		Field sysPath = null;
+		try {
+			sysPath = ClassLoader.class.getDeclaredField("sys_paths");
+		} catch (NoSuchFieldException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sysPath.setAccessible( true );
+		try {
+			sysPath.set( null, null );
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.loadLibrary(libraryName);
     }
 	
 	// TongHuaShun Initialize
