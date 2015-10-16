@@ -32,14 +32,18 @@ import stormstock.data.DataWebStockRealTimeInfo.RealTimeInfo;
 public class RunAutoRealTimeTransection {
 	public static Random random = new Random();
 	public static Formatter fmt = new Formatter(System.out);
+	public static void rmlog()
+	{
+		File cfile =new File("LOG_AutoRealTimeTransection.txt");
+		cfile.delete();
+	}
 	public static void outputLog(String s)
 	{
 		fmt.format("%s", s);
 		File cfile =new File("LOG_AutoRealTimeTransection.txt");
-		cfile.delete();
 		try
 		{
-			FileOutputStream cOutputStream = new FileOutputStream(cfile);
+			FileOutputStream cOutputStream = new FileOutputStream(cfile, true);
 			cOutputStream.write(s.getBytes());
 			cOutputStream.close();
 		}
@@ -302,6 +306,7 @@ public class RunAutoRealTimeTransection {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		rmlog();
 		autoSell("AutoSellConfig.xml");
 	}
 
