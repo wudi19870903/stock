@@ -134,7 +134,8 @@ public class RunAutoRealTimeTransection {
 						outputLog(logstr);
 						return -3;
 					}
-					int iSellFlag = sellStock(m_stockID, m_sellAmount, cRealTimeInfo.curPrice);
+					//小于1分 当前价 卖出
+					int iSellFlag = sellStock(m_stockID, m_sellAmount, cRealTimeInfo.curPrice-0.01f);
 					if(iSellFlag == 0)
 					{
 						m_bSelledFlag = true;
@@ -249,9 +250,22 @@ public class RunAutoRealTimeTransection {
 	        {  
 				SellStockItem cSellStockItem = retList.get(i);  
 				
-				logstr = String.format("SellContent: ID[%s] hPrice[%.3f] lPrice[%.3f] amount[%d]\n",
-	            		cSellStockItem.m_stockID, cSellStockItem.m_hSellPrice, cSellStockItem.m_lSellPrice, cSellStockItem.m_sellAmount);
-				outputLog(logstr);
+				RealTimeInfo cRealTimeInfo = new RealTimeInfo();
+				int ret = DataWebStockRealTimeInfo.getRealTimeInfo(cSellStockItem.m_stockID, cRealTimeInfo);
+				if(0 == ret)
+				{
+					logstr = String.format("SellContent: ID[%s] name[%s] hPrice[%.3f] lPrice[%.3f] amount[%d]\n",
+		            		cSellStockItem.m_stockID, cRealTimeInfo.name, cSellStockItem.m_hSellPrice, cSellStockItem.m_lSellPrice, cSellStockItem.m_sellAmount);
+					outputLog(logstr);
+				}
+				else
+				{
+					logstr = String.format("[Warnning] could not get RealTimeInfo, stockID:%s\n", cSellStockItem.m_stockID);
+					outputLog(logstr);
+					logstr = String.format("SellContent: ID[%s] hPrice[%.3f] lPrice[%.3f] amount[%d]\n",
+		            		cSellStockItem.m_stockID, cSellStockItem.m_hSellPrice, cSellStockItem.m_lSellPrice, cSellStockItem.m_sellAmount);
+					outputLog(logstr);
+				}
 	        }
 			logstr = "\ninput \"YES\" to continue...\n";
 			outputLog(logstr);
@@ -274,7 +288,7 @@ public class RunAutoRealTimeTransection {
 				{
 					SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
 					String CurrentDate = df.format(new Date());
-					logstr = String.format("<------   %s   ------>\n", CurrentDate);
+					logstr = String.format("<------   LocalTime: %s   ------>\n", CurrentDate);
 					outputLog(logstr);
 					
 					// 对所有股票进行检查
