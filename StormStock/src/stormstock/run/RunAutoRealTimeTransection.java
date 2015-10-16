@@ -200,7 +200,7 @@ public class RunAutoRealTimeTransection {
 	}
 	public static int autoSell(String configFileName)
 	{
-		int iEveryCheckTimeSec = 2; //120秒刷新一次，检查是否需要卖出
+		int iEveryCheckTimeSec = 120; //120秒刷新一次，检查是否需要卖出
 		String logstr = "";
 		
 		List<SellStockItem> retList = GetSellConfig(configFileName);
@@ -267,7 +267,7 @@ public class RunAutoRealTimeTransection {
 						cSellStockItem.CheckSell();
 			        }
 					
-					// 每2分钟检查一次
+					// 刷新间隔
 					Thread.sleep(1000*iEveryCheckTimeSec); 
 				}
 			}
