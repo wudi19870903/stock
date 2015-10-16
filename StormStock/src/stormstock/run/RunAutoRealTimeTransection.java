@@ -96,10 +96,9 @@ public class RunAutoRealTimeTransection {
 			int ret = DataWebStockRealTimeInfo.getRealTimeInfo(m_stockID, cRealTimeInfo);
 			if(0 == ret)
 			{
-				logstr = String.format("Update: Id[%s] name[%s] TranTime[%s] TranPrice[%.3f]\n", 
+				logstr = String.format("    RealTimeInfo %s(%s) %s %.3f\n", 
 						m_stockID, cRealTimeInfo.name, cRealTimeInfo.time, cRealTimeInfo.curPrice);
 				outputLog(logstr);
-				
 				if((cRealTimeInfo.time.compareTo("09:30:00") > 0 
 						&& cRealTimeInfo.time.compareTo("11:30:00") < 0)
 						||
@@ -111,7 +110,7 @@ public class RunAutoRealTimeTransection {
 				}
 				else
 				{
-					logstr = String.format("[Warning] not transection time!\n");
+					logstr = String.format("    [Warning] not transection time!\n");
 					outputLog(logstr);
 					//非交易时间
 					return -8;
@@ -130,7 +129,7 @@ public class RunAutoRealTimeTransection {
 					m_iTrySellTimes++;
 					if(m_iTrySellTimes > 10)
 					{
-						logstr = String.format("[Warning] try sell times over max times! m_stockID:%s\n", m_stockID);
+						logstr = String.format("    [Warning] try sell times over max times! m_stockID:%s\n", m_stockID);
 						outputLog(logstr);
 						return -3;
 					}
@@ -145,7 +144,7 @@ public class RunAutoRealTimeTransection {
 			else
 			{
 				//获得实时信息失败，继续获取下一个
-				logstr = String.format("[Warnning] Get realtime info stockId[%s] failed!\n", m_stockID);
+				logstr = String.format("    [Warnning] Get realtime info stockId[%s] failed!\n", m_stockID);
 				outputLog(logstr);
 			}
 			
@@ -254,7 +253,7 @@ public class RunAutoRealTimeTransection {
 				int ret = DataWebStockRealTimeInfo.getRealTimeInfo(cSellStockItem.m_stockID, cRealTimeInfo);
 				if(0 == ret)
 				{
-					logstr = String.format("SellContent: ID[%s] name[%s] hPrice[%.3f] lPrice[%.3f] amount[%d]\n",
+					logstr = String.format("[SellContent] %s(%s) highSell:%.3f lowSell:%.3f amount:%d\n",
 		            		cSellStockItem.m_stockID, cRealTimeInfo.name, cSellStockItem.m_hSellPrice, cSellStockItem.m_lSellPrice, cSellStockItem.m_sellAmount);
 					outputLog(logstr);
 				}
@@ -262,7 +261,7 @@ public class RunAutoRealTimeTransection {
 				{
 					logstr = String.format("[Warnning] could not get RealTimeInfo, stockID:%s\n", cSellStockItem.m_stockID);
 					outputLog(logstr);
-					logstr = String.format("SellContent: ID[%s] hPrice[%.3f] lPrice[%.3f] amount[%d]\n",
+					logstr = String.format("[SellContent] %s highSell:%.3f lowSell:%.3f amount:%d\n",
 		            		cSellStockItem.m_stockID, cSellStockItem.m_hSellPrice, cSellStockItem.m_lSellPrice, cSellStockItem.m_sellAmount);
 					outputLog(logstr);
 				}
@@ -286,18 +285,35 @@ public class RunAutoRealTimeTransection {
 				outputLog(logstr);
 				while(true)
 				{
-					SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-					String CurrentDate = df.format(new Date());
-					logstr = String.format("<------   LocalTime: %s   ------>\n", CurrentDate);
-					outputLog(logstr);
-					
-					// 对所有股票进行检查
-					for(int i = 0; i < retList.size(); i++)  
-			        {  
-						SellStockItem cSellStockItem = retList.get(i); 
-						cSellStockItem.CheckSell();
-			        }
-					
+					SimpleDateFormat dffull = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+					String CurrentDateTime = dffull.format(new Date());
+					SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm:ss");//设置日期格式
+					String CurrentTime = dfTime.format(new Date());
+					if((CurrentTime.compareTo("09:30:00") > 0 
+							&& CurrentTime.compareTo("11:30:00") < 0)
+							||
+							(CurrentTime.compareTo("13:00:00") > 0 
+									&& CurrentTime.compareTo("15:00:00") < 0)
+							)
+					{
+						// 交易时间
+						logstr = String.format(">>> LocalTime: %s\n", CurrentDateTime);
+						outputLog(logstr);
+						
+						// 对所有股票进行检查
+						for(int i = 0; i < retList.size(); i++)  
+				        {  
+							SellStockItem cSellStockItem = retList.get(i); 
+							cSellStockItem.CheckSell();
+				        }
+					}
+					else
+					{
+						//非交易时间
+						logstr = String.format(">>> LocalTime: %s (not transection time)\n", CurrentDateTime);
+						outputLog(logstr);
+					}
+
 					// 刷新间隔
 					Thread.sleep(1000*iEveryCheckTimeSec); 
 				}
