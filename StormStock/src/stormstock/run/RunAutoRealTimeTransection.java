@@ -2,6 +2,7 @@ package stormstock.run;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.StringReader;
 import java.text.SimpleDateFormat;
@@ -34,6 +35,18 @@ public class RunAutoRealTimeTransection {
 	public static void outputLog(String s)
 	{
 		fmt.format("%s", s);
+		File cfile =new File("LOG_AutoRealTimeTransection.txt");
+		cfile.delete();
+		try
+		{
+			FileOutputStream cOutputStream = new FileOutputStream(cfile);
+			cOutputStream.write(s.getBytes());
+			cOutputStream.close();
+		}
+		catch(Exception e)
+		{
+			System.out.println("Exception:" + e.getMessage()); 
+		}
 	}
 	public static class SellStockItem
 	{
