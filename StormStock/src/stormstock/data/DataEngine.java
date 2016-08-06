@@ -213,8 +213,8 @@ public class DataEngine extends DataEngineBase
             float changeper = Math.abs((opennext-close)/close);
             if(changeper > 0.15) 
         	{
-            	System.out.println("Warnning: Check getDayKDataQianFuQuan error! id:" + id
-            			+ " date:" + cDayKData.date);
+//            	System.out.println("Warnning: Check getDayKDataQianFuQuan error! id:" + id
+//            			+ " date:" + cDayKData.date);
 //            	System.out.println("close:" + close);
 //            	System.out.println("opennext:" + opennext);
 //            	System.out.println("changeper:" + Math.abs(changeper));
