@@ -54,6 +54,9 @@ public class Test {
 		float xiacuo_ave = 0.0f;
 		int xiacuo_cnt = 0;
 		
+		int SuccCnt = 0;
+		int FailCnt = 0;
+		
 		int ilastpoint = 0;
 		for (int i =10; i< retList.size()-1; i++)
 		{
@@ -137,10 +140,15 @@ public class Test {
 						if(realHigh > gueesHigh) succRate = gueesHighRate;
 						if(realLow < guessLow) succRate = guessLowRate;
 						if(realHigh <= gueesHigh && realLow >= guessLow) succRate = lastDayCloseRate;
-						logstr = String.format("Result: "
-								+ "%.2f\n",
-								succRate);
+						if(succRate > 0) SuccCnt++;
+						if(succRate <= 0) FailCnt++;
+						float HisSucc = 0.0f;
+						if(SuccCnt!=0 || FailCnt!=0) HisSucc = (float)SuccCnt/(SuccCnt+FailCnt);
+						logstr = String.format("Result(%.2f) HisSucc(%.2f)\n",
+								succRate, HisSucc);
 						outputLog(logstr, enablelog);
+						
+						
 					}
 					
 					ilastpoint = i;
@@ -155,10 +163,10 @@ public class Test {
 		// ¹ÉÆ±ÁÐ±í
 		List<StockItem> cStockList = new ArrayList<StockItem>();
 //		cStockList.add(new StockItem("300312"));
-		cStockList.add(new StockItem("300191"));
+//		cStockList.add(new StockItem("300191"));
 // 		cStockList.add(new StockItem("002344"));
 //		cStockList.add(new StockItem("002695"));
-//		cStockList.add(new StockItem("300041"));
+		cStockList.add(new StockItem("300041"));
 //		cStockList.add(new StockItem("600030"));
 		if(cStockList.size() <= 0)
 		{
