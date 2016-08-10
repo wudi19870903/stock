@@ -144,8 +144,8 @@ public class Test {
 						if(succRate <= 0) FailCnt++;
 						float HisSucc = 0.0f;
 						if(SuccCnt!=0 || FailCnt!=0) HisSucc = (float)SuccCnt/(SuccCnt+FailCnt);
-						logstr = String.format("Result(%.2f) HisSucc(%.2f)\n",
-								succRate, HisSucc);
+						logstr = String.format("Result(%.2f) HisSucc(%.2f) AllCnt(%d)\n",
+								succRate, HisSucc, SuccCnt + FailCnt);
 						outputLog(logstr, enablelog);
 						
 						
