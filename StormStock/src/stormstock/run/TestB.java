@@ -3,20 +3,15 @@ package stormstock.run;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Formatter;
 import java.util.List;
 
-import stormstock.analysis.ANLPolicyBase;
-import stormstock.analysis.ANLPolicyXY;
-import stormstock.analysis.ANLStockDayKData;
 import stormstock.data.DataEngine;
 import stormstock.data.DataWebStockAllList.StockItem;
-import stormstock.data.DataWebStockDayDetail.DayDetailItem;
 import stormstock.data.DataWebStockDayK.DayKData;
-import stormstock.run.RunSuccRateCheckByStocks.ProfitResult;
 
-public class Test {
+public class TestB {
+
 	public static Formatter fmt = new Formatter(System.out);
 	public static void rmlog()
 	{
@@ -43,6 +38,7 @@ public class Test {
 	{
 		outputLog(s, true);
 	}
+
 	
 	public static void analysisOne(String id, int maxDayCount)
 	{
@@ -51,22 +47,18 @@ public class Test {
 		List<DayKData> retList = new ArrayList<DayKData>();
 		DataEngine.getDayKDataQianFuQuan(id, retList);
 		
-		// 5日平均下挫幅度
 		float xiacuo_ave = 0.0f;
 		int xiacuo_cnt = 0;
 		
-		// 历史成功失败次数
 		int SuccCnt = 0;
 		int FailCnt = 0;
 		
-		//上次检查进入点
 		int ilastpoint = 0;
-		
 		for (int i =10; i< retList.size()-1; i++)
 		{
 			DayKData cDayKData = retList.get(i);
 			
-			// 计算i的前五天最低下挫价位点与价位均值 
+			// 找前5天最低点下挫点 ====================
 			float last5low = 1000.0f;
 			float last5ave = 0.0f;
 			for(int j = i-5; j!=i; j++ )
@@ -78,32 +70,24 @@ public class Test {
 				}
 			}
 			last5ave = last5ave/5;
-			
-			// 计算i的下一天最低值
-			float nextlow = 0.0f;
 			DayKData cDayKDataNext = retList.get(i+1);
-			nextlow = cDayKDataNext.low;
-			
-			// @@@ 过滤条件：i天为近5日最低下挫点
 			if(cDayKData.low < last5low 
 					&& (cDayKDataNext.low > cDayKData.low)
 					)
 			{
-				// 统计下挫次数与5日下挫平均值
 				float xiacuo_all = xiacuo_ave*xiacuo_cnt;
 				xiacuo_cnt++;
 				xiacuo_ave = (xiacuo_all + (cDayKData.low - last5ave)/last5ave)/xiacuo_cnt;
 				
 				float xiacuo = (cDayKData.low - last5ave)/last5ave;
-				
-				// @@@ 过滤条件：i日的下挫幅度比较大
+				// 下挫幅度平均值判断====================
 				if((cDayKData.low - last5ave)/last5ave <= xiacuo_ave/3*2) 
 				{
 					
-					// @@@ 过滤条件：近期还存在下挫点
+					// 判断 连续两次下挫点间距在一定范围内====================
 					if(i - ilastpoint > 2 && i - ilastpoint <= 15) 
 					{
-						// 判断输出日志条件
+						// 判断输出
 						boolean enablelog = false;
 						if(retList.size()-1 - i < maxDayCount)
 						{
@@ -119,7 +103,7 @@ public class Test {
 								last5ave, xiacuo, xiacuo_ave);
 						outputLog(logstr, enablelog);
 						
-						// 检查结果计算
+						// 检查结果
 						float gueesHigh = (last5ave - cDayKData.low)/3*2 + cDayKData.low;
 						float gueesHighRate = (gueesHigh - cDayKData.low)/cDayKData.low;
 						float guessLow = cDayKData.low * (1-gueesHighRate/3*2);
@@ -163,7 +147,6 @@ public class Test {
 						
 					}
 					
-					// 更新上次进入点
 					ilastpoint = i;
 				}
 			}
@@ -175,7 +158,7 @@ public class Test {
 		outputLog("Main Begin\n\n");
 		// 股票列表
 		List<StockItem> cStockList = new ArrayList<StockItem>();
-//		cStockList.add(new StockItem("300312"));
+		cStockList.add(new StockItem("300312"));
 //		cStockList.add(new StockItem("300191"));
 // 		cStockList.add(new StockItem("002344"));
 //		cStockList.add(new StockItem("002695"));
@@ -190,9 +173,10 @@ public class Test {
 		for(int i=0; i<cStockList.size();i++)
 		{
 			String stockId = cStockList.get(i).id;
-			analysisOne(stockId, 4);
+			analysisOne(stockId, 10000);
 		}
 		outputLog("\n\nMain End");
 	}
+
 
 }
