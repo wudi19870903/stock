@@ -3,15 +3,20 @@ package stormstock.run;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Formatter;
 import java.util.List;
 
+import stormstock.analysis.ANLPolicyBase;
+import stormstock.analysis.ANLPolicyXY;
+import stormstock.analysis.ANLStockDayKData;
 import stormstock.data.DataEngine;
 import stormstock.data.DataWebStockAllList.StockItem;
+import stormstock.data.DataWebStockDayDetail.DayDetailItem;
 import stormstock.data.DataWebStockDayK.DayKData;
+import stormstock.run.RunSuccRateCheckByStocks.ProfitResult;
 
 public class TestB {
-
 	public static Formatter fmt = new Formatter(System.out);
 	public static void rmlog()
 	{
@@ -38,8 +43,94 @@ public class TestB {
 	{
 		outputLog(s, true);
 	}
-
 	
+	// i是否是短期下挫企稳日
+	public static boolean ShenFuXiaCuoQiWen(List<DayKData> dayklist, int i)
+	{
+		String logstr;
+		DayKData cDayKData = dayklist.get(i);
+		// 计算i的前五天最低下挫价位点
+		int zuidi_index = 0;
+		float last5low = 1000.0f;
+		for(int j = i-5; j!=i; j++ )
+		{
+			DayKData cDayKDataTmp = dayklist.get(j);
+			if(cDayKDataTmp.low < last5low) {
+				last5low = cDayKDataTmp.low;
+				zuidi_index = j;
+			}
+		}
+		// 计算前2天均值与 后两2均值
+		DayKData cDayKDataFirst1 = dayklist.get(i-5);
+		DayKData cDayKDataFirst2 = dayklist.get(i-4);
+		float pre2ave = (cDayKDataFirst1.low + cDayKDataFirst2.low)/2;
+		DayKData cDayKDataLast1 = dayklist.get(i-1);
+		DayKData cDayKDataLast2 = dayklist.get(i-0);
+		float last2ave = (cDayKDataLast1.low + cDayKDataLast2.low)/2;
+		float xiacuo = (last2ave - pre2ave)/pre2ave;
+
+		
+		// 前5日最低点是i-1天
+		if(zuidi_index == i-1 && cDayKData.low > last5low)
+		{
+//			logstr = String.format("    %.2f\n",
+//					xiacuo);
+//			outputLog(logstr);
+			//趋势判断幅度判断
+			if(xiacuo < -0.05)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static void transectionAnalysis(List<DayKData> dayklist, int m)
+	{
+		String logstr;
+		DayKData cDayKDataPre1 = dayklist.get(m-1);
+		float minPreK = cDayKDataPre1.close;
+		if(cDayKDataPre1.close > cDayKDataPre1.open) minPreK = cDayKDataPre1.open;
+		DayKData cDayKDataPre2 = dayklist.get(m-2);
+		
+		boolean bEnter = false;
+		int iEnter = 0;
+		float enterPrice = 0.0f;
+		for(int j = m; j < m+5; j++ )
+		{
+			DayKData cDayKDataTmp = dayklist.get(j);
+			if(cDayKDataTmp.low < minPreK) {
+				logstr = String.format("    Enter %s %.2f\n",
+						cDayKDataTmp.date,minPreK);
+				outputLog(logstr);
+				bEnter = true;
+				iEnter = j;
+				enterPrice = minPreK;
+				break;
+			}
+		}
+		if(bEnter)
+		{
+			for(int j = iEnter+1; j < iEnter+5; j++ )
+			{
+				DayKData cDayKDataTmp = dayklist.get(j);
+				if(cDayKDataTmp.low < enterPrice*(1-0.03)) {
+					logstr = String.format("        - Fail\n",
+							cDayKDataTmp.date);
+					outputLog(logstr);
+					break;
+				}
+				if(cDayKDataTmp.high > enterPrice*(1+0.01))
+				{
+					logstr = String.format("        - Succ\n",
+							cDayKDataTmp.date);
+					outputLog(logstr);
+					break;
+				}
+			}
+		}
+		
+	}
 	public static void analysisOne(String id, int maxDayCount)
 	{
 		String logstr;
@@ -47,108 +138,17 @@ public class TestB {
 		List<DayKData> retList = new ArrayList<DayKData>();
 		DataEngine.getDayKDataQianFuQuan(id, retList);
 		
-		float xiacuo_ave = 0.0f;
-		int xiacuo_cnt = 0;
-		
-		int SuccCnt = 0;
-		int FailCnt = 0;
-		
-		int ilastpoint = 0;
 		for (int i =10; i< retList.size()-1; i++)
 		{
-			DayKData cDayKData = retList.get(i);
+			boolean bSFXCQW = ShenFuXiaCuoQiWen(retList, i);
 			
-			// 找前5天最低点下挫点 ====================
-			float last5low = 1000.0f;
-			float last5ave = 0.0f;
-			for(int j = i-5; j!=i; j++ )
+			if(bSFXCQW)
 			{
-				DayKData cDayKDataTmp = retList.get(j);
-				last5ave = last5ave + (cDayKDataTmp.high + cDayKDataTmp.low)/2;
-				if(cDayKDataTmp.low < last5low) {
-					last5low = cDayKDataTmp.low;
-				}
-			}
-			last5ave = last5ave/5;
-			DayKData cDayKDataNext = retList.get(i+1);
-			if(cDayKData.low < last5low 
-					&& (cDayKDataNext.low > cDayKData.low)
-					)
-			{
-				float xiacuo_all = xiacuo_ave*xiacuo_cnt;
-				xiacuo_cnt++;
-				xiacuo_ave = (xiacuo_all + (cDayKData.low - last5ave)/last5ave)/xiacuo_cnt;
-				
-				float xiacuo = (cDayKData.low - last5ave)/last5ave;
-				// 下挫幅度平均值判断====================
-				if((cDayKData.low - last5ave)/last5ave <= xiacuo_ave/3*2) 
-				{
-					
-					// 判断 连续两次下挫点间距在一定范围内====================
-					if(i - ilastpoint > 2 && i - ilastpoint <= 15) 
-					{
-						// 判断输出
-						boolean enablelog = false;
-						if(retList.size()-1 - i < maxDayCount)
-						{
-							enablelog = true;
-						}
-							
-						logstr = String.format("%s  %s - " + "Low(%.2f)"
-								+ " Last5Low(%.2f) "
-								+ "last5ave(%.2f) XiaCuo(%.2f) XiaCuoAve(%.2f)"
-								+ " ",
-								id, cDayKData.date, cDayKData.low, 
-								last5low, 
-								last5ave, xiacuo, xiacuo_ave);
-						outputLog(logstr, enablelog);
-						
-						// 检查结果
-						float gueesHigh = (last5ave - cDayKData.low)/3*2 + cDayKData.low;
-						float gueesHighRate = (gueesHigh - cDayKData.low)/cDayKData.low;
-						float guessLow = cDayKData.low * (1-gueesHighRate/3*2);
-						float guessLowRate = (guessLow - cDayKData.low)/cDayKData.low;
-						
-						float realHigh = 0.0f;
-						float realLow = 1000.0f;
-						float lastDayClose = 0.0f;
-						float lastDayCloseRate = 0.0f;
-						for(int j =i+1; j<retList.size()-1 && j<=i+5; j++)
-						{
-							DayKData cDayKDataTmp = retList.get(j);
-							if(cDayKDataTmp.high > realHigh) realHigh = cDayKDataTmp.high;
-							if(cDayKDataTmp.low < realLow) realLow = cDayKDataTmp.low;
-							lastDayClose = cDayKDataTmp.close;
-							lastDayCloseRate = (lastDayClose - cDayKData.low)/cDayKData.low;
-							
-						}
-						
-						logstr = String.format(""
-								+ "gueesHigh(%.2f,%.2f) guessLow(%.2f,%.2f) "
-								+ "realHigh(%.2f) reallow(%.2f) "
-								+ "lastDayClose(%.2f,%.2f) ", 
-								gueesHigh, gueesHighRate,guessLow,guessLowRate,
-								realHigh, realLow,
-								lastDayClose,lastDayCloseRate);
-						outputLog(logstr, enablelog);
-						
-						float succRate = 0.0f;
-						if(realHigh > gueesHigh) succRate = gueesHighRate;
-						if(realLow < guessLow) succRate = guessLowRate;
-						if(realHigh <= gueesHigh && realLow >= guessLow) succRate = lastDayCloseRate;
-						if(succRate > 0) SuccCnt++;
-						if(succRate <= 0) FailCnt++;
-						float HisSucc = 0.0f;
-						if(SuccCnt!=0 || FailCnt!=0) HisSucc = (float)SuccCnt/(SuccCnt+FailCnt);
-						logstr = String.format("Result(%.2f) HisSucc(%.2f) AllCnt(%d)\n",
-								succRate, HisSucc, SuccCnt + FailCnt);
-						outputLog(logstr, enablelog);
-						
-						
-					}
-					
-					ilastpoint = i;
-				}
+				DayKData cDayKData = retList.get(i);
+				logstr = String.format("%s\n",
+						cDayKData.date);
+				outputLog(logstr);
+				transectionAnalysis(retList, i+1);
 			}
 		}
 	}
@@ -177,6 +177,5 @@ public class TestB {
 		}
 		outputLog("\n\nMain End");
 	}
-
 
 }
