@@ -43,6 +43,20 @@ public class TestB {
 	{
 		outputLog(s, true);
 	}
+	public static int indexDayK(List<DayKData> dayklist, String dateStr)
+	{
+		int index = -1;
+		for(int k = dayklist.size()-1; k >= 0; k-- )
+		{
+			DayKData cDayKDataTmp = dayklist.get(k);
+			if(cDayKDataTmp.date.compareTo(dateStr) <= 0)
+			{
+				index = k;
+				break;
+			}
+		}
+		return index;
+	}
 	public static float priceAve(List<DayKData> dayklist, int i, int j)
 	{
 		float ave = 0.0f;
@@ -105,6 +119,20 @@ public class TestB {
 			}
 		}
 		return index;
+	}
+	// 波动幅度参数,数值越大波动越大
+	public static float waveParam(List<DayKData> dayklist, int i, int j)
+	{
+		float wave = 0.0f;
+		for(int k = i; k<=j; k++ )
+		{
+			DayKData cDayKDataTmp = dayklist.get(k);
+			float wave1 = Math.abs((cDayKDataTmp.close - cDayKDataTmp.open)/cDayKDataTmp.open);
+			float wave2 = (cDayKDataTmp.high - cDayKDataTmp.low)/cDayKDataTmp.low;
+			wave = wave + (wave1+wave2)/2;
+		}
+		wave = wave/(j-i+1);
+		return wave;
 	}
 	// i是否是短期下挫企稳日
 	public static boolean ShenFuXiaCuoQiWen(List<DayKData> dayklist, int i)
@@ -201,61 +229,78 @@ public class TestB {
 		List<DayKData> retList = new ArrayList<DayKData>();
 		DataEngine.getDayKDataQianFuQuan(id, retList);
 		
-		// 确定要查看的准备点索引区间
-		int beginPreCheckPos = 0;
-		int endPreCheckPos = 0;
-		for (int i = 0; i< retList.size(); i++)
-		{
-			DayKData cDayKDataTmp = retList.get(i);
-			
-			if(cDayKDataTmp.date.compareTo(fromDate) >= 0)
-			{
-				beginPreCheckPos = i;
-//				logstr = String.format("inputcheck[%s %s] Cur %s beginPreCheckPos %d\n",
-//						fromDate, toDate, cDayKDataTmp.date, beginPreCheckPos);
-//				outputLog(logstr);
-				break;
-			}
-		}
-		for (int i = retList.size()-1; i> 0; i--)
-		{
-			DayKData cDayKDataTmp = retList.get(i);
-			
-			if(cDayKDataTmp.date.compareTo(toDate) <= 0)
-			{
-				endPreCheckPos = i;
-//				logstr = String.format("inputcheck[%s %s] Cur %s endPreCheckPos %d\n",
-//						fromDate, toDate, cDayKDataTmp.date, endPreCheckPos);
-//				outputLog(logstr);
-				break;
-			}
-		}
+		int iB = indexDayK(retList, fromDate);
+		int iE = indexDayK(retList, toDate);
 		
+		float priceAve_test = priceAve(retList, iB, iE);
+		float priceHigh_test = priceHigh(retList, iB, iE);
+		float priceLow_test = priceLow(retList, iB, iE);
+		int indexHigh_test = indexHigh(retList, iB, iE);
+		int indexLow_test = indexLow(retList, iB, iE);
+		float waveParam_test = waveParam(retList, iB, iE);
+		logstr = String.format("priceAve_test[%.2f] priceHigh_test[%.2f] priceLow_test[%.2f]"
+				+ " indexHigh_test[%s] indexLow_test[%s] waveParam_test[%.3f]\n",
+				priceAve_test, priceHigh_test, priceLow_test,
+				retList.get(indexHigh_test).date, retList.get(indexLow_test).date, waveParam_test);
+		outputLog(logstr);
 		
-		int iLast = 0;
-		for (int i = beginPreCheckPos + 10; i<= endPreCheckPos; i++)
-		{
-			DayKData cDayKDataTmp = retList.get(i);
-//			logstr = String.format("check %s\n",
-//					cDayKDataTmp.date);
-//			outputLog(logstr);
-			
-			
-			if(ShenFuXiaCuoQiWen(retList, i))
-			{
-				logstr = String.format("%s PreEnterPoint (%d) %d\n",
-						cDayKDataTmp.date, i, iLast);
-				outputLog(logstr);
-				
-//					logstr = String.format("%s  Lianxu PreEnterPoint (%d) %d\n",
-//							cDayKDataTmp.date, i, iLast);
-//					outputLog(logstr);
-					
-					transectionAnalysis(retList, i+1);
-					
-				iLast = i;
-			}
-		}
+		// 近期最高点最低点计算完毕后，跌幅满足少量天跌了8成总跌幅，跌幅天数算出跌幅系数，最好比较大，这样有涨幅空间，偏离5倍时间价格均值，有一定反弹需求
+//		
+//		// 确定要查看的准备点索引区间
+//		int beginPreCheckPos = 0;
+//		int endPreCheckPos = 0;
+//		for (int i = 0; i< retList.size(); i++)
+//		{
+//			DayKData cDayKDataTmp = retList.get(i);
+//			
+//			if(cDayKDataTmp.date.compareTo(fromDate) >= 0)
+//			{
+//				beginPreCheckPos = i;
+////				logstr = String.format("inputcheck[%s %s] Cur %s beginPreCheckPos %d\n",
+////						fromDate, toDate, cDayKDataTmp.date, beginPreCheckPos);
+////				outputLog(logstr);
+//				break;
+//			}
+//		}
+//		for (int i = retList.size()-1; i> 0; i--)
+//		{
+//			DayKData cDayKDataTmp = retList.get(i);
+//			
+//			if(cDayKDataTmp.date.compareTo(toDate) <= 0)
+//			{
+//				endPreCheckPos = i;
+////				logstr = String.format("inputcheck[%s %s] Cur %s endPreCheckPos %d\n",
+////						fromDate, toDate, cDayKDataTmp.date, endPreCheckPos);
+////				outputLog(logstr);
+//				break;
+//			}
+//		}
+//		
+//		
+//		int iLast = 0;
+//		for (int i = beginPreCheckPos + 10; i<= endPreCheckPos; i++)
+//		{
+//			DayKData cDayKDataTmp = retList.get(i);
+////			logstr = String.format("check %s\n",
+////					cDayKDataTmp.date);
+////			outputLog(logstr);
+//			
+//			
+//			if(ShenFuXiaCuoQiWen(retList, i))
+//			{
+//				logstr = String.format("%s PreEnterPoint (%d) %d\n",
+//						cDayKDataTmp.date, i, iLast);
+//				outputLog(logstr);
+//				
+////					logstr = String.format("%s  Lianxu PreEnterPoint (%d) %d\n",
+////							cDayKDataTmp.date, i, iLast);
+////					outputLog(logstr);
+//					
+//					transectionAnalysis(retList, i+1);
+//					
+//				iLast = i;
+//			}
+//		}
 	}
 	
 	public static void main(String[] args) {
@@ -278,7 +323,7 @@ public class TestB {
 		for(int i=0; i<cStockList.size();i++)
 		{
 			String stockId = cStockList.get(i).id;
-			analysisOne(stockId, "2012-05-18", "2016-08-02");
+			analysisOne(stockId, "2016-05-31", "2016-05-31");
 		}
 		outputLog("\n\nMain End");
 	}
