@@ -7,8 +7,6 @@ import java.util.Collections;
 import java.util.Formatter;
 import java.util.List;
 
-import stormstock.analysis.ANLPolicyBase;
-import stormstock.analysis.ANLPolicyXY;
 import stormstock.analysis.ANLStockDayKData;
 import stormstock.data.DataEngine;
 import stormstock.data.DataWebStockAllList.StockItem;
@@ -120,10 +118,10 @@ public class Test {
 						outputLog(logstr, enablelog);
 						
 						// 检查结果计算
-						float gueesHigh = (last5ave - cDayKData.low)/3*2 + cDayKData.low;
-						float gueesHighRate = (gueesHigh - cDayKData.low)/cDayKData.low;
-						float guessLow = cDayKData.low * (1-gueesHighRate/3*2);
-						float guessLowRate = (guessLow - cDayKData.low)/cDayKData.low;
+						float gueesHigh = (last5ave - cDayKDataNext.low)/4*1 + cDayKDataNext.low;
+						float gueesHighRate = (gueesHigh - cDayKDataNext.low)/cDayKDataNext.low;
+						float guessLow = cDayKDataNext.low * (1-gueesHighRate/3*3);
+						float guessLowRate = (guessLow - cDayKDataNext.low)/cDayKDataNext.low;
 						
 						float realHigh = 0.0f;
 						float realLow = 1000.0f;
@@ -175,7 +173,7 @@ public class Test {
 		outputLog("Main Begin\n\n");
 		// 股票列表
 		List<StockItem> cStockList = new ArrayList<StockItem>();
-//		cStockList.add(new StockItem("300312"));
+		cStockList.add(new StockItem("600000"));
 //		cStockList.add(new StockItem("300191"));
 // 		cStockList.add(new StockItem("002344"));
 //		cStockList.add(new StockItem("002695"));
@@ -190,7 +188,7 @@ public class Test {
 		for(int i=0; i<cStockList.size();i++)
 		{
 			String stockId = cStockList.get(i).id;
-			analysisOne(stockId, 4);
+			analysisOne(stockId, 10000);
 		}
 		outputLog("\n\nMain End");
 	}

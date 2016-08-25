@@ -1,9 +1,6 @@
 package stormstock.run;
 
 import stormstock.analysis.ANLPolicyBase;
-import stormstock.analysis.ANLPolicyBase.RetExitCheck;
-import stormstock.analysis.ANLPolicyX1;
-import stormstock.analysis.ANLPolicyXY;
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
 import stormstock.analysis.ANLStockPool;
@@ -43,7 +40,6 @@ public class RunSuccRateCheckByStocks {
 		// run param 
 		
 		// param1: 策略
-		ANLPolicyBase cPolicy = new ANLPolicyXY();
 		// param2: 股票列表
 		List<StockItem> cStockList = new ArrayList<StockItem>();
 //		cStockList.add(new StockItem("600795"));
@@ -80,9 +76,6 @@ public class RunSuccRateCheckByStocks {
 			for(int iIndex = iCheckDayBegin; iIndex < iCheckDayEnd; iIndex++) 
 			{
 				ANLStockDayKData cCheckDayKData = cANLStock.historyData.get(iIndex);
-				if(cPolicy.enterCheck(cANLStock, iIndex))
-				{
-					RetExitCheck cRetExitCheck = cPolicy.exitCheck(cANLStock, iIndex);
 					if(cRetExitCheck.profitPer < 0.0f)
 					{
 						cProfitResult.failCnt = cProfitResult.failCnt + 1;
