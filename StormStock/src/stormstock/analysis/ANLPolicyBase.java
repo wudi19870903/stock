@@ -41,7 +41,7 @@ public class ANLPolicyBase {
 	// 查找日期索引
 	public static int indexDayK(List<ANLStockDayKData> dayklist, String dateStr)
 	{
-		int index = -1;
+		int index = 0;
 		for(int k = dayklist.size()-1; k >= 0; k-- )
 		{
 			ANLStockDayKData cDayKDataTmp = dayklist.get(k);
@@ -223,6 +223,7 @@ public class ANLPolicyBase {
 		}
 		
 	}
+	
 	public static void analysisOne(String id, String fromDate, String toDate)
 	{
 		String logstr;
@@ -231,18 +232,91 @@ public class ANLPolicyBase {
 		int iB = indexDayK(cANLStock.historyData, fromDate);
 		int iE = indexDayK(cANLStock.historyData, toDate);
 		
-		float priceAve_test = priceAve(cANLStock.historyData, iB, iE);
-		float priceHigh_test = priceHigh(cANLStock.historyData, iB, iE);
-		float priceLow_test = priceLow(cANLStock.historyData, iB, iE);
-		int indexHigh_test = indexHigh(cANLStock.historyData, iB, iE);
-		int indexLow_test = indexLow(cANLStock.historyData, iB, iE);
-		float waveParam_test = waveParam(cANLStock.historyData, iB, iE);
-		logstr = String.format("priceAve_test[%.2f] priceHigh_test[%.2f] priceLow_test[%.2f]"
-				+ " indexHigh_test[%s] indexLow_test[%s] waveParam_test[%.3f]\n",
-				priceAve_test, priceHigh_test, priceLow_test,
-				cANLStock.historyData.get(indexHigh_test).date, 
-				cANLStock.historyData.get(indexLow_test).date, waveParam_test);
-		outputLog(logstr);
+		int iLastHighIndex = 0;
+		for(int i = iB; i<= iE; i++)
+		{
+			// 检查当前天，前6到20天区间满足急跌趋势
+			logstr = String.format("CheckDay %s\n",
+					cANLStock.historyData.get(i).date);
+			outputLog(logstr);
+			
+			int iCheckE = i;
+			for(int iCheckB = iCheckE-6; iCheckB>=iCheckE-20; iCheckB--)
+			{
+				if(iCheckB >= iB)
+				{
+					// @ 最高点与最低点在区间位置的判断
+					boolean bCheckHighLowIndex = false;
+					int indexHigh = indexHigh(cANLStock.historyData, iCheckB, iCheckE);
+					int indexLow = indexLow(cANLStock.historyData, iCheckB, iCheckE);
+					if(indexHigh>iCheckB && indexHigh<=(iCheckB+iCheckE)/2
+							&& indexLow > (iCheckB+iCheckE)/2 && indexLow < iCheckE)
+					{
+						bCheckHighLowIndex = true;
+					}
+					
+					// @ 最高点与最低点下挫幅度判断
+					boolean bCheckXiaCuo = false;
+					float highPrice = cANLStock.historyData.get(indexHigh).high;
+					float lowPrice = cANLStock.historyData.get(indexLow).low;
+					float xiaCuoZhenFu = (lowPrice-highPrice)/highPrice;
+					float xiaCuoMinCheck = -1.5f*0.01f*(indexLow-indexHigh);
+					if(xiaCuoZhenFu < xiaCuoMinCheck)
+					{
+						bCheckXiaCuo = true;
+					}
+					
+					// @ 前区间，后区间价位判断
+					boolean bCheck3 = true;
+					int cntDay = iCheckE-iCheckB;
+					float midPrice = (highPrice+lowPrice)/2;
+					for(int c= iCheckB; c<iCheckB + cntDay/3; c++)
+					{
+						if(cANLStock.historyData.get(c).low < midPrice)
+						{
+							bCheck3 = false;
+						}
+					}
+					for(int c= iCheckE; c>iCheckE - cntDay/3; c--)
+					{
+						if(cANLStock.historyData.get(c).low > midPrice)
+						{
+							bCheck3 = false;
+						}
+					}
+					
+					
+					if(indexHigh-iLastHighIndex > 5 &&
+							bCheckHighLowIndex && 
+							bCheckXiaCuo && 
+							bCheck3)
+					{
+						logstr = String.format("    Test XiaCuoQuJian [%s,%s] ZhenFu(%.3f,%.3f)\n",
+						cANLStock.historyData.get(iCheckB).date,
+						cANLStock.historyData.get(iCheckE).date,
+						xiaCuoZhenFu,xiaCuoMinCheck);
+						outputLog(logstr);
+						
+						iLastHighIndex = indexHigh;
+						break;
+					}
+					
+				}
+			}
+		}
+		
+//		float priceAve_test = priceAve(cANLStock.historyData, iB, iE);
+//		float priceHigh_test = priceHigh(cANLStock.historyData, iB, iE);
+//		float priceLow_test = priceLow(cANLStock.historyData, iB, iE);
+//		int indexHigh_test = indexHigh(cANLStock.historyData, iB, iE);
+//		int indexLow_test = indexLow(cANLStock.historyData, iB, iE);
+//		float waveParam_test = waveParam(cANLStock.historyData, iB, iE);
+//		logstr = String.format("priceAve_test[%.2f] priceHigh_test[%.2f] priceLow_test[%.2f]"
+//				+ " indexHigh_test[%s] indexLow_test[%s] waveParam_test[%.3f]\n",
+//				priceAve_test, priceHigh_test, priceLow_test,
+//				cANLStock.historyData.get(indexHigh_test).date, 
+//				cANLStock.historyData.get(indexLow_test).date, waveParam_test);
+//		outputLog(logstr);
 		
 		// 近期最高点最低点计算完毕后，跌幅满足少量天跌了8成总跌幅，跌幅天数算出跌幅系数，最好比较大，这样有涨幅空间，偏离5倍时间价格均值，有一定反弹需求
 //		
@@ -323,7 +397,7 @@ public class ANLPolicyBase {
 		for(int i=0; i<cStockList.size();i++)
 		{
 			String stockId = cStockList.get(i).id;
-			analysisOne(stockId, "2016-05-10", "2016-05-31");
+			analysisOne(stockId, "2008-01-10", "2016-08-23");
 		}
 		outputLog("\n\nMain End");
 	}
