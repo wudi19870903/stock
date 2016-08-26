@@ -8,17 +8,20 @@ import stormstock.data.DataEngine.ExKData;
 import stormstock.data.DataWebStockAllList.StockItem;
  
 public class ANLStockDayKData {
+	public class DetailData
+	{
+		public Float price;
+		public String time;
+	}
 	public ANLStockDayKData()
 	{
-		priceList = new ArrayList<Float>();
-		volumeList = new ArrayList<Float>();
+		detailDataList = new ArrayList<DetailData>();
 	} 
 	
 	public int LoadDetail()
 	{
-		int iSizePriceList = priceList.size();
-		int iSizeVolumeList = volumeList.size();
-		if(iSizePriceList == iSizeVolumeList && iSizePriceList != 0)
+		int iSizedetailDataList = detailDataList.size();
+		if(iSizedetailDataList != 0)
 		{
 			return 0;
 		}
@@ -37,17 +40,19 @@ public class ANLStockDayKData {
 			for(int i = 0; i < retList.size(); i++)  
 	        {  
 				ExKData cExKData = retList.get(i);  
-//	            System.out.println(cExKData.datetime + "," 
-//	            		+ cExKData.open + "," + cExKData.close + "," 
-//	            		+ cExKData.low + "," + cExKData.high + "," 
-//	            		+ cExKData.volume);  
+	            System.out.println(cExKData.datetime + "," 
+	            		+ cExKData.open + "," + cExKData.close + "," 
+	            		+ cExKData.low + "," + cExKData.high + "," 
+	            		+ cExKData.volume);  
 				
 				float actrualprice = cExKData.close;
 				float changeper = (actrualprice - actruaFirstPrice)/actruaFirstPrice;
 				float changedprice = baseOpenPrice + baseOpenPrice * changeper;
 				
-				priceList.add(changedprice);
-				volumeList.add(cExKData.volume);
+				DetailData cDetail = new DetailData();
+				cDetail.price = changedprice;
+				cDetail.time = cExKData.getTime();
+				detailDataList.add(cDetail);
 	        } 
 		}
 		else
@@ -65,28 +70,7 @@ public class ANLStockDayKData {
 	public float low;
 	public float volume;
 	
-	public List<Float> priceList;
-	public List<Float> volumeList;
+	public List<DetailData> detailDataList;
 	
 	public ANLStock ref_ANLStock;
-	
-	
-	public static void main(String[] args){
-		System.out.println("main begin");
-		ANLStock cANLStock = new ANLStock();
-		cANLStock.id = "300163";
-		ANLStockDayKData cANLStockDayKData = new ANLStockDayKData();
-		cANLStockDayKData.date = "2015-09-30";
-		cANLStockDayKData.ref_ANLStock = cANLStock;
-		
-		if(0 == cANLStockDayKData.LoadDetail())
-		{
-			for(int i = 0; i < cANLStockDayKData.priceList.size(); i++)  
-	        {  
-				float price = cANLStockDayKData.priceList.get(i);  
-	            System.out.println("price:" + price);  
-	        } 
-		}
-		System.out.println("main end");
-	}
 }

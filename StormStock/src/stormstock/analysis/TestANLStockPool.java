@@ -19,9 +19,11 @@ public class TestANLStockPool {
             if(i == cANLStock.historyData.size()-1)
             {
             	cANLDayKData.LoadDetail();
-            	for(int j = 0; j < cANLDayKData.priceList.size(); j++)  
+            	for(int j = 0; j < cANLDayKData.detailDataList.size(); j++)  
             	{
-            		fmt.format("  1minDetail %.2f\n", cANLDayKData.priceList.get(j));
+            		fmt.format("    %s %.2f\n", 
+            				cANLDayKData.detailDataList.get(j).time,
+            				cANLDayKData.detailDataList.get(j).price);
             	}
             }
         } 

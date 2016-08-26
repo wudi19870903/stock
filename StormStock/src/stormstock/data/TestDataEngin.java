@@ -50,7 +50,7 @@ public class TestDataEngin {
 	private static void test_get1MinKDataOneDay()
 	{
 		List<ExKData> retList = new ArrayList<ExKData>();
-		int ret = DataEngine.get1MinKDataOneDay("000920", "2016-08-25", retList);
+		int ret = DataEngine.get1MinKDataOneDay("000920", "2016-08-05", retList);
 		//int ret = get5MinKDataOneDay("600316", "2010-06-28", retList);
 		if(0 == ret)
 		{

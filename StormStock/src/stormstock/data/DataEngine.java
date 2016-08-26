@@ -36,6 +36,10 @@ public class DataEngine extends DataEngineBase
 		public float low;
 		public float high;
 		public float volume;
+		public String getTime()
+		{
+			return datetime.split(" ")[1];
+		}
 	}
 
 	public static List<ExKData> getStock(String id) {
@@ -398,6 +402,7 @@ public class DataEngine extends DataEngineBase
             int iSecBegin = 0;
             int iSecEnd = 0;
             int iStdSecEnd = 0;
+            float preClosePrice = 0.0f;
             // add ионГ
             for(int i = 0; i < 120; i++)
             {
@@ -438,10 +443,10 @@ public class DataEngine extends DataEngineBase
     			//System.out.println("==================================================");
     			String StdEndTimeStr = String.format("%02d:%02d:%02d", 
     					iStdSecEnd/3600, (iStdSecEnd%3600)/60, (iStdSecEnd%3600)%60);
-    			float K1MinOpen = 0.0f;
-    			float K1MinClose = 0.0f;
-    			float K1MinLow = 0.0f;
-    			float K1MinHigh = 0.0f;
+    			float K1MinOpen = preClosePrice;
+    			float K1MinClose = preClosePrice;
+    			float K1MinLow = preClosePrice;
+    			float K1MinHigh = preClosePrice;
     			float K1MinVolume = 0.0f;
     			for(int k = 0; k < tmpList.size(); k++) 
     			{
@@ -468,9 +473,9 @@ public class DataEngine extends DataEngineBase
     			tmpList.clear();
     			out_list.add(cExKData);
     			//System.out.println("cExKData.datetime:" + cExKData.datetime);
+    			preClosePrice = cExKData.close;
             }
             // add обнГ
-            float preClosePrice = 0.0f;
             for(int i = 0; i < 120; i++)
             {
             	if(0 == i)
