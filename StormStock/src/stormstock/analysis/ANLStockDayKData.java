@@ -28,7 +28,7 @@ public class ANLStockDayKData {
 		
 		// load new detail data
 		List<ExKData> retList = new ArrayList<ExKData>();
-		int ret = DataEngine.get5MinKDataOneDay(ref_ANLStock.id, date, retList);
+		int ret = DataEngine.get1MinKDataOneDay(ref_ANLStock.id, date, retList);
 		if(0 == ret && retList.size() != 0)
 		{
 			// 由于可能是复权价位，需要重新计算相对价格

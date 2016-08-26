@@ -6,7 +6,7 @@ public class TestDataWebStockRealTimeInfo {
 
 	public static void main(String[] args){
 		RealTimeInfo cRealTimeInfo = new RealTimeInfo();
-		int ret = DataWebStockRealTimeInfo.getRealTimeInfo("300163", cRealTimeInfo);
+		int ret = DataWebStockRealTimeInfo.getRealTimeInfo("600030", cRealTimeInfo);
 		if(0 == ret)
 		{ 
 			System.out.println(cRealTimeInfo.name);
