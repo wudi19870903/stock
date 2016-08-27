@@ -13,6 +13,14 @@ import stormstock.data.DataWebStockDayK.DayKData;
 public class ANLPolicyBase {
 	public static Formatter fmt = new Formatter(System.out);
 	public static String strLogName = "ANLPolicyBase.txt";
+	
+	// 测试统计结果全局记录
+	public static String stockId;
+	public static int succCnt = 0;
+	public static int failCnt = 0;
+	public static float initMoney = 10000.0f;
+	public static float curMoney = initMoney;
+	
 	public static void rmlog()
 	{
 		File cfile =new File(strLogName);
@@ -135,97 +143,100 @@ public class ANLPolicyBase {
 		wave = wave/(j-i+1);
 		return wave;
 	}
-	// i是否是短期下挫企稳日
-	public static boolean ShenFuXiaCuoQiWen(List<ANLStockDayKData> dayklist, int i)
-	{
-		String logstr;
-		ANLStockDayKData cDayKData = dayklist.get(i);
-		
-		// 计算i的前10天最低下挫价位点
-		int pre10low_index = indexLow(dayklist, i-10, i-1);
-		float last10high = priceHigh(dayklist, i-10, i-1);
-		float last10low = priceLow(dayklist, i-10, i-1);
-		float maxZhenFu = (last10low - last10high)/last10high;
-		
-		// 计算前2天与 后两2最低均值,与均值下挫
-		float pre7Ave = priceAve(dayklist, i-10, i-4);
-		float last3Ave = priceAve(dayklist, i-3, i-1);
-		float xiacuo = (last3Ave - pre7Ave)/pre7Ave;
-		
-		// 前5日最低点是i-1天, 急跌
-		if(pre10low_index == i-1)
-		{
-			logstr = String.format("    %.2f\n",
-					xiacuo);
-			outputLog(logstr);
-			//趋势判断幅度判断
-			if(maxZhenFu < -0.08)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
 	
-	public static void transectionAnalysis(List<DayKData> dayklist, int m)
+	// 进行测试交易
+	public static void transectionAnalysis(List<ANLStockDayKData> dayklist, 
+			String enterDate, int iMaxTranDays, float zhisun, float zhiying)
 	{
 		String logstr;
-		DayKData cDayKDataPre1 = dayklist.get(m-1);
-		DayKData cDayKDataPre2 = dayklist.get(m-2);
+		logstr = String.format("    | transectionAnalysis  beginDate(%s) maxTranDays(%d) waitPrice[%.2f,%.2f] \n",
+				enterDate, iMaxTranDays, zhisun, zhiying);
+		outputLog(logstr);
 		
-		boolean bEnter = false;
-		int iEnter = 0;
-		float enterPrice = 0.0f;
-		float checkhigh = cDayKDataPre1.high;
-		for(int j = m; j < m+5; j++ )
+		int iTranBegin = indexDayK(dayklist, enterDate);
+		float enterPrice = dayklist.get(iTranBegin).open;
+		float zhisunPrice = enterPrice * (1+zhisun);
+		float zhiyingPrice = enterPrice * (1+zhiying);
+		
+		
+		float outPrice = 0.0f;
+		int outIndex = 0;
+		for(int i = iTranBegin; i < iTranBegin + iMaxTranDays; i++ )
 		{
-			DayKData cDayKDataTmp = dayklist.get(j);
-			if(cDayKDataTmp.high > checkhigh) checkhigh = cDayKDataTmp.high;
-			float checkEnterPrice = (cDayKDataPre1.low + cDayKDataPre2.low)/2;
-			
-			if(cDayKDataTmp.low < checkEnterPrice && 
-					checkEnterPrice < cDayKDataPre1.close) {
-				logstr = String.format("    Enter %s %.2f\n",
-						cDayKDataTmp.date,checkEnterPrice);
-				
-				outputLog(logstr);
-				bEnter = true;
-				iEnter = j;
-				enterPrice = checkEnterPrice;
+			if(i >= dayklist.size())
+			{
+				break;
+			}
+			ANLStockDayKData cDayKDataTmp = dayklist.get(i);
+			if(cDayKDataTmp.low < zhisunPrice) {
+				outPrice = zhisunPrice;
+				outIndex = i;
+				break;
+			}
+			if(cDayKDataTmp.high > zhiyingPrice) {
+				outPrice = zhiyingPrice;
+				outIndex = i;
+				break;
+			}
+			if(i == iTranBegin + iMaxTranDays - 1)
+			{
+				outPrice = cDayKDataTmp.close;
+				outIndex = i;
 				break;
 			}
 		}
-		if(bEnter)
+		
+		if(outIndex > 0)
 		{
-			for(int j = iEnter+1; j < iEnter+10; j++ )
+			float profit = (outPrice - enterPrice)/enterPrice;
+			if(profit>0)
 			{
-				DayKData cDayKDataTmp = dayklist.get(j);
-				if(cDayKDataTmp.low < enterPrice*(1-0.05)) {
-					logstr = String.format("        - Fail\n",
-							cDayKDataTmp.date);
-					outputLog(logstr);
-					break;
-				}
-				if(cDayKDataTmp.high > enterPrice*(1+0.03))
-				{
-					logstr = String.format("        - Succ\n",
-							cDayKDataTmp.date);
-					outputLog(logstr);
-					break;
-				}
+				succCnt = succCnt + 1;
 			}
+			else
+			{
+				failCnt = failCnt + 1;
+			}
+			curMoney = curMoney*(1+profit);
+			
+			logstr = String.format("    | %s enterPrice:%.2f [%.2f,%.2f]  - ",
+					dayklist.get(iTranBegin).date, enterPrice,zhisunPrice,zhiyingPrice);
+			logstr += String.format("%s outPrice:%.2f curMoney:%.2f profit:%.3f\n",
+					dayklist.get(outIndex).date, outPrice,curMoney, profit);
+			outputLog(logstr);
 		}
 		else
 		{
-			logstr = String.format("    NotEnter\n"
-					);
+			logstr = String.format("    | waiting\n");
 			outputLog(logstr);
 		}
-		
+	}
+	public static void initProfitInfo(String inStockId) {
+		stockId = inStockId;
+		succCnt = 0;
+		failCnt = 0;
+		curMoney = initMoney;
+	}
+	public static void printProfitInfo() {
+		String logstr;
+		logstr = String.format("\n --- printProfitInfo ---\n");
+		outputLog(logstr);
+		logstr = String.format("    succCnt: %d \n", succCnt);
+		outputLog(logstr);
+		logstr = String.format("    failCnt: %d \n", failCnt);
+		outputLog(logstr);
+		logstr = String.format("    initMoney: %.2f \n", initMoney);
+		outputLog(logstr);
+		logstr = String.format("    curMoney: %.2f \n", curMoney);
+		outputLog(logstr);
+		logstr = String.format("    totalProfit: %.3f \n", (curMoney- initMoney)/initMoney);
+		outputLog(logstr);
 	}
 	
 	public static void analysisOne(String id, String fromDate, String toDate)
 	{
+		initProfitInfo(id);
+		
 		String logstr;
 		
 		ANLStock cANLStock = ANLStockPool.getANLStock(id);
@@ -240,6 +251,7 @@ public class ANLPolicyBase {
 					cANLStock.historyData.get(i).date);
 			outputLog(logstr);
 			
+			int iEnterTran = -1;
 			int iCheckE = i;
 			for(int iCheckB = iCheckE-6; iCheckB>=iCheckE-20; iCheckB--)
 			{
@@ -286,7 +298,7 @@ public class ANLPolicyBase {
 					}
 					
 					
-					if(indexHigh-iLastHighIndex > 5 &&
+					if(indexHigh-iLastHighIndex > 1 &&
 							bCheckHighLowIndex && 
 							bCheckXiaCuo && 
 							bCheck3)
@@ -297,6 +309,15 @@ public class ANLPolicyBase {
 						xiaCuoZhenFu,xiaCuoMinCheck);
 						outputLog(logstr);
 						
+						// 交易测试阶段
+						iEnterTran = iCheckE + 1;
+						if(iEnterTran <= iE)
+						{
+							transectionAnalysis(cANLStock.historyData, 
+									cANLStock.historyData.get(iEnterTran).date,
+									10, -0.1f, +0.1f);
+						}
+						
 						iLastHighIndex = indexHigh;
 						break;
 					}
@@ -304,6 +325,8 @@ public class ANLPolicyBase {
 				}
 			}
 		}
+		
+		printProfitInfo();
 		
 //		float priceAve_test = priceAve(cANLStock.historyData, iB, iE);
 //		float priceHigh_test = priceHigh(cANLStock.historyData, iB, iE);
@@ -397,8 +420,9 @@ public class ANLPolicyBase {
 		for(int i=0; i<cStockList.size();i++)
 		{
 			String stockId = cStockList.get(i).id;
-			analysisOne(stockId, "2008-01-10", "2016-08-23");
+			analysisOne(stockId, "2008-05-10", "2016-08-23");
 		}
+		
 		outputLog("\n\nMain End");
 	}
 }
