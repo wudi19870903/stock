@@ -157,6 +157,10 @@ public class ANLPolicyBase {
 		{
 			return (lowPrice-highPrice)/highPrice;
 		}
+		public float xiaCuoXieLv()
+		{
+			return maxZhenFu()/(iLowIndex-iHighIndex);
+		}
 	}
 	public static XiaCuoRange CheckXiaCuoRange(List<ANLStockDayKData> dayklist, int i)
 	{
@@ -183,6 +187,7 @@ public class ANLPolicyBase {
 				float lowPrice = dayklist.get(indexLow).low;
 				float xiaCuoZhenFu = (lowPrice-highPrice)/highPrice;
 				float xiaCuoMinCheck = -1.5f*0.01f*(indexLow-indexHigh);
+				if(xiaCuoMinCheck > -0.06f) xiaCuoMinCheck = -0.06f;
 				if(xiaCuoZhenFu < xiaCuoMinCheck)
 				{
 					bCheckXiaCuo = true;
@@ -232,10 +237,12 @@ public class ANLPolicyBase {
 	}
 	
 	// 进行测试交易
-	public static void transectionAnalysis(List<ANLStockDayKData> dayklist, 
-			String enterDate, float enterPrice, int iMaxTranDays, float zhisun, float zhiying,
-			boolean bLogOutFlag)
+	public static String transectionAnalysis(List<ANLStockDayKData> dayklist, 
+			String enterDate, float enterPrice)
 	{
+		int iMaxTranDays = 10;
+		float zhisun = -0.03f;
+		float zhiying = 0.03f;
 		String logstr;
 
 		int iTranBegin = indexDayK(dayklist, enterDate);
@@ -249,28 +256,31 @@ public class ANLPolicyBase {
 		{
 			if(i >= dayklist.size())
 			{
+				// 现有数据不够了，需要等待交易
 				break;
 			}
 			ANLStockDayKData cDayKDataTmp = dayklist.get(i);
 			if(cDayKDataTmp.low < zhisunPrice) {
 				outPrice = zhisunPrice;
 				outIndex = i;
+				// 止损出局
 				break;
 			}
 			if(cDayKDataTmp.high > zhiyingPrice) {
 				outPrice = zhiyingPrice;
 				outIndex = i;
+				// 止盈出局
 				break;
 			}
 			if(i == iTranBegin + iMaxTranDays - 1)
 			{
 				outPrice = cDayKDataTmp.close;
 				outIndex = i;
+				// 超时出局
 				break;
 			}
 		}
 		
-		float hisSucc = (float)succCnt/(failCnt+succCnt);
 		if(outIndex > 0)
 		{
 			float profit = (outPrice - enterPrice)/enterPrice;
@@ -284,27 +294,20 @@ public class ANLPolicyBase {
 			}
 			curMoney = curMoney*(1+profit);
 			
-			if(bLogOutFlag)
-			{
-				logstr = String.format("transectionAnalysis( %s ) enter( %s %.2f ) [ %.2f %.2f ]",
-						stockId, dayklist.get(iTranBegin).date, enterPrice,zhisunPrice,zhiyingPrice);
-				logstr += String.format(" -> out( %s %.2f ) profit( %.3f ) HisSucc( %.3f ) AllCnt( %d )\n",
-						dayklist.get(outIndex).date, outPrice, profit, 
-						hisSucc,failCnt+succCnt);
-				outputLog(logstr);
-			}
+			logstr = String.format("TRAN[ %s %.2f -> %s %.2f %.3f ]",
+					dayklist.get(iTranBegin).date, enterPrice,
+					dayklist.get(outIndex).date, outPrice, 
+					profit);
+			//outputLog(logstr);
 		}
 		else
 		{
-			if(bLogOutFlag)
-			{
-				logstr = String.format("transectionAnalysis( %s ) enter( %s %.2f ) [ %.2f %.2f ]",
-						stockId, dayklist.get(iTranBegin).date, enterPrice,zhisunPrice,zhiyingPrice);
-				logstr += String.format(" -> WaitingOut HisSucc( %.3f ) AllCnt (%d )\n",
-						hisSucc,failCnt+succCnt);
-				outputLog(logstr);
-			}
+			logstr = String.format("TRAN[ %s %.2f -> wait 0.00 0.000 ]",
+					dayklist.get(iTranBegin).date, enterPrice
+					);
+			//outputLog(logstr);
 		}
+		return logstr;
 	}
 	public static void initProfitInfo(String inStockId) {
 		stockId = inStockId;
@@ -328,7 +331,8 @@ public class ANLPolicyBase {
 //		outputLog(logstr);
 	}
 	
-	public static void analysisOne(String id, String fromDate, String toDate)
+	// 分析股票id从fromDate日期到toDate日期，只输出enableLogMinDate天的之后的分析log
+	public static void analysisOne(String id, String fromDate, String toDate, String enableLogMinDate)
 	{
 		initProfitInfo(id);
 		
@@ -339,53 +343,58 @@ public class ANLPolicyBase {
 		
 		int iB = indexDayK(cANLStock.historyData, fromDate);
 		int iE = indexDayK(cANLStock.historyData, toDate);
+		int iLogEnable = indexDayK(cANLStock.historyData, enableLogMinDate);
+		boolean bLogEnable = false;
+		//String dateLogEnable = cANLStock.historyData.get(retXiaCuoRange.iBeginIndex).date;
 
+		XiaCuoRange cLastXiaCuoRange = new XiaCuoRange();
 		for(int i = iB; i<= iE; i++)
 		{
-			boolean bLogOutFlag = false;
-			if(iE-i<5) bLogOutFlag = true;
 			
 //			logstr = String.format("CheckDay %s\n",
 //					cANLStock.historyData.get(i).date);
 //			outputLog(logstr);
+			if(i >= iLogEnable) bLogEnable = true;
 			
-			
+			// 急跌确认
 			XiaCuoRange retXiaCuoRange = CheckXiaCuoRange(cANLStock.historyData, i);
-			if(null != retXiaCuoRange)
+			if(null != retXiaCuoRange && cLastXiaCuoRange.highPrice != retXiaCuoRange.highPrice)
 			{
-					if(bLogOutFlag)
-					{
-						float hisSucc = (float)succCnt/(failCnt+succCnt);
-						logstr = String.format("ReadyPoint( %s ) CheckXiaCuoRange [ %s %s ] HisSucc( %.3f ) AllCnt( %d )\n",
-								stockId, cANLStock.historyData.get(retXiaCuoRange.iBeginIndex).date,
-								cANLStock.historyData.get(retXiaCuoRange.iEndEndex).date,
-								hisSucc, failCnt+succCnt);
-						outputLog(logstr);
-					}
-						
-					// 等待回调
-					int iEnterIndex = -1;
-					float enterPrice = 0.0f;
-					float latastHigh = 0.0f;
-					for(int k = retXiaCuoRange.iEndEndex + 1; k<=retXiaCuoRange.iEndEndex + 6 && k<cANLStock.historyData.size(); k++)
-					{
-						if(cANLStock.historyData.get(k).high > latastHigh) 
-							latastHigh = cANLStock.historyData.get(k).high;
-						
-						if(cANLStock.historyData.get(k).low < (latastHigh + retXiaCuoRange.lowPrice)/2)
-						{
-							iEnterIndex = k;
-							enterPrice = (latastHigh + retXiaCuoRange.lowPrice)/2;
-							// 交易测试阶段
-							transectionAnalysis(cANLStock.historyData, 
-										cANLStock.historyData.get(iEnterIndex).date,enterPrice,
-										5, -0.05f, +0.05f, false);
-							break;
-						}
-					}
-
+				
+				float hisSucc = 0.0f;
+				if(0!=(failCnt+succCnt)) hisSucc = (float)succCnt/(failCnt+succCnt);
+				logstr = String.format("S( %s ) CXCR[ %s %s %.3f %.3f ] "
+						+ "HIS[ %.3f %d ] ",
+						stockId, cANLStock.historyData.get(retXiaCuoRange.iBeginIndex).date,
+						cANLStock.historyData.get(retXiaCuoRange.iEndEndex).date,
+						retXiaCuoRange.maxZhenFu(),retXiaCuoRange.xiaCuoXieLv(),
+						hisSucc, failCnt+succCnt);
 					
-					i = i + 10;
+				// 回踩确认
+				int iEnterIndex = retXiaCuoRange.iEndEndex + 1;
+				float enterPrice = 0.0f;
+				float latastHigh = 0.0f;
+				for(int k = retXiaCuoRange.iEndEndex + 1; k<=retXiaCuoRange.iEndEndex + 6 && k<cANLStock.historyData.size(); k++)
+				{
+					if(cANLStock.historyData.get(k).high > latastHigh) 
+						latastHigh = cANLStock.historyData.get(k).high;
+					
+					if(cANLStock.historyData.get(k).low < (latastHigh + retXiaCuoRange.lowPrice)/2)
+					{
+						iEnterIndex = k;
+						enterPrice = (latastHigh + retXiaCuoRange.lowPrice)/2;
+						// 交易测试阶段
+						logstr += transectionAnalysis(cANLStock.historyData, 
+								cANLStock.historyData.get(iEnterIndex).date,enterPrice);
+						break;
+					}
+				}
+			
+				logstr+= "\n";
+				if(bLogEnable)
+					outputLog(logstr);
+				
+				cLastXiaCuoRange = retXiaCuoRange;
 			}
 		}
 		
@@ -398,8 +407,8 @@ public class ANLPolicyBase {
 		outputLog("Main Begin\n\n");
 		// 股票列表
 		List<StockItem> cStockList = new ArrayList<StockItem>();
-//		cStockList.add(new StockItem("300312"));
-//		cStockList.add(new StockItem("000430"));
+		cStockList.add(new StockItem("300312"));
+//		cStockList.add(new StockItem("300132"));
 //		cStockList.add(new StockItem("002344"));
 //		cStockList.add(new StockItem("002695"));
 //		cStockList.add(new StockItem("300041"));
@@ -413,7 +422,7 @@ public class ANLPolicyBase {
 		for(int i=0; i<cStockList.size();i++)
 		{
 			String stockId = cStockList.get(i).id;
-			analysisOne(stockId, "2008-01-01", "2100-08-27");
+			analysisOne(stockId, "2008-04-28", "2100-06-21", "2008-08-21");
 		}
 		
 		outputLog("\n\nMain End");
