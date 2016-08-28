@@ -241,8 +241,8 @@ public class ANLPolicyBase {
 			String enterDate, float enterPrice)
 	{
 		int iMaxTranDays = 10;
-		float zhisun = -0.03f;
-		float zhiying = 0.03f;
+		float zhisun = -0.04f;
+		float zhiying = 0.04f;
 		String logstr;
 
 		int iTranBegin = indexDayK(dayklist, enterDate);
@@ -373,7 +373,7 @@ public class ANLPolicyBase {
 				// ªÿ≤»»∑»œ
 				int iEnterIndex = retXiaCuoRange.iEndEndex + 1;
 				float enterPrice = 0.0f;
-				float latastHigh = 0.0f;
+				float latastHigh = cANLStock.historyData.get(retXiaCuoRange.iEndEndex).high;
 				for(int k = retXiaCuoRange.iEndEndex + 1; k<=retXiaCuoRange.iEndEndex + 6 && k<cANLStock.historyData.size(); k++)
 				{
 					if(cANLStock.historyData.get(k).high > latastHigh) 
@@ -422,7 +422,7 @@ public class ANLPolicyBase {
 		for(int i=0; i<cStockList.size();i++)
 		{
 			String stockId = cStockList.get(i).id;
-			analysisOne(stockId, "2008-04-28", "2100-06-21", "2008-08-21");
+			analysisOne(stockId, "2008-01-01", "2116-01-01", "2016-07-27");
 		}
 		
 		outputLog("\n\nMain End");
