@@ -12,7 +12,6 @@ import stormstock.data.DataEngine;
 import stormstock.data.DataWebStockAllList.StockItem;
 import stormstock.data.DataWebStockDayDetail.DayDetailItem;
 import stormstock.data.DataWebStockDayK.DayKData;
-import stormstock.run.RunSuccRateCheckByStocks.ProfitResult;
 
 public class Test {
 	public static Formatter fmt = new Formatter(System.out);

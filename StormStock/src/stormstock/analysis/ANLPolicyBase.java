@@ -241,8 +241,8 @@ public class ANLPolicyBase {
 			String enterDate, float enterPrice)
 	{
 		int iMaxTranDays = 10;
-		float zhisun = -0.04f;
-		float zhiying = 0.04f;
+		float zhisun = -0.03f;
+		float zhiying = 0.03f;
 		String logstr;
 
 		int iTranBegin = indexDayK(dayklist, enterDate);
@@ -376,9 +376,6 @@ public class ANLPolicyBase {
 				float latastHigh = cANLStock.historyData.get(retXiaCuoRange.iEndEndex).high;
 				for(int k = retXiaCuoRange.iEndEndex + 1; k<=retXiaCuoRange.iEndEndex + 6 && k<cANLStock.historyData.size(); k++)
 				{
-					if(cANLStock.historyData.get(k).high > latastHigh) 
-						latastHigh = cANLStock.historyData.get(k).high;
-					
 					if(cANLStock.historyData.get(k).low < (latastHigh + retXiaCuoRange.lowPrice)/2)
 					{
 						iEnterIndex = k;
@@ -388,6 +385,8 @@ public class ANLPolicyBase {
 								cANLStock.historyData.get(iEnterIndex).date,enterPrice);
 						break;
 					}
+					if(cANLStock.historyData.get(k).high > latastHigh) 
+						latastHigh = cANLStock.historyData.get(k).high;
 				}
 			
 				logstr+= "\n";
@@ -407,7 +406,7 @@ public class ANLPolicyBase {
 		outputLog("Main Begin\n\n");
 		// ¹ÉÆ±ÁÐ±í
 		List<StockItem> cStockList = new ArrayList<StockItem>();
-		cStockList.add(new StockItem("300312"));
+//		cStockList.add(new StockItem("300312"));
 //		cStockList.add(new StockItem("300132"));
 //		cStockList.add(new StockItem("002344"));
 //		cStockList.add(new StockItem("002695"));
@@ -422,7 +421,7 @@ public class ANLPolicyBase {
 		for(int i=0; i<cStockList.size();i++)
 		{
 			String stockId = cStockList.get(i).id;
-			analysisOne(stockId, "2008-01-01", "2116-01-01", "2016-07-27");
+			analysisOne(stockId, "2008-01-01", "2116-01-01", "2016-08-29");
 		}
 		
 		outputLog("\n\nMain End");
