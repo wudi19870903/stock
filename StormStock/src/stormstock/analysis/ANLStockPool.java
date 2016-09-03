@@ -3,12 +3,30 @@ package stormstock.analysis;
 import java.util.ArrayList;
 import java.util.List;
 
+import stormstock.analysis.ANLStockDayKData.DetailData;
 import stormstock.data.DataEngine;
+import stormstock.data.DataWebStockAllList.StockItem;
 import stormstock.data.DataWebStockDayDetail.DayDetailItem;
 import stormstock.data.DataWebStockDayK.DayKData;
 import stormstock.data.DataWebStockRealTimeInfo.RealTimeInfo;
 
 public class ANLStockPool {
+	// 获得所有股票id列表
+	public static List<String> getAllStocks()
+	{
+		List<String> retList = new ArrayList<String>();
+		
+		List<StockItem> cStockList = DataEngine.getLocalAllStock();
+		
+		for(int i=0; i<cStockList.size();i++)
+		{
+			String stockId = cStockList.get(i).id;
+			retList.add(stockId);
+		}
+		
+		return retList;
+	}
+	
 	// 新数据加载
 	public static ANLStock getANLStock(String id)
 	{

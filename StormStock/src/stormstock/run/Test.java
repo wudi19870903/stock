@@ -7,7 +7,9 @@ import java.util.Collections;
 import java.util.Formatter;
 import java.util.List;
 
+import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
+import stormstock.analysis.ANLStockPool;
 import stormstock.data.DataEngine;
 import stormstock.data.DataWebStockAllList.StockItem;
 import stormstock.data.DataWebStockDayDetail.DayDetailItem;
@@ -170,25 +172,36 @@ public class Test {
 	public static void main(String[] args) {
 		rmlog();
 		outputLog("Main Begin\n\n");
-		// 股票列表
-		List<StockItem> cStockList = new ArrayList<StockItem>();
-		cStockList.add(new StockItem("600000"));
-//		cStockList.add(new StockItem("300191"));
-// 		cStockList.add(new StockItem("002344"));
-//		cStockList.add(new StockItem("002695"));
-//		cStockList.add(new StockItem("300041"));
-//		cStockList.add(new StockItem("600030"));
-		if(cStockList.size() <= 0)
-		{
-			// cStockList =  DataEngine.getLocalRandomStock(30);
-			cStockList = DataEngine.getLocalAllStock();
-		}
 		
+		// 股票全列表，输出所有股票id
+		List<String> cStockList = ANLStockPool.getAllStocks();
 		for(int i=0; i<cStockList.size();i++)
 		{
-			String stockId = cStockList.get(i).id;
-			analysisOne(stockId, 10000);
+			String stockId = cStockList.get(i);
+			outputLog(stockId + "\n");
 		}
+		
+		
+		// 输出一只股票所有日k数据
+		ANLStock cANLStock = ANLStockPool.getANLStock("600020");
+		for(int j = 0; j < cANLStock.historyData.size(); j++)  
+        {  
+			ANLStockDayKData cANLDayKData = cANLStock.historyData.get(j);  
+            fmt.format("date:%s open %.2f\n", cANLDayKData.date, cANLDayKData.open);
+            
+            // 输出一天交易的详细数据
+            if(j == cANLStock.historyData.size()-1)
+            {
+            	cANLDayKData.LoadDetail();
+            	for(int k = 0; k < cANLDayKData.detailDataList.size(); k++)  
+            	{
+            		fmt.format("    %s %.2f\n", 
+            				cANLDayKData.detailDataList.get(k).time,
+            				cANLDayKData.detailDataList.get(k).price);
+            	}
+            }
+        } 
+		
 		outputLog("\n\nMain End");
 	}
 
