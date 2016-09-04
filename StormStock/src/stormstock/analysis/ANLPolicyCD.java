@@ -9,45 +9,19 @@ import java.util.List;
 import stormstock.data.DataEngine;
 import stormstock.data.DataWebStockAllList.StockItem;
 import stormstock.data.DataWebStockDayK.DayKData;
+import stormstock.analysis.ANLPolicy;
 
-public class ANLPolicyBase {
-	public static Formatter fmt = new Formatter(System.out);
-	public static String strLogName = "ANLPolicyBase.txt";
-	
+public class ANLPolicyCD extends ANLPolicy {
 	// 测试统计结果全局记录
-	public static String stockId;
-	public static int succCnt = 0;
-	public static int failCnt = 0;
-	public static float initMoney = 10000.0f;
-	public static float curMoney = initMoney;
+	public String stockId;
+	public int succCnt = 0;
+	public int failCnt = 0;
+	public float initMoney = 10000.0f;
+	public float curMoney = initMoney;
 	
-	public static void rmlog()
-	{
-		File cfile =new File(strLogName);
-		cfile.delete();
-	}
-	public static void outputLog(String s, boolean enable)
-	{
-		if(!enable) return;
-		fmt.format("%s", s);
-		File cfile =new File(strLogName);
-		try
-		{
-			FileOutputStream cOutputStream = new FileOutputStream(cfile, true);
-			cOutputStream.write(s.getBytes());
-			cOutputStream.close();
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception:" + e.getMessage()); 
-		}
-	}
-	public static void outputLog(String s)
-	{
-		outputLog(s, true);
-	}
+
 	// 查找日期索引
-	public static int indexDayK(List<ANLStockDayKData> dayklist, String dateStr)
+	public int indexDayK(List<ANLStockDayKData> dayklist, String dateStr)
 	{
 		int index = 0;
 		for(int k = dayklist.size()-1; k >= 0; k-- )
@@ -62,7 +36,7 @@ public class ANLPolicyBase {
 		return index;
 	}
 	// 计算i到j日的价格均值
-	public static float priceAve(List<ANLStockDayKData> dayklist, int i, int j)
+	public float priceAve(List<ANLStockDayKData> dayklist, int i, int j)
 	{
 		float ave = 0.0f;
 		for(int k = i; k<=j; k++ )
@@ -74,7 +48,7 @@ public class ANLPolicyBase {
 		return ave;
 	}
 	// 计算i到j日的最高价格
-	public static float priceHigh(List<ANLStockDayKData> dayklist, int i, int j)
+	public float priceHigh(List<ANLStockDayKData> dayklist, int i, int j)
 	{
 		float high = 0.0f;
 		for(int k = i; k<=j; k++ )
@@ -86,7 +60,7 @@ public class ANLPolicyBase {
 		return high;
 	}
 	// 计算i到j日的最低价格
-	public static float priceLow(List<ANLStockDayKData> dayklist, int i, int j)
+	public float priceLow(List<ANLStockDayKData> dayklist, int i, int j)
 	{
 		float low = 100000.0f;
 		for(int k = i; k<=j; k++ )
@@ -98,7 +72,7 @@ public class ANLPolicyBase {
 		return low;
 	}
 	// 计算i到j日的最高价格的索引
-	public static int indexHigh(List<ANLStockDayKData> dayklist, int i, int j)
+	public int indexHigh(List<ANLStockDayKData> dayklist, int i, int j)
 	{
 		int index = i;
 		float high = 0.0f;
@@ -114,7 +88,7 @@ public class ANLPolicyBase {
 		return index;
 	}
 	// 计算i到j日的最低价格的索引
-	public static int indexLow(List<ANLStockDayKData> dayklist, int i, int j)
+	public int indexLow(List<ANLStockDayKData> dayklist, int i, int j)
 	{
 		int index = i;
 		float low = 100000.0f;
@@ -130,7 +104,7 @@ public class ANLPolicyBase {
 		return index;
 	}
 	// 计算i到j日的波动幅度参数,数值越大波动越大
-	public static float waveParam(List<ANLStockDayKData> dayklist, int i, int j)
+	public float waveParam(List<ANLStockDayKData> dayklist, int i, int j)
 	{
 		float wave = 0.0f;
 		for(int k = i; k<=j; k++ )
@@ -145,7 +119,7 @@ public class ANLPolicyBase {
 	}
 	
 	// 确认i日是否是下挫企稳点
-	public static class XiaCuoRange
+	public class XiaCuoRange
 	{
 		public int iBeginIndex;
 		public int iHighIndex;
@@ -162,7 +136,7 @@ public class ANLPolicyBase {
 			return maxZhenFu()/(iLowIndex-iHighIndex);
 		}
 	}
-	public static XiaCuoRange CheckXiaCuoRange(List<ANLStockDayKData> dayklist, int i)
+	public XiaCuoRange CheckXiaCuoRange(List<ANLStockDayKData> dayklist, int i)
 	{
 		String logstr;
 		int iCheckE = i;
@@ -237,7 +211,7 @@ public class ANLPolicyBase {
 	}
 	
 	// 进行测试交易
-	public static String transectionAnalysis(List<ANLStockDayKData> dayklist, 
+	public String transectionAnalysis(List<ANLStockDayKData> dayklist, 
 			String enterDate, float enterPrice)
 	{
 		int iMaxTranDays = 10;
@@ -309,7 +283,7 @@ public class ANLPolicyBase {
 		}
 		return logstr;
 	}
-	public static void initProfitInfo(String inStockId) {
+	public void initProfitInfo(String inStockId) {
 		stockId = inStockId;
 		succCnt = 0;
 		failCnt = 0;
@@ -332,7 +306,7 @@ public class ANLPolicyBase {
 	}
 	
 	// 分析股票id从fromDate日期到toDate日期，只输出enableLogMinDate天的之后的分析log
-	public static void analysisOne(String id, String fromDate, String toDate, String enableLogMinDate)
+	public void analysisOne(String id, String fromDate, String toDate, String enableLogMinDate)
 	{
 		initProfitInfo(id);
 		
@@ -401,9 +375,9 @@ public class ANLPolicyBase {
 	}
 	
 	public static void main(String[] args) {
-		strLogName = "ANLPolicyBase.txt";
-		rmlog();
-		outputLog("Main Begin\n\n");
+		ANLPolicyCD objANLPolicy = new ANLPolicyCD();
+		objANLPolicy.rmlog();
+		objANLPolicy.outputLog("Main Begin\n\n");
 		// 股票列表
 		List<StockItem> cStockList = new ArrayList<StockItem>();
 //		cStockList.add(new StockItem("300312"));
@@ -421,9 +395,9 @@ public class ANLPolicyBase {
 		for(int i=0; i<cStockList.size();i++)
 		{
 			String stockId = cStockList.get(i).id;
-			analysisOne(stockId, "2008-01-01", "2116-01-01", "2016-08-29");
+			objANLPolicy.analysisOne(stockId, "2008-01-01", "2116-01-01", "2016-08-29");
 		}
 		
-		outputLog("\n\nMain End");
+		objANLPolicy.outputLog("\n\nMain End");
 	}
 }
