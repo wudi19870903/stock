@@ -77,29 +77,37 @@ public class ANLPolicyAve {
 	{
 		ANLStockDayKData cTodayKData = dayK_list.get(today);
 		float todayClose = cTodayKData.close;
-		int nDayAfter = today+day;
+		int nDayAfter = today+day+2;
 		if(nDayAfter >= dayK_list.size())
 		{
 			return false;
 		}
 		
 		float closeHigh = 0.0f;
-		for(int i=today; i<=nDayAfter ; ++i)
+		
+		//满足条件后第2天买，第3天才能开始交易，所以从第3天开始算
+		for(int i=today+2; i<=nDayAfter ; ++i)
 		{
 			ANLStockDayKData cDayKData = dayK_list.get(i);
-			if(cDayKData.close > closeHigh)
+			
+			//如果买完后先到达了止损位，则算失败
+			if(cDayKData.close < todayClose)
 			{
-				closeHigh = cDayKData.close;
+				float decRate = (todayClose-cDayKData.close)/todayClose*100;
+				if(decRate >= 2.0f)  //止损位暂设为3个点
+				{
+					break;
+				}
 			}
-		}
-		
-		if(closeHigh > todayClose)
-		{
-			float realRate = (closeHigh-todayClose)/todayClose*100;
-			if(realRate >= incRate)
+			
+			if(cDayKData.close > todayClose)
 			{
-				//outputLog(String.format("future inc rate:%.2f\n", realRate));
-				return true;
+				float realRate = (cDayKData.close-todayClose)/todayClose*100;
+				if(realRate >= incRate)
+				{
+					//outputLog(String.format("future inc rate:%.2f\n", realRate));
+					return true;
+				}
 			}
 		}
 		
@@ -259,26 +267,30 @@ public class ANLPolicyAve {
 		ANLStockDayKData cDayKData = dayK_list.get(index);
 		if(cDayKData.close<cDayKData.open  //当日是下跌的
 				&& cDayKData.open>fNDayAve  //开盘并没有破均线
-				&& (cDayKData.low-0.15)<=fNDayAve)  //最低点跌破或接近均线(TODO：0.15只是大概值)
+				&& (cDayKData.low/*-0.15*/)<=fNDayAve)  //最低点跌破或接近均线(TODO：0.15只是大概值)
 		{
 			int day = 10;
-			float incRate = 10.0f;
+			float incRate = 15.0f;
 			switch(nAveOfDays)
 			{
 				case 5:
+				{
+					day = 5;
+					incRate = 10.0f;
+				}
 					break;
 				case 10:
 					break;
 				case 20:
 				{
 					day = 10;
-					incRate = 10.0f;
+					incRate = 15.0f;
 				}
 					break;
 				case 30:
 				{
 					day = 15;
-					incRate = 15.0f;
+					incRate = 20.0f;
 				}
 					break;
 				case 60:
@@ -330,27 +342,27 @@ public class ANLPolicyAve {
 		int incCount = 0;
 		int decCount = 0;
 		
-		for (int i =nAveOfDays; i< size-6; i++)
+		for (int i =nAveOfDays; i< size; i++)
 		{
 			if(isDaySatisfied(nAveOfDays,i,cANLStock.historyData))
 			{
 				++total;
 				
-				if(isIncInFuture(5,2,i,cANLStock.historyData))
+				if(isIncInFuture(5,1,i,cANLStock.historyData))
 				{
 					//ANLStockDayKData cDayKData = cANLStock.historyData.get(i);
 					//System.out.println(cDayKData.date);
 					++incCount;
 				}
 				
-				if(isDecInFuture(5,2,i,cANLStock.historyData))
+				//if(isDecInFuture(5,2,i,cANLStock.historyData))
 				{
-					++decCount;
+					//++decCount;
 				}
 			}
 		}
 		
-		if(total > 0)
+		if(total > 15)
 		{
 			float incRate = (float)incCount/total*100;
 			float decRate = (float)decCount/total*100;
@@ -382,7 +394,7 @@ public class ANLPolicyAve {
 		
 		List<BounceData> bounceList = new ArrayList<BounceData>();
 		
-		boolean bCalToday = true;
+		boolean bCalToday = false;
 		int nAveOfDay = 20;
 		
 		for(int i=0; i<cStockList.size();i++)
