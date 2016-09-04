@@ -14,6 +14,9 @@ import stormstock.data.DataWebStockDayK.DayKData;
 public class ANLPolicyAve {
 	public static Formatter fmt = new Formatter(System.out);
 	public static String strLogName = "ANLPolicyAve.txt";
+	public static float fStopProfit = 1.0f;  //止盈点
+	public static float fStopLoss = 2.0f;  //止损点
+	public static int nMaxTradeDays = 5;  //最大交易时间（天）
 	
 	public static void rmlog()
 	{
@@ -67,23 +70,19 @@ public class ANLPolicyAve {
 	
 	/*
 	 * 功能：判断未来几日内最大涨幅是否超过incRate
-	 * 参数：day：未来几日
-	 * 参数：incRate：涨幅幅度（相对于满足条件的那天的收盘价）
 	 * 参数：today：满足条件的这天在dayK_list的索引
 	 * 参数：dayK_list：日K数据
 	 * 返回值：是否成功
 	 * */
-	public static boolean isIncInFuture(int day, float incRate, int today, List<ANLStockDayKData> dayK_list)
+	public static boolean isIncInFuture(int today, List<ANLStockDayKData> dayK_list)
 	{
 		ANLStockDayKData cTodayKData = dayK_list.get(today);
 		float todayClose = cTodayKData.close;
-		int nDayAfter = today+day+2;
+		int nDayAfter = today+nMaxTradeDays+2;
 		if(nDayAfter >= dayK_list.size())
 		{
 			return false;
 		}
-		
-		float closeHigh = 0.0f;
 		
 		//满足条件后第2天买，第3天才能开始交易，所以从第3天开始算
 		for(int i=today+2; i<=nDayAfter ; ++i)
@@ -94,7 +93,7 @@ public class ANLPolicyAve {
 			if(cDayKData.close < todayClose)
 			{
 				float decRate = (todayClose-cDayKData.close)/todayClose*100;
-				if(decRate >= 2.0f)  //止损位暂设为3个点
+				if(decRate >= fStopLoss)
 				{
 					break;
 				}
@@ -103,7 +102,7 @@ public class ANLPolicyAve {
 			if(cDayKData.close > todayClose)
 			{
 				float realRate = (cDayKData.close-todayClose)/todayClose*100;
-				if(realRate >= incRate)
+				if(realRate >= fStopProfit)
 				{
 					//outputLog(String.format("future inc rate:%.2f\n", realRate));
 					return true;
@@ -117,39 +116,43 @@ public class ANLPolicyAve {
 	
 	/*
 	 * 功能：判断未来几日内最大跌幅是否超过decRate
-	 * 参数：day：未来几日
-	 * 参数：decRate：跌幅幅度（相对于满足条件的那天的收盘价）
 	 * 参数：today：满足条件的这天在dayK_list的索引
 	 * 参数：dayK_list：日K数据
 	 * 返回值：是否成功
 	 * */
-	public static boolean isDecInFuture(int day, float decRate, int today, List<ANLStockDayKData> dayK_list)
+	public static boolean isDecInFuture(int today, List<ANLStockDayKData> dayK_list)
 	{
 		ANLStockDayKData cTodayKData = dayK_list.get(today);
 		float todayClose = cTodayKData.close;
-		int nDayAfter = today+day;
+		int nDayAfter = today+nMaxTradeDays+2;
 		if(nDayAfter >= dayK_list.size())
 		{
 			return false;
 		}
 		
-		float closeLow = 1000.0f;
-		for(int i=today; i<=nDayAfter ; ++i)
+		//满足条件后第2天买，第3天才能开始交易，所以从第3天开始算
+		for(int i=today+2; i<=nDayAfter ; ++i)
 		{
 			ANLStockDayKData cDayKData = dayK_list.get(i);
-			if(cDayKData.close < closeLow)
+			
+			//如果买完后先到达了止损位，则算失败
+			if(cDayKData.close < todayClose)
 			{
-				closeLow = cDayKData.close;
+				float realDecRate = (todayClose-cDayKData.close)/todayClose*100;
+				if(realDecRate >= fStopLoss)
+				{
+					return true;
+				}
 			}
-		}
-		
-		if(closeLow < todayClose)
-		{
-			float realRate = (todayClose-closeLow)/closeLow*100;
-			if(realRate >= decRate)
+			
+			if(cDayKData.close > todayClose)
 			{
-				//outputLog(String.format("future inc rate:%.2f\n", realRate));
-				return true;
+				float realRate = (cDayKData.close-todayClose)/todayClose*100;
+				if(realRate >= fStopProfit)
+				{
+					//outputLog(String.format("future inc rate:%.2f\n", realRate));
+					break;
+				}
 			}
 		}
 		
@@ -348,16 +351,16 @@ public class ANLPolicyAve {
 			{
 				++total;
 				
-				if(isIncInFuture(5,1,i,cANLStock.historyData))
+				if(isIncInFuture(i,cANLStock.historyData))
 				{
 					//ANLStockDayKData cDayKData = cANLStock.historyData.get(i);
 					//System.out.println(cDayKData.date);
 					++incCount;
 				}
 				
-				//if(isDecInFuture(5,2,i,cANLStock.historyData))
+				if(isDecInFuture(i,cANLStock.historyData))
 				{
-					//++decCount;
+					++decCount;
 				}
 			}
 		}
