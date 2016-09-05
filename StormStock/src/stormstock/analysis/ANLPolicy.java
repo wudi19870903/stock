@@ -6,7 +6,7 @@ import java.util.Formatter;
 import java.util.List;
 
 public class ANLPolicy {
-	public Formatter fmt = new Formatter(System.out);
+	static public Formatter fmt = new Formatter(System.out);
 	public String strLogName;
 	public ANLPolicy()
 	{
@@ -53,7 +53,21 @@ public class ANLPolicy {
 		
 	}
 	// 查找日期索引
-	public int indexDayK(List<ANLStockDayKData> dayklist, String dateStr)
+	public int indexDayKAfterDate(List<ANLStockDayKData> dayklist, String dateStr)
+	{
+		int index = 0;
+		for(int k = 0; k<dayklist.size(); k++ )
+		{
+			ANLStockDayKData cDayKDataTmp = dayklist.get(k);
+			if(cDayKDataTmp.date.compareTo(dateStr) >= 0)
+			{
+				index = k;
+				break;
+			}
+		}
+		return index;
+	}
+	public int indexDayKBeforeDate(List<ANLStockDayKData> dayklist, String dateStr)
 	{
 		int index = 0;
 		for(int k = dayklist.size()-1; k >= 0; k-- )
@@ -76,8 +90,8 @@ public class ANLPolicy {
 	}
 	void run(String beginDate, String endDate) {
 		ANLStock cANLStock = ANLStockPool.getANLStock("999999");
-		int iB = indexDayK(cANLStock.historyData, beginDate);
-		int iE = indexDayK(cANLStock.historyData, endDate);
+		int iB = indexDayKAfterDate(cANLStock.historyData, beginDate);
+		int iE = indexDayKBeforeDate(cANLStock.historyData, endDate);
 		for(int i = iB; i <= iE; i++)  
         {  
 			ANLStockDayKData cANLDayKData = cANLStock.historyData.get(i);  
