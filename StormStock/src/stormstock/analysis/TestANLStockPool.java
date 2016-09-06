@@ -10,8 +10,14 @@ public class TestANLStockPool {
 	public static Formatter fmt = new Formatter(System.out);
 	public static void main(String[] args) {
 
-		ANLStock cANLStock = ANLStockPool.getANLStock("000920");
+		ANLStock cANLStock = ANLStockPool.getANLStock("300312");
 		fmt.format("cANLStockId:%s\n", cANLStock.id);
+		fmt.format("    -name:%s\n", cANLStock.curBaseInfo.name);
+		fmt.format("    -price:%.3f\n", cANLStock.curBaseInfo.price);
+		fmt.format("    -allMarketValue:%.3f\n", cANLStock.curBaseInfo.allMarketValue);
+		fmt.format("    -circulatedMarketValue:%.3f\n", cANLStock.curBaseInfo.circulatedMarketValue);
+		fmt.format("    -PE:%.3f\n", cANLStock.curBaseInfo.peRatio);
+		
 		for(int i = 0; i < cANLStock.historyData.size(); i++)  
         {  
 			ANLStockDayKData cANLDayKData = cANLStock.historyData.get(i);  

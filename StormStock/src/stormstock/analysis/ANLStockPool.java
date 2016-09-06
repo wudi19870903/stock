@@ -5,6 +5,7 @@ import java.util.List;
 
 import stormstock.analysis.ANLStockDayKData.DetailData;
 import stormstock.data.DataEngine;
+import stormstock.data.DataEngineBase.StockBaseInfo;
 import stormstock.data.DataWebStockAllList.StockItem;
 import stormstock.data.DataWebStockDayDetail.DayDetailItem;
 import stormstock.data.DataWebStockDayK.DayKData;
@@ -38,6 +39,8 @@ public class ANLStockPool {
 			
 		ANLStock cANLStock = new ANLStock();
 		cANLStock.id = id;
+		
+		DataEngine.getStockBaseData(id, cANLStock.curBaseInfo);
 		
 		for(int i = 0; i < retList.size(); i++)  
         {  

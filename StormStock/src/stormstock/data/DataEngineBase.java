@@ -299,6 +299,66 @@ public class DataEngineBase {
 		}
 		return 0;
 	}
+	public static class StockBaseInfo
+	{
+		public String name;
+		public float price; // 元
+		public float allMarketValue; // 亿
+		public float circulatedMarketValue; // 亿
+		public float peRatio;
+	}
+	public static int saveStockBaseData(String id, StockBaseInfo baseData) 
+	{
+		if(0 != mkStocDataDir(id)) return -10;
+		String stockBaseInfoFileName = s_DataDir + "/" + id + "/" + s_BaseInfoFile;
+		File cfile =new File(stockBaseInfoFileName);
+		// System.out.println("saveStockBaseData:" + id);
+		try
+		{
+			FileOutputStream cOutputStream = new FileOutputStream(cfile);
+			String s = String.format("%s,%.3f,%.3f,%.3f,%.3f", 
+					baseData.name, baseData.price, 
+					baseData.allMarketValue, baseData.circulatedMarketValue, baseData.peRatio);
+			cOutputStream.write(s.getBytes());
+			cOutputStream.close();
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.getMessage()); 
+			return -1;
+		}
+		return 0;
+	}
+	public static int getStockBaseData(String id, StockBaseInfo baseData) 
+	{
+		String stockBaseInfoFileName = s_DataDir + "/" + id + "/" + s_BaseInfoFile;
+		File cfile=new File(stockBaseInfoFileName);
+		if(!cfile.exists()) return -10;
+		try
+		{
+			BufferedReader reader = new BufferedReader(new FileReader(cfile));
+			String tempString = null;
+            while ((tempString = reader.readLine()) != null) {
+                //System.out.println("line " + line + ": " + tempString);
+            	String[] cols = tempString.split(",");
+            	
+            	baseData.name = cols[0];
+            	baseData.price = Float.parseFloat(cols[1]);
+            	baseData.allMarketValue = Float.parseFloat(cols[2]);
+            	baseData.circulatedMarketValue = Float.parseFloat(cols[3]);
+            	baseData.peRatio = Float.parseFloat(cols[4]);
+
+                break;
+            }
+            reader.close();
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.getMessage()); 
+			return -1;
+		}
+		return 0;
+	}
 	public static int updateStock(String id)
 	{
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
@@ -338,9 +398,18 @@ public class DataEngineBase {
 			if(curValiddateStr.compareTo(localDataLastDate) > 0)
 			{
 				RealTimeInfo cRealTimeInfo = new RealTimeInfo();
-				int retgetRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfo(id, cRealTimeInfo);
+				int retgetRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfoMore(id, cRealTimeInfo);
 				if(0 == retgetRealTimeInfo)
 				{
+					// save basedata
+					StockBaseInfo cStockBaseData = new StockBaseInfo();
+					cStockBaseData.name = cRealTimeInfo.name;
+					cStockBaseData.price = cRealTimeInfo.curPrice;
+					cStockBaseData.allMarketValue = cRealTimeInfo.allMarketValue;
+					cStockBaseData.circulatedMarketValue = cRealTimeInfo.circulatedMarketValue;
+					cStockBaseData.peRatio = cRealTimeInfo.peRatio;
+					saveStockBaseData(id, cStockBaseData);
+					
 					String webValidLastDate = cRealTimeInfo.date;
 					if(cRealTimeInfo.time.compareTo("15:00:00") < 0)
 					{
@@ -480,5 +549,6 @@ public class DataEngineBase {
 	private static String s_DataDir = "data";
 	private static String s_daykFile = "dayk.txt";
 	private static String s_DividendPayoutFile = "dividendPayout.txt";
+	private static String s_BaseInfoFile = "baseInfo.txt";
 
 }

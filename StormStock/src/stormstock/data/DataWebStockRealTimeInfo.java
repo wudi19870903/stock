@@ -18,10 +18,16 @@ import stormstock.data.DataWebStockDividendPayout.DividendPayout;
 public class DataWebStockRealTimeInfo {
 	public static class RealTimeInfo implements Comparable
 	{
+		// base
 		public String name;
 		public String date;
 		public String time;
 		public float curPrice;
+		// more
+		public float allMarketValue; //总市值
+		public float circulatedMarketValue; // 流通市值
+		public float peRatio; //市盈率
+		
 		@Override
 		public int compareTo(Object o) {
 			// TODO Auto-generated method stub
@@ -85,6 +91,63 @@ public class DataWebStockRealTimeInfo {
 			
         }catch (Exception e) {  
         	System.out.println("Exception[DataWebStockRealTimeInfo]:" + e.getMessage()); 
+            // TODO: handle exception  
+        	return -1;
+        }  
+		return 0;
+	}
+	public static int getRealTimeInfoMore(String id, RealTimeInfo out_obj)
+	{
+		// get base info
+		getRealTimeInfo(id, out_obj);
+		
+		// e.g http://qt.gtimg.cn/q=sz000858
+		String urlStr = "http://qt.gtimg.cn/q=";
+		String tmpId = "";
+		if(id.startsWith("60") && 6 == id.length())
+		{
+			tmpId = "sh" + id;
+		}
+		else if((id.startsWith("00") ||  id.startsWith("30")) && 6 == id.length())
+		{
+			tmpId = "sz" + id;
+		}
+		else if(id.startsWith("99")) // 上证指数
+		{
+			tmpId = "sh" + "000001";
+		}
+		else
+		{
+			return -10;
+		}
+		urlStr = urlStr + tmpId;
+		
+		try{  
+			
+			URL url = new URL(urlStr);    
+	        HttpURLConnection conn = (HttpURLConnection)url.openConnection();    
+	        //设置超时间为3秒  
+	        conn.setConnectTimeout(3*1000);  
+	        //防止屏蔽程序抓取而返回403错误  
+	        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");  
+			InputStream inputStream = conn.getInputStream(); 
+			byte[] getData = readInputStream(inputStream); 
+			String data = new String(getData, "gbk");  
+			//System.out.println(data);     
+			String[] cells = data.split("~");
+			for(int i =0; i< cells.length; i++)
+			{
+				System.out.println(cells[i]);
+			}
+			out_obj.allMarketValue = Float.parseFloat(cells[45]); //总市值
+			out_obj.circulatedMarketValue = Float.parseFloat(cells[44]); // 流通市值
+			if(cells[39].length() != 0)
+				out_obj.peRatio = Float.parseFloat(cells[39]); //市盈率
+			else
+				out_obj.peRatio = 0.0f;
+			
+        }catch (Exception e) {  
+        	System.out.println("Exception[getRealTimeInfoMore]:" + e.getMessage()); 
             // TODO: handle exception  
         	return -1;
         }  
