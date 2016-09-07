@@ -17,6 +17,18 @@ public class ANLStockDayKData {
 	{
 		detailDataList = new ArrayList<DetailData>();
 	} 
+	public ANLStockDayKData(ANLStockDayKData c, ANLStock refStock)
+	{
+
+		date = c.date;
+		open = c.open;
+		close = c.close;
+		high = c.high;
+		low = c.low;
+		volume = c.volume;
+		detailDataList = new ArrayList<DetailData>();
+		ref_ANLStock = refStock;
+	} 
 	
 	public int LoadDetail()
 	{

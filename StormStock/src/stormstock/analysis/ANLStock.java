@@ -13,6 +13,13 @@ public class ANLStock {
 		historyData = new ArrayList<ANLStockDayKData>();
 		curBaseInfo = new StockBaseInfo();
 	}	 
+	public ANLStock(String sid, StockBaseInfo scurBaseInfo)
+	{
+		id = sid;
+		curBaseInfo = scurBaseInfo;
+		historyData = new ArrayList<ANLStockDayKData>();
+		curBaseInfo = new StockBaseInfo();
+	}	 
 	public String id;
 	public StockBaseInfo curBaseInfo;
 	public List<ANLStockDayKData> historyData;
