@@ -42,7 +42,7 @@ public class DataWebStockDayK {
 	// 600001 20080101 20151010
 	public static int getDayKData(String id, String begin_date, String end_date, List<DayKData> out_list)
 	{
-		// e.g "http://biz.finance.sina.com.cn/stock/flash_hq/kline_data.php?symbol=sz300163&begin_date=20080101&end_date=20151010"
+		// e.g "http://biz.finance.sina.com.cn/stock/flash_hq/kline_data.php?symbol=sz000002&begin_date=20160101&end_date=21000101"
 		String urlStr = "http://biz.finance.sina.com.cn/stock/flash_hq/kline_data.php?";
 		String tmpId = "";
 		if(id.startsWith("60") && 6 == id.length())

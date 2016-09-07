@@ -114,7 +114,8 @@ public class DataWebStockRealTimeInfo {
 		}
 		else if(id.startsWith("99")) // 上证指数
 		{
-			tmpId = "sh" + "000001";
+			tmpId = "sh" + "000001"; // 上证指数没有更多基本信息
+			return 0;
 		}
 		else
 		{
@@ -135,10 +136,10 @@ public class DataWebStockRealTimeInfo {
 			String data = new String(getData, "gbk");  
 			//System.out.println(data);     
 			String[] cells = data.split("~");
-			for(int i =0; i< cells.length; i++)
-			{
-				System.out.println(cells[i]);
-			}
+//			for(int i =0; i< cells.length; i++)
+//			{
+//				System.out.println(cells[i]);
+//			}
 			out_obj.allMarketValue = Float.parseFloat(cells[45]); //总市值
 			out_obj.circulatedMarketValue = Float.parseFloat(cells[44]); // 流通市值
 			if(cells[39].length() != 0)

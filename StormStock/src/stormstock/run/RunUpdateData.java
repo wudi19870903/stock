@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.Formatter;
 import java.util.List;
 
+import stormstock.analysis.ANLStock;
+import stormstock.analysis.ANLStockPool;
 import stormstock.data.DataEngineBase;
 import stormstock.data.DataWebStockAllList;
 import stormstock.data.DataWebStockAllList.StockItem;
@@ -24,13 +26,20 @@ public class RunUpdateData {
 		String ShangZhiId = "999999";
 		String ShangZhiName = "上证指数";
 		iRetupdateStock = DataEngineBase.updateStock(ShangZhiId);
+		ANLStock cANLStock = ANLStockPool.getANLStock(ShangZhiId);
+		String newestDate = "";
+		if(cANLStock.historyData.size()>0)
+		{
+			newestDate = cANLStock.historyData.get(cANLStock.historyData.size()-1).date;
+		}
 		if(iRetupdateStock >= 0)
 		{
-			fmt.format("update success: %s (%s) item:%d\n", ShangZhiId, ShangZhiName, iRetupdateStock);
+
+			fmt.format("update success: %s (%s) item:%d date:%s\n", ShangZhiId, ShangZhiName, iRetupdateStock, newestDate);
 		}
 		else
 		{
-			fmt.format("update ERROR: %s (%s) item:%d\n", ShangZhiId, ShangZhiName, iRetupdateStock);
+			fmt.format("update ERROR: %s (%s) item:%d date:%s\n", ShangZhiId, ShangZhiName, iRetupdateStock, newestDate);
 		}
 		
 		// 更新所有k
@@ -42,13 +51,18 @@ public class RunUpdateData {
 	        {  
 				StockItem cStockItem = retList.get(i);  
 	            iRetupdateStock = DataEngineBase.updateStock(cStockItem.id);
+	            cANLStock = ANLStockPool.getANLStock(cStockItem.id);
+	            if(cANLStock != null && cANLStock.historyData.size()>0)
+	    		{
+	    			newestDate = cANLStock.historyData.get(cANLStock.historyData.size()-1).date;
+	    		}
 	            if( iRetupdateStock >= 0)
 	            {
-	            	fmt.format("update success: %s (%s) item:%d\n", cStockItem.id, cStockItem.name, iRetupdateStock);
+	            	fmt.format("update success: %s (%s) item:%d date:%s\n", cStockItem.id, cStockItem.name, iRetupdateStock, newestDate);
 	            }
 	            else
 	            {
-	            	fmt.format("update ERROR: %s (%s) item:%d\n", cStockItem.id, cStockItem.name, iRetupdateStock);
+	            	fmt.format("update ERROR: %s (%s) item:%d date:%s\n", cStockItem.id, cStockItem.name, iRetupdateStock, newestDate);
 	            }
 	            
 	        } 
