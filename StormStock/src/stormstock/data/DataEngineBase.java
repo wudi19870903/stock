@@ -306,6 +306,14 @@ public class DataEngineBase {
 		public float allMarketValue; // вк
 		public float circulatedMarketValue; // вк
 		public float peRatio;
+		public StockBaseInfo()
+		{
+			name = "";
+			price = 0.0f;
+			allMarketValue = 0.0f;
+			circulatedMarketValue = 0.0f;
+			peRatio = 0.0f;
+		}
 	}
 	public static int saveStockBaseData(String id, StockBaseInfo baseData) 
 	{

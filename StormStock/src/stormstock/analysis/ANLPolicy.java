@@ -7,6 +7,25 @@ import java.util.Formatter;
 import java.util.List;
 
 public class ANLPolicy {
+	static class ANLUserAcc
+	{
+		class ANLUserAccStock
+		{
+			String id;
+			int totalAmount;
+			float buyPrices;
+		}
+		public float money;
+		public List<ANLUserAccStock> stockList; 
+		public boolean buyStock(String id, float price, int amount)
+		{
+			return true;
+		}
+		public boolean sellStock(String id, float price, int amount)
+		{
+			return true;
+		}
+	}
 	static class ANLUserStockPool 
 	{
 		ANLUserStockPool()
@@ -108,7 +127,7 @@ public class ANLPolicy {
 	}
 	void run(String beginDate, String endDate) {
 		// 遍历所有股票，让用户筛选到用户股票池
-		fmt.format("loading user stock pool ...\n");
+		// fmt.format("loading user stock pool ...\n");
 		List<String> cStockList = ANLStockPool.getAllStocks();
 		for(int i=0; i<cStockList.size();i++)
 		{

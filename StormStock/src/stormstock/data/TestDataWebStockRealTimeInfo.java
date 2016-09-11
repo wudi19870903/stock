@@ -24,7 +24,7 @@ public class TestDataWebStockRealTimeInfo {
 		{
 			System.out.println("getRealTimeInfoMore -----------------------------------");
 			RealTimeInfo cRealTimeInfo = new RealTimeInfo();
-			int ret = DataWebStockRealTimeInfo.getRealTimeInfoMore("999999", cRealTimeInfo);
+			int ret = DataWebStockRealTimeInfo.getRealTimeInfoMore("300028", cRealTimeInfo);
 			if(0 == ret)
 			{ 
 				System.out.println(cRealTimeInfo.name);

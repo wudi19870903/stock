@@ -88,6 +88,11 @@ public class DataWebStockRealTimeInfo {
 			out_obj.curPrice = Float.parseFloat(cols[3]);
 			out_obj.date = cols[30];
 			out_obj.time = cols[31];
+			if(out_obj.date.length() < 2 || out_obj.name.length() < 2)
+			{
+				System.out.println("Exception[DataWebStockRealTimeInfo]: invalid data"); 
+				return -2;
+			}
 			
         }catch (Exception e) {  
         	System.out.println("Exception[DataWebStockRealTimeInfo]:" + e.getMessage()); 
@@ -99,7 +104,8 @@ public class DataWebStockRealTimeInfo {
 	public static int getRealTimeInfoMore(String id, RealTimeInfo out_obj)
 	{
 		// get base info
-		getRealTimeInfo(id, out_obj);
+		int retBase = getRealTimeInfo(id, out_obj);
+		if(0 != retBase) return retBase;
 		
 		// e.g http://qt.gtimg.cn/q=sz000858
 		String urlStr = "http://qt.gtimg.cn/q=";
