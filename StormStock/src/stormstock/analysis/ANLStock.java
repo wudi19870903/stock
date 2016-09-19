@@ -55,10 +55,16 @@ public class ANLStock {
 		}
 		return index;
 	}
+	
+	public float GetCurPrice()
+	{
+		return historyData.get(historyData.size()-1).close;
+	}
 		
 	// 均线计算
 	public float GetMA(int count, String date)
 	{
+		if(historyData.size() == 0) return 0.0f;
 		float value = 0.0f;
 		int iE = indexDayKBeforeDate(historyData, date);
 		int iB = iE-count+1;
@@ -78,6 +84,7 @@ public class ANLStock {
 	// 高值计算
 	public float GetHigh(int count, String date)
 	{
+		if(historyData.size() == 0) return 0.0f;
 		float value = 0.0f;
 		int iE = indexDayKBeforeDate(historyData, date);
 		int iB = iE-count+1;
@@ -96,6 +103,7 @@ public class ANLStock {
 	// 低值计算
 	public float GetLow(int count, String date)
 	{
+		if(historyData.size() == 0) return 0.0f;
 		float value = 10000.0f;
 		int iE = indexDayKBeforeDate(historyData, date);
 		int iB = iE-count+1;

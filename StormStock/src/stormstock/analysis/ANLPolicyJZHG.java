@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import stormstock.analysis.ANLPolicy.ANLUserAcc.ANLUserAccStock;
 import stormstock.analysis.ANLPolicy.ANLUserStockPool;
 import stormstock.analysis.ANLPolicyAve.BounceData;
 
@@ -33,6 +34,7 @@ public class ANLPolicyJZHG extends ANLPolicy {
 	public void init()
 	{
 		String logstr = String.format("init\n");
+		cUserAcc.init(100000.0f);
 		outputLog(logstr);
 	}
 
@@ -64,7 +66,7 @@ public class ANLPolicyJZHG extends ANLPolicy {
 			return false;
 		}
 		
-//		if(cANLStock.id.compareTo("300312") == 0 )
+//		if(cANLStock.id.compareTo("603099") == 0 )
 //		{
 //			return true;
 //		}
@@ -88,8 +90,12 @@ public class ANLPolicyJZHG extends ANLPolicy {
 		for(int i = 0; i < spool.stockList.size(); i++)
 		{
 			ANLStock cANLStock = spool.stockList.get(i);
+			if(cANLStock.historyData.size() == 0) continue;
+			
 			ANLPolicyStockCK cANLPolicyStockCK = new ANLPolicyStockCK();
 			cANLPolicyStockCK.stockID = cANLStock.id;
+//			logstr = String.format("%s %s ", date, cANLPolicyStockCK.stockID);
+//			outputLog(logstr);
 			
 			// 长期价格均值作为基准值
 			float long_base_price = cANLStock.GetMA(500, date);
@@ -124,33 +130,53 @@ public class ANLPolicyJZHG extends ANLPolicy {
 			if(long_high_pricePa-long_low_pricePa != 0)
 				long_pianlirate = (cur_pricePa-long_low_pricePa)/(long_high_pricePa-long_low_pricePa);
 			
-			logstr = String.format("    %s test[ %.3f %.3f %.3f]\n", cANLPolicyStockCK.stockID, 
-					short_pianlirate,mid_pianlirate,long_pianlirate);
-			outputLog(logstr);
+//			logstr = String.format("test[ %.3f %.3f %.3f]\n",
+//					short_pianlirate,mid_pianlirate,long_pianlirate);
+//			outputLog(logstr);
 			
 			// 短期均值参数
 			cANLPolicyStockCK.c1 = short_pianlirate*(5/10.0f) + mid_pianlirate*(3/10.0f) + long_pianlirate*(2/10.0f);
 			
 			stockCKList.add(cANLPolicyStockCK);
-
+			Collections.sort(stockCKList); //分值表排序
 		}
-		//分值表排序
-		Collections.sort(stockCKList);
-		
-		for(int i = 0; i < stockCKList.size(); i++)
+		if(stockCKList.size() != 0) 
 		{
-			ANLPolicyStockCK cANLPolicyStockCK = stockCKList.get(i);
-			logstr = String.format("    %s c1[ %.3f ]\n", cANLPolicyStockCK.stockID, cANLPolicyStockCK.c1);
-			outputLog(logstr);
+			for(int i = 0; i < stockCKList.size(); i++)
+			{
+				ANLPolicyStockCK cANLPolicyStockCK = stockCKList.get(i);
+//				logstr = String.format("    %s c1[ %.3f ]\n", cANLPolicyStockCK.stockID, cANLPolicyStockCK.c1);
+//				outputLog(logstr);
+			}
+			
+			// 用户操作 ---------------------------------------------------
+			for(int i = 0; i < cUserAcc.stockList.size(); i++)
+			{
+				ANLUserAccStock cANLUserAccStock = cUserAcc.stockList.get(i);
+				if(cANLUserAccStock.holdDayCnt > 5)
+				{
+					float cprice = spool.getStock(cANLUserAccStock.id).GetCurPrice();
+					cUserAcc.sellStock(cANLUserAccStock.id, cprice, cANLUserAccStock.totalAmount);
+				}
+			}
+			if(cUserAcc.stockList.size() == 0)
+			{
+				int indexBuy = 5;
+				if(stockCKList.size() < 6) indexBuy = stockCKList.size()-1;
+				
+				ANLPolicyStockCK cANLPolicyStockCK = stockCKList.get(indexBuy);
+				String buy_id = cANLPolicyStockCK.stockID;
+				float buy_price = spool.getStock(buy_id).GetCurPrice();
+				int buy_amount = (int)(cUserAcc.money/buy_price)/100*100;
+				cUserAcc.buyStock(buy_id, buy_price, buy_amount);
+			}
 		}
-		
 	}
 	public static void main(String[] args) throws InterruptedException {
 		fmt.format("main begin\n");
 		ANLPolicyJZHG cANLPolicyJZHG = new ANLPolicyJZHG();
 		cANLPolicyJZHG.rmlog();
-		cANLPolicyJZHG.run("2016-09-19", "2016-09-19");
-		List<ANLStock> cStockObjList = new ArrayList<ANLStock>();
+		cANLPolicyJZHG.run("2014-08-25", "2016-08-25");
 		fmt.format("main end\n");
 	}
 }

@@ -6,25 +6,105 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
+import stormstock.analysis.ANLPolicyJZHG.ANLPolicyStockCK;
+
 public class ANLPolicy {
+	static public Formatter fmt = new Formatter(System.out);
+	public String strLogName;
+	private List<ANLStock> stockListstore;
+	
+	public ANLUserAcc cUserAcc;
+	private ANLUserStockPool cANLUserStockPool;
+	
 	static class ANLUserAcc
 	{
 		class ANLUserAccStock
 		{
-			String id;
-			int totalAmount;
-			float buyPrices;
+			public String id;
+			public int totalAmount;
+			public float buyPrices;
+			public int holdDayCnt;
 		}
+		public String curDate;
 		public float money;
 		public List<ANLUserAccStock> stockList; 
+		
+		void init(float in_money) 
+		{
+			money = in_money;
+			stockList = new ArrayList<ANLUserAccStock>();
+		}
+		void update(String date)
+		{
+			curDate = date;
+			for(int i=0;i<stockList.size();i++)
+			{
+				ANLUserAccStock cANLUserAccStock = stockList.get(i);
+				cANLUserAccStock.holdDayCnt = cANLUserAccStock.holdDayCnt + 1;
+			}
+			for(int i=0;i<stockList.size();i++)
+			{
+				ANLUserAccStock cANLUserAccStock = stockList.get(i);
+				if(cANLUserAccStock.totalAmount == 0)
+				{
+					stockList.remove(i);
+				}
+			}
+		}
+		public float GetMountAmount(){
+			return money;
+		}
 		public boolean buyStock(String id, float price, int amount)
 		{
+			ANLUserAccStock cANLUserAccStock = null;
+			for(int i=0;i<stockList.size();i++)
+			{
+				ANLUserAccStock cTmp = stockList.get(i);
+				if(cTmp.id.compareTo(id) == 0)
+				{
+					cANLUserAccStock = cTmp;
+					break;
+				}
+			}
+			if(null == cANLUserAccStock)
+			{
+				cANLUserAccStock = new ANLUserAccStock();
+				cANLUserAccStock.id = id;
+				cANLUserAccStock.holdDayCnt =0;
+				cANLUserAccStock.buyPrices = price;
+				cANLUserAccStock.totalAmount = amount;
+				stockList.add(cANLUserAccStock);
+			}
+			else
+			{
+				int oriAmount = cANLUserAccStock.totalAmount;
+				float oriPrice = cANLUserAccStock.buyPrices;
+				cANLUserAccStock.totalAmount = cANLUserAccStock.totalAmount + amount;
+				cANLUserAccStock.buyPrices = (oriPrice*oriAmount + price*amount)/cANLUserAccStock.totalAmount;
+			}
+			money = money - price*amount;
+			fmt.format("# buyStock [%s %s %.2f %d]\n", curDate, id, price, amount);
 			return true;
 		}
 		public boolean sellStock(String id, float price, int amount)
 		{
+			for(int i=0;i<stockList.size();i++)
+			{
+				ANLUserAccStock cANLUserAccStock = stockList.get(i);
+				if(cANLUserAccStock.id.compareTo(id) == 0)
+				{
+					int oriAmount = cANLUserAccStock.totalAmount;
+					float oriPrice = cANLUserAccStock.buyPrices;
+					cANLUserAccStock.totalAmount = cANLUserAccStock.totalAmount - amount;
+					cANLUserAccStock.buyPrices = (oriPrice*oriAmount - price*amount)/cANLUserAccStock.totalAmount;
+					money = money + price*amount;
+					fmt.format("# sellStock [%s %s %.2f %d] %.2f \n", curDate, id, price, amount, money);
+					break;
+				}
+			}
 			return true;
 		}
+		
 	}
 	static class ANLUserStockPool 
 	{
@@ -33,18 +113,32 @@ public class ANLPolicy {
 			stockList = new ArrayList<ANLStock>();
 		}
 		public List<ANLStock> stockList;
+		ANLStock getStock(String id)
+		{
+			ANLStock cANLStock = null;
+			for(int i=0;i<stockList.size();i++)
+			{
+				ANLStock tmp = stockList.get(i);
+				if(tmp.id.compareTo(id) == 0)
+				{
+					cANLStock = tmp;
+					break;
+				}
+			}
+			return cANLStock;
+		}
 	}
-	
-	static public Formatter fmt = new Formatter(System.out);
-	public String strLogName;
-	private List<ANLStock> stockListstore;
 	
 	public ANLPolicy()
 	{
 		strLogName = this.getClass().getSimpleName() + ".txt";
 		stockListstore = new ArrayList<ANLStock>();
+		
+		cUserAcc = new ANLUserAcc();
+		cANLUserStockPool = new ANLUserStockPool();
 	}
 	
+	// --------------------------------------------------------------
 	// log
 	public void rmlog()
 	{
@@ -78,16 +172,6 @@ public class ANLPolicy {
 	public boolean stock_filter(ANLStock cANLStock){ return false;}
 	public void check_today(String date, ANLUserStockPool spool) {}
 	// --------------------------------------------------------------
-	
-	public void buy(String stockId, float price)
-	{
-		
-	}
-	
-	public void sell(String stockId, float price)
-	{
-		
-	}
 	
 	// 查找日期索引
 	public int indexDayKAfterDate(List<ANLStockDayKData> dayklist, String dateStr)
@@ -126,6 +210,7 @@ public class ANLPolicy {
 		run(cANLDayKDataBegin.date, cANLDayKDataEnd.date);
 	}
 	void run(String beginDate, String endDate) {
+		init();
 		// 遍历所有股票，让用户筛选到用户股票池
 		// fmt.format("loading user stock pool ...\n");
 		List<String> cStockList = ANLStockPool.getAllStocks();
@@ -192,6 +277,7 @@ public class ANLPolicy {
 			
 			// 回调给用户
             check_today(cANLDayKData.date, cANLUserStockPool);
+            cUserAcc.update(cANLDayKData.date);
         } 
 	}
 }
