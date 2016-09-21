@@ -1,12 +1,14 @@
 package stormstock.analysis;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import stormstock.analysis.ANLPolicy.ANLUserAcc.ANLUserAccStock;
 import stormstock.analysis.ANLPolicy.ANLUserStockPool;
 import stormstock.analysis.ANLPolicyAve.BounceData;
+import stormstock.analysis.ANLPolicyCD.XiaCuoRange;
 
 // 价值回归
 public class ANLPolicyJZHG extends ANLPolicy {
@@ -41,6 +43,25 @@ public class ANLPolicyJZHG extends ANLPolicy {
 	// 所有股票回调筛选函数，系统自动回调，反悔true的被加入考察股票池
 	public boolean stock_filter(ANLStock cANLStock)
 	{
+		// for test -------------------------------------------------------------
+		boolean bEnableTest = false;
+		if(bEnableTest)
+		{
+			List<String> testStockList = Arrays.asList(
+					"600742", 
+					"600790"
+					);
+			for(int i=0; i< testStockList.size();i++)
+			{
+				if(cANLStock.id.compareTo(testStockList.get(i)) == 0 )
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+		// -------------------------------------------------------------
+		
 		// 市值过大过滤掉
 		if(cANLStock.curBaseInfo.allMarketValue > 200.0f 
 				|| cANLStock.curBaseInfo.circulatedMarketValue > 100.0f)
@@ -66,19 +87,136 @@ public class ANLPolicyJZHG extends ANLPolicy {
 			return false;
 		}
 		
-//		if(cANLStock.id.compareTo("603099") == 0 )
-//		{
-//			return true;
-//		}
-//		else{
-//			return false;
-//		}
-		
 		String logstr = String.format("add userpool %s %s\n", cANLStock.id, cANLStock.curBaseInfo.name);
 		outputLog(logstr);
 		return true;
 	}
 	
+	// 计算i到j日的最高价格的索引
+	public int indexHigh(List<ANLStockDayKData> dayklist, int i, int j)
+	{
+		int index = i;
+		float high = 0.0f;
+		for(int k = i; k<=j; k++ )
+		{
+			ANLStockDayKData cDayKDataTmp = dayklist.get(k);
+			if(cDayKDataTmp.high > high) 
+			{
+				high = cDayKDataTmp.high;
+				index = k;
+			}
+		}
+		return index;
+	}
+	// 计算i到j日的最低价格的索引
+	public int indexLow(List<ANLStockDayKData> dayklist, int i, int j)
+	{
+		int index = i;
+		float low = 100000.0f;
+		for(int k = i; k<=j; k++ )
+		{
+			ANLStockDayKData cDayKDataTmp = dayklist.get(k);
+			if(cDayKDataTmp.low < low) 
+			{
+				low = cDayKDataTmp.low;
+				index = k;
+			}
+		}
+		return index;
+	}
+	
+	// 确认i日是否是下挫企稳点
+	public class XiaCuoRange
+	{
+		public int iBeginIndex;
+		public int iHighIndex;
+		public int iLowIndex;
+		public int iEndEndex;
+		public float highPrice;
+		public float lowPrice;
+		public float maxZhenFu()
+		{
+			return (lowPrice-highPrice)/highPrice;
+		}
+		public float xiaCuoXieLv()
+		{
+			return maxZhenFu()/(iLowIndex-iHighIndex);
+		}
+	}
+	public XiaCuoRange CheckXiaCuoRange(List<ANLStockDayKData> dayklist, int i)
+	{
+		String logstr;
+		int iCheckE = i;
+		// 检查当前天，前6到20天区间满足急跌企稳趋势
+		for(int iCheckB = i-6; iCheckB>=i-20; iCheckB--)
+		{
+			if(iCheckB >= 0)
+			{
+				// @ 最高点与最低点在区间位置的判断
+				boolean bCheckHighLowIndex = false;
+				int indexHigh = indexHigh(dayklist, iCheckB, iCheckE);
+				int indexLow = indexLow(dayklist, iCheckB, iCheckE);
+				if(indexHigh>iCheckB && indexHigh<=(iCheckB+iCheckE)/2
+						&& indexLow > (iCheckB+iCheckE)/2 && indexLow < iCheckE)
+				{
+					bCheckHighLowIndex = true;
+				}
+				
+				// @ 最高点与最低点下挫幅度判断
+				boolean bCheckXiaCuo = false;
+				float highPrice = dayklist.get(indexHigh).high;
+				float lowPrice = dayklist.get(indexLow).low;
+				float xiaCuoZhenFu = (lowPrice-highPrice)/highPrice;
+				float xiaCuoMinCheck = -1.5f*0.01f*(indexLow-indexHigh);
+				if(xiaCuoMinCheck > -0.06f) xiaCuoMinCheck = -0.06f;
+				if(xiaCuoZhenFu < xiaCuoMinCheck)
+				{
+					bCheckXiaCuo = true;
+				}
+				
+				// @ 前区间，后区间价位判断
+				boolean bCheck3 = true;
+				int cntDay = iCheckE-iCheckB;
+				float midPrice = (highPrice+lowPrice)/2;
+				for(int c= iCheckB; c<iCheckB + cntDay/3; c++)
+				{
+					if(dayklist.get(c).low < midPrice)
+					{
+						bCheck3 = false;
+					}
+				}
+				for(int c= iCheckE; c>iCheckE - cntDay/3; c--)
+				{
+					if(dayklist.get(c).low > midPrice)
+					{
+						bCheck3 = false;
+					}
+				}
+				
+				if(bCheckHighLowIndex && 
+						bCheckXiaCuo && 
+						bCheck3)
+				{
+//						logstr = String.format("    Test findLatestXiaCuoRange [%s,%s] ZhenFu(%.3f,%.3f)\n",
+//								dayklist.get(iCheckB).date,
+//								dayklist.get(iCheckE).date,
+//								xiaCuoZhenFu,xiaCuoMinCheck);
+//						outputLog(logstr);
+					
+					XiaCuoRange retXiaCuoRange = new XiaCuoRange();
+					retXiaCuoRange.iBeginIndex = iCheckB;
+					retXiaCuoRange.iEndEndex = iCheckE;
+					retXiaCuoRange.iHighIndex = indexHigh;
+					retXiaCuoRange.iLowIndex = indexLow;
+					retXiaCuoRange.highPrice = highPrice;
+					retXiaCuoRange.lowPrice = lowPrice;
+					return retXiaCuoRange;
+				}
+			}
+		}
+		return null;
+	}
+		
 	public void check_today(String date, ANLUserStockPool spool)
 	{
 		String logstr = String.format("check_today %s --->>>\n", date);
@@ -94,8 +232,6 @@ public class ANLPolicyJZHG extends ANLPolicy {
 			
 			ANLPolicyStockCK cANLPolicyStockCK = new ANLPolicyStockCK();
 			cANLPolicyStockCK.stockID = cANLStock.id;
-//			logstr = String.format("%s %s ", date, cANLPolicyStockCK.stockID);
-//			outputLog(logstr);
 			
 			// 长期价格均值作为基准值
 			float long_base_price = cANLStock.GetMA(500, date);
@@ -129,17 +265,27 @@ public class ANLPolicyJZHG extends ANLPolicy {
 			float long_pianlirate = 0.0f;
 			if(long_high_pricePa-long_low_pricePa != 0)
 				long_pianlirate = (cur_pricePa-long_low_pricePa)/(long_high_pricePa-long_low_pricePa);
-			
-//			logstr = String.format("test[ %.3f %.3f %.3f]\n",
-//					short_pianlirate,mid_pianlirate,long_pianlirate);
-//			outputLog(logstr);
-			
 			// 短期均值参数
-			cANLPolicyStockCK.c1 = short_pianlirate*(5/10.0f) + mid_pianlirate*(3/10.0f) + long_pianlirate*(2/10.0f);
+			cANLPolicyStockCK.c1 = short_pianlirate*(2/10.0f) 
+					+ mid_pianlirate*(3/10.0f) 
+					+ long_pianlirate*(5/10.0f);
 			
-			stockCKList.add(cANLPolicyStockCK);
-			Collections.sort(stockCKList); //分值表排序
+			XiaCuoRange cXiaCuoRange = CheckXiaCuoRange(cANLStock.historyData, cANLStock.historyData.size()-1);
+			if(null != cXiaCuoRange && cXiaCuoRange.maxZhenFu() > -0.5f)
+			{
+				logstr = String.format("%s %s ", date, cANLPolicyStockCK.stockID);
+				logstr = logstr + String.format("P[ %.3f %.3f %.3f] ",
+						short_pianlirate,mid_pianlirate,long_pianlirate);
+				logstr = logstr + String.format("X[ %.3f %.3f %.3f %.3f]\n",
+						cXiaCuoRange.highPrice, cXiaCuoRange.lowPrice, cXiaCuoRange.maxZhenFu(), cXiaCuoRange.xiaCuoXieLv());
+				//outputLog(logstr);
+				
+				stockCKList.add(cANLPolicyStockCK);
+				Collections.sort(stockCKList); //分值表排序
+			}
 		}
+		
+		
 		if(stockCKList.size() != 0) 
 		{
 			for(int i = 0; i < stockCKList.size(); i++)
@@ -148,18 +294,21 @@ public class ANLPolicyJZHG extends ANLPolicy {
 //				logstr = String.format("    %s c1[ %.3f ]\n", cANLPolicyStockCK.stockID, cANLPolicyStockCK.c1);
 //				outputLog(logstr);
 			}
+		}
 			
-			// 用户操作 ---------------------------------------------------
-			for(int i = 0; i < cUserAcc.stockList.size(); i++)
+		// 用户操作 ---------------------------------------------------
+		for(int i = 0; i < cUserAcc.stockList.size(); i++)
+		{
+			ANLUserAccStock cANLUserAccStock = cUserAcc.stockList.get(i);
+			if(cANLUserAccStock.holdDayCnt > 3)
 			{
-				ANLUserAccStock cANLUserAccStock = cUserAcc.stockList.get(i);
-				if(cANLUserAccStock.holdDayCnt > 5)
-				{
-					float cprice = spool.getStock(cANLUserAccStock.id).GetCurPrice();
-					cUserAcc.sellStock(cANLUserAccStock.id, cprice, cANLUserAccStock.totalAmount);
-				}
+				float cprice = spool.getStock(cANLUserAccStock.id).GetCurPrice();
+				cUserAcc.sellStock(cANLUserAccStock.id, cprice, cANLUserAccStock.totalAmount);
 			}
-			if(cUserAcc.stockList.size() == 0)
+		}
+		if(cUserAcc.stockList.size() == 0)
+		{
+			if(stockCKList.size() != 0) // 存在操作票
 			{
 				int indexBuy = 5;
 				if(stockCKList.size() < 6) indexBuy = stockCKList.size()-1;
@@ -172,11 +321,12 @@ public class ANLPolicyJZHG extends ANLPolicy {
 			}
 		}
 	}
+	
 	public static void main(String[] args) throws InterruptedException {
 		fmt.format("main begin\n");
 		ANLPolicyJZHG cANLPolicyJZHG = new ANLPolicyJZHG();
 		cANLPolicyJZHG.rmlog();
-		cANLPolicyJZHG.run("2014-08-25", "2016-08-25");
+		cANLPolicyJZHG.run("2011-01-01", "2011-12-31");
 		fmt.format("main end\n");
 	}
 }

@@ -83,7 +83,7 @@ public class ANLPolicy {
 				cANLUserAccStock.buyPrices = (oriPrice*oriAmount + price*amount)/cANLUserAccStock.totalAmount;
 			}
 			money = money - price*amount;
-			fmt.format("# buyStock [%s %s %.2f %d]\n", curDate, id, price, amount);
+			fmt.format("# UserAccOpe buyStock [%s %s %.2f %d]\n", curDate, id, price, amount);
 			return true;
 		}
 		public boolean sellStock(String id, float price, int amount)
@@ -98,7 +98,7 @@ public class ANLPolicy {
 					cANLUserAccStock.totalAmount = cANLUserAccStock.totalAmount - amount;
 					cANLUserAccStock.buyPrices = (oriPrice*oriAmount - price*amount)/cANLUserAccStock.totalAmount;
 					money = money + price*amount;
-					fmt.format("# sellStock [%s %s %.2f %d] %.2f \n", curDate, id, price, amount, money);
+					fmt.format("# UserAccOpe sellStock [%s %s %.2f %d] %.2f \n", curDate, id, price, amount, money);
 					break;
 				}
 			}
@@ -276,8 +276,8 @@ public class ANLPolicy {
 			}
 			
 			// 回调给用户
+			cUserAcc.update(cANLDayKData.date);
             check_today(cANLDayKData.date, cANLUserStockPool);
-            cUserAcc.update(cANLDayKData.date);
         } 
 	}
 }
