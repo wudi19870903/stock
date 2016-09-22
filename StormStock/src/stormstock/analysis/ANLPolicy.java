@@ -25,10 +25,15 @@ public class ANLPolicy {
 			public float buyPrices;
 			public int holdDayCnt;
 		}
+		public ANLUserStockPool ref_UserStockPool;
 		public String curDate;
 		public float money;
 		public List<ANLUserAccStock> stockList; 
 		
+		ANLUserAcc(ANLUserStockPool userStockPool)
+		{
+			ref_UserStockPool = userStockPool;
+		}
 		void init(float in_money) 
 		{
 			money = in_money;
@@ -83,11 +88,21 @@ public class ANLPolicy {
 				cANLUserAccStock.buyPrices = (oriPrice*oriAmount + price*amount)/cANLUserAccStock.totalAmount;
 			}
 			money = money - price*amount;
-			fmt.format("# UserAccOpe buyStock [%s %s %.2f %d]\n", curDate, id, price, amount);
+
+			float all_marketval = 0.0f;
+			for(int i=0;i<stockList.size();i++)
+			{
+				ANLUserAccStock tmpANLUserAccStock = stockList.get(i);
+				float cprice = ref_UserStockPool.getStock(tmpANLUserAccStock.id).GetCurPrice();
+				all_marketval = all_marketval + tmpANLUserAccStock.totalAmount*cprice;
+			}
+			float all_asset = all_marketval + money;
+			fmt.format("# UserAccOpe buyStock [%s %s %.2f %d] [%.2f %.2f] \n", curDate, id, price, amount, all_marketval, all_asset);
 			return true;
 		}
 		public boolean sellStock(String id, float price, int amount)
 		{
+			boolean sellflag =false;
 			for(int i=0;i<stockList.size();i++)
 			{
 				ANLUserAccStock cANLUserAccStock = stockList.get(i);
@@ -98,9 +113,21 @@ public class ANLPolicy {
 					cANLUserAccStock.totalAmount = cANLUserAccStock.totalAmount - amount;
 					cANLUserAccStock.buyPrices = (oriPrice*oriAmount - price*amount)/cANLUserAccStock.totalAmount;
 					money = money + price*amount;
-					fmt.format("# UserAccOpe sellStock [%s %s %.2f %d] %.2f \n", curDate, id, price, amount, money);
+					sellflag = true;
 					break;
 				}
+			}
+			if(sellflag)
+			{
+				float all_marketval = 0.0f;
+				for(int i=0;i<stockList.size();i++)
+				{
+					ANLUserAccStock cANLUserAccStock = stockList.get(i);
+					float cprice = ref_UserStockPool.getStock(cANLUserAccStock.id).GetCurPrice();
+					all_marketval = all_marketval + cANLUserAccStock.totalAmount*cprice;
+				}
+				float all_asset = all_marketval + money;
+				fmt.format("# UserAccOpe sellStock [%s %s %.2f %d] [%.2f %.2f]\n", curDate, id, price, amount, all_marketval, all_asset);
 			}
 			return true;
 		}
@@ -134,8 +161,8 @@ public class ANLPolicy {
 		strLogName = this.getClass().getSimpleName() + ".txt";
 		stockListstore = new ArrayList<ANLStock>();
 		
-		cUserAcc = new ANLUserAcc();
 		cANLUserStockPool = new ANLUserStockPool();
+		cUserAcc = new ANLUserAcc(cANLUserStockPool);
 	}
 	
 	// --------------------------------------------------------------
@@ -228,7 +255,6 @@ public class ANLPolicy {
 		fmt.format("load success, stock count : %d\n", stockListstore.size());
 		
 		// 从上证指数中确认回调天数
-		ANLUserStockPool cANLUserStockPool = new ANLUserStockPool();
 		ANLStock cANLStock = ANLStockPool.getANLStock("999999");
 		int iB = indexDayKAfterDate(cANLStock.historyData, beginDate);
 		int iE = indexDayKBeforeDate(cANLStock.historyData, endDate);

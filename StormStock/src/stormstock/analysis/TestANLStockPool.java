@@ -10,7 +10,7 @@ public class TestANLStockPool {
 	public static Formatter fmt = new Formatter(System.out);
 	public static void main(String[] args) {
 
-		ANLStock cANLStock = ANLStockPool.getANLStock("603099");
+		ANLStock cANLStock = ANLStockPool.getANLStock("000678");
 		fmt.format("cANLStockId:%s\n", cANLStock.id);
 		fmt.format("    -name:%s\n", cANLStock.curBaseInfo.name);
 		fmt.format("    -price:%.3f\n", cANLStock.curBaseInfo.price);

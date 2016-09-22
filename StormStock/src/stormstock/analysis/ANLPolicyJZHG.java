@@ -12,11 +12,19 @@ import stormstock.analysis.ANLPolicyCD.XiaCuoRange;
 
 // 价值回归
 public class ANLPolicyJZHG extends ANLPolicy {
-	// 计算股票各项系数表单
+	
+	// 股票分值表，用于给每天的股票打分
 	static class ANLPolicyStockCK implements Comparable
 	{
 		public String stockID;
-		float c1; // 价值回归分值   系数(当前价-半年最高)+(当前价-半年最低)+(当前价-15日均)
+		float c1; // 偏离比分值
+		float c2; // 短期下挫分值
+		// 价值回归分值   系数(当前价-半年最高)+(当前价-半年最低)+(当前价-15日均)
+		// 前3个月吸货分值，    贴重要压力位上穿吃货检查，20 60日均线 ， - 贴重要支撑位下穿反弹
+		// 解套分值， 给近5日解套次数，突破次数
+		// 洗盘分值， 缩量中阴线次数，直接一次性击穿重要支撑位
+		
+		// 综合排序方法
 		@Override
 		public int compareTo(Object arg0) {
 			// TODO Auto-generated method stub
@@ -32,207 +40,14 @@ public class ANLPolicyJZHG extends ANLPolicy {
 		}
 	}
 	
-	// init 初始化参数
-	public void init()
+	// 偏离比分数计算类，计算短期中期长期都处于相对底部的分值
+	static class CalPianLiBi
 	{
-		String logstr = String.format("init\n");
-		cUserAcc.init(100000.0f);
-		outputLog(logstr);
-	}
-
-	// 所有股票回调筛选函数，系统自动回调，反悔true的被加入考察股票池
-	public boolean stock_filter(ANLStock cANLStock)
-	{
-		// for test -------------------------------------------------------------
-		boolean bEnableTest = false;
-		if(bEnableTest)
+		static float calculate(ANLStock cANLStock)
 		{
-			List<String> testStockList = Arrays.asList(
-					"600742", 
-					"600790"
-					);
-			for(int i=0; i< testStockList.size();i++)
-			{
-				if(cANLStock.id.compareTo(testStockList.get(i)) == 0 )
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-		// -------------------------------------------------------------
-		
-		// 市值过大过滤掉
-		if(cANLStock.curBaseInfo.allMarketValue > 200.0f 
-				|| cANLStock.curBaseInfo.circulatedMarketValue > 100.0f)
-		{
-			return false;
-		}
-		// 交易历史上市时间较短的过滤掉
-		if(cANLStock.historyData.size() < 250*2)
-		{
-			return false;
-		}
-		// PE市盈率过大的过滤掉
-		if(cANLStock.curBaseInfo.peRatio > 100.0f 
-				|| cANLStock.curBaseInfo.peRatio == 0)
-		{
-			return false;
-		}
-		// 名字过滤
-		if(cANLStock.curBaseInfo.name.contains("S")
-				|| cANLStock.curBaseInfo.name.contains("*")
-				|| cANLStock.curBaseInfo.name.contains("N"))
-		{
-			return false;
-		}
-		
-		String logstr = String.format("add userpool %s %s\n", cANLStock.id, cANLStock.curBaseInfo.name);
-		outputLog(logstr);
-		return true;
-	}
-	
-	// 计算i到j日的最高价格的索引
-	public int indexHigh(List<ANLStockDayKData> dayklist, int i, int j)
-	{
-		int index = i;
-		float high = 0.0f;
-		for(int k = i; k<=j; k++ )
-		{
-			ANLStockDayKData cDayKDataTmp = dayklist.get(k);
-			if(cDayKDataTmp.high > high) 
-			{
-				high = cDayKDataTmp.high;
-				index = k;
-			}
-		}
-		return index;
-	}
-	// 计算i到j日的最低价格的索引
-	public int indexLow(List<ANLStockDayKData> dayklist, int i, int j)
-	{
-		int index = i;
-		float low = 100000.0f;
-		for(int k = i; k<=j; k++ )
-		{
-			ANLStockDayKData cDayKDataTmp = dayklist.get(k);
-			if(cDayKDataTmp.low < low) 
-			{
-				low = cDayKDataTmp.low;
-				index = k;
-			}
-		}
-		return index;
-	}
-	
-	// 确认i日是否是下挫企稳点
-	public class XiaCuoRange
-	{
-		public int iBeginIndex;
-		public int iHighIndex;
-		public int iLowIndex;
-		public int iEndEndex;
-		public float highPrice;
-		public float lowPrice;
-		public float maxZhenFu()
-		{
-			return (lowPrice-highPrice)/highPrice;
-		}
-		public float xiaCuoXieLv()
-		{
-			return maxZhenFu()/(iLowIndex-iHighIndex);
-		}
-	}
-	public XiaCuoRange CheckXiaCuoRange(List<ANLStockDayKData> dayklist, int i)
-	{
-		String logstr;
-		int iCheckE = i;
-		// 检查当前天，前6到20天区间满足急跌企稳趋势
-		for(int iCheckB = i-6; iCheckB>=i-20; iCheckB--)
-		{
-			if(iCheckB >= 0)
-			{
-				// @ 最高点与最低点在区间位置的判断
-				boolean bCheckHighLowIndex = false;
-				int indexHigh = indexHigh(dayklist, iCheckB, iCheckE);
-				int indexLow = indexLow(dayklist, iCheckB, iCheckE);
-				if(indexHigh>iCheckB && indexHigh<=(iCheckB+iCheckE)/2
-						&& indexLow > (iCheckB+iCheckE)/2 && indexLow < iCheckE)
-				{
-					bCheckHighLowIndex = true;
-				}
-				
-				// @ 最高点与最低点下挫幅度判断
-				boolean bCheckXiaCuo = false;
-				float highPrice = dayklist.get(indexHigh).high;
-				float lowPrice = dayklist.get(indexLow).low;
-				float xiaCuoZhenFu = (lowPrice-highPrice)/highPrice;
-				float xiaCuoMinCheck = -1.5f*0.01f*(indexLow-indexHigh);
-				if(xiaCuoMinCheck > -0.06f) xiaCuoMinCheck = -0.06f;
-				if(xiaCuoZhenFu < xiaCuoMinCheck)
-				{
-					bCheckXiaCuo = true;
-				}
-				
-				// @ 前区间，后区间价位判断
-				boolean bCheck3 = true;
-				int cntDay = iCheckE-iCheckB;
-				float midPrice = (highPrice+lowPrice)/2;
-				for(int c= iCheckB; c<iCheckB + cntDay/3; c++)
-				{
-					if(dayklist.get(c).low < midPrice)
-					{
-						bCheck3 = false;
-					}
-				}
-				for(int c= iCheckE; c>iCheckE - cntDay/3; c--)
-				{
-					if(dayklist.get(c).low > midPrice)
-					{
-						bCheck3 = false;
-					}
-				}
-				
-				if(bCheckHighLowIndex && 
-						bCheckXiaCuo && 
-						bCheck3)
-				{
-//						logstr = String.format("    Test findLatestXiaCuoRange [%s,%s] ZhenFu(%.3f,%.3f)\n",
-//								dayklist.get(iCheckB).date,
-//								dayklist.get(iCheckE).date,
-//								xiaCuoZhenFu,xiaCuoMinCheck);
-//						outputLog(logstr);
-					
-					XiaCuoRange retXiaCuoRange = new XiaCuoRange();
-					retXiaCuoRange.iBeginIndex = iCheckB;
-					retXiaCuoRange.iEndEndex = iCheckE;
-					retXiaCuoRange.iHighIndex = indexHigh;
-					retXiaCuoRange.iLowIndex = indexLow;
-					retXiaCuoRange.highPrice = highPrice;
-					retXiaCuoRange.lowPrice = lowPrice;
-					return retXiaCuoRange;
-				}
-			}
-		}
-		return null;
-	}
-		
-	public void check_today(String date, ANLUserStockPool spool)
-	{
-		String logstr = String.format("check_today %s --->>>\n", date);
-		outputLog(logstr);
-		
-		//创建计算分值表
-		List<ANLPolicyStockCK> stockCKList = new ArrayList<ANLPolicyStockCK>();
-		// 计算所有股票检查表值，并添加
-		for(int i = 0; i < spool.stockList.size(); i++)
-		{
-			ANLStock cANLStock = spool.stockList.get(i);
-			if(cANLStock.historyData.size() == 0) continue;
-			
-			ANLPolicyStockCK cANLPolicyStockCK = new ANLPolicyStockCK();
-			cANLPolicyStockCK.stockID = cANLStock.id;
-			
+			if(cANLStock.historyData.size() == 0) 
+				return -1.0f;
+			String date = cANLStock.historyData.get(cANLStock.historyData.size()-1).date;
 			// 长期价格均值作为基准值
 			float long_base_price = cANLStock.GetMA(500, date);
 			// 当前价格参数
@@ -266,67 +81,305 @@ public class ANLPolicyJZHG extends ANLPolicy {
 			if(long_high_pricePa-long_low_pricePa != 0)
 				long_pianlirate = (cur_pricePa-long_low_pricePa)/(long_high_pricePa-long_low_pricePa);
 			// 短期均值参数
-			cANLPolicyStockCK.c1 = short_pianlirate*(2/10.0f) 
+			float fenshu = short_pianlirate*(2/10.0f) 
 					+ mid_pianlirate*(3/10.0f) 
 					+ long_pianlirate*(5/10.0f);
-			
-			XiaCuoRange cXiaCuoRange = CheckXiaCuoRange(cANLStock.historyData, cANLStock.historyData.size()-1);
-			if(null != cXiaCuoRange && cXiaCuoRange.maxZhenFu() > -0.5f)
+			return fenshu;
+		}
+	}
+	
+	static class DuanQiXiaCuo
+	{
+		// 确认i日是否是下挫企稳点
+		static public class XiaCuoRange
+		{
+			public int iBeginIndex;
+			public int iHighIndex;
+			public int iLowIndex;
+			public int iEndEndex;
+			public float highPrice;
+			public float lowPrice;
+			public float maxZhenFu()
 			{
-				logstr = String.format("%s %s ", date, cANLPolicyStockCK.stockID);
-				logstr = logstr + String.format("P[ %.3f %.3f %.3f] ",
-						short_pianlirate,mid_pianlirate,long_pianlirate);
+				return (lowPrice-highPrice)/highPrice;
+			}
+			public float xiaCuoXieLv()
+			{
+				return maxZhenFu()/(iLowIndex-iHighIndex);
+			}
+		}
+		// 计算i到j日的最高价格的索引
+		static public int indexHigh(List<ANLStockDayKData> dayklist, int i, int j)
+		{
+			int index = i;
+			float high = 0.0f;
+			for(int k = i; k<=j; k++ )
+			{
+				ANLStockDayKData cDayKDataTmp = dayklist.get(k);
+				if(cDayKDataTmp.high > high) 
+				{
+					high = cDayKDataTmp.high;
+					index = k;
+				}
+			}
+			return index;
+		}
+		// 计算i到j日的最低价格的索引
+		static public int indexLow(List<ANLStockDayKData> dayklist, int i, int j)
+		{
+			int index = i;
+			float low = 100000.0f;
+			for(int k = i; k<=j; k++ )
+			{
+				ANLStockDayKData cDayKDataTmp = dayklist.get(k);
+				if(cDayKDataTmp.low < low) 
+				{
+					low = cDayKDataTmp.low;
+					index = k;
+				}
+			}
+			return index;
+		}
+		static public XiaCuoRange CheckXiaCuoRange(List<ANLStockDayKData> dayklist, int i)
+		{
+			String logstr;
+			int iCheckE = i;
+			// 检查当前天，前6到20天区间满足急跌企稳趋势
+			for(int iCheckB = i-6; iCheckB>=i-20; iCheckB--)
+			{
+				if(iCheckB >= 0)
+				{
+					// @ 最高点与最低点在区间位置的判断
+					boolean bCheckHighLowIndex = false;
+					int indexHigh = indexHigh(dayklist, iCheckB, iCheckE);
+					int indexLow = indexLow(dayklist, iCheckB, iCheckE);
+					if(indexHigh>iCheckB && indexHigh<=(iCheckB+iCheckE)/2
+							&& indexLow > (iCheckB+iCheckE)/2 && indexLow < iCheckE)
+					{
+						bCheckHighLowIndex = true;
+					}
+					
+					// @ 最高点与最低点下挫幅度判断
+					boolean bCheckXiaCuo = false;
+					float highPrice = dayklist.get(indexHigh).high;
+					float lowPrice = dayklist.get(indexLow).low;
+					float xiaCuoZhenFu = (lowPrice-highPrice)/highPrice;
+					float xiaCuoMinCheck = -1.5f*0.01f*(indexLow-indexHigh);
+					if(xiaCuoMinCheck > -0.06f) xiaCuoMinCheck = -0.06f;
+					if(xiaCuoZhenFu < xiaCuoMinCheck)
+					{
+						bCheckXiaCuo = true;
+					}
+					
+					// @ 前区间，后区间价位判断
+					boolean bCheck3 = true;
+					int cntDay = iCheckE-iCheckB;
+					float midPrice = (highPrice+lowPrice)/2;
+					for(int c= iCheckB; c<iCheckB + cntDay/3; c++)
+					{
+						if(dayklist.get(c).low < midPrice)
+						{
+							bCheck3 = false;
+						}
+					}
+					for(int c= iCheckE; c>iCheckE - cntDay/3; c--)
+					{
+						if(dayklist.get(c).low > midPrice)
+						{
+							bCheck3 = false;
+						}
+					}
+					
+					if(bCheckHighLowIndex && 
+							bCheckXiaCuo && 
+							bCheck3)
+					{
+						logstr = String.format("    Test findLatestXiaCuoRange [%s,%s] ZhenFu(%.3f,%.3f)\n",
+								dayklist.get(iCheckB).date,
+								dayklist.get(iCheckE).date,
+								xiaCuoZhenFu,xiaCuoMinCheck);
+						// outputLog(logstr);
+						
+						XiaCuoRange retXiaCuoRange = new XiaCuoRange();
+						retXiaCuoRange.iBeginIndex = iCheckB;
+						retXiaCuoRange.iEndEndex = iCheckE;
+						retXiaCuoRange.iHighIndex = indexHigh;
+						retXiaCuoRange.iLowIndex = indexLow;
+						retXiaCuoRange.highPrice = highPrice;
+						retXiaCuoRange.lowPrice = lowPrice;
+						return retXiaCuoRange;
+					}
+				}
+			}
+			return null;
+		}
+		static float calculate(ANLStock cANLStock)
+		{
+			String date = cANLStock.historyData.get(cANLStock.historyData.size()-1).date;
+			XiaCuoRange cXiaCuoRange = CheckXiaCuoRange(cANLStock.historyData, cANLStock.historyData.size()-1);
+			if(null != cXiaCuoRange)
+			{
+				String logstr = "";
 				logstr = logstr + String.format("X[ %.3f %.3f %.3f %.3f]\n",
 						cXiaCuoRange.highPrice, cXiaCuoRange.lowPrice, cXiaCuoRange.maxZhenFu(), cXiaCuoRange.xiaCuoXieLv());
 				//outputLog(logstr);
-				
-				stockCKList.add(cANLPolicyStockCK);
-				Collections.sort(stockCKList); //分值表排序
+				return cXiaCuoRange.maxZhenFu();
 			}
+			return -1.0f;
+		}
+	}
+	
+	
+	//****************************************************************
+	// init 初始化参数, 测试系统回调
+	public void init()
+	{
+		String logstr = String.format("init\n");
+		// 账户初始化
+		cUserAcc.init(100000.0f);
+		outputLog(logstr);
+	}
+
+	//****************************************************************
+	// 所有股票回调筛选函数，测试系统回调，反悔true的被加入考察股票池
+	public boolean stock_filter(ANLStock cANLStock)
+	{
+		// for test
+		boolean bEnableTest = true;
+		if(bEnableTest)
+		{
+			List<String> testStockList = Arrays.asList(
+					"600742", 
+					"600790"
+					);
+			for(int i=0; i< testStockList.size();i++)
+			{
+				if(cANLStock.id.compareTo(testStockList.get(i)) == 0 )
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 		
+		// 市值过大过滤掉
+		if(cANLStock.curBaseInfo.allMarketValue > 200.0f 
+				|| cANLStock.curBaseInfo.circulatedMarketValue > 100.0f)
+		{
+			return false;
+		}
+		// 交易历史上市时间较短的过滤掉
+		if(cANLStock.historyData.size() < 250*2)
+		{
+			return false;
+		}
+		// PE市盈率过大的过滤掉
+		if(cANLStock.curBaseInfo.peRatio > 100.0f 
+				|| cANLStock.curBaseInfo.peRatio == 0)
+		{
+			return false;
+		}
+		// 名字过滤
+		if(cANLStock.curBaseInfo.name.contains("S")
+				|| cANLStock.curBaseInfo.name.contains("*")
+				|| cANLStock.curBaseInfo.name.contains("N"))
+		{
+			return false;
+		}
 		
+		String logstr = String.format("add userpool %s %s\n", cANLStock.id, cANLStock.curBaseInfo.name);
+		outputLog(logstr);
+		return true;
+	}
+
+	//****************************************************************
+	// 每天用户股票池回调，测试系统自动回调，确定买入卖出
+	public void check_today(String date, ANLUserStockPool spool)
+	{
+		String logstr = String.format("check_today %s --->>>\n", date);
+		outputLog(logstr);
+		
+		// ---------创建股票分值表 ---------
+		List<ANLPolicyStockCK> stockCKList = new ArrayList<ANLPolicyStockCK>();
+		for(int i = 0; i < spool.stockList.size(); i++)
+		{
+			ANLStock cANLStock = spool.stockList.get(i);
+			if(cANLStock.historyData.size() == 0) continue;
+			
+			ANLPolicyStockCK cANLPolicyStockCK = new ANLPolicyStockCK();
+			cANLPolicyStockCK.stockID = cANLStock.id;
+			cANLPolicyStockCK.c1 = CalPianLiBi.calculate(cANLStock);
+			cANLPolicyStockCK.c2 = DuanQiXiaCuo.calculate(cANLStock);
+			
+			stockCKList.add(cANLPolicyStockCK);
+			Collections.sort(stockCKList); //分值综合排序
+		}
+		
+		// ---------打印可操作股票信息 ---------
 		if(stockCKList.size() != 0) 
 		{
 			for(int i = 0; i < stockCKList.size(); i++)
 			{
 				ANLPolicyStockCK cANLPolicyStockCK = stockCKList.get(i);
-//				logstr = String.format("    %s c1[ %.3f ]\n", cANLPolicyStockCK.stockID, cANLPolicyStockCK.c1);
-//				outputLog(logstr);
+				logstr = String.format("    %s c1[ %.3f ]\n", cANLPolicyStockCK.stockID, cANLPolicyStockCK.c1);
+				//outputLog(logstr);
 			}
 		}
 			
-		// 用户操作 ---------------------------------------------------
-		for(int i = 0; i < cUserAcc.stockList.size(); i++)
+		// ---------用户操作交易 ---------
+		int iMaxHoldCnt = 1; // 最大持股个数
+		for(int i = 0; i < cUserAcc.stockList.size(); i++) // 遍历持仓票，进行卖出判断
 		{
 			ANLUserAccStock cANLUserAccStock = cUserAcc.stockList.get(i);
-			if(cANLUserAccStock.holdDayCnt > 3)
+			float cprice = spool.getStock(cANLUserAccStock.id).GetCurPrice();
+			if(cANLUserAccStock.holdDayCnt > 5) // 持有一定时间卖出
 			{
-				float cprice = spool.getStock(cANLUserAccStock.id).GetCurPrice();
+				cUserAcc.sellStock(cANLUserAccStock.id, cprice, cANLUserAccStock.totalAmount);
+			}
+			float shouyi = (cprice - cANLUserAccStock.buyPrices)/cANLUserAccStock.buyPrices;
+			if(shouyi > 0.03 || shouyi < -0.03) // 止盈止损卖出
+			{
 				cUserAcc.sellStock(cANLUserAccStock.id, cprice, cANLUserAccStock.totalAmount);
 			}
 		}
-		if(cUserAcc.stockList.size() == 0)
+		int iNeedBuyCnt = iMaxHoldCnt - cUserAcc.stockList.size();
+		for(int i = 0; i< iNeedBuyCnt; i++) // 手中持票数量不足时进行买入
 		{
-			if(stockCKList.size() != 0) // 存在操作票
+			float usedMoney = cUserAcc.money/(iNeedBuyCnt-i);//拿出相应仓位钱
+			for(int j=0;j<stockCKList.size();j++)// 遍历可操作票
 			{
-				int indexBuy = 5;
-				if(stockCKList.size() < 6) indexBuy = stockCKList.size()-1;
+				ANLPolicyStockCK cANLPolicyStockCK = stockCKList.get(j);
 				
-				ANLPolicyStockCK cANLPolicyStockCK = stockCKList.get(indexBuy);
-				String buy_id = cANLPolicyStockCK.stockID;
-				float buy_price = spool.getStock(buy_id).GetCurPrice();
-				int buy_amount = (int)(cUserAcc.money/buy_price)/100*100;
-				cUserAcc.buyStock(buy_id, buy_price, buy_amount);
+				boolean alreayHas = false;
+				for(int k = 0; k < cUserAcc.stockList.size(); k++) // 遍历持仓票，判断是否已经持有
+				{
+					ANLUserAccStock cANLUserAccStock = cUserAcc.stockList.get(k);
+					if(cANLPolicyStockCK.stockID.compareTo(cANLUserAccStock.id) == 0)
+					{
+						alreayHas = true;
+						break;
+					}
+				}
+				if(!alreayHas)
+				{
+					String buy_id = cANLPolicyStockCK.stockID;
+					float buy_price = spool.getStock(buy_id).GetCurPrice();
+					int buy_amount = (int)(usedMoney/buy_price)/100*100;
+					cUserAcc.buyStock(buy_id, buy_price, buy_amount);
+					stockCKList.remove(j); // 买入后从列表清除
+					break;
+				}
 			}
 		}
+		
+		return;
 	}
 	
 	public static void main(String[] args) throws InterruptedException {
 		fmt.format("main begin\n");
 		ANLPolicyJZHG cANLPolicyJZHG = new ANLPolicyJZHG();
 		cANLPolicyJZHG.rmlog();
-		cANLPolicyJZHG.run("2011-01-01", "2011-12-31");
+		cANLPolicyJZHG.run("2016-01-01", "2016-12-31");
 		fmt.format("main end\n");
 	}
 }
