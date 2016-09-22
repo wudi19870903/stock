@@ -3,6 +3,7 @@ package stormstock.analysis;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import stormstock.analysis.ANLPolicy.ANLUserAcc.ANLUserAccStock;
@@ -12,31 +13,89 @@ import stormstock.analysis.ANLPolicyCD.XiaCuoRange;
 
 // 价值回归
 public class ANLPolicyJZHG extends ANLPolicy {
+	public static ANLPolicyJZHG s_cANLPolicyJZHG = new ANLPolicyJZHG();
+	public static void OutLog(String str){s_cANLPolicyJZHG.outputLog(str);}
 	
 	// 股票分值表，用于给每天的股票打分
-	static class ANLPolicyStockCK implements Comparable
+	static class ANLPolicyStockCK
 	{
 		public String stockID;
-		float c1; // 偏离比分值
-		float c2; // 短期下挫分值
+		
+		public float param_PianLiBi; // 偏离比分值
+		public float mingci_PianLiBi; // 偏离比名次
+		
+		public float param_XiaCuo; // 短期下挫分值
+		public float mingci_XiaCuo; // 下挫名次
+		
 		// 价值回归分值   系数(当前价-半年最高)+(当前价-半年最低)+(当前价-15日均)
 		// 前3个月吸货分值，    贴重要压力位上穿吃货检查，20 60日均线 ， - 贴重要支撑位下穿反弹
 		// 解套分值， 给近5日解套次数，突破次数
 		// 洗盘分值， 缩量中阴线次数，直接一次性击穿重要支撑位
 		
-		// 综合排序方法
-		@Override
-		public int compareTo(Object arg0) {
-			// TODO Auto-generated method stub
-			ANLPolicyStockCK ck = (ANLPolicyStockCK)arg0;
-			if(this.c1 <= ck.c1)
-			{
-				return -1;
+		static class ZongHeCompare implements Comparator 
+		{
+			public int compare(Object object1, Object object2) {
+				ANLPolicyStockCK ck1 = (ANLPolicyStockCK)object1;
+				ANLPolicyStockCK ck2 = (ANLPolicyStockCK)object2;
+				float zonghe1 = ck1.mingci_PianLiBi * 5/10.0f + ck1.mingci_XiaCuo * 5/10.0f;
+				float zonghe2 = ck2.mingci_PianLiBi * 5/10.0f + ck2.mingci_XiaCuo * 5/10.0f;
+				if(zonghe1 <= zonghe2)
+				{
+					return -1;
+				}
+				else
+				{
+					return 1;
+				}
 			}
-			else
-			{
-				return 1;
+		}
+		static class PianLiBiCompare implements Comparator 
+		{
+			public int compare(Object object1, Object object2) {
+				ANLPolicyStockCK ck1 = (ANLPolicyStockCK)object1;
+				ANLPolicyStockCK ck2 = (ANLPolicyStockCK)object2;
+				if(ck1.param_PianLiBi <= ck2.param_PianLiBi)
+				{
+					return -1;
+				}
+				else
+				{
+					return 1;
+				}
 			}
+		}
+		static class XiaCuoCompare implements Comparator 
+		{
+			public int compare(Object object1, Object object2) {
+				ANLPolicyStockCK ck1 = (ANLPolicyStockCK)object1;
+				ANLPolicyStockCK ck2 = (ANLPolicyStockCK)object2;
+				if(ck1.param_XiaCuo <= ck2.param_XiaCuo)
+				{
+					return -1;
+				}
+				else
+				{
+					return 1;
+				}
+			}
+		}
+		static public void sortZongHe(List<ANLPolicyStockCK> cList)
+		{
+			Collections.sort(cList, new ANLPolicyStockCK.PianLiBiCompare()); //偏离比排序
+			for(int i=0; i<cList.size(); i++)
+			{
+				int mingci = i+1;
+				ANLPolicyStockCK cANLPolicyStockCK = cList.get(i);
+				cANLPolicyStockCK.mingci_PianLiBi = mingci;
+			}
+			Collections.sort(cList, new ANLPolicyStockCK.XiaCuoCompare()); //偏离比排序
+			for(int i=0; i<cList.size(); i++)
+			{
+				int mingci = i+1;
+				ANLPolicyStockCK cANLPolicyStockCK = cList.get(i);
+				cANLPolicyStockCK.mingci_XiaCuo = mingci;
+			}
+			Collections.sort(cList, new ANLPolicyStockCK.ZongHeCompare()); // 最后进行综合排序
 		}
 	}
 	
@@ -80,10 +139,18 @@ public class ANLPolicyJZHG extends ANLPolicy {
 			float long_pianlirate = 0.0f;
 			if(long_high_pricePa-long_low_pricePa != 0)
 				long_pianlirate = (cur_pricePa-long_low_pricePa)/(long_high_pricePa-long_low_pricePa);
+			
 			// 短期均值参数
-			float fenshu = short_pianlirate*(2/10.0f) 
+			float fenshu = short_pianlirate*(3/10.0f) 
 					+ mid_pianlirate*(3/10.0f) 
-					+ long_pianlirate*(5/10.0f);
+					+ long_pianlirate*(4/10.0f);
+			
+			String logstr = String.format(" --- Test ---  PianLiBi %s [%.2f %.2f %.2f %.2f] %.2f\n",
+					cANLStock.id, 
+					fenshu, short_pianlirate,mid_pianlirate,long_pianlirate, 
+					cur_price);
+			//OutLog(logstr);
+			
 			return fenshu;
 		}
 	}
@@ -215,17 +282,29 @@ public class ANLPolicyJZHG extends ANLPolicy {
 		}
 		static float calculate(ANLStock cANLStock)
 		{
+			float param_XiaCuo = 100.0f;
 			String date = cANLStock.historyData.get(cANLStock.historyData.size()-1).date;
+			float cur_price = cANLStock.historyData.get(cANLStock.historyData.size()-1).close;
 			XiaCuoRange cXiaCuoRange = CheckXiaCuoRange(cANLStock.historyData, cANLStock.historyData.size()-1);
+			String logstr = "";
 			if(null != cXiaCuoRange)
 			{
-				String logstr = "";
-				logstr = logstr + String.format("X[ %.3f %.3f %.3f %.3f]\n",
-						cXiaCuoRange.highPrice, cXiaCuoRange.lowPrice, cXiaCuoRange.maxZhenFu(), cXiaCuoRange.xiaCuoXieLv());
-				//outputLog(logstr);
-				return cXiaCuoRange.maxZhenFu();
+				param_XiaCuo = cXiaCuoRange.maxZhenFu();
+				
+				logstr = String.format(" --- Test ---  XiaCuo %s [%.3f %.3f %.3f %.3f %.3f] %.2f\n",
+						cANLStock.id, 
+						param_XiaCuo, cXiaCuoRange.highPrice, cXiaCuoRange.lowPrice, cXiaCuoRange.maxZhenFu(), cXiaCuoRange.xiaCuoXieLv(),
+						cur_price);
 			}
-			return -1.0f;
+			else
+			{
+				logstr = String.format(" --- Test ---  XiaCuo %s [%.3f  - - - -] %.2f\n",
+						cANLStock.id, 
+						param_XiaCuo,
+						cur_price);
+			}
+			// OutLog(logstr);
+			return param_XiaCuo;
 		}
 	}
 	
@@ -245,7 +324,7 @@ public class ANLPolicyJZHG extends ANLPolicy {
 	public boolean stock_filter(ANLStock cANLStock)
 	{
 		// for test
-		boolean bEnableTest = true;
+		boolean bEnableTest = false;
 		if(bEnableTest)
 		{
 			List<String> testStockList = Arrays.asList(
@@ -308,12 +387,12 @@ public class ANLPolicyJZHG extends ANLPolicy {
 			
 			ANLPolicyStockCK cANLPolicyStockCK = new ANLPolicyStockCK();
 			cANLPolicyStockCK.stockID = cANLStock.id;
-			cANLPolicyStockCK.c1 = CalPianLiBi.calculate(cANLStock);
-			cANLPolicyStockCK.c2 = DuanQiXiaCuo.calculate(cANLStock);
+			cANLPolicyStockCK.param_PianLiBi = CalPianLiBi.calculate(cANLStock);
+			cANLPolicyStockCK.param_XiaCuo = DuanQiXiaCuo.calculate(cANLStock);
 			
 			stockCKList.add(cANLPolicyStockCK);
-			Collections.sort(stockCKList); //分值综合排序
 		}
+		ANLPolicyStockCK.sortZongHe(stockCKList);
 		
 		// ---------打印可操作股票信息 ---------
 		if(stockCKList.size() != 0) 
@@ -321,18 +400,22 @@ public class ANLPolicyJZHG extends ANLPolicy {
 			for(int i = 0; i < stockCKList.size(); i++)
 			{
 				ANLPolicyStockCK cANLPolicyStockCK = stockCKList.get(i);
-				logstr = String.format("    %s c1[ %.3f ]\n", cANLPolicyStockCK.stockID, cANLPolicyStockCK.c1);
-				//outputLog(logstr);
+				logstr = String.format("    %s PianLiBi[ %.3f %.1f] XiaCuo[ %.3f %.1f]\n", 
+						cANLPolicyStockCK.stockID, 
+						cANLPolicyStockCK.param_PianLiBi, cANLPolicyStockCK.mingci_PianLiBi,
+						cANLPolicyStockCK.param_XiaCuo, cANLPolicyStockCK.mingci_XiaCuo);
+				outputLog(logstr);
+				if(i>20) break; // 只打印排序靠前的
 			}
 		}
 			
 		// ---------用户操作交易 ---------
-		int iMaxHoldCnt = 1; // 最大持股个数
+		int iMaxHoldCnt = 2; // 最大持股个数
 		for(int i = 0; i < cUserAcc.stockList.size(); i++) // 遍历持仓票，进行卖出判断
 		{
 			ANLUserAccStock cANLUserAccStock = cUserAcc.stockList.get(i);
-			float cprice = spool.getStock(cANLUserAccStock.id).GetCurPrice();
-			if(cANLUserAccStock.holdDayCnt > 5) // 持有一定时间卖出
+			float cprice = spool.getStock(cANLUserAccStock.id).GetLastPrice();
+			if(cANLUserAccStock.holdDayCnt > 3) // 持有一定时间卖出
 			{
 				cUserAcc.sellStock(cANLUserAccStock.id, cprice, cANLUserAccStock.totalAmount);
 			}
@@ -349,6 +432,10 @@ public class ANLPolicyJZHG extends ANLPolicy {
 			for(int j=0;j<stockCKList.size();j++)// 遍历可操作票
 			{
 				ANLPolicyStockCK cANLPolicyStockCK = stockCKList.get(j);
+				if(spool.getStock(cANLPolicyStockCK.stockID).GetLastDate().compareTo(date)!=0) //股票最后日期与当前最后日期不同 继续下一个
+				{
+					continue;
+				}
 				
 				boolean alreayHas = false;
 				for(int k = 0; k < cUserAcc.stockList.size(); k++) // 遍历持仓票，判断是否已经持有
@@ -363,7 +450,7 @@ public class ANLPolicyJZHG extends ANLPolicy {
 				if(!alreayHas)
 				{
 					String buy_id = cANLPolicyStockCK.stockID;
-					float buy_price = spool.getStock(buy_id).GetCurPrice();
+					float buy_price = spool.getStock(buy_id).GetLastPrice();
 					int buy_amount = (int)(usedMoney/buy_price)/100*100;
 					cUserAcc.buyStock(buy_id, buy_price, buy_amount);
 					stockCKList.remove(j); // 买入后从列表清除
@@ -374,12 +461,11 @@ public class ANLPolicyJZHG extends ANLPolicy {
 		
 		return;
 	}
-	
 	public static void main(String[] args) throws InterruptedException {
+		System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
 		fmt.format("main begin\n");
-		ANLPolicyJZHG cANLPolicyJZHG = new ANLPolicyJZHG();
-		cANLPolicyJZHG.rmlog();
-		cANLPolicyJZHG.run("2016-01-01", "2016-12-31");
+		s_cANLPolicyJZHG.rmlog();
+		s_cANLPolicyJZHG.run("2011-01-01", "2011-12-31");
 		fmt.format("main end\n");
 	}
 }

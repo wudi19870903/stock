@@ -56,9 +56,13 @@ public class ANLStock {
 		return index;
 	}
 	
-	public float GetCurPrice()
+	public float GetLastPrice()
 	{
 		return historyData.get(historyData.size()-1).close;
+	}
+	public String GetLastDate()
+	{
+		return historyData.get(historyData.size()-1).date;
 	}
 		
 	// ¾ùÏß¼ÆËã

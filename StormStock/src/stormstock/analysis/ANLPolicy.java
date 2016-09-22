@@ -93,7 +93,7 @@ public class ANLPolicy {
 			for(int i=0;i<stockList.size();i++)
 			{
 				ANLUserAccStock tmpANLUserAccStock = stockList.get(i);
-				float cprice = ref_UserStockPool.getStock(tmpANLUserAccStock.id).GetCurPrice();
+				float cprice = ref_UserStockPool.getStock(tmpANLUserAccStock.id).GetLastPrice();
 				all_marketval = all_marketval + tmpANLUserAccStock.totalAmount*cprice;
 			}
 			float all_asset = all_marketval + money;
@@ -123,7 +123,7 @@ public class ANLPolicy {
 				for(int i=0;i<stockList.size();i++)
 				{
 					ANLUserAccStock cANLUserAccStock = stockList.get(i);
-					float cprice = ref_UserStockPool.getStock(cANLUserAccStock.id).GetCurPrice();
+					float cprice = ref_UserStockPool.getStock(cANLUserAccStock.id).GetLastPrice();
 					all_marketval = all_marketval + cANLUserAccStock.totalAmount*cprice;
 				}
 				float all_asset = all_marketval + money;
