@@ -142,14 +142,14 @@ public class ANLPolicyJZHG extends ANLPolicy {
 			
 			// 短期均值参数
 			float fenshu = short_pianlirate*(3/10.0f) 
-					+ mid_pianlirate*(3/10.0f) 
-					+ long_pianlirate*(4/10.0f);
+					+ mid_pianlirate*(4/10.0f) 
+					+ long_pianlirate*(3/10.0f);
 			
 			String logstr = String.format(" --- Test ---  PianLiBi %s [%.2f %.2f %.2f %.2f] %.2f\n",
 					cANLStock.id, 
 					fenshu, short_pianlirate,mid_pianlirate,long_pianlirate, 
 					cur_price);
-			//OutLog(logstr);
+			// OutLog(logstr);
 			
 			return fenshu;
 		}
@@ -328,8 +328,7 @@ public class ANLPolicyJZHG extends ANLPolicy {
 		if(bEnableTest)
 		{
 			List<String> testStockList = Arrays.asList(
-					"600742", 
-					"600790"
+					"000001"
 					);
 			for(int i=0; i< testStockList.size();i++)
 			{
@@ -375,7 +374,7 @@ public class ANLPolicyJZHG extends ANLPolicy {
 	// 每天用户股票池回调，测试系统自动回调，确定买入卖出
 	public void check_today(String date, ANLUserStockPool spool)
 	{
-		String logstr = String.format("check_today %s --->>>\n", date);
+		String logstr = String.format("check_today %s --------------------------------- >>>\n", date);
 		outputLog(logstr);
 		
 		// ---------创建股票分值表 ---------
@@ -415,7 +414,7 @@ public class ANLPolicyJZHG extends ANLPolicy {
 		{
 			ANLUserAccStock cANLUserAccStock = cUserAcc.stockList.get(i);
 			float cprice = spool.getStock(cANLUserAccStock.id).GetLastPrice();
-			if(cANLUserAccStock.holdDayCnt > 3) // 持有一定时间卖出
+			if(cANLUserAccStock.holdDayCnt > 5) // 持有一定时间卖出
 			{
 				cUserAcc.sellStock(cANLUserAccStock.id, cprice, cANLUserAccStock.totalAmount);
 			}
@@ -465,7 +464,7 @@ public class ANLPolicyJZHG extends ANLPolicy {
 		System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
 		fmt.format("main begin\n");
 		s_cANLPolicyJZHG.rmlog();
-		s_cANLPolicyJZHG.run("2011-01-01", "2011-12-31");
+		s_cANLPolicyJZHG.run("2016-01-01", "2016-12-31");
 		fmt.format("main end\n");
 	}
 }

@@ -514,9 +514,20 @@ public class DataEngineBase {
 			// 本地没有数据，需要试图重新下载
 			int retdownloadStockDayk =  DataEngineBase.downloadStockDayk(id);
 			int retdownloadStockDividendPayout =  DataEngineBase.downloadStockDividendPayout(id);
+			RealTimeInfo cRealTimeInfo = new RealTimeInfo();
+			int retgetRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfoMore(id, cRealTimeInfo);
 			if(0 == retdownloadStockDayk 
-					&& 0 == retdownloadStockDividendPayout)
+					&& 0 == retdownloadStockDividendPayout 
+					&& 0 == retgetRealTimeInfo)
 			{
+				StockBaseInfo cStockBaseData = new StockBaseInfo();
+				cStockBaseData.name = cRealTimeInfo.name;
+				cStockBaseData.price = cRealTimeInfo.curPrice;
+				cStockBaseData.allMarketValue = cRealTimeInfo.allMarketValue;
+				cStockBaseData.circulatedMarketValue = cRealTimeInfo.circulatedMarketValue;
+				cStockBaseData.peRatio = cRealTimeInfo.peRatio;
+				saveStockBaseData(id, cStockBaseData);
+				
 				retgetDayKData = DataEngineBase.getDayKData(id, retListLocal);
 				
 				//最新数据下载成功
