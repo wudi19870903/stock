@@ -1,4 +1,4 @@
-package stormstock.analysis;
+package stormstock.run;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,9 +9,12 @@ import java.util.List;
 import stormstock.data.DataEngine;
 import stormstock.data.DataWebStockAllList.StockItem;
 import stormstock.data.DataWebStockDayK.DayKData;
-import stormstock.analysis.ANLPolicy;
+import stormstock.analysis.ANLPolicyBase;
+import stormstock.analysis.ANLStock;
+import stormstock.analysis.ANLStockDayKData;
+import stormstock.analysis.ANLStockPool;
 
-public class ANLPolicyCD extends ANLPolicy {
+public class RunPolicyCD extends ANLPolicyBase {
 	// 测试统计结果全局记录
 	public String stockId;
 	public int succCnt = 0;
@@ -190,11 +193,11 @@ public class ANLPolicyCD extends ANLPolicy {
 						bCheckXiaCuo && 
 						bCheck3)
 				{
-//					logstr = String.format("    Test findLatestXiaCuoRange [%s,%s] ZhenFu(%.3f,%.3f)\n",
-//							dayklist.get(iCheckB).date,
-//							dayklist.get(iCheckE).date,
-//							xiaCuoZhenFu,xiaCuoMinCheck);
-//					outputLog(logstr);
+//						logstr = String.format("    Test findLatestXiaCuoRange [%s,%s] ZhenFu(%.3f,%.3f)\n",
+//								dayklist.get(iCheckB).date,
+//								dayklist.get(iCheckE).date,
+//								xiaCuoZhenFu,xiaCuoMinCheck);
+//						outputLog(logstr);
 					
 					XiaCuoRange retXiaCuoRange = new XiaCuoRange();
 					retXiaCuoRange.iBeginIndex = iCheckB;
@@ -290,19 +293,19 @@ public class ANLPolicyCD extends ANLPolicy {
 		curMoney = initMoney;
 	}
 	public static void printProfitInfo() {
-//		String logstr;
-//		logstr = String.format("\n --- printProfitInfo (stockId) ---\n");
-//		outputLog(logstr);
-//		logstr = String.format("    succCnt: %d \n", succCnt);
-//		outputLog(logstr);
-//		logstr = String.format("    failCnt: %d \n", failCnt);
-//		outputLog(logstr);
-//		logstr = String.format("    initMoney: %.2f \n", initMoney);
-//		outputLog(logstr);
-//		logstr = String.format("    curMoney: %.2f \n", curMoney);
-//		outputLog(logstr);
-//		logstr = String.format("    totalProfit: %.3f \n", (curMoney- initMoney)/initMoney);
-//		outputLog(logstr);
+//			String logstr;
+//			logstr = String.format("\n --- printProfitInfo (stockId) ---\n");
+//			outputLog(logstr);
+//			logstr = String.format("    succCnt: %d \n", succCnt);
+//			outputLog(logstr);
+//			logstr = String.format("    failCnt: %d \n", failCnt);
+//			outputLog(logstr);
+//			logstr = String.format("    initMoney: %.2f \n", initMoney);
+//			outputLog(logstr);
+//			logstr = String.format("    curMoney: %.2f \n", curMoney);
+//			outputLog(logstr);
+//			logstr = String.format("    totalProfit: %.3f \n", (curMoney- initMoney)/initMoney);
+//			outputLog(logstr);
 	}
 	
 	// 分析股票id从fromDate日期到toDate日期，只输出enableLogMinDate天的之后的分析log
@@ -325,9 +328,9 @@ public class ANLPolicyCD extends ANLPolicy {
 		for(int i = iB; i<= iE; i++)
 		{
 			
-//			logstr = String.format("CheckDay %s\n",
-//					cANLStock.historyData.get(i).date);
-//			outputLog(logstr);
+//				logstr = String.format("CheckDay %s\n",
+//						cANLStock.historyData.get(i).date);
+//				outputLog(logstr);
 			if(i >= iLogEnable) bLogEnable = true;
 			
 			// 急跌确认
@@ -375,17 +378,16 @@ public class ANLPolicyCD extends ANLPolicy {
 	}
 	
 	public static void main(String[] args) {
-		ANLPolicyCD objANLPolicy = new ANLPolicyCD();
-		objANLPolicy.rmlog();
-		objANLPolicy.outputLog("Main Begin\n\n");
+		RunPolicyCD objANLPolicy = new RunPolicyCD();
+		outputLog("Main Begin\n\n");
 		// 股票列表
 		List<StockItem> cStockList = new ArrayList<StockItem>();
-//		cStockList.add(new StockItem("300312"));
-//		cStockList.add(new StockItem("300132"));
-//		cStockList.add(new StockItem("002344"));
-//		cStockList.add(new StockItem("002695"));
-//		cStockList.add(new StockItem("300041"));
-//		cStockList.add(new StockItem("600030"));
+//			cStockList.add(new StockItem("300312"));
+//			cStockList.add(new StockItem("300132"));
+//			cStockList.add(new StockItem("002344"));
+//			cStockList.add(new StockItem("002695"));
+//			cStockList.add(new StockItem("300041"));
+//			cStockList.add(new StockItem("600030"));
 		if(cStockList.size() <= 0)
 		{
 			// cStockList =  DataEngine.getLocalRandomStock(30);
@@ -398,6 +400,6 @@ public class ANLPolicyCD extends ANLPolicy {
 			objANLPolicy.analysisOne(stockId, "2008-01-01", "2116-01-01", "2016-08-29");
 		}
 		
-		objANLPolicy.outputLog("\n\nMain End");
+		outputLog("\n\nMain End");
 	}
 }

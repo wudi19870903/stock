@@ -6,19 +6,10 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
-import stormstock.analysis.ANLPolicyJZHG.ANLPolicyStockCK;
-
-public class ANLPolicy {
-	static public Formatter fmt = new Formatter(System.out);
-	public String strLogName;
-	private List<ANLStock> stockListstore;
-	
-	public ANLUserAcc cUserAcc;
-	private ANLUserStockPool cANLUserStockPool;
-	
-	static class ANLUserAcc
+public class ANLPolicyBase {
+	public static class ANLUserAcc
 	{
-		class ANLUserAccStock
+		public class ANLUserAccStock
 		{
 			public String id;
 			public int totalAmount;
@@ -34,7 +25,7 @@ public class ANLPolicy {
 		{
 			ref_UserStockPool = userStockPool;
 		}
-		void init(float in_money) 
+		public void init(float in_money) 
 		{
 			money = in_money;
 			stockList = new ArrayList<ANLUserAccStock>();
@@ -97,7 +88,7 @@ public class ANLPolicy {
 				all_marketval = all_marketval + tmpANLUserAccStock.totalAmount*cprice;
 			}
 			float all_asset = all_marketval + money;
-			fmt.format("# UserAccOpe buyStock [%s %s %.2f %d] [%.2f %.2f] \n", curDate, id, price, amount, all_marketval, all_asset);
+			s_fmt.format("# UserAccOpe buyStock [%s %s %.2f %d] [%.2f %.2f] \n", curDate, id, price, amount, all_marketval, all_asset);
 			return true;
 		}
 		public boolean sellStock(String id, float price, int amount)
@@ -127,20 +118,20 @@ public class ANLPolicy {
 					all_marketval = all_marketval + cANLUserAccStock.totalAmount*cprice;
 				}
 				float all_asset = all_marketval + money;
-				fmt.format("# UserAccOpe sellStock [%s %s %.2f %d] [%.2f %.2f]\n", curDate, id, price, amount, all_marketval, all_asset);
+				s_fmt.format("# UserAccOpe sellStock [%s %s %.2f %d] [%.2f %.2f]\n", curDate, id, price, amount, all_marketval, all_asset);
 			}
 			return true;
 		}
 		
 	}
-	static class ANLUserStockPool 
+	public static class ANLUserStockPool 
 	{
 		ANLUserStockPool()
 		{
 			stockList = new ArrayList<ANLStock>();
 		}
 		public List<ANLStock> stockList;
-		ANLStock getStock(String id)
+		public ANLStock getStock(String id)
 		{
 			ANLStock cANLStock = null;
 			for(int i=0;i<stockList.size();i++)
@@ -156,41 +147,34 @@ public class ANLPolicy {
 		}
 	}
 	
-	public ANLPolicy()
+	public ANLPolicyBase()
 	{
-		strLogName = this.getClass().getSimpleName() + ".txt";
+		System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
+		s_strLogName = this.getClass().getSimpleName() + ".txt";
+		// delete log
+		File cfile =new File(s_strLogName);
+		cfile.delete();
+		// create inner object
 		stockListstore = new ArrayList<ANLStock>();
-		
 		cANLUserStockPool = new ANLUserStockPool();
 		cUserAcc = new ANLUserAcc(cANLUserStockPool);
 	}
 	
-	// --------------------------------------------------------------
-	// log
-	public void rmlog()
+	public static void outputLog(String format, Object... args)
 	{
-		File cfile =new File(strLogName);
-		cfile.delete();
-	}
-	public void outputLog(String s, boolean enable)
-	{
-		if(!enable) return;
-		fmt.format("%s", s);
-		File cfile =new File(strLogName);
+		String logstr = String.format(format, args);
+		s_fmt.format("%s", logstr);
+		File cfile =new File(s_strLogName);
 		try
 		{
 			FileOutputStream cOutputStream = new FileOutputStream(cfile, true);
-			cOutputStream.write(s.getBytes());
+			cOutputStream.write(logstr.getBytes());
 			cOutputStream.close();
 		}
 		catch(Exception e)
 		{
 			System.out.println("Exception:" + e.getMessage()); 
 		}
-	}
-	public void outputLog(String s)
-	{
-		outputLog(s, true);
 	}
 	
 	// --------------------------------------------------------------
@@ -236,7 +220,7 @@ public class ANLPolicy {
 		ANLStockDayKData cANLDayKDataEnd = cANLStock.historyData.get(cANLStock.historyData.size()-1);  
 		run(cANLDayKDataBegin.date, cANLDayKDataEnd.date);
 	}
-	void run(String beginDate, String endDate) {
+	protected void run(String beginDate, String endDate) {
 		init();
 		// 遍历所有股票，让用户筛选到用户股票池
 		// fmt.format("loading user stock pool ...\n");
@@ -252,7 +236,7 @@ public class ANLPolicy {
 				// fmt.format("stockListstore id:%s \n", cANLStock.id);
 			}
 		}
-		fmt.format("load success, stock count : %d\n", stockListstore.size());
+		s_fmt.format("load success, stock count : %d\n", stockListstore.size());
 		
 		// 从上证指数中确认回调天数
 		ANLStock cANLStock = ANLStockPool.getANLStock("999999");
@@ -306,4 +290,10 @@ public class ANLPolicy {
             check_today(cANLDayKData.date, cANLUserStockPool);
         } 
 	}
+	
+	static public Formatter s_fmt = new Formatter(System.out);
+	static public String s_strLogName;
+	private List<ANLStock> stockListstore;
+	public ANLUserAcc cUserAcc;
+	private ANLUserStockPool cANLUserStockPool;
 }

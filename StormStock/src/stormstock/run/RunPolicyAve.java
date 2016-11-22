@@ -1,17 +1,19 @@
-package stormstock.analysis;
+package stormstock.run;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Formatter;
 import java.util.List;
-import java.util.Collections;
 
+import stormstock.analysis.ANLStock;
+import stormstock.analysis.ANLStockDayKData;
+import stormstock.analysis.ANLStockPool;
 import stormstock.data.DataEngine;
 import stormstock.data.DataWebStockAllList.StockItem;
-import stormstock.data.DataWebStockDayK.DayKData;
 
-public class ANLPolicyAve {
+public class RunPolicyAve {
 	public static Formatter fmt = new Formatter(System.out);
 	public static String strLogName = "ANLPolicyAve.txt";
 	public static float fStopProfit = 1.0f;  //Ö¹Ó¯µã

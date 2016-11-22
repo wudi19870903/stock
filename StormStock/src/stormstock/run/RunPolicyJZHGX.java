@@ -1,4 +1,4 @@
-package stormstock.analysis;
+package stormstock.run;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,15 +6,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import stormstock.analysis.ANLPolicy.ANLUserAcc.ANLUserAccStock;
-import stormstock.analysis.ANLPolicy.ANLUserStockPool;
-import stormstock.analysis.ANLPolicyAve.BounceData;
-import stormstock.analysis.ANLPolicyCD.XiaCuoRange;
+import stormstock.analysis.ANLPolicyBase;
+import stormstock.analysis.ANLPolicyBase.ANLUserAcc.ANLUserAccStock;
+import stormstock.analysis.ANLStock;
+import stormstock.analysis.ANLStockDayKData;
 
-// 价值回归
-public class ANLPolicyJZHG extends ANLPolicy {
-	public static ANLPolicyJZHG s_cANLPolicyJZHG = new ANLPolicyJZHG();
-	public static void OutLog(String str){s_cANLPolicyJZHG.outputLog(str);}
+public class RunPolicyJZHGX extends ANLPolicyBase  {
 	
 	// 股票分值表，用于给每天的股票打分
 	static class ANLPolicyStockCK
@@ -261,11 +258,10 @@ public class ANLPolicyJZHG extends ANLPolicy {
 							bCheckXiaCuo && 
 							bCheck3)
 					{
-						logstr = String.format("    Test findLatestXiaCuoRange [%s,%s] ZhenFu(%.3f,%.3f)\n",
+						outputLog("    Test findLatestXiaCuoRange [%s,%s] ZhenFu(%.3f,%.3f)\n",
 								dayklist.get(iCheckB).date,
 								dayklist.get(iCheckE).date,
 								xiaCuoZhenFu,xiaCuoMinCheck);
-						// outputLog(logstr);
 						
 						XiaCuoRange retXiaCuoRange = new XiaCuoRange();
 						retXiaCuoRange.iBeginIndex = iCheckB;
@@ -313,10 +309,9 @@ public class ANLPolicyJZHG extends ANLPolicy {
 	// init 初始化参数, 测试系统回调
 	public void init()
 	{
-		String logstr = String.format("init\n");
 		// 账户初始化
 		cUserAcc.init(100000.0f);
-		outputLog(logstr);
+		outputLog("init\n");
 	}
 
 	//****************************************************************
@@ -365,8 +360,7 @@ public class ANLPolicyJZHG extends ANLPolicy {
 			return false;
 		}
 		
-		String logstr = String.format("add userpool %s %s\n", cANLStock.id, cANLStock.curBaseInfo.name);
-		outputLog(logstr);
+		outputLog("add userpool %s %s\n", cANLStock.id, cANLStock.curBaseInfo.name);
 		return true;
 	}
 
@@ -374,8 +368,7 @@ public class ANLPolicyJZHG extends ANLPolicy {
 	// 每天用户股票池回调，测试系统自动回调，确定买入卖出
 	public void check_today(String date, ANLUserStockPool spool)
 	{
-		String logstr = String.format("check_today %s --------------------------------- >>>\n", date);
-		outputLog(logstr);
+		outputLog("check_today %s --------------------------------- >>>\n", date);
 		
 		// ---------创建股票分值表 ---------
 		List<ANLPolicyStockCK> stockCKList = new ArrayList<ANLPolicyStockCK>();
@@ -399,11 +392,10 @@ public class ANLPolicyJZHG extends ANLPolicy {
 			for(int i = 0; i < stockCKList.size(); i++)
 			{
 				ANLPolicyStockCK cANLPolicyStockCK = stockCKList.get(i);
-				logstr = String.format("    %s PianLiBi[ %.3f %.1f] XiaCuo[ %.3f %.1f]\n", 
+				outputLog("    %s PianLiBi[ %.3f %.1f] XiaCuo[ %.3f %.1f]\n", 
 						cANLPolicyStockCK.stockID, 
 						cANLPolicyStockCK.param_PianLiBi, cANLPolicyStockCK.mingci_PianLiBi,
 						cANLPolicyStockCK.param_XiaCuo, cANLPolicyStockCK.mingci_XiaCuo);
-				outputLog(logstr);
 				if(i>20) break; // 只打印排序靠前的
 			}
 		}
@@ -457,14 +449,10 @@ public class ANLPolicyJZHG extends ANLPolicy {
 				}
 			}
 		}
-		
 		return;
 	}
 	public static void main(String[] args) throws InterruptedException {
-		System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
-		fmt.format("main begin\n");
-		s_cANLPolicyJZHG.rmlog();
-		s_cANLPolicyJZHG.run("2016-01-01", "2016-12-31");
-		fmt.format("main end\n");
+		RunPolicyJZHGX cANLPolicyJZHG = new RunPolicyJZHGX();
+		cANLPolicyJZHG.run("2016-01-01", "2016-12-31");
 	}
 }
