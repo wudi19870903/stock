@@ -9,6 +9,7 @@ import java.util.List;
 import stormstock.data.DataEngine;
 import stormstock.data.DataWebStockAllList.StockItem;
 import stormstock.data.DataWebStockDayK.DayKData;
+import stormstock.analysis.ANLLog;
 import stormstock.analysis.ANLPolicyBase;
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
@@ -368,7 +369,7 @@ public class RunPolicyCD extends ANLPolicyBase {
 			
 				logstr+= "\n";
 				if(bLogEnable)
-					outputLog(logstr);
+					ANLLog.outputLog(logstr);
 				
 				cLastXiaCuoRange = retXiaCuoRange;
 			}
@@ -379,7 +380,7 @@ public class RunPolicyCD extends ANLPolicyBase {
 	
 	public static void main(String[] args) {
 		RunPolicyCD objANLPolicy = new RunPolicyCD();
-		outputLog("Main Begin\n\n");
+		ANLLog.outputConsole("Main Begin\n\n");
 		// ¹ÉÆ±ÁÐ±í
 		List<StockItem> cStockList = new ArrayList<StockItem>();
 //			cStockList.add(new StockItem("300312"));
@@ -400,6 +401,6 @@ public class RunPolicyCD extends ANLPolicyBase {
 			objANLPolicy.analysisOne(stockId, "2008-01-01", "2116-01-01", "2016-08-29");
 		}
 		
-		outputLog("\n\nMain End");
+		ANLLog.outputConsole("\n\nMain End");
 	}
 }

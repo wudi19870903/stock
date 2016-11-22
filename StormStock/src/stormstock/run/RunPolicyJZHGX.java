@@ -6,10 +6,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import stormstock.analysis.ANLLog;
 import stormstock.analysis.ANLPolicyBase;
-import stormstock.analysis.ANLPolicyBase.ANLUserAcc.ANLUserAccStock;
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
+import stormstock.analysis.ANLUserAcc;
 
 public class RunPolicyJZHGX extends ANLPolicyBase  {
 	
@@ -258,10 +259,10 @@ public class RunPolicyJZHGX extends ANLPolicyBase  {
 							bCheckXiaCuo && 
 							bCheck3)
 					{
-						outputLog("    Test findLatestXiaCuoRange [%s,%s] ZhenFu(%.3f,%.3f)\n",
-								dayklist.get(iCheckB).date,
-								dayklist.get(iCheckE).date,
-								xiaCuoZhenFu,xiaCuoMinCheck);
+//						outputLog("    Test findLatestXiaCuoRange [%s,%s] ZhenFu(%.3f,%.3f)\n",
+//								dayklist.get(iCheckB).date,
+//								dayklist.get(iCheckE).date,
+//								xiaCuoZhenFu,xiaCuoMinCheck);
 						
 						XiaCuoRange retXiaCuoRange = new XiaCuoRange();
 						retXiaCuoRange.iBeginIndex = iCheckB;
@@ -311,7 +312,7 @@ public class RunPolicyJZHGX extends ANLPolicyBase  {
 	{
 		// 账户初始化
 		cUserAcc.init(100000.0f);
-		outputLog("init\n");
+		ANLLog.outputLog("init\n");
 	}
 
 	//****************************************************************
@@ -360,7 +361,7 @@ public class RunPolicyJZHGX extends ANLPolicyBase  {
 			return false;
 		}
 		
-		outputLog("add userpool %s %s\n", cANLStock.id, cANLStock.curBaseInfo.name);
+		ANLLog.outputLog("add userpool %s %s\n", cANLStock.id, cANLStock.curBaseInfo.name);
 		return true;
 	}
 
@@ -368,7 +369,7 @@ public class RunPolicyJZHGX extends ANLPolicyBase  {
 	// 每天用户股票池回调，测试系统自动回调，确定买入卖出
 	public void check_today(String date, ANLUserStockPool spool)
 	{
-		outputLog("check_today %s --------------------------------- >>>\n", date);
+		ANLLog.outputLog("check_today %s --------------------------------- >>>\n", date);
 		
 		// ---------创建股票分值表 ---------
 		List<ANLPolicyStockCK> stockCKList = new ArrayList<ANLPolicyStockCK>();
@@ -392,7 +393,7 @@ public class RunPolicyJZHGX extends ANLPolicyBase  {
 			for(int i = 0; i < stockCKList.size(); i++)
 			{
 				ANLPolicyStockCK cANLPolicyStockCK = stockCKList.get(i);
-				outputLog("    %s PianLiBi[ %.3f %.1f] XiaCuo[ %.3f %.1f]\n", 
+				ANLLog.outputLog("    %s PianLiBi[ %.3f %.1f] XiaCuo[ %.3f %.1f]\n", 
 						cANLPolicyStockCK.stockID, 
 						cANLPolicyStockCK.param_PianLiBi, cANLPolicyStockCK.mingci_PianLiBi,
 						cANLPolicyStockCK.param_XiaCuo, cANLPolicyStockCK.mingci_XiaCuo);
@@ -404,7 +405,7 @@ public class RunPolicyJZHGX extends ANLPolicyBase  {
 		int iMaxHoldCnt = 2; // 最大持股个数
 		for(int i = 0; i < cUserAcc.stockList.size(); i++) // 遍历持仓票，进行卖出判断
 		{
-			ANLUserAccStock cANLUserAccStock = cUserAcc.stockList.get(i);
+			ANLUserAcc.ANLUserAccStock cANLUserAccStock = cUserAcc.stockList.get(i);
 			float cprice = spool.getStock(cANLUserAccStock.id).GetLastPrice();
 			if(cANLUserAccStock.holdDayCnt > 5) // 持有一定时间卖出
 			{
@@ -431,7 +432,7 @@ public class RunPolicyJZHGX extends ANLPolicyBase  {
 				boolean alreayHas = false;
 				for(int k = 0; k < cUserAcc.stockList.size(); k++) // 遍历持仓票，判断是否已经持有
 				{
-					ANLUserAccStock cANLUserAccStock = cUserAcc.stockList.get(k);
+					ANLUserAcc.ANLUserAccStock cANLUserAccStock = cUserAcc.stockList.get(k);
 					if(cANLPolicyStockCK.stockID.compareTo(cANLUserAccStock.id) == 0)
 					{
 						alreayHas = true;
