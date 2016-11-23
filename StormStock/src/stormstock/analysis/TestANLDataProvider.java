@@ -6,11 +6,11 @@ import java.util.List;
 import stormstock.data.DataEngine;
 import stormstock.data.DataWebStockAllList.StockItem;
 
-public class TestANLStockPool {
+public class TestANLDataProvider {
 	public static Formatter fmt = new Formatter(System.out);
 	public static void main(String[] args) {
 
-		ANLStock cANLStock = ANLStockPool.getANLStock("000678");
+		ANLStock cANLStock = ANLDataProvider.getANLStock("000678");
 		fmt.format("cANLStockId:%s\n", cANLStock.id);
 		fmt.format("    -name:%s\n", cANLStock.curBaseInfo.name);
 		fmt.format("    -price:%.3f\n", cANLStock.curBaseInfo.price);

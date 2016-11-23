@@ -9,7 +9,7 @@ import java.util.List;
 
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
-import stormstock.analysis.ANLStockPool;
+import stormstock.analysis.ANLDataProvider;
 import stormstock.data.DataEngine;
 import stormstock.data.DataWebStockAllList.StockItem;
 import stormstock.data.DataWebStockDayDetail.DayDetailItem;
@@ -48,7 +48,7 @@ public class RunTest {
 		outputLog("Main Begin\n\n");
 		
 		// 股票全列表，输出所有股票id
-		List<String> cStockList = ANLStockPool.getAllStocks();
+		List<String> cStockList = ANLDataProvider.getAllStocks();
 		for(int i=0; i<cStockList.size();i++)
 		{
 			String stockId = cStockList.get(i);
@@ -57,7 +57,7 @@ public class RunTest {
 		
 		
 		// 输出一只股票所有日k数据
-		ANLStock cANLStock = ANLStockPool.getANLStock("600020");
+		ANLStock cANLStock = ANLDataProvider.getANLStock("600020");
 		for(int j = 0; j < cANLStock.historyData.size(); j++)  
         {  
 			ANLStockDayKData cANLDayKData = cANLStock.historyData.get(j);  

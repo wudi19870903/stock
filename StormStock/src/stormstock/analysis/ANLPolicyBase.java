@@ -41,8 +41,6 @@ public class ANLPolicyBase {
 		cUserAcc = new ANLUserAcc(cANLUserStockPool);
 	}
 	
-
-	
 	// --------------------------------------------------------------
 	// user imp
 	public void init(){}
@@ -50,38 +48,9 @@ public class ANLPolicyBase {
 	public void check_today(String date, ANLUserStockPool spool) {}
 	// --------------------------------------------------------------
 	
-	// 查找日期索引
-	public int indexDayKAfterDate(List<ANLStockDayKData> dayklist, String dateStr)
-	{
-		int index = 0;
-		for(int k = 0; k<dayklist.size(); k++ )
-		{
-			ANLStockDayKData cDayKDataTmp = dayklist.get(k);
-			if(cDayKDataTmp.date.compareTo(dateStr) >= 0)
-			{
-				index = k;
-				break;
-			}
-		}
-		return index;
-	}
-	public int indexDayKBeforeDate(List<ANLStockDayKData> dayklist, String dateStr)
-	{
-		int index = 0;
-		for(int k = dayklist.size()-1; k >= 0; k-- )
-		{
-			ANLStockDayKData cDayKDataTmp = dayklist.get(k);
-			if(cDayKDataTmp.date.compareTo(dateStr) <= 0)
-			{
-				index = k;
-				break;
-			}
-		}
-		return index;
-	}
 	void run()
 	{
-		ANLStock cANLStock = ANLStockPool.getANLStock("999999");
+		ANLStock cANLStock = ANLDataProvider.getANLStock("999999");
 		ANLStockDayKData cANLDayKDataBegin = cANLStock.historyData.get(0);  
 		ANLStockDayKData cANLDayKDataEnd = cANLStock.historyData.get(cANLStock.historyData.size()-1);  
 		run(cANLDayKDataBegin.date, cANLDayKDataEnd.date);
@@ -90,12 +59,12 @@ public class ANLPolicyBase {
 		init();
 		// 遍历所有股票，让用户筛选到用户股票池
 		// fmt.format("loading user stock pool ...\n");
-		List<String> cStockList = ANLStockPool.getAllStocks();
+		List<String> cStockList = ANLDataProvider.getAllStocks();
 		for(int i=0; i<cStockList.size();i++)
 		{
 			String stockId = cStockList.get(i);
 			//outputLog(stockId + "\n");
-			ANLStock cANLStock = ANLStockPool.getANLStock(stockId);
+			ANLStock cANLStock = ANLDataProvider.getANLStock(stockId);
 			if(null!= cANLStock && stock_filter(cANLStock))
 			{
 				stockListstore.add(cANLStock);
@@ -105,9 +74,9 @@ public class ANLPolicyBase {
 		ANLLog.outputConsole("load success, stock count : %d\n", stockListstore.size());
 		
 		// 从上证指数中确认回调天数
-		ANLStock cANLStock = ANLStockPool.getANLStock("999999");
-		int iB = indexDayKAfterDate(cANLStock.historyData, beginDate);
-		int iE = indexDayKBeforeDate(cANLStock.historyData, endDate);
+		ANLStock cANLStock = ANLDataProvider.getANLStock("999999");
+		int iB = ANLUtils.indexDayKAfterDate(cANLStock.historyData, beginDate);
+		int iE = ANLUtils.indexDayKBeforeDate(cANLStock.historyData, endDate);
 		for(int i = iB; i <= iE; i++)  
         {  
 			ANLStockDayKData cANLDayKData = cANLStock.historyData.get(i);  

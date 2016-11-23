@@ -11,7 +11,7 @@ import stormstock.data.DataWebStockDayDetail.DayDetailItem;
 import stormstock.data.DataWebStockDayK.DayKData;
 import stormstock.data.DataWebStockRealTimeInfo.RealTimeInfo;
 
-public class ANLStockPool {
+public class ANLDataProvider {
 	// 获得所有股票id列表
 	public static List<String> getAllStocks()
 	{

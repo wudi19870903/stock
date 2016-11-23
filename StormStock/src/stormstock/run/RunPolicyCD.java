@@ -13,7 +13,7 @@ import stormstock.analysis.ANLLog;
 import stormstock.analysis.ANLPolicyBase;
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
-import stormstock.analysis.ANLStockPool;
+import stormstock.analysis.ANLDataProvider;
 
 public class RunPolicyCD extends ANLPolicyBase {
 	// 测试统计结果全局记录
@@ -316,7 +316,7 @@ public class RunPolicyCD extends ANLPolicyBase {
 		
 		String logstr;
 		
-		ANLStock cANLStock = ANLStockPool.getANLStock(id);
+		ANLStock cANLStock = ANLDataProvider.getANLStock(id);
 		if(null == cANLStock) return;
 		
 		int iB = indexDayK(cANLStock.historyData, fromDate);
