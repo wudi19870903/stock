@@ -52,10 +52,10 @@ public class ANLStockDayKData {
 			for(int i = 0; i < retList.size(); i++)  
 	        {  
 				ExKData cExKData = retList.get(i);  
-	            System.out.println(cExKData.datetime + "," 
-	            		+ cExKData.open + "," + cExKData.close + "," 
-	            		+ cExKData.low + "," + cExKData.high + "," 
-	            		+ cExKData.volume);  
+//	            System.out.println(cExKData.datetime + "," 
+//	            		+ cExKData.open + "," + cExKData.close + "," 
+//	            		+ cExKData.low + "," + cExKData.high + "," 
+//	            		+ cExKData.volume);  
 				
 				float actrualprice = cExKData.close;
 				float changeper = (actrualprice - actruaFirstPrice)/actruaFirstPrice;

@@ -60,7 +60,7 @@ public class ANLImgShow {
 		float logic_unit_max_hight = (max_logic_y - min_logic_y);
 		
 		List<CurvePoint> poiUnitList = new ArrayList<CurvePoint>();
-		int AutoWriteTextAve = LogicPoiList.size()/5;
+		int AutoWriteTextSpan = LogicPoiList.size()/5;
 		for(int i = 0; i < LogicPoiList.size(); i++)  
         {  
 			CurvePoint cPoi = LogicPoiList.get(i); 
@@ -75,8 +75,9 @@ public class ANLImgShow {
 			{
 				float val = cPoi.m_y;
 				float rate = (cPoi.m_y - beginy)/beginy*100;
-				if(i%AutoWriteTextAve == 0 || val == beginy 
-						|| 0 == Float.compare(max_logic_y, val) || 0 == Float.compare(min_logic_y, val))
+				if(i == 0 || i == LogicPoiList.size() -1 
+						|| 0 == Float.compare(max_logic_y, val) || 0 == Float.compare(min_logic_y, val)
+						|| (i%AutoWriteTextSpan == 0 && i > 0 & i < LogicPoiList.size() - AutoWriteTextSpan/2) )
 				{
 					textstr = String.format("(%.2f, %.2f%%)", val, rate);
 					poiUnitList.add(new CurvePoint(unitX, unitY, textstr));
@@ -123,7 +124,7 @@ public class ANLImgShow {
 			if (cPoiBegin.m_name != "")
 			{
 				m_g2.drawString(cPoiBegin.m_name, (int)BeginX - 10, (int)BeginY - 5);
-				m_g2.fillOval((int)BeginX, (int)BeginY, 10, 10);
+				m_g2.fillOval((int)BeginX, (int)BeginY, 8, 8);
 			}
         }
 	}

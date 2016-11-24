@@ -13,7 +13,7 @@ public class TestANLImgShow {
 	{
 		ANLImgShow cANLImgShow = new ANLImgShow(1600,900,"test_writeLogicCurve_shangzheng.jpg");
 		List<CurvePoint> PoiList = new ArrayList<CurvePoint>();
-		ANLStock cANLStock = ANLDataProvider.getANLStock("999999");
+		ANLStock cANLStock = ANLDataProvider.getANLStock("999999", "2014-01-01", "2016-01-01");
 		for(int j = 0; j < cANLStock.historyData.size(); j++)  
         {  
 			ANLStockDayKData cANLDayKData = cANLStock.historyData.get(j);  

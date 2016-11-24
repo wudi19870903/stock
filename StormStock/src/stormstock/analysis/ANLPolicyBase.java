@@ -62,17 +62,16 @@ public class ANLPolicyBase {
 	protected void run(String beginDate, String endDate) {
 		init();
 		// 遍历所有股票，让用户筛选到用户股票池
-		// fmt.format("loading user stock pool ...\n");
+		// ANLLog.outputConsole("loading user stock pool ...\n");
 		List<String> cStockList = ANLDataProvider.getAllStocks();
 		for(int i=0; i<cStockList.size();i++)
 		{
 			String stockId = cStockList.get(i);
-			//outputLog(stockId + "\n");
 			ANLStock cANLStock = ANLDataProvider.getANLStock(stockId);
 			if(null!= cANLStock && stock_filter(cANLStock))
 			{
 				stockListstore.add(cANLStock);
-				// fmt.format("stockListstore id:%s \n", cANLStock.id);
+				// ANLLog.outputConsole("stockListstore id:%s \n", cANLStock.id);
 			}
 		}
 		ANLLog.outputConsole("load success, stock count : %d\n", stockListstore.size());
@@ -88,7 +87,7 @@ public class ANLPolicyBase {
         {  
 			ANLStockDayKData cANLDayKData = cANLStock.historyData.get(i);  
 			PoiList_shangzhen.add(new CurvePoint(i,cANLDayKData.close));
-            // fmt.format("%s data generate\n", cANLDayKData.date);
+            // ANLLog.outputConsole("%s data generate\n", cANLDayKData.date);
 			// 从存储股票列表中提取相应天数的数据到用户股票池中，回调给用户测试
 			for(int iS=0;iS<stockListstore.size();iS++)
 			{
