@@ -9,28 +9,10 @@ import java.util.List;
 import stormstock.analysis.ANLImgShow.CurvePoint;
 
 public class ANLPolicyBase {
-	public static class ANLUserStockPool 
-	{
-		ANLUserStockPool()
-		{
-			stockList = new ArrayList<ANLStock>();
-		}
-		public List<ANLStock> stockList;
-		public ANLStock getStock(String id)
-		{
-			ANLStock cANLStock = null;
-			for(int i=0;i<stockList.size();i++)
-			{
-				ANLStock tmp = stockList.get(i);
-				if(tmp.id.compareTo(id) == 0)
-				{
-					cANLStock = tmp;
-					break;
-				}
-			}
-			return cANLStock;
-		}
-	}
+
+	public void init(){}
+	public boolean stock_filter(ANLStock cANLStock){ return false;}
+	public void check_today(String date, ANLStockPool spool) {}
 	
 	public ANLPolicyBase()
 	{
@@ -41,17 +23,9 @@ public class ANLPolicyBase {
 		cImageShow = new ANLImgShow(1600,900,imgfilename);
 		// create inner object
 		stockListstore = new ArrayList<ANLStock>();
-		cANLUserStockPool = new ANLUserStockPool();
-		cUserAcc = new ANLUserAcc(cANLUserStockPool);
+		cANLStockPool = new ANLStockPool();
+		cUserAcc = new ANLUserAcc(cANLStockPool);
 	}
-	
-	// --------------------------------------------------------------
-	// user imp
-	public void init(){}
-	public boolean stock_filter(ANLStock cANLStock){ return false;}
-	public void check_today(String date, ANLUserStockPool spool) {}
-	// --------------------------------------------------------------
-	
 	void run()
 	{
 		ANLStock cANLStock = ANLDataProvider.getANLStock("999999");
@@ -95,9 +69,9 @@ public class ANLPolicyBase {
 				// fmt.format("   Stock %s generate\n", cANLStockStore.id);
 				// 获取用户池中的相应股票对象
 				ANLStock cANLStockUser = null;
-				for(int iUS=0;iUS<cANLUserStockPool.stockList.size();iUS++)
+				for(int iUS=0;iUS<cANLStockPool.stockList.size();iUS++)
 				{
-					ANLStock cANLStockUserFind = cANLUserStockPool.stockList.get(iUS);
+					ANLStock cANLStockUserFind = cANLStockPool.stockList.get(iUS);
 					if(cANLStockUserFind.id.compareTo(cANLStockStore.id) == 0)
 					{
 						cANLStockUser = cANLStockUserFind;
@@ -106,7 +80,7 @@ public class ANLPolicyBase {
 				if(null == cANLStockUser)
 				{
 					cANLStockUser = new  ANLStock(cANLStockStore.id, cANLStockStore.curBaseInfo);
-					cANLUserStockPool.stockList.add(cANLStockUser);
+					cANLStockPool.stockList.add(cANLStockUser);
 				}
 				// 添加相应的天数数据，添加完毕后移除
 				int iRemoveCnt = 0;
@@ -129,7 +103,7 @@ public class ANLPolicyBase {
 			
 			// 回调给用户
 			cUserAcc.update(cANLDayKData.date);
-            check_today(cANLDayKData.date, cANLUserStockPool);
+            check_today(cANLDayKData.date, cANLStockPool);
             
             PoiList_money.add(new CurvePoint(i,cUserAcc.GetTotalAssets()));
         } 
@@ -141,6 +115,6 @@ public class ANLPolicyBase {
 	
 	private List<ANLStock> stockListstore;
 	public ANLUserAcc cUserAcc;
-	private ANLUserStockPool cANLUserStockPool;
+	private ANLStockPool cANLStockPool;
 	private ANLImgShow cImageShow;
 }

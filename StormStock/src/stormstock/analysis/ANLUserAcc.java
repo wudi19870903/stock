@@ -3,7 +3,7 @@ package stormstock.analysis;
 import java.util.ArrayList;
 import java.util.List;
 
-import stormstock.analysis.ANLPolicyBase.ANLUserStockPool;
+import stormstock.analysis.ANLStockPool;
 
 public class ANLUserAcc {
 	public class ANLUserAccStock
@@ -13,12 +13,12 @@ public class ANLUserAcc {
 		public float buyPrices;
 		public int holdDayCnt;
 	}
-	public ANLUserStockPool ref_UserStockPool;
+	public ANLStockPool ref_UserStockPool;
 	public String curDate;
 	public float money;
 	public List<ANLUserAccStock> stockList; 
 	
-	ANLUserAcc(ANLUserStockPool userStockPool)
+	ANLUserAcc(ANLStockPool userStockPool)
 	{
 		ref_UserStockPool = userStockPool;
 	}

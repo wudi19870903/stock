@@ -11,6 +11,7 @@ import stormstock.analysis.ANLLog;
 import stormstock.analysis.ANLPolicyBase;
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
+import stormstock.analysis.ANLStockPool;
 import stormstock.analysis.ANLUserAcc;
 
 public class RunPolicyJZHGX extends ANLPolicyBase  {
@@ -368,7 +369,7 @@ public class RunPolicyJZHGX extends ANLPolicyBase  {
 
 	//****************************************************************
 	// 每天用户股票池回调，测试系统自动回调，确定买入卖出
-	public void check_today(String date, ANLUserStockPool spool)
+	public void check_today(String date, ANLStockPool spool)
 	{
 		ANLLog.outputLog("check_today %s --------------------------------- >>>\n", date);
 		
