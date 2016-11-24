@@ -1,5 +1,6 @@
 package stormstock.analysis;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -121,7 +122,8 @@ public class ANLImgShow {
 			m_g2.drawLine(BeginX, BeginY, EndX, EndY);
 			if (cPoiBegin.m_name != "")
 			{
-				m_g2.drawString(cPoiBegin.m_name, (int)BeginX, (int)BeginY);
+				m_g2.drawString(cPoiBegin.m_name, (int)BeginX - 10, (int)BeginY - 5);
+				m_g2.fillOval((int)BeginX, (int)BeginY, 10, 10);
 			}
         }
 	}
@@ -138,6 +140,7 @@ public class ANLImgShow {
 		m_g2.setPaint(Color.BLACK);   
         Font font = new Font(Font.MONOSPACED,Font.BOLD, 15);   
         m_g2.setFont(font);
+        m_g2.setStroke(new BasicStroke(1.0f)); // œﬂ¥÷œ∏
         
     	m_padding_x = (int)(m_widthPix * 0.1f);
     	m_padding_y = (int)(m_hightPix * 0.05f);
