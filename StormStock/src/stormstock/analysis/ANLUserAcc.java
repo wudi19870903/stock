@@ -44,7 +44,19 @@ public class ANLUserAcc {
 			}
 		}
 	}
-	public float GetMountAmount(){
+	public float GetTotalAssets()
+	{
+		float all_marketval = 0.0f;
+		for(int i=0;i<stockList.size();i++)
+		{
+			ANLUserAccStock tmpANLUserAccStock = stockList.get(i);
+			float cprice = ref_UserStockPool.getStock(tmpANLUserAccStock.id).GetLastPrice();
+			all_marketval = all_marketval + tmpANLUserAccStock.totalAmount*cprice;
+		}
+		float all_asset = all_marketval + money;
+		return all_asset;
+	}
+	public float GetTotalMoney(){
 		return money;
 	}
 	public boolean buyStock(String id, float price, int amount)

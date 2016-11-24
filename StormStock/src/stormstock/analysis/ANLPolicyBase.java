@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
+import stormstock.analysis.ANLImgShow.CurvePoint;
+
 public class ANLPolicyBase {
 	public static class ANLUserStockPool 
 	{
@@ -35,6 +37,8 @@ public class ANLPolicyBase {
 		System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
 		String logfilename = this.getClass().getSimpleName() + ".txt";
 		ANLLog.init(logfilename);
+		String imgfilename = this.getClass().getSimpleName() + ".jpg";
+		cImageShow = new ANLImgShow(1600,900,imgfilename);
 		// create inner object
 		stockListstore = new ArrayList<ANLStock>();
 		cANLUserStockPool = new ANLUserStockPool();
@@ -73,6 +77,9 @@ public class ANLPolicyBase {
 		}
 		ANLLog.outputConsole("load success, stock count : %d\n", stockListstore.size());
 		
+		List<CurvePoint> PoiList_shangzhen = new ArrayList<CurvePoint>();
+		List<CurvePoint> PoiList_money = new ArrayList<CurvePoint>();
+		
 		// 从上证指数中确认回调天数
 		ANLStock cANLStock = ANLDataProvider.getANLStock("999999");
 		int iB = ANLUtils.indexDayKAfterDate(cANLStock.historyData, beginDate);
@@ -80,6 +87,7 @@ public class ANLPolicyBase {
 		for(int i = iB; i <= iE; i++)  
         {  
 			ANLStockDayKData cANLDayKData = cANLStock.historyData.get(i);  
+			PoiList_shangzhen.add(new CurvePoint(i,cANLDayKData.close));
             // fmt.format("%s data generate\n", cANLDayKData.date);
 			// 从存储股票列表中提取相应天数的数据到用户股票池中，回调给用户测试
 			for(int iS=0;iS<stockListstore.size();iS++)
@@ -123,10 +131,17 @@ public class ANLPolicyBase {
 			// 回调给用户
 			cUserAcc.update(cANLDayKData.date);
             check_today(cANLDayKData.date, cANLUserStockPool);
+            
+            PoiList_money.add(new CurvePoint(i,cUserAcc.GetTotalAssets()));
         } 
+		
+		cImageShow.writeLogicCurve(PoiList_shangzhen, 1);
+		cImageShow.writeLogicCurve(PoiList_money, 2);
+		cImageShow.GenerateImage();
 	}
 	
 	private List<ANLStock> stockListstore;
 	public ANLUserAcc cUserAcc;
 	private ANLUserStockPool cANLUserStockPool;
+	private ANLImgShow cImageShow;
 }
