@@ -8,13 +8,13 @@ import java.util.List;
 
 import stormstock.analysis.ANLImgShow.CurvePoint;
 
-public class ANLPolicyBase {
-
-	public void init(){}
-	public boolean stock_filter(ANLStock cANLStock){ return false;}
-	public void check_today(String date, ANLStockPool spool) {}
+public class ANLStrategy {
+	// 所有股票回调筛选函数，测试系统回调，反悔true的被加入考察股票池
+	public boolean strategy_pre_filter(ANLStock cANLStock) { return false;}
+	// 每天用户股票池回调，测试系统自动回调，确定买入卖出
+	public void strategy_today(String date, ANLStockPool spool) {}
 	
-	public ANLPolicyBase()
+	public ANLStrategy()
 	{
 		System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
 		String logfilename = this.getClass().getSimpleName() + ".txt";
@@ -34,7 +34,8 @@ public class ANLPolicyBase {
 		run(cANLDayKDataBegin.date, cANLDayKDataEnd.date);
 	}
 	protected void run(String beginDate, String endDate) {
-		init();
+		// 账户对象初始化
+		cUserAcc.init(100000.0f);
 		// 遍历所有股票，让用户筛选到用户股票池
 		// ANLLog.outputConsole("loading user stock pool ...\n");
 		List<String> cStockList = ANLDataProvider.getAllStocks();
@@ -42,7 +43,7 @@ public class ANLPolicyBase {
 		{
 			String stockId = cStockList.get(i);
 			ANLStock cANLStock = ANLDataProvider.getANLStock(stockId);
-			if(null!= cANLStock && stock_filter(cANLStock))
+			if(null!= cANLStock && strategy_pre_filter(cANLStock))
 			{
 				stockListstore.add(cANLStock);
 				// ANLLog.outputConsole("stockListstore id:%s \n", cANLStock.id);
@@ -103,7 +104,7 @@ public class ANLPolicyBase {
 			
 			// 回调给用户
 			cUserAcc.update(cANLDayKData.date);
-            check_today(cANLDayKData.date, cANLStockPool);
+			strategy_today(cANLDayKData.date, cANLStockPool);
             
             PoiList_money.add(new CurvePoint(i,cUserAcc.GetTotalAssets()));
         } 

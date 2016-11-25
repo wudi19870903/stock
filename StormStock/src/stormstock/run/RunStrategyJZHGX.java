@@ -8,13 +8,13 @@ import java.util.List;
 
 import stormstock.analysis.ANLImgShow;
 import stormstock.analysis.ANLLog;
-import stormstock.analysis.ANLPolicyBase;
+import stormstock.analysis.ANLStrategy;
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
 import stormstock.analysis.ANLStockPool;
 import stormstock.analysis.ANLUserAcc;
 
-public class RunPolicyJZHGX extends ANLPolicyBase  {
+public class RunStrategyJZHGX extends ANLStrategy  {
 	
 	// 股票分值表，用于给每天的股票打分
 	static class ANLPolicyStockCK
@@ -306,20 +306,8 @@ public class RunPolicyJZHGX extends ANLPolicyBase  {
 			return param_XiaCuo;
 		}
 	}
-	
-	
-	//****************************************************************
-	// init 初始化参数, 测试系统回调
-	public void init()
-	{
-		// 账户初始化
-		cUserAcc.init(100000.0f);
-		ANLLog.outputLog("init\n");
-	}
 
-	//****************************************************************
-	// 所有股票回调筛选函数，测试系统回调，反悔true的被加入考察股票池
-	public boolean stock_filter(ANLStock cANLStock)
+	public boolean strategy_pre_filter(ANLStock cANLStock)
 	{
 		// for test
 		boolean bEnableTest = false;
@@ -367,9 +355,7 @@ public class RunPolicyJZHGX extends ANLPolicyBase  {
 		return true;
 	}
 
-	//****************************************************************
-	// 每天用户股票池回调，测试系统自动回调，确定买入卖出
-	public void check_today(String date, ANLStockPool spool)
+	public void strategy_today(String date, ANLStockPool spool)
 	{
 		ANLLog.outputLog("check_today %s --------------------------------- >>>\n", date);
 		
@@ -455,7 +441,7 @@ public class RunPolicyJZHGX extends ANLPolicyBase  {
 		return;
 	}
 	public static void main(String[] args) throws InterruptedException {
-		RunPolicyJZHGX cANLPolicyJZHG = new RunPolicyJZHGX();
+		RunStrategyJZHGX cANLPolicyJZHG = new RunStrategyJZHGX();
 		cANLPolicyJZHG.run("2016-01-01", "2016-12-31");
 	}
 }

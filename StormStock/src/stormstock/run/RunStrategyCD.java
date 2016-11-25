@@ -10,12 +10,12 @@ import stormstock.data.DataEngine;
 import stormstock.data.DataWebStockAllList.StockItem;
 import stormstock.data.DataWebStockDayK.DayKData;
 import stormstock.analysis.ANLLog;
-import stormstock.analysis.ANLPolicyBase;
+import stormstock.analysis.ANLStrategy;
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
 import stormstock.analysis.ANLDataProvider;
 
-public class RunPolicyCD extends ANLPolicyBase {
+public class RunStrategyCD extends ANLStrategy {
 	// 测试统计结果全局记录
 	public String stockId;
 	public int succCnt = 0;
@@ -379,7 +379,7 @@ public class RunPolicyCD extends ANLPolicyBase {
 	}
 	
 	public static void main(String[] args) {
-		RunPolicyCD objANLPolicy = new RunPolicyCD();
+		RunStrategyCD objANLPolicy = new RunStrategyCD();
 		ANLLog.outputConsole("Main Begin\n\n");
 		// 股票列表
 		List<StockItem> cStockList = new ArrayList<StockItem>();
