@@ -10,12 +10,12 @@ import stormstock.data.DataEngine;
 import stormstock.data.DataWebStockAllList.StockItem;
 import stormstock.data.DataWebStockDayK.DayKData;
 import stormstock.analysis.ANLLog;
-import stormstock.analysis.ANLStrategy;
+import stormstock.analysis.ANLStrategyEngine;
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
 import stormstock.analysis.ANLDataProvider;
 
-public class RunStrategyCD extends ANLStrategy {
+public class RunStrategyCD {
 	// 测试统计结果全局记录
 	public String stockId;
 	public int succCnt = 0;

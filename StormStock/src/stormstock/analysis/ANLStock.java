@@ -2,7 +2,9 @@ package stormstock.analysis;
 
 import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import stormstock.data.DataEngine;
 import stormstock.data.DataEngineBase.StockBaseInfo;
@@ -14,6 +16,7 @@ public class ANLStock {
 	{
 		historyData = new ArrayList<ANLStockDayKData>();
 		curBaseInfo = new StockBaseInfo();
+		eigenMap = new HashMap<String, Float>();
 	}	 
 	public ANLStock(String sid, StockBaseInfo scurBaseInfo)
 	{
@@ -21,6 +24,7 @@ public class ANLStock {
 		curBaseInfo = scurBaseInfo;
 		historyData = new ArrayList<ANLStockDayKData>();
 		curBaseInfo = new StockBaseInfo();
+		eigenMap = new HashMap<String, Float>();
 	}	 
 
 	// 获得最后一天的收盘价
@@ -99,4 +103,5 @@ public class ANLStock {
 	public String id;
 	public StockBaseInfo curBaseInfo;
 	public List<ANLStockDayKData> historyData;
+	public Map<String, Float> eigenMap;
 }

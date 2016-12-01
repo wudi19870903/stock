@@ -4,17 +4,22 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import stormstock.analysis.ANLImgShow.CurvePoint;
 
-public class ANLStrategy {
-	// 所有股票回调筛选函数，测试系统回调，反悔true的被加入考察股票池
-	public boolean strategy_pre_filter(ANLStock cANLStock) { return false;}
-	// 每天用户股票池回调，测试系统自动回调，确定买入卖出
-	public void strategy_today(String date, ANLStockPool spool) {}
+abstract public class ANLStrategyEngine {
 	
-	public ANLStrategy()
+	// 所有股票加载那些股票到内存，返回true则参与回测系统
+	abstract public boolean strategy_preload(ANLStock cANLStock);
+	// 每天用户股票池回调，测试系统自动回调，确定买入卖出
+	abstract public void strategy_today(String date, ANLStockPool spool);
+
+	//------------------------------------------------------------------------------------
+	
+	public ANLStrategyEngine()
 	{
 		System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
 		String logfilename = this.getClass().getSimpleName() + ".txt";
@@ -23,10 +28,15 @@ public class ANLStrategy {
 		cImageShow = new ANLImgShow(1600,900,imgfilename);
 		// create inner object
 		stockListstore = new ArrayList<ANLStock>();
+		eigenObjMap = new HashMap<String, ANLEigen>();
 		cANLStockPool = new ANLStockPool();
 		cUserAcc = new ANLUserAcc(cANLStockPool);
 	}
-	void run()
+	protected void addEigen(ANLEigen cEigen)
+	{
+		eigenObjMap.put(cEigen.getClass().getSimpleName(), cEigen); 
+	}
+	protected void run()
 	{
 		ANLStock cANLStock = ANLDataProvider.getANLStock("999999");
 		ANLStockDayKData cANLDayKDataBegin = cANLStock.historyData.get(0);  
@@ -43,7 +53,7 @@ public class ANLStrategy {
 		{
 			String stockId = cStockList.get(i);
 			ANLStock cANLStock = ANLDataProvider.getANLStock(stockId);
-			if(null!= cANLStock && strategy_pre_filter(cANLStock))
+			if(null!= cANLStock && strategy_preload(cANLStock))
 			{
 				stockListstore.add(cANLStock);
 				// ANLLog.outputConsole("stockListstore id:%s \n", cANLStock.id);
@@ -100,6 +110,13 @@ public class ANLStrategy {
 				{
 					cANLStockStore.historyData.remove(0);
 				}
+				// 为股票计算特征值
+				for(Map.Entry<String, ANLEigen> entry:eigenObjMap.entrySet()){     
+					String eigenKey = entry.getKey();
+					float eigenVal = entry.getValue().calc(cANLStockUser);
+					//ANLLog.outputConsole("ANLEigen %s %.3f\n", entry.getKey(), entry.getValue().calc(cANLStockUser));
+					cANLStockUser.eigenMap.put(eigenKey, eigenVal);
+				}   
 			}
 			
 			// 回调给用户
@@ -115,6 +132,7 @@ public class ANLStrategy {
 	}
 	
 	private List<ANLStock> stockListstore;
+	private Map<String, ANLEigen> eigenObjMap;
 	public ANLUserAcc cUserAcc;
 	private ANLStockPool cANLStockPool;
 	private ANLImgShow cImageShow;

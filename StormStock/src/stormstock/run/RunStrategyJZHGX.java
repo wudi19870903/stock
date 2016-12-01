@@ -8,13 +8,14 @@ import java.util.List;
 
 import stormstock.analysis.ANLImgShow;
 import stormstock.analysis.ANLLog;
-import stormstock.analysis.ANLStrategy;
+import stormstock.analysis.ANLStrategyEngine;
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
 import stormstock.analysis.ANLStockPool;
 import stormstock.analysis.ANLUserAcc;
+import stormstock.eigen.EISample;
 
-public class RunStrategyJZHGX extends ANLStrategy  {
+public class RunStrategyJZHGX extends ANLStrategyEngine  {
 	
 	// 股票分值表，用于给每天的股票打分
 	static class ANLPolicyStockCK
@@ -37,8 +38,8 @@ public class RunStrategyJZHGX extends ANLStrategy  {
 			public int compare(Object object1, Object object2) {
 				ANLPolicyStockCK ck1 = (ANLPolicyStockCK)object1;
 				ANLPolicyStockCK ck2 = (ANLPolicyStockCK)object2;
-				float zonghe1 = ck1.mingci_PianLiBi * 5/10.0f + ck1.mingci_XiaCuo * 5/10.0f;
-				float zonghe2 = ck2.mingci_PianLiBi * 5/10.0f + ck2.mingci_XiaCuo * 5/10.0f;
+				float zonghe1 = ck1.mingci_PianLiBi * 7/10.0f + ck1.mingci_XiaCuo * 3/10.0f;
+				float zonghe2 = ck2.mingci_PianLiBi * 7/10.0f + ck2.mingci_XiaCuo * 3/10.0f;
 				if(zonghe1 <= zonghe2)
 				{
 					return -1;
@@ -307,14 +308,15 @@ public class RunStrategyJZHGX extends ANLStrategy  {
 		}
 	}
 
-	public boolean strategy_pre_filter(ANLStock cANLStock)
+	public boolean strategy_preload(ANLStock cANLStock)
 	{
 		// for test
-		boolean bEnableTest = false;
+		boolean bEnableTest = true;
 		if(bEnableTest)
 		{
 			List<String> testStockList = Arrays.asList(
-					"000001"
+					"000001",
+					"600030"
 					);
 			for(int i=0; i< testStockList.size();i++)
 			{
@@ -364,6 +366,7 @@ public class RunStrategyJZHGX extends ANLStrategy  {
 		for(int i = 0; i < spool.stockList.size(); i++)
 		{
 			ANLStock cANLStock = spool.stockList.get(i);
+			ANLLog.outputLog("    %s EISample %.3f\n",cANLStock.id, cANLStock.eigenMap.get("EISample"));
 			if(cANLStock.historyData.size() == 0) continue;
 			
 			ANLPolicyStockCK cANLPolicyStockCK = new ANLPolicyStockCK();
@@ -442,6 +445,7 @@ public class RunStrategyJZHGX extends ANLStrategy  {
 	}
 	public static void main(String[] args) throws InterruptedException {
 		RunStrategyJZHGX cANLPolicyJZHG = new RunStrategyJZHGX();
-		cANLPolicyJZHG.run("2016-01-01", "2016-12-31");
+		cANLPolicyJZHG.addEigen(new EISample());
+		cANLPolicyJZHG.run("2016-01-01", "2016-01-05");
 	}
 }
