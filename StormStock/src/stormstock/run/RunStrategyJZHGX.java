@@ -13,7 +13,6 @@ import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
 import stormstock.analysis.ANLStockPool;
 import stormstock.analysis.ANLUserAcc;
-import stormstock.eigen.EISample;
 
 public class RunStrategyJZHGX extends ANLStrategyEngine  {
 	
@@ -445,7 +444,6 @@ public class RunStrategyJZHGX extends ANLStrategyEngine  {
 	}
 	public static void main(String[] args) throws InterruptedException {
 		RunStrategyJZHGX cANLPolicyJZHG = new RunStrategyJZHGX();
-		cANLPolicyJZHG.addEigen(new EISample());
 		cANLPolicyJZHG.run("2016-01-01", "2016-01-05");
 	}
 }
