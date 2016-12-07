@@ -15,6 +15,7 @@ public class ANLBTEngine {
 		m_eigenObjMap = new HashMap<String, ANLEigen>();
 		m_strategyObj = null;
 		m_cANLStockPool = new ANLStockPool();
+		cUserAcc = new ANLUserAcc(m_cANLStockPool);
 	}
 	public void addEigen(ANLEigen cEigen)
 	{
@@ -30,6 +31,10 @@ public class ANLBTEngine {
 			ANLLog.outputConsole("m_strategyObj is null\n");
 			return;
 		}
+		
+		// ------------------------------------------------------------------------------
+		// 账户对象初始化
+		cUserAcc.init(100000.0f);
 		
 		// ------------------------------------------------------------------------------
 		// 遍历所有股票，让用户筛选到股票池
@@ -102,10 +107,68 @@ public class ANLBTEngine {
 				}   
 			}
 			
-			// 回调给用户
+			// 更新账户日期
+			cUserAcc.update(cANLDayKData.date);
+			
+			// 当前股票池回调给用户
 			List<String> cSelectStockList = new ArrayList<String>();
 			ANLLog.outputLog("---> strategy_enter date(%s) stockCnt(%d)\n", cANLDayKData.date, m_cANLStockPool.stockList.size());
-			m_strategyObj.strategy_enter(cANLDayKData.date, m_cANLStockPool, cSelectStockList);
+			m_strategyObj.strategy_select(cANLDayKData.date, m_cANLStockPool, cSelectStockList);
+			ANLLog.outputLog("    strategy_enter date(%s) result [ ", cANLDayKData.date);
+			for(int j=0; j< cSelectStockList.size(); j++)// 遍历可操作票
+			{
+				String stockId = cSelectStockList.get(j);
+				ANLLog.outputLog("%s ", stockId);
+			}
+			ANLLog.outputLog("]\n");
+			
+			// 账户操作交易
+			int iMaxHoldCnt = 3; // 最大持股个数
+			for(int iHold = 0; iHold < cUserAcc.stockList.size(); iHold++) // 遍历持仓票，进行卖出判断
+			{
+				ANLUserAcc.ANLUserAccStock cANLUserAccStock = cUserAcc.stockList.get(iHold);
+				float cprice = m_cANLStockPool.getStock(cANLUserAccStock.id).GetLastPrice();
+				if(cANLUserAccStock.holdDayCnt > 10) // 持有一定时间卖出
+				{
+					cUserAcc.sellStock(cANLUserAccStock.id, cprice, cANLUserAccStock.totalAmount);
+				}
+				float shouyi = (cprice - cANLUserAccStock.buyPrices)/cANLUserAccStock.buyPrices;
+				if(shouyi > 0.02 || shouyi < -0.02) // 止盈止损卖出
+				{
+					cUserAcc.sellStock(cANLUserAccStock.id, cprice, cANLUserAccStock.totalAmount);
+				}
+			}
+			int iNeedBuyCnt = iMaxHoldCnt - cUserAcc.stockList.size();
+			for(int iBuy = 0; iBuy< iNeedBuyCnt; iBuy++) // 手中持票数量不足时进行买入
+			{
+				float usedMoney = cUserAcc.money/(iNeedBuyCnt-iBuy);//拿出相应仓位钱
+				for(int j=0; j< cSelectStockList.size(); j++)// 遍历可操作票
+				{
+					String stockId = cSelectStockList.get(j);
+					if(m_cANLStockPool.getStock(stockId).GetLastDate().compareTo(cANLDayKData.date)!=0) //股票最后日期与当前最后日期不同 继续下一个
+					{
+						continue;
+					}
+					boolean alreayHas = false;
+					for(int k = 0; k < cUserAcc.stockList.size(); k++) // 遍历持仓票，判断是否已经持有
+					{
+						ANLUserAcc.ANLUserAccStock cANLUserAccStock = cUserAcc.stockList.get(k);
+						if(stockId.compareTo(cANLUserAccStock.id) == 0)
+						{
+							alreayHas = true;
+							break;
+						}
+					}
+					if(!alreayHas)
+					{
+						String buy_id = stockId;
+						float buy_price = m_cANLStockPool.getStock(buy_id).GetLastPrice();
+						int buy_amount = (int)(usedMoney/buy_price)/100*100;
+						cUserAcc.buyStock(buy_id, buy_price, buy_amount);
+						break;
+					}
+				}
+			}
         } 
 	}
 	
@@ -113,5 +176,6 @@ public class ANLBTEngine {
 	private Map<String, ANLEigen> m_eigenObjMap;
 	private ANLStrategy m_strategyObj;
 	private ANLStockPool m_cANLStockPool;
+	public ANLUserAcc cUserAcc;
 	
 }

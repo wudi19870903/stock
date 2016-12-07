@@ -41,8 +41,8 @@ public class RunBTStrategySample {
 		@Override
 		public boolean strategy_preload(ANLStock cANLStock) {
 			// TODO Auto-generated method stub
-			if(cANLStock.id.compareTo("000001") == 0
-					|| cANLStock.id.compareTo("600030") == 0)
+			if(cANLStock.id.compareTo("000001") >= 0
+				&& cANLStock.id.compareTo("000200") <= 0)
 			{	
 				ANLLog.outputLog("add stockpool %s %s\n", cANLStock.id, cANLStock.curBaseInfo.name);
 				return true;
@@ -51,17 +51,17 @@ public class RunBTStrategySample {
 			}
 		}
 		@Override
-		public void strategy_enter(String date, ANLStockPool spool, List<String> selectStockList) {
+		public void strategy_select(String date, ANLStockPool spool, List<String> selectStockList) {
 			for(int i = 0; i < spool.stockList.size(); i++)
 			{
 				ANLStock cANLStock = spool.stockList.get(i);
 				float EigenSample1 = cANLStock.eigenMap.get("EigenSample1");
 				float EigenSample2 = cANLStock.eigenMap.get("EigenSample2");
-				ANLLog.outputLog("stock %s %s %s %.2f EigenSample1(%.3f) EigenSample2(%.3f)\n", 
+				ANLLog.outputLog("    stock %s %s %s %.2f EigenSample1(%.3f) EigenSample2(%.3f)\n", 
 						cANLStock.id, cANLStock.curBaseInfo.name, 
 						cANLStock.GetLastDate(), cANLStock.GetLastPrice(),
 						EigenSample1,EigenSample2);
-				if(EigenSample1 < -0.05) {
+				if(EigenSample1 < -0.15 && EigenSample2 < -0.2) {
 					selectStockList.add(cANLStock.id);
 				}
 			}
@@ -79,7 +79,7 @@ public class RunBTStrategySample {
 		// 设置策略
 		cANLBTEngine.setStrategy(new StrategySample());
 		// 进行回测
-		cANLBTEngine.runBT("2016-01-01", "2016-01-05");
+		cANLBTEngine.runBT("2016-01-01", "2016-10-05");
 		
 		ANLLog.outputConsole("RunBTStrategySample end\n");
 	}
