@@ -69,10 +69,7 @@ public class RunBTStrategySample {
 	}
 	
 	public static void main(String[] args) {
-		ANLLog.init("RunBTStrategySample.txt");
-		ANLLog.outputConsole("RunBTStrategySample begin\n");
-		
-		ANLBTEngine cANLBTEngine = new ANLBTEngine();
+		ANLBTEngine cANLBTEngine = new ANLBTEngine("Sample");
 		// 添加特征
 		cANLBTEngine.addEigen(new EigenSample1());
 		cANLBTEngine.addEigen(new EigenSample2());
@@ -80,7 +77,5 @@ public class RunBTStrategySample {
 		cANLBTEngine.setStrategy(new StrategySample());
 		// 进行回测
 		cANLBTEngine.runBT("2016-01-01", "2016-10-05");
-		
-		ANLLog.outputConsole("RunBTStrategySample end\n");
 	}
 }

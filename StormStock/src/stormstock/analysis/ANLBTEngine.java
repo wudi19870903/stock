@@ -9,8 +9,11 @@ import stormstock.analysis.ANLImgShow.CurvePoint;
 import stormstock.analysis.ANLStockDayKData.DetailData;
 
 public class ANLBTEngine {
-	public ANLBTEngine()
+	public ANLBTEngine(String name)
 	{
+		System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
+		m_logfilename = name + ".txt";
+		ANLLog.init(m_logfilename);
 		stockListstore = new ArrayList<ANLStock>();
 		m_eigenObjMap = new HashMap<String, ANLEigen>();
 		m_strategyObj = null;
@@ -172,6 +175,7 @@ public class ANLBTEngine {
         } 
 	}
 	
+	private String m_logfilename;
 	private List<ANLStock> stockListstore;
 	private Map<String, ANLEigen> m_eigenObjMap;
 	private ANLStrategy m_strategyObj;
