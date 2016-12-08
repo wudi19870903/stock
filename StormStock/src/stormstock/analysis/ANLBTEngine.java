@@ -7,8 +7,16 @@ import java.util.Map;
 
 import stormstock.analysis.ANLImgShow.CurvePoint;
 import stormstock.analysis.ANLStockDayKData.DetailData;
+import stormstock.analysis.ANLStrategy.SelectResult;
 
+/*
+ * ANL Back Test Engine class
+ */
 public class ANLBTEngine {
+	
+	/*
+	 * 构造
+	 */
 	public ANLBTEngine(String name)
 	{
 		System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
@@ -27,14 +35,28 @@ public class ANLBTEngine {
 		m_eigenObjMap = new HashMap<String, ANLEigen>();
 		m_strategyObj = null;
 	}
+	
+	/*
+	 * 为测试引擎添加特征对象，用于计算股票的特征值
+	 */
 	public void addEigen(ANLEigen cEigen)
 	{
 		m_eigenObjMap.put(cEigen.getClass().getSimpleName(), cEigen); 
 	}
+	
+	/*
+	 * 为测试引擎设置要测试的策略
+	 */
 	public void setStrategy(ANLStrategy cStrategy)
 	{
 		m_strategyObj = cStrategy;
 	}
+	
+	/*
+	 * 进行股票回测
+	 * beginDate: 开始日期 例如 “2016-01-01”
+	 * endDate: 结束日期 例如 “2016-12-31”
+	 */
 	public void runBT(String beginDate, String endDate)
 	{
 		if(null == m_strategyObj) {
@@ -48,7 +70,7 @@ public class ANLBTEngine {
 		
 		// ------------------------------------------------------------------------------
 		// 遍历所有股票，预加载到所有股票列表
-		// ANLLog.outputConsole("loading user stock pool ...\n");
+		ANLLog.outputConsole("loading user stock pool ...");
 		List<String> cStockList = ANLDataProvider.getAllStocks();
 		for(int i=0; i<cStockList.size();i++)
 		{
@@ -79,18 +101,9 @@ public class ANLBTEngine {
 			// 更新账户当前日期
 			m_cUserAcc.update(curDate);
 			
-			// 当前股票池回调给用户，获得select股票列表
+			// 当前股票池中股票全部回调给用户，获得select股票列表
 			List<String> cSelectStockList = new ArrayList<String>();
-			ANLLog.outputLog("---> strategy_enter date(%s) stockCnt(%d)\n", curDate, m_cANLStockPool.stockList.size());
-			m_strategyObj.strategy_select(curDate, m_cANLStockPool, cSelectStockList);
-			ANLLog.outputLog("    strategy_enter date(%s) select [ ", curDate);
-			if(cSelectStockList.size() == 0) ANLLog.outputLog("null ");
-			for(int j=0; j< cSelectStockList.size(); j++)// 遍历可操作票
-			{
-				String stockId = cSelectStockList.get(j);
-				ANLLog.outputLog("%s ", stockId);
-			}
-			ANLLog.outputLog("]\n");
+			callStockPoolUserSelect(curDate, cSelectStockList);
 			
 			// 模拟账户交易
 			mockTransaction(curDate, cSelectStockList);
@@ -151,6 +164,30 @@ public class ANLBTEngine {
 				cANLStockUser.eigenMap.put(eigenKey, eigenVal);
 			}   
 		}
+	}
+	
+	private void callStockPoolUserSelect(String date, List<String> out_selectList)
+	{
+		ANLLog.outputLog("---> strategy_enter date(%s) stockCnt(%d)\n", date, m_cANLStockPool.stockList.size());
+		
+		for(int iStockIndex = 0; iStockIndex < m_cANLStockPool.stockList.size(); iStockIndex++)
+		{
+			ANLStock cCurStock = m_cANLStockPool.stockList.get(iStockIndex);
+			SelectResult cSR = new SelectResult();
+			m_strategyObj.strategy_select(date, cCurStock, cSR);
+			if(cSR.bSelect){
+				out_selectList.add(cCurStock.id);
+			}
+		}
+		
+		ANLLog.outputLog("    strategy_enter date(%s) select [ ", date);
+		if(out_selectList.size() == 0) ANLLog.outputLog("null ");
+		for(int j=0; j< out_selectList.size(); j++)// 遍历可操作票
+		{
+			String stockId = out_selectList.get(j);
+			ANLLog.outputLog("%s ", stockId);
+		}
+		ANLLog.outputLog("]\n");
 	}
 	
 	private void mockTransaction(String date, List<String> cSelectStockList)

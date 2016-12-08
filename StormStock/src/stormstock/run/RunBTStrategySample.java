@@ -9,6 +9,7 @@ import stormstock.analysis.ANLLog;
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockPool;
 import stormstock.analysis.ANLStrategy;
+import stormstock.analysis.ANLStrategy.SelectResult;
 
 public class RunBTStrategySample {
 	// ÌØÕ÷EISample1Àà
@@ -41,29 +42,22 @@ public class RunBTStrategySample {
 		@Override
 		public boolean strategy_preload(ANLStock cANLStock) {
 			// TODO Auto-generated method stub
-			if(cANLStock.id.compareTo("000001") >= 0
-				&& cANLStock.id.compareTo("000200") <= 0)
+			if(cANLStock.id.compareTo("000001") >= 0 && cANLStock.id.compareTo("000200") <= 0)
 			{	
-				ANLLog.outputLog("add stockpool %s %s\n", cANLStock.id, cANLStock.curBaseInfo.name);
+				//ANLLog.outputLog("add stockpool %s %s\n", cANLStock.id, cANLStock.curBaseInfo.name);
 				return true;
 			} else {
 				return false;
 			}
 		}
+		
 		@Override
-		public void strategy_select(String date, ANLStockPool spool, List<String> selectStockList) {
-			for(int i = 0; i < spool.stockList.size(); i++)
-			{
-				ANLStock cANLStock = spool.stockList.get(i);
-				float EigenSample1 = (float)cANLStock.eigenMap.get("EigenSample1");
-				float EigenSample2 = (float)cANLStock.eigenMap.get("EigenSample2");
-				ANLLog.outputLog("    stock %s %s %s %.2f EigenSample1(%.3f) EigenSample2(%.3f)\n", 
-						cANLStock.id, cANLStock.curBaseInfo.name, 
-						cANLStock.GetLastDate(), cANLStock.GetLastPrice(),
-						EigenSample1,EigenSample2);
-				if(EigenSample1 < -0.03 && EigenSample2 < -0.02) {
-					selectStockList.add(cANLStock.id);
-				}
+		public void strategy_select(String in_date, ANLStock in_stock, SelectResult out_sr) {
+			float EigenSample1 = (float)in_stock.eigenMap.get("EigenSample1");
+			float EigenSample2 = (float)in_stock.eigenMap.get("EigenSample2");
+			//ANLLog.outputLog("    stock %s %s %s %.2f EigenSample1(%.3f) EigenSample2(%.3f)\n", in_stock.id, in_stock.curBaseInfo.name, in_stock.GetLastDate(), in_stock.GetLastPrice(),EigenSample1,EigenSample2);
+			if(EigenSample1 < -0.03 && EigenSample2 < -0.02) {
+				out_sr.bSelect = true;
 			}
 		}
 	}
