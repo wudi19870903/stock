@@ -1,5 +1,5 @@
 package stormstock.analysis;
 
 abstract public class ANLEigen {
-	abstract public float calc(ANLStock cANLStock);
+	abstract public Object calc(ANLStock cANLStock);
 }

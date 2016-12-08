@@ -14,7 +14,7 @@ public class RunBTStrategySample {
 	// 特征EISample1类
 	public static class EigenSample1 extends ANLEigen {
 		@Override
-		public float calc(ANLStock cANLStock) {
+		public Object calc(ANLStock cANLStock) {
 			// 计算离60日均线的价格偏离百分比
 			float MA60 = cANLStock.GetMA(60, cANLStock.GetLastDate());
 			float curPrice = cANLStock.GetLastPrice();
@@ -26,7 +26,7 @@ public class RunBTStrategySample {
 	// 特征EISample2类
 	public static class EigenSample2 extends ANLEigen {
 		@Override
-		public float calc(ANLStock cANLStock)
+		public Object calc(ANLStock cANLStock)
 		{
 			// 计算离250日均线的价格偏离百分比
 			float MA250 = cANLStock.GetMA(250, cANLStock.GetLastDate());
@@ -55,8 +55,8 @@ public class RunBTStrategySample {
 			for(int i = 0; i < spool.stockList.size(); i++)
 			{
 				ANLStock cANLStock = spool.stockList.get(i);
-				float EigenSample1 = cANLStock.eigenMap.get("EigenSample1");
-				float EigenSample2 = cANLStock.eigenMap.get("EigenSample2");
+				float EigenSample1 = (float)cANLStock.eigenMap.get("EigenSample1");
+				float EigenSample2 = (float)cANLStock.eigenMap.get("EigenSample2");
 				ANLLog.outputLog("    stock %s %s %s %.2f EigenSample1(%.3f) EigenSample2(%.3f)\n", 
 						cANLStock.id, cANLStock.curBaseInfo.name, 
 						cANLStock.GetLastDate(), cANLStock.GetLastPrice(),

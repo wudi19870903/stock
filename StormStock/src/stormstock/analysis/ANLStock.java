@@ -16,7 +16,7 @@ public class ANLStock {
 	{
 		historyData = new ArrayList<ANLStockDayKData>();
 		curBaseInfo = new StockBaseInfo();
-		eigenMap = new HashMap<String, Float>();
+		eigenMap = new HashMap<String, Object>();
 	}	 
 	public ANLStock(String sid, StockBaseInfo scurBaseInfo)
 	{
@@ -24,7 +24,7 @@ public class ANLStock {
 		curBaseInfo = scurBaseInfo;
 		historyData = new ArrayList<ANLStockDayKData>();
 		curBaseInfo = new StockBaseInfo();
-		eigenMap = new HashMap<String, Float>();
+		eigenMap = new HashMap<String, Object>();
 	}	 
 
 	// 获得最后一天的收盘价
@@ -109,5 +109,5 @@ public class ANLStock {
 	public String id;
 	public StockBaseInfo curBaseInfo;
 	public List<ANLStockDayKData> historyData;
-	public Map<String, Float> eigenMap;
+	public Map<String, Object> eigenMap;
 }

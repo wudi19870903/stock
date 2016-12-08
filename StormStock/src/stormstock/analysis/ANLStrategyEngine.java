@@ -113,7 +113,7 @@ abstract public class ANLStrategyEngine {
 				// 为股票计算特征值
 				for(Map.Entry<String, ANLEigen> entry:eigenObjMap.entrySet()){     
 					String eigenKey = entry.getKey();
-					float eigenVal = entry.getValue().calc(cANLStockUser);
+					Object eigenVal = entry.getValue().calc(cANLStockUser);
 					//ANLLog.outputConsole("ANLEigen %s %.3f\n", entry.getKey(), entry.getValue().calc(cANLStockUser));
 					cANLStockUser.eigenMap.put(eigenKey, eigenVal);
 				}   
