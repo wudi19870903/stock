@@ -30,13 +30,19 @@ public class ANLStock {
 	// 获得最后一天的收盘价
 	public float GetLastPrice()
 	{
-		return historyData.get(historyData.size()-1).close;
+		if(historyData.size() > 0)
+			return historyData.get(historyData.size()-1).close;
+		else
+			return 0.0f;
 	}
 	
 	// 获得最后一天的日期
 	public String GetLastDate()
 	{
-		return historyData.get(historyData.size()-1).date;
+		if(historyData.size() > 0)
+			return historyData.get(historyData.size()-1).date;
+		else
+			return "0000-00-00";
 	}
 		
 	// 均线计算，计算date日期前count天均线价格

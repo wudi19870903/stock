@@ -61,7 +61,7 @@ public class RunBTStrategySample {
 						cANLStock.id, cANLStock.curBaseInfo.name, 
 						cANLStock.GetLastDate(), cANLStock.GetLastPrice(),
 						EigenSample1,EigenSample2);
-				if(EigenSample1 < -0.15 && EigenSample2 < -0.2) {
+				if(EigenSample1 < -0.03 && EigenSample2 < -0.02) {
 					selectStockList.add(cANLStock.id);
 				}
 			}
@@ -76,6 +76,6 @@ public class RunBTStrategySample {
 		// 设置策略
 		cANLBTEngine.setStrategy(new StrategySample());
 		// 进行回测
-		cANLBTEngine.runBT("2016-01-01", "2016-10-05");
+		cANLBTEngine.runBT("2016-01-01", "2016-12-31");
 	}
 }
