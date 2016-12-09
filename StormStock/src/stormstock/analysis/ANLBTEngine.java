@@ -1,6 +1,8 @@
 package stormstock.analysis;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +15,32 @@ import stormstock.analysis.ANLStrategy.SelectResult;
  * ANL Back Test Engine class
  */
 public class ANLBTEngine {
-	
+	/*
+	 * SelectResultWrapper类，用于选股优先级排序
+	 */
+	static private class SelectResultWrapper {
+		public SelectResultWrapper(){
+			selectRes = new SelectResult();
+		}
+		// 优先级从大到小排序
+		static public class SelectResultCompare implements Comparator 
+		{
+			public int compare(Object object1, Object object2) {
+				SelectResultWrapper c1 = (SelectResultWrapper)object1;
+				SelectResultWrapper c2 = (SelectResultWrapper)object2;
+				int iCmp = Float.compare(c1.selectRes.fPriority, c2.selectRes.fPriority);
+				if(iCmp > 0) 
+					return -1;
+				else if(iCmp < 0) 
+					return 1;
+				else
+					return 0;
+			}
+		}
+		public String stockId;
+		public SelectResult selectRes;
+	}
+
 	/*
 	 * 构造
 	 */
@@ -82,7 +109,7 @@ public class ANLBTEngine {
 				// ANLLog.outputConsole("stockListstore id:%s \n", cANLStock.id);
 			}
 		}
-		ANLLog.outputConsole("===> load success, stockCnt(%d)\n", m_stockListstore.size());
+		ANLLog.outputConsole("==> load success, stockCnt(%d)\n", m_stockListstore.size());
 		
 		// ------------------------------------------------------------------------------
 		// 从上证指数中确认回调天数
@@ -113,7 +140,7 @@ public class ANLBTEngine {
 		m_cImageShow.writeLogicCurve(m_poiList_shangzheng, 1);
 		m_cImageShow.writeLogicCurve(m_poiList_money, 2);
 		m_cImageShow.GenerateImage();
-		ANLLog.outputLog("---> run back test over!");
+		ANLLog.outputLog("--> run back test over!");
 	}
 	
 	private void generateStockPoolToday(String date)
@@ -168,19 +195,31 @@ public class ANLBTEngine {
 	
 	private void callStockPoolUserSelect(String date, List<String> out_selectList)
 	{
-		ANLLog.outputLog("---> strategy_enter date(%s) stockCnt(%d)\n", date, m_cANLStockPool.stockList.size());
+		ANLLog.outputLog("--> strategy_enter date(%s) stockCnt(%d)\n", date, m_cANLStockPool.stockList.size());
 		
+		// 回调给用户生成cSelectResultWrapperList后进行排序
+		List<SelectResultWrapper> cSelectResultWrapperList = new ArrayList<SelectResultWrapper>();
 		for(int iStockIndex = 0; iStockIndex < m_cANLStockPool.stockList.size(); iStockIndex++)
 		{
 			ANLStock cCurStock = m_cANLStockPool.stockList.get(iStockIndex);
-			SelectResult cSR = new SelectResult();
-			m_strategyObj.strategy_select(date, cCurStock, cSR);
-			if(cSR.bSelect){
-				out_selectList.add(cCurStock.id);
+			
+			SelectResultWrapper cSRW = new SelectResultWrapper();
+			cSRW.stockId = cCurStock.id;
+			m_strategyObj.strategy_select(date, cCurStock, cSRW.selectRes);
+			if(cSRW.selectRes.bSelect){
+				cSelectResultWrapperList.add(cSRW);
 			}
+		} 
+		Collections.sort(cSelectResultWrapperList, new SelectResultWrapper.SelectResultCompare());
+		
+		// 排序后的SelectResultWrapperList添加到selectlist中
+		for(int iSRW = 0; iSRW < cSelectResultWrapperList.size(); iSRW++)
+		{
+			String stockId = cSelectResultWrapperList.get(iSRW).stockId;
+			out_selectList.add(stockId);
 		}
 		
-		ANLLog.outputLog("    strategy_enter date(%s) select [ ", date);
+		ANLLog.outputLog("    # strategy_enter date(%s) select [ ", date);
 		if(out_selectList.size() == 0) ANLLog.outputLog("null ");
 		for(int j=0; j< out_selectList.size(); j++)// 遍历可操作票
 		{

@@ -97,7 +97,7 @@ public class ANLUserAcc {
 			all_marketval = all_marketval + tmpANLUserAccStock.totalAmount*cprice;
 		}
 		float all_asset = all_marketval + money;
-		ANLLog.outputLog("# UserAccOpe buyStock [%s %s %.2f %d] [%.2f %.2f] \n", curDate, id, price, amount, all_marketval, all_asset);
+		ANLLog.outputLog("    # UserAccOpe buyStock [%s %s %.2f %d] [%.2f %.2f] \n", curDate, id, price, amount, all_marketval, all_asset);
 		return true;
 	}
 	public boolean sellStock(String id, float price, int amount)
@@ -127,7 +127,7 @@ public class ANLUserAcc {
 				all_marketval = all_marketval + cANLUserAccStock.totalAmount*cprice;
 			}
 			float all_asset = all_marketval + money;
-			ANLLog.outputLog("# UserAccOpe sellStock [%s %s %.2f %d] [%.2f %.2f]\n", curDate, id, price, amount, all_marketval, all_asset);
+			ANLLog.outputLog("    # UserAccOpe sellStock [%s %s %.2f %d] [%.2f %.2f]\n", curDate, id, price, amount, all_marketval, all_asset);
 		}
 		return true;
 	}
