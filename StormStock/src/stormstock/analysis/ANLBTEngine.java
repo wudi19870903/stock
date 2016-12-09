@@ -219,12 +219,16 @@ public class ANLBTEngine {
 			out_selectList.add(stockId);
 		}
 		
-		ANLLog.outputLog("    # strategy_enter date(%s) select [ ", date);
+		ANLLog.outputLog("    # strategy_enter date(%s) select(%d) [ ", date, out_selectList.size());
 		if(out_selectList.size() == 0) ANLLog.outputLog("null ");
 		for(int j=0; j< out_selectList.size(); j++)// ±éÀú¿É²Ù×÷Æ±
 		{
 			String stockId = out_selectList.get(j);
 			ANLLog.outputLog("%s ", stockId);
+			if (j >= 7 && out_selectList.size()-1 > 8) {
+				ANLLog.outputLog("... ", stockId);
+				break;
+			}
 		}
 		ANLLog.outputLog("]\n");
 	}

@@ -52,7 +52,7 @@ public class RunBTStrategySample {
 		public void strategy_select(String in_date, ANLStock in_stock, SelectResult out_sr) {
 			float EigenSample1 = (float)in_stock.eigenMap.get("EigenSample1");
 			float EigenSample2 = (float)in_stock.eigenMap.get("EigenSample2");
-			if(EigenSample1 < -0.05 && EigenSample2 < -0.05) {
+			if(EigenSample1 < -0.03 && EigenSample2 < -0.03) {
 				out_sr.bSelect = true;
 				//out_sr.fPriority = (float) Math.random();
 				//ANLLog.outputLog("    stock %s %s %s %.2f EigenSample1(%.3f) EigenSample2(%.3f)\n", in_stock.id, in_stock.curBaseInfo.name, in_stock.GetLastDate(), in_stock.GetLastPrice(),EigenSample1,EigenSample2);
