@@ -1,4 +1,4 @@
-package stormstock.run;
+package stormstock.run.bt;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +12,7 @@ import stormstock.analysis.ANLStrategy;
 import stormstock.analysis.ANLStrategy.SelectResult;
 
 public class RunBTStrategySample {
-	// 特征EISample1类
+	// 特征EigenSample1类
 	public static class EigenSample1 extends ANLEigen {
 		@Override
 		public Object calc(ANLStock cANLStock) {
@@ -24,7 +24,7 @@ public class RunBTStrategySample {
 		}
 
 	}
-	// 特征EISample2类
+	// 特征EigenSample2类
 	public static class EigenSample2 extends ANLEigen {
 		@Override
 		public Object calc(ANLStock cANLStock)
@@ -37,7 +37,7 @@ public class RunBTStrategySample {
 		}
 	}
 
-	// 策略Sample类
+	// 策略StrategySample类
 	public static class StrategySample extends ANLStrategy {
 		@Override
 		public boolean strategy_preload(ANLStock cANLStock) {

@@ -1,4 +1,4 @@
-package stormstock.run;
+package stormstock.run.bt;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,7 +13,7 @@ import stormstock.analysis.ANLDataProvider;
 import stormstock.data.DataEngine;
 import stormstock.data.DataWebStockAllList.StockItem;
 
-public class RunStrategyAve {
+public class RunBTStrategyAve {
 	public static Formatter fmt = new Formatter(System.out);
 	public static String strLogName = "ANLPolicyAve.txt";
 	public static float fStopProfit = 1.0f;  //Ö¹Ó¯µã

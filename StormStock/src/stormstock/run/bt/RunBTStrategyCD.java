@@ -1,4 +1,4 @@
-package stormstock.run;
+package stormstock.run.bt;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,7 +15,7 @@ import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
 import stormstock.analysis.ANLDataProvider;
 
-public class RunStrategyCD {
+public class RunBTStrategyCD {
 	// 测试统计结果全局记录
 	public String stockId;
 	public int succCnt = 0;
@@ -379,7 +379,7 @@ public class RunStrategyCD {
 	}
 	
 	public static void main(String[] args) {
-		RunStrategyCD objANLPolicy = new RunStrategyCD();
+		RunBTStrategyCD objANLPolicy = new RunBTStrategyCD();
 		ANLLog.outputConsole("Main Begin\n\n");
 		// 股票列表
 		List<StockItem> cStockList = new ArrayList<StockItem>();

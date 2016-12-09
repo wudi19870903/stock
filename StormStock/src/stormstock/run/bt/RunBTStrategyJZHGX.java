@@ -1,4 +1,4 @@
-package stormstock.run;
+package stormstock.run.bt;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +14,7 @@ import stormstock.analysis.ANLStockDayKData;
 import stormstock.analysis.ANLStockPool;
 import stormstock.analysis.ANLUserAcc;
 
-public class RunStrategyJZHGX extends ANLStrategyEngine  {
+public class RunBTStrategyJZHGX extends ANLStrategyEngine  {
 	
 	// 股票分值表，用于给每天的股票打分
 	static class ANLPolicyStockCK
@@ -443,7 +443,7 @@ public class RunStrategyJZHGX extends ANLStrategyEngine  {
 		return;
 	}
 	public static void main(String[] args) throws InterruptedException {
-		RunStrategyJZHGX cANLPolicyJZHG = new RunStrategyJZHGX();
+		RunBTStrategyJZHGX cANLPolicyJZHG = new RunBTStrategyJZHGX();
 		cANLPolicyJZHG.run("2016-01-01", "2016-01-05");
 	}
 }
