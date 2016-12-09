@@ -16,7 +16,10 @@ import stormstock.data.DataWebStockAllList.StockItem;
 import stormstock.data.DataWebStockDayDetail.DayDetailItem;
 import stormstock.data.DataWebStockDayK.DayKData;
 
-public class RunTest {
+/*
+ * 简单取得股票信息数据的方式
+ */
+public class RunGetDataSample {
 	public static void main(String[] args) {
 		ANLLog.outputConsole("Main Begin\n\n");
 		// 股票全列表，输出所有股票id

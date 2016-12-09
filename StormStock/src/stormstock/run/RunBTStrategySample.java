@@ -1,4 +1,4 @@
-package stormstock.run.bt;
+package stormstock.run;
 
 import java.util.Arrays;
 import java.util.List;
