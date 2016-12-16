@@ -365,7 +365,7 @@ public class RunBTStrategyJZHGX extends ANLStrategyEngine  {
 		for(int i = 0; i < spool.stockList.size(); i++)
 		{
 			ANLStock cANLStock = spool.stockList.get(i);
-			ANLLog.outputLog("    %s EISample %.3f\n",cANLStock.id, cANLStock.eigenMap.get("EISample"));
+			ANLLog.outputLog("    %s EISample %.3f\n",cANLStock.id, cANLStock.getEngen("EISample"));
 			if(cANLStock.historyData.size() == 0) continue;
 			
 			ANLPolicyStockCK cANLPolicyStockCK = new ANLPolicyStockCK();
@@ -396,7 +396,7 @@ public class RunBTStrategyJZHGX extends ANLStrategyEngine  {
 		for(int i = 0; i < cUserAcc.stockList.size(); i++) // 遍历持仓票，进行卖出判断
 		{
 			ANLUserAcc.ANLUserAccStock cANLUserAccStock = cUserAcc.stockList.get(i);
-			float cprice = spool.getStock(cANLUserAccStock.id).GetLastPrice();
+			float cprice = spool.getStock(cANLUserAccStock.id).GetLastClosePrice();
 			if(cANLUserAccStock.holdDayCnt > 5) // 持有一定时间卖出
 			{
 				cUserAcc.sellStock(cANLUserAccStock.id, cprice, cANLUserAccStock.totalAmount);
@@ -432,7 +432,7 @@ public class RunBTStrategyJZHGX extends ANLStrategyEngine  {
 				if(!alreayHas)
 				{
 					String buy_id = cANLPolicyStockCK.stockID;
-					float buy_price = spool.getStock(buy_id).GetLastPrice();
+					float buy_price = spool.getStock(buy_id).GetLastClosePrice();
 					int buy_amount = (int)(usedMoney/buy_price)/100*100;
 					cUserAcc.buyStock(buy_id, buy_price, buy_amount);
 					stockCKList.remove(j); // 买入后从列表清除
@@ -444,6 +444,6 @@ public class RunBTStrategyJZHGX extends ANLStrategyEngine  {
 	}
 	public static void main(String[] args) throws InterruptedException {
 		RunBTStrategyJZHGX cANLPolicyJZHG = new RunBTStrategyJZHGX();
-		cANLPolicyJZHG.run("2016-01-01", "2016-01-05");
+		cANLPolicyJZHG.run("2010-01-01", "2016-01-05");
 	}
 }

@@ -1,5 +1,7 @@
 package stormstock.analysis;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class ANLUtils {
@@ -67,5 +69,52 @@ public class ANLUtils {
 			}
 		}
 		return index;
+	}
+	
+	/*
+	 *  转换日期对象Date到字符串
+	 *  如果时分秒都为0 则返回  "yyyy-MM-dd"
+	 *  否则返回  "yyyy-MM-dd HH:mm:ss"
+	 */
+	static public String GetDateStr(Date cDate)
+	{
+		if(cDate.getHours() == 0 && cDate.getMinutes() == 0 && cDate.getSeconds() == 0) 
+		{
+			SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd");
+			return sdf.format(cDate);
+		}
+		else
+		{
+			SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			return sdf.format(cDate);
+		}
+	}
+	
+	/*
+	 * 转换日期字符串到对象 Date
+	 * 输入日期字符串可以为 "yyyy-MM-dd"
+	 * 输入日期字符串可以为 "yyyy-MM-dd HH:mm:ss"
+	 */
+	static public Date GetDate(String dateStr)
+	{
+		SimpleDateFormat sdf = null;
+		if(dateStr.length() == "yyyy-MM-dd".length())
+		{
+			sdf =new SimpleDateFormat("yyyy-MM-dd");
+		}
+		else
+		{
+			sdf =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		}
+		Date cDate = null;
+		try
+		{
+			cDate = sdf.parse(dateStr);  
+		}
+		catch (Exception e)  
+		{  
+			ANLLog.outputConsole(e.getMessage());  
+		}  
+		return cDate;
 	}
 }

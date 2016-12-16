@@ -28,13 +28,13 @@ abstract public class ANLStrategyEngine {
 		cImageShow = new ANLImgShow(1600,900,imgfilename);
 		// create inner object
 		stockListstore = new ArrayList<ANLStock>();
-		eigenObjMap = new HashMap<String, ANLEigen>();
+		m_eigenObjMap = new HashMap<String, ANLEigen>();
 		cANLStockPool = new ANLStockPool();
 		cUserAcc = new ANLUserAcc(cANLStockPool);
 	}
 	protected void addEigen(ANLEigen cEigen)
 	{
-		eigenObjMap.put(cEigen.getClass().getSimpleName(), cEigen); 
+		m_eigenObjMap.put(cEigen.getClass().getSimpleName(), cEigen); 
 	}
 	protected void run()
 	{
@@ -110,13 +110,8 @@ abstract public class ANLStrategyEngine {
 				{
 					cANLStockStore.historyData.remove(0);
 				}
-				// 为股票计算特征值
-				for(Map.Entry<String, ANLEigen> entry:eigenObjMap.entrySet()){     
-					String eigenKey = entry.getKey();
-					Object eigenVal = entry.getValue().calc(cANLStockUser);
-					//ANLLog.outputConsole("ANLEigen %s %.3f\n", entry.getKey(), entry.getValue().calc(cANLStockUser));
-					cANLStockUser.eigenMap.put(eigenKey, eigenVal);
-				}   
+				// 为股票设置特征表
+				cANLStockUser.addEigenMap(m_eigenObjMap);    
 			}
 			
 			// 回调给用户
@@ -132,7 +127,7 @@ abstract public class ANLStrategyEngine {
 	}
 	
 	private List<ANLStock> stockListstore;
-	private Map<String, ANLEigen> eigenObjMap;
+	private Map<String, ANLEigen> m_eigenObjMap;
 	public ANLUserAcc cUserAcc;
 	private ANLStockPool cANLStockPool;
 	private ANLImgShow cImageShow;

@@ -16,7 +16,7 @@ public class ANLStock {
 	{
 		historyData = new ArrayList<ANLStockDayKData>();
 		curBaseInfo = new StockBaseInfo();
-		eigenMap = new HashMap<String, Object>();
+		m_eigenObjMap = null;
 	}	 
 	public ANLStock(String sid, StockBaseInfo scurBaseInfo)
 	{
@@ -24,11 +24,45 @@ public class ANLStock {
 		curBaseInfo = scurBaseInfo;
 		historyData = new ArrayList<ANLStockDayKData>();
 		curBaseInfo = new StockBaseInfo();
-		eigenMap = new HashMap<String, Object>();
+		m_eigenObjMap = null;
 	}	 
+	
+	// 获得最后一天的昨日收盘价
+	public float GetLastYesterdayClosePrice()
+	{
+		if(historyData.size() > 1) // 2天以上
+			return historyData.get(historyData.size()-2).close;
+		else if(historyData.size() > 0) // 只有一天情况，昨收就是今开
+			return historyData.get(historyData.size()-1).open;
+		else
+			return 0.0f;
+	}
+	
+	// 获得最后一天的开盘价
+	public float GetLastOpenPrice()
+	{
+		if(historyData.size() > 0)
+			return historyData.get(historyData.size()-1).open;
+		else
+			return 0.0f;
+	}
 
+	// 获得最后一天的开盘时的百分比
+	public float GetLastOpenRatio()
+	{
+		if(historyData.size() > 0)
+		{
+			float fYesterdayClose = GetLastYesterdayClosePrice();
+			float fLastOpen = GetLastOpenPrice();
+			float fLastOpenRatio = (fLastOpen - fYesterdayClose)/fYesterdayClose;
+			return fLastOpenRatio;
+		}
+		else
+			return 0.0f;
+	}
+	
 	// 获得最后一天的收盘价
-	public float GetLastPrice()
+	public float GetLastClosePrice()
 	{
 		if(historyData.size() > 0)
 			return historyData.get(historyData.size()-1).close;
@@ -106,8 +140,21 @@ public class ANLStock {
 		return value;
 	}
 	
+	public void addEigenMap(Map<String, ANLEigen> cEngenMap)
+	{
+		m_eigenObjMap = cEngenMap;
+	}
+	public Object getEngen(String name, Object... args)
+	{
+		if(null == m_eigenObjMap) return null;
+		ANLEigen cANLEigen = m_eigenObjMap.get(name);
+		if(null == cANLEigen) return null;
+		Object engenObj = cANLEigen.calc(this, args);
+		return engenObj;
+	}
+	
 	public String id;
 	public StockBaseInfo curBaseInfo;
 	public List<ANLStockDayKData> historyData;
-	public Map<String, Object> eigenMap;
+	private Map<String, ANLEigen> m_eigenObjMap;
 }

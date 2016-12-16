@@ -10,7 +10,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -30,6 +32,9 @@ public class ANLImgShow {
 	
 	public void GenerateImage()
 	{   
+		// 绘制多条Y同比曲线
+		writeMultiLogicCurveSameRatio();
+		
         try {
         	File file = new File(m_fileName);
 			ImageIO.write(m_bi, "jpg", file);
@@ -39,7 +44,98 @@ public class ANLImgShow {
 		}   
 	}
 	
-	// 描画任意数值曲线， 次曲线将映射到图片上
+	// 描画任意数值曲线， 此曲线将映射到图片上，多曲线Y同比例调整
+	public void addLogicCurveSameRatio(List<CurvePoint> LogicPoiList, int index)
+	{
+		float beginx = LogicPoiList.get(0).m_x;
+		float beginy = LogicPoiList.get(0).m_y;
+		float min_logic_x =  1000000.0f;
+		float min_logic_y =  1000000.0f;
+		float max_logic_x = -1000000.0f;
+		float max_logic_y = -1000000.0f;
+		for(int i = 0; i < LogicPoiList.size(); i++)  
+        {  
+			CurvePoint cPoi = LogicPoiList.get(i); 
+			if(cPoi.m_x <= min_logic_x) min_logic_x = cPoi.m_x;
+			if(cPoi.m_y <= min_logic_y) min_logic_y = cPoi.m_y;
+			if(cPoi.m_x >= max_logic_x) max_logic_x = cPoi.m_x;
+			if(cPoi.m_y >= max_logic_y) max_logic_y = cPoi.m_y;
+        }
+		float logic_unit_max_width = max_logic_x - min_logic_x;
+		float logic_unit_max_hight = (max_logic_y - min_logic_y);
+		
+		List<CurvePoint> poiCurList = new ArrayList<CurvePoint>();
+		int AutoWriteTextSpan = LogicPoiList.size()/5;
+		int iPreSpan = 0;
+		for(int i = 0; i < LogicPoiList.size(); i++)  
+        {  
+			CurvePoint cPoi = LogicPoiList.get(i); 
+			float curX = (cPoi.m_x - beginx)/logic_unit_max_width;
+			float curY = (cPoi.m_y - beginy)/beginy;
+			String textstr = "";
+			if(cPoi.m_name != "")
+			{
+				textstr = cPoi.m_name;
+			}
+			else
+			{
+				float val = cPoi.m_y;
+				float rate = (cPoi.m_y - beginy)/beginy*100;
+				if(i == 0 || i == LogicPoiList.size() -1) // 头尾带文字
+				{
+					textstr = String.format("(%.2f, %.2f%%)", val, rate);
+				}
+				if((i%AutoWriteTextSpan == 0 && 
+						i > 0 && i < LogicPoiList.size() - AutoWriteTextSpan/2) ) // 中间部分固定跨度带文字
+				{
+					textstr = String.format("(%.2f, %.2f%%)", val, rate);
+					iPreSpan = i;
+				}
+				if(0 == Float.compare(max_logic_y, val) || 0 == Float.compare(min_logic_y, val)) // 最高最低带文字
+				{
+					if( iPreSpan+AutoWriteTextSpan-i >=  AutoWriteTextSpan/4 
+							&& LogicPoiList.size()-1-i >= AutoWriteTextSpan/4) // 避免与下一个文字过分重合
+					{
+						textstr = String.format("(%.2f, %.2f%%)", val, rate);
+					}
+				}
+			}
+			poiCurList.add(new CurvePoint(curX, curY, textstr));
+        }
+		
+		m_cMultiUnitCurveMap.put(index, poiCurList);
+	}
+	public void writeMultiLogicCurveSameRatio()
+	{
+		//找到最大y
+		float fMaxY = 0.0f; 
+		for (Map.Entry<Integer, List<CurvePoint>> entry : m_cMultiUnitCurveMap.entrySet()) {  
+			
+			List<CurvePoint> cCurPoiList = entry.getValue();
+			for(int i = 0; i < cCurPoiList.size(); i++) 
+			{
+				CurvePoint cPoi = cCurPoiList.get(i);
+				if(cPoi.m_y > fMaxY) fMaxY = cPoi.m_y;
+				if(-cPoi.m_y > fMaxY) fMaxY = -cPoi.m_y;
+			} 
+		}  
+		fMaxY = fMaxY*1.10f;
+		
+		// 高度同比化
+		for (Map.Entry<Integer, List<CurvePoint>> entry : m_cMultiUnitCurveMap.entrySet()) {  
+			Integer key = entry.getKey();
+			List<CurvePoint> cCurPoiList = entry.getValue();
+			for(int i = 0; i < cCurPoiList.size(); i++) 
+			{
+				CurvePoint cPoi = cCurPoiList.get(i);
+				cPoi.m_y = cPoi.m_y / fMaxY;
+			} 
+			// 绘制单位曲线到图像
+			writeUnitCurve(cCurPoiList, key);
+		} 
+	}
+	
+	// 描画任意数值曲线， 此曲线将映射到图片上，Y自比例调整，与其他曲线无关
 	public void writeLogicCurve(List<CurvePoint> LogicPoiList, int index)
 	{
 		float beginx = LogicPoiList.get(0).m_x;
@@ -61,6 +157,7 @@ public class ANLImgShow {
 		
 		List<CurvePoint> poiUnitList = new ArrayList<CurvePoint>();
 		int AutoWriteTextSpan = LogicPoiList.size()/5;
+		int iPreSpan = 0;
 		for(int i = 0; i < LogicPoiList.size(); i++)  
         {  
 			CurvePoint cPoi = LogicPoiList.get(i); 
@@ -75,12 +172,23 @@ public class ANLImgShow {
 			{
 				float val = cPoi.m_y;
 				float rate = (cPoi.m_y - beginy)/beginy*100;
-				if(i == 0 || i == LogicPoiList.size() -1 
-						|| 0 == Float.compare(max_logic_y, val) || 0 == Float.compare(min_logic_y, val)
-						|| (i%AutoWriteTextSpan == 0 && i > 0 & i < LogicPoiList.size() - AutoWriteTextSpan/2) )
+				if(i == 0 || i == LogicPoiList.size() -1) // 头尾带文字
 				{
 					textstr = String.format("(%.2f, %.2f%%)", val, rate);
-					poiUnitList.add(new CurvePoint(unitX, unitY, textstr));
+				}
+				if((i%AutoWriteTextSpan == 0 && 
+						i > 0 && i < LogicPoiList.size() - AutoWriteTextSpan/2) ) // 中间部分固定跨度带文字
+				{
+					textstr = String.format("(%.2f, %.2f%%)", val, rate);
+					iPreSpan = i;
+				}
+				if(0 == Float.compare(max_logic_y, val) || 0 == Float.compare(min_logic_y, val)) // 最高最低带文字
+				{
+					if( iPreSpan+AutoWriteTextSpan-i >=  AutoWriteTextSpan/4 
+							&& LogicPoiList.size()-1-i >= AutoWriteTextSpan/4) // 避免与下一个文字过分重合
+					{
+						textstr = String.format("(%.2f, %.2f%%)", val, rate);
+					}
 				}
 			}
 			poiUnitList.add(new CurvePoint(unitX, unitY, textstr));
@@ -112,25 +220,35 @@ public class ANLImgShow {
 		if(index == 1) m_g2.setPaint(Color.RED);
 		if(index == 2) m_g2.setPaint(Color.GREEN);
 		if(index == 3) m_g2.setPaint(Color.YELLOW);
-		for(int i = 0; i < poiList.size()-1; i++)  
+		for(int i = 0; i < poiList.size(); i++)  
         {  
-			CurvePoint cPoiBegin = poiList.get(i); 
-			CurvePoint cPoiEnd = poiList.get(i+1); 
-			int BeginX = (int)cPoiBegin.m_x;
-			int BeginY = (int)cPoiBegin.m_y;
-			int EndX = (int)cPoiEnd.m_x;
-			int EndY = (int)cPoiEnd.m_y;
-			m_g2.drawLine(BeginX, BeginY, EndX, EndY);
-			if (cPoiBegin.m_name != "")
+			// 绘制线段
+			if(i <  poiList.size() - 1)
 			{
-				m_g2.drawString(cPoiBegin.m_name, (int)BeginX - 10, (int)BeginY - 5);
-				m_g2.fillOval((int)BeginX, (int)BeginY, 8, 8);
+				CurvePoint cPoiBegin = poiList.get(i); 
+				CurvePoint cPoiEnd = poiList.get(i+1); 
+				int BeginX = (int)cPoiBegin.m_x;
+				int BeginY = (int)cPoiBegin.m_y;
+				int EndX = (int)cPoiEnd.m_x;
+				int EndY = (int)cPoiEnd.m_y;
+				m_g2.drawLine(BeginX, BeginY, EndX, EndY);
+			}
+			// 绘制文字
+			{
+				CurvePoint cPoi = poiList.get(i); 
+				if (cPoi.m_name != "")
+				{
+					m_g2.drawString(cPoi.m_name, (int)cPoi.m_x - 10, (int)cPoi.m_y - 5);
+					m_g2.fillOval((int)cPoi.m_x, (int)cPoi.m_y, 8, 8);
+				}
 			}
         }
 	}
 	
 	public ANLImgShow(int width, int high, String fileName)
 	{
+		m_cMultiUnitCurveMap = new HashMap<Integer, List<CurvePoint>>();
+		
 		m_widthPix = width;
 		m_hightPix = high;
 		m_fileName = fileName;
@@ -145,7 +263,7 @@ public class ANLImgShow {
         
     	m_padding_x = (int)(m_widthPix * 0.1f);
     	m_padding_y = (int)(m_hightPix * 0.05f);
-    	m_unitWidth = (int)(m_widthPix - 2*m_padding_x);
+    	m_unitWidth = (int)(m_widthPix - 2.5*m_padding_x);
     	m_unitHight = (int)((m_hightPix - 2*m_padding_y)/2.0f);
     	
     	// 描画坐标系
@@ -167,6 +285,9 @@ public class ANLImgShow {
 //        double baseY = y + ascent;   
 //        m_g2.drawString(s, (int)x, (int)baseY);   
 	}
+	
+	// 同比例多曲线表，点记录的是Unit数据，最大Y为单位1
+	private Map<Integer, List<CurvePoint>> m_cMultiUnitCurveMap; // <index, curvePointList>
 
     //坐标系参数
 	private int m_padding_x;

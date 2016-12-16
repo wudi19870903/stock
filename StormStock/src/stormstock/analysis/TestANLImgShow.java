@@ -9,6 +9,42 @@ import stormstock.analysis.ANLImgShow.CurvePoint;
 public class TestANLImgShow {
 	public static Formatter fmt = new Formatter(System.out);
 	
+	public static void test_addLogicCurveSameRatio()
+	{
+		ANLImgShow cANLImgShow = new ANLImgShow(1600,900,"test_addLogicCurveSameRatio.jpg");
+		{
+			List<CurvePoint> PoiList = new ArrayList<CurvePoint>();
+			PoiList.add(new CurvePoint(10.0f,110.1f));
+			PoiList.add(new CurvePoint(20.1f,180.2f));
+			PoiList.add(new CurvePoint(30.2f,290.3f));
+			PoiList.add(new CurvePoint(40.3f,560.4f));
+			PoiList.add(new CurvePoint(50.4f,300.2f));
+			PoiList.add(new CurvePoint(60.5f,-22.1f));
+			PoiList.add(new CurvePoint(70.6f,-110.3f));
+			PoiList.add(new CurvePoint(80.7f,0.0f));
+			PoiList.add(new CurvePoint(90.8f,110.1f));
+			PoiList.add(new CurvePoint(100.9f,400.2f));
+			PoiList.add(new CurvePoint(110.0f,110.9f));
+			cANLImgShow.addLogicCurveSameRatio(PoiList, 1);
+		}
+		{
+			List<CurvePoint> PoiList = new ArrayList<CurvePoint>();
+			PoiList.add(new CurvePoint(10.0f,11.1f));
+			PoiList.add(new CurvePoint(20.1f,18.2f));
+			PoiList.add(new CurvePoint(30.2f,29.3f));
+			PoiList.add(new CurvePoint(40.3f,60.4f));
+			PoiList.add(new CurvePoint(50.4f,110.2f));
+			PoiList.add(new CurvePoint(60.5f,122.1f));
+			PoiList.add(new CurvePoint(70.6f,188.3f));
+			PoiList.add(new CurvePoint(80.7f,266.0f));
+			PoiList.add(new CurvePoint(90.8f,198.1f));
+			PoiList.add(new CurvePoint(100.9f,172.2f));
+			PoiList.add(new CurvePoint(110.0f,111.9f));
+			cANLImgShow.addLogicCurveSameRatio(PoiList, 2);
+		}
+		cANLImgShow.GenerateImage();
+	}
+	
 	public static void test_writeLogicCurve_shangzheng()
 	{
 		ANLImgShow cANLImgShow = new ANLImgShow(1600,900,"test_writeLogicCurve_shangzheng.jpg");
@@ -27,19 +63,36 @@ public class TestANLImgShow {
 	public static void test_writeLogicCurve()
 	{
 		ANLImgShow cANLImgShow = new ANLImgShow(1600,900,"test_writeLogicCurve.jpg");
-		List<CurvePoint> PoiList = new ArrayList<CurvePoint>();
-		PoiList.add(new CurvePoint(10.0f,110.1f));
-		PoiList.add(new CurvePoint(20.1f,180.2f));
-		PoiList.add(new CurvePoint(30.2f,290.3f));
-		PoiList.add(new CurvePoint(40.3f,560.4f));
-		PoiList.add(new CurvePoint(50.4f,300.2f));
-		PoiList.add(new CurvePoint(60.5f,-22.1f));
-		PoiList.add(new CurvePoint(70.6f,-110.3f));
-		PoiList.add(new CurvePoint(80.7f,0.0f));
-		PoiList.add(new CurvePoint(90.8f,110.1f));
-		PoiList.add(new CurvePoint(100.9f,400.2f));
-		PoiList.add(new CurvePoint(110.0f,110.9f));
-		cANLImgShow.writeLogicCurve(PoiList, 1);
+		{
+			List<CurvePoint> PoiList = new ArrayList<CurvePoint>();
+			PoiList.add(new CurvePoint(10.0f,110.1f));
+			PoiList.add(new CurvePoint(20.1f,180.2f));
+			PoiList.add(new CurvePoint(30.2f,290.3f));
+			PoiList.add(new CurvePoint(40.3f,560.4f));
+			PoiList.add(new CurvePoint(50.4f,300.2f));
+			PoiList.add(new CurvePoint(60.5f,-22.1f));
+			PoiList.add(new CurvePoint(70.6f,-110.3f));
+			PoiList.add(new CurvePoint(80.7f,0.0f));
+			PoiList.add(new CurvePoint(90.8f,110.1f));
+			PoiList.add(new CurvePoint(100.9f,400.2f));
+			PoiList.add(new CurvePoint(110.0f,110.9f));
+			cANLImgShow.writeLogicCurve(PoiList, 1);
+		}
+		{
+			List<CurvePoint> PoiList = new ArrayList<CurvePoint>();
+			PoiList.add(new CurvePoint(10.0f,11.1f));
+			PoiList.add(new CurvePoint(20.1f,18.2f));
+			PoiList.add(new CurvePoint(30.2f,29.3f));
+			PoiList.add(new CurvePoint(40.3f,60.4f));
+			PoiList.add(new CurvePoint(50.4f,110.2f));
+			PoiList.add(new CurvePoint(60.5f,122.1f));
+			PoiList.add(new CurvePoint(70.6f,188.3f));
+			PoiList.add(new CurvePoint(80.7f,266.0f));
+			PoiList.add(new CurvePoint(90.8f,198.1f));
+			PoiList.add(new CurvePoint(100.9f,172.2f));
+			PoiList.add(new CurvePoint(110.0f,111.9f));
+			cANLImgShow.writeLogicCurve(PoiList, 2);
+		}
 		cANLImgShow.GenerateImage();
 	}
 	
@@ -87,5 +140,6 @@ public class TestANLImgShow {
 		test_writeUnitCurve();
 		test_writeLogicCurve();
 		test_writeLogicCurve_shangzheng();
+		test_addLogicCurveSameRatio();
 	}
 }

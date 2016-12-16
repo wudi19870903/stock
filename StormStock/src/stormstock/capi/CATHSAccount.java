@@ -2,13 +2,13 @@ package stormstock.capi;
 
 import java.lang.reflect.Field;
 import java.util.Formatter;
+import java.util.Properties;
  
 public class CATHSAccount {
 	
 	static{
-		String libraryName = "AutoStockTransaction";
+		// add libpath
 		String yourPath = "lib";
-		
 		System.setProperty("java.library.path", yourPath);
 		Field sysPath = null;
 		try {
@@ -27,6 +27,25 @@ public class CATHSAccount {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		// load c++ API dll
+		String libraryName = "AutoStockTransaction_x86";
+		Properties properties = System.getProperties();
+		String jvmName = properties.getProperty("java.vm.name");
+		if(jvmName.contains("64"))
+		{
+			libraryName = "AutoStockTransaction_x64";
+		}
+		try {
+			sysPath = ClassLoader.class.getDeclaredField("sys_paths");
+		} catch (NoSuchFieldException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// System.out.println("System.loadLibrary: " + libraryName);
 		System.loadLibrary(libraryName);
     }
 	

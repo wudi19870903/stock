@@ -12,29 +12,39 @@ import stormstock.analysis.ANLStrategy;
 import stormstock.analysis.ANLStrategy.SelectResult;
 
 public class RunBTStrategySample {
-	// 特征EigenSample1类
-	public static class EigenSample1 extends ANLEigen {
+	/*
+	 * 特征EigenPriceLoc类
+	 * 垂直位置比例
+	 * 用于计算近N日的垂直价格位置比例
+	 * 例如：历史 最高100 最低0 当前25，则特征值为0.25
+	 */
+	public static class EigenSamplePriceLoc extends ANLEigen {
 		@Override
-		public Object calc(ANLStock cANLStock) {
-			// 计算离60日均线的价格偏离百分比
-			float MA60 = cANLStock.GetMA(60, cANLStock.GetLastDate());
-			float curPrice = cANLStock.GetLastPrice();
-			float val = (curPrice-MA60)/MA60;
+		public Object calc(ANLStock cANLStock, Object... args) {
+			int cntDay = (int)args[0];
+			if(cANLStock.historyData.size() == 0) 
+				return 0.0f;
+			String date = cANLStock.GetLastDate();
+			float lowPrice = cANLStock.GetLow(cntDay, date);
+			float highPrice = cANLStock.GetHigh(cntDay, date);
+			float curPrice = cANLStock.GetLastClosePrice();
+			return (curPrice-lowPrice)/(highPrice-lowPrice);
+		}
+	}
+	/*
+	 * 特征EigenSampleMADeviation类
+	 * 用于计算当前价格偏离N日均线价格的百分比
+	 */
+	public static class EigenSampleMADeviation extends ANLEigen {
+		@Override
+		public Object calc(ANLStock cANLStock, Object... args) {
+			int dayCnt = (int)args[0];
+			float MAVal = cANLStock.GetMA(dayCnt, cANLStock.GetLastDate());
+			float curPrice = cANLStock.GetLastClosePrice();
+			float val = (curPrice-MAVal)/MAVal;
 			return val;
 		}
 
-	}
-	// 特征EigenSample2类
-	public static class EigenSample2 extends ANLEigen {
-		@Override
-		public Object calc(ANLStock cANLStock)
-		{
-			// 计算离250日均线的价格偏离百分比
-			float MA250 = cANLStock.GetMA(250, cANLStock.GetLastDate());
-			float curPrice = cANLStock.GetLastPrice();
-			float val = (curPrice-MA250)/MA250;
-			return val;
-		}
 	}
 
 	// 策略StrategySample类
@@ -50,9 +60,14 @@ public class RunBTStrategySample {
 		
 		@Override
 		public void strategy_select(String in_date, ANLStock in_stock, SelectResult out_sr) {
-			float EigenSample1 = (float)in_stock.eigenMap.get("EigenSample1");
-			float EigenSample2 = (float)in_stock.eigenMap.get("EigenSample2");
-			if(EigenSample1 < -0.03 && EigenSample2 < -0.03) {
+			// 特征：价值位置250日周期
+			float EigenPriceLocLong = (float)in_stock.getEngen("EigenSamplePriceLoc", 250);
+			// 离60日均线偏离百分比
+			float MADeviation60 = (float)in_stock.getEngen("EigenSampleMADeviation", 60);
+			// 离250日均线偏离百分比
+			float MADeviation250 = (float)in_stock.getEngen("EigenSampleMADeviation", 250);
+			if(MADeviation60 < -0.1 && MADeviation250 < -0.06 
+					&& EigenPriceLocLong < 0.4 && EigenPriceLocLong > 0.1) {
 				out_sr.bSelect = true;
 				//out_sr.fPriority = (float) Math.random();
 				//ANLLog.outputLog("    stock %s %s %s %.2f EigenSample1(%.3f) EigenSample2(%.3f)\n", in_stock.id, in_stock.curBaseInfo.name, in_stock.GetLastDate(), in_stock.GetLastPrice(),EigenSample1,EigenSample2);
@@ -63,11 +78,11 @@ public class RunBTStrategySample {
 	public static void main(String[] args) {
 		ANLBTEngine cANLBTEngine = new ANLBTEngine("Sample");
 		// 添加特征
-		cANLBTEngine.addEigen(new EigenSample1());
-		cANLBTEngine.addEigen(new EigenSample2());
+		cANLBTEngine.addEigen(new EigenSampleMADeviation());
+		cANLBTEngine.addEigen(new EigenSamplePriceLoc()); 
 		// 设置策略
 		cANLBTEngine.setStrategy(new StrategySample());
 		// 进行回测
-		cANLBTEngine.runBT("2016-01-01", "2016-12-31");
+		cANLBTEngine.runBT("2010-01-01", "2016-12-31");
 	}
 }

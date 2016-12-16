@@ -3,10 +3,12 @@ package stormstock.analysis;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import stormstock.analysis.ANLUtils;
 import stormstock.analysis.ANLImgShow.CurvePoint;
 import stormstock.analysis.ANLStockDayKData.DetailData;
 import stormstock.analysis.ANLStrategy.SelectResult;
@@ -56,6 +58,8 @@ public class ANLBTEngine {
 		
 		m_stockListstore = new ArrayList<ANLStock>();
 		m_cANLStockPool = new ANLStockPool();
+		m_cSelectStockList = new ArrayList<String>();
+		m_cSellStockList = new ArrayList<String>();
 		
 		m_cUserAcc = new ANLUserAcc(m_cANLStockPool);
 		
@@ -97,7 +101,7 @@ public class ANLBTEngine {
 		
 		// ------------------------------------------------------------------------------
 		// 遍历所有股票，预加载到所有股票列表
-		ANLLog.outputConsole("loading user stock pool ...");
+		ANLLog.outputLog("==> # loading test stock list ... \n");
 		List<String> cStockList = ANLDataProvider.getAllStocks();
 		for(int i=0; i<cStockList.size();i++)
 		{
@@ -109,7 +113,7 @@ public class ANLBTEngine {
 				// ANLLog.outputConsole("stockListstore id:%s \n", cANLStock.id);
 			}
 		}
-		ANLLog.outputConsole("==> load success, stockCnt(%d)\n", m_stockListstore.size());
+		ANLLog.outputLog("    # load success, stockCnt(%d) \n", m_stockListstore.size());
 		
 		// ------------------------------------------------------------------------------
 		// 从上证指数中确认回调天数
@@ -125,22 +129,120 @@ public class ANLBTEngine {
 			// 做成当天股票池
 			generateStockPoolToday(curDate);
             
-			// 更新账户当前日期
+			// 更新账户到当前日期
 			m_cUserAcc.update(curDate);
+			ANLLog.outputLog("--> # date(%s) stockCnt(%d)\n", curDate, m_cANLStockPool.stockList.size());
 			
-			// 当前股票池中股票全部回调给用户，获得select股票列表
-			List<String> cSelectStockList = new ArrayList<String>();
-			callStockPoolUserSelect(curDate, cSelectStockList);
+			// 开盘操作：模拟账户交易（根据昨天晚上算出的买入卖出表）
+			mockTransaction(curDate, m_cSelectStockList, m_cSellStockList);
 			
-			// 模拟账户交易
-			mockTransaction(curDate, cSelectStockList);
+			// 收盘操作：晚上执行策略回调，获得选入股票列表与卖出列表（再下一次循环中做交易）
+			callStockPoolUserSelect(curDate, m_cSelectStockList); // 回调策略获得选入列表
+			callStockPoolAccSell(curDate, m_cSellStockList); // 回调账户获得卖出列表
+			callSelectSellFix(m_cSelectStockList, m_cSellStockList); // 买表中剔除卖出的重合部分
+			
+			m_cUserAcc.printInfo();
 			m_poiList_money.add(new CurvePoint(i,m_cUserAcc.GetTotalAssets()));
         }
 		
-		m_cImageShow.writeLogicCurve(m_poiList_shangzheng, 1);
-		m_cImageShow.writeLogicCurve(m_poiList_money, 2);
+		m_cImageShow.addLogicCurveSameRatio(m_poiList_shangzheng, 1);
+		m_cImageShow.addLogicCurveSameRatio(m_poiList_money, 2);
 		m_cImageShow.GenerateImage();
-		ANLLog.outputLog("--> run back test over!");
+		ANLLog.outputLog("==> # run back test over!");
+	}
+	
+	public void runBTRealtimeMock(String beginDate, String endDate)
+	{
+		if(null == m_strategyObj) {
+			ANLLog.outputConsole("m_strategyObj is null\n");
+			return;
+		}
+		
+		// ------------------------------------------------------------------------------
+		// 账户对象初始化
+		m_cUserAcc.init(100000.0f);
+		
+		// ------------------------------------------------------------------------------
+		// 遍历所有股票，预加载到所有股票列表
+		ANLLog.outputLog("==> # loading test stock list ... \n");
+		List<String> cStockList = ANLDataProvider.getAllStocks();
+		for(int i=0; i<cStockList.size();i++)
+		{
+			String stockId = cStockList.get(i);
+			ANLStock cANLStock = ANLDataProvider.getANLStock(stockId);
+			if(null!= cANLStock && m_strategyObj.strategy_preload(cANLStock))
+			{
+				m_stockListstore.add(cANLStock);
+				// ANLLog.outputConsole("stockListstore id:%s \n", cANLStock.id);
+			}
+		}
+		ANLLog.outputLog("    # load success, stockCnt(%d) \n", m_stockListstore.size());
+		
+		// ------------------------------------------------------------------------------
+		// 获得实时回到区间，调用realtimeEngine接口
+		Date cDateBegin = ANLUtils.GetDate(beginDate);
+		Date cDateEnd = ANLUtils.GetDate(endDate);
+		Date curDateTime = cDateBegin;
+		if(curDateTime.getMinutes()!=0)
+		{
+			curDateTime.setTime(curDateTime.getTime() + 60*1000*1);
+			curDateTime.setSeconds(0);
+		}
+		if(curDateTime.compareTo(cDateEnd) <= 0)
+		{
+			do
+			{
+				// 回调给实时引擎,每整数分钟调用执行引擎
+				realtimeEngine(curDateTime, false);
+				// 当前时间加1分钟
+				curDateTime.setTime(curDateTime.getTime() + 60*1000);
+			} while(curDateTime.compareTo(cDateEnd) <= 0);
+		}
+		ANLLog.outputLog("==> # run back test over! \n");
+	}
+	
+	public void runRealtimeLoop()
+	{
+		ANLLog.outputConsole("==> # run realtime loop ... \n");
+		if(null == m_strategyObj) {
+			ANLLog.outputConsole("m_strategyObj is null\n");
+			return;
+		}
+		do
+		{
+			// 获取当前时间
+			Date cDate = new Date(); 
+			if(cDate.getSeconds() == 0)
+			{
+				// 回调给实时引擎,每整数分钟回调
+				realtimeEngine(cDate, true);
+				
+				try
+				{
+					Thread.sleep(1000);  //回调后+1秒，避免1秒内连续调用
+				}
+				catch (Exception e)  
+				{  
+					ANLLog.outputConsole(e.getMessage());  
+				}  
+			}
+			
+			// 等待0.5秒
+			try
+			{
+				Thread.sleep(500); 
+			}
+			catch (Exception e)  
+			{  
+				ANLLog.outputConsole(e.getMessage());  
+			}  
+			
+		} while(true);
+	}
+	
+	private void realtimeEngine(Date datetime, boolean realFlag)
+	{
+		ANLLog.outputConsole("datetime: %s \n", datetime);
 	}
 	
 	private void generateStockPoolToday(String date)
@@ -183,19 +285,14 @@ public class ANLBTEngine {
 			{
 				cANLStockStore.historyData.remove(0);
 			}
-			// 为股票计算特征值
-			for(Map.Entry<String, ANLEigen> entry:m_eigenObjMap.entrySet()){     
-				String eigenKey = entry.getKey();
-				Object eigenVal = entry.getValue().calc(cANLStockUser);
-				//ANLLog.outputConsole("ANLEigen %s %.3f\n", entry.getKey(), entry.getValue().calc(cANLStockUser));
-				cANLStockUser.eigenMap.put(eigenKey, eigenVal);
-			}   
+			// 为股票设置特征表
+			cANLStockUser.addEigenMap(m_eigenObjMap); 
 		}
 	}
 	
 	private void callStockPoolUserSelect(String date, List<String> out_selectList)
 	{
-		ANLLog.outputLog("--> strategy_enter date(%s) stockCnt(%d)\n", date, m_cANLStockPool.stockList.size());
+		out_selectList.clear();
 		
 		// 回调给用户生成cSelectResultWrapperList后进行排序
 		List<SelectResultWrapper> cSelectResultWrapperList = new ArrayList<SelectResultWrapper>();
@@ -219,7 +316,7 @@ public class ANLBTEngine {
 			out_selectList.add(stockId);
 		}
 		
-		ANLLog.outputLog("    # strategy_enter date(%s) select(%d) [ ", date, out_selectList.size());
+		ANLLog.outputLog("    # select(%d) [ ", out_selectList.size());
 		if(out_selectList.size() == 0) ANLLog.outputLog("null ");
 		for(int j=0; j< out_selectList.size(); j++)// 遍历可操作票
 		{
@@ -233,25 +330,91 @@ public class ANLBTEngine {
 		ANLLog.outputLog("]\n");
 	}
 	
-	private void mockTransaction(String date, List<String> cSelectStockList)
+	private void callStockPoolAccSell(String date, List<String> out_sellList)
 	{
-		// 账户操作交易
-		int iMaxHoldCnt = 3; // 最大持股个数
+		out_sellList.clear();
+		
 		for(int iHold = 0; iHold < m_cUserAcc.stockList.size(); iHold++) // 遍历持仓票，进行卖出判断
 		{
 			ANLUserAcc.ANLUserAccStock cANLUserAccStock = m_cUserAcc.stockList.get(iHold);
-			float cprice = m_cANLStockPool.getStock(cANLUserAccStock.id).GetLastPrice();
+			ANLStock cANLStock = m_cANLStockPool.getStock(cANLUserAccStock.id);
+			float cprice = cANLStock.GetLastClosePrice();
 			if(cANLUserAccStock.holdDayCnt > 10) // 持有一定时间卖出
 			{
-				m_cUserAcc.sellStock(cANLUserAccStock.id, cprice, cANLUserAccStock.totalAmount);
+				out_sellList.add(cANLUserAccStock.id);
+				continue;
 			}
 			float shouyi = (cprice - cANLUserAccStock.buyPrices)/cANLUserAccStock.buyPrices;
 			if(shouyi > 0.02 || shouyi < -0.02) // 止盈止损卖出
 			{
-				m_cUserAcc.sellStock(cANLUserAccStock.id, cprice, cANLUserAccStock.totalAmount);
+				out_sellList.add(cANLUserAccStock.id);
+				continue;
 			}
 		}
+		ANLLog.outputLog("    # sell(%d) [ ", out_sellList.size());
+		if(out_sellList.size() == 0) ANLLog.outputLog("null ");
+		for(int j=0; j< out_sellList.size(); j++)// 遍历可操作票
+		{
+			String stockId = out_sellList.get(j);
+			ANLLog.outputLog("%s ", stockId);
+			if (j >= 7 && out_sellList.size()-1 > 8) {
+				ANLLog.outputLog("... ", stockId);
+				break;
+			}
+		}
+		ANLLog.outputLog("]\n");
+	}
+	
+	private void callSelectSellFix(List<String> out_selectList, List<String> out_sellList)
+	{
+		List<String> cSelectSaveList = new ArrayList<String>(); // 找到需要保留哪些选中的
+		
+		for(int iSelect = 0; iSelect < out_selectList.size(); iSelect++)
+		{
+			String sid_select = out_selectList.get(iSelect);
+			
+			boolean bFindInSell = false;
+			for(int iSell = 0; iSell < out_sellList.size(); iSell++)
+			{
+				String sid_sell = out_sellList.get(iSell);
+				if(sid_sell == sid_select)
+				{
+					bFindInSell = true;
+					break;
+				}
+			}
+			
+			if(!bFindInSell)
+			{
+				cSelectSaveList.add(sid_select);
+			}
+		}
+		
+		out_selectList.clear();
+		out_selectList.addAll(cSelectSaveList);
+	}
+	
+	private void mockTransaction(String date, List<String> cSelectStockList, List<String> cSellStockList)
+	{
+		// 账户操作交易
+		int iMaxHoldCnt = 3; // 最大持股个数
+		
+		// 卖出操作
+		for(int i = 0; i < cSellStockList.size(); i++)
+		{
+			String sid = cSellStockList.get(i);
+			float fLastOpenRatio = m_cANLStockPool.getStock(sid).GetLastOpenRatio(); // 开盘涨跌幅
+			if(fLastOpenRatio > -0.095) // 只有没跌停时候才能卖出
+			{
+				float cprice = m_cANLStockPool.getStock(sid).GetLastOpenPrice(); // 开盘价卖出
+				int amount = m_cUserAcc.GetStockAmount(sid);
+				m_cUserAcc.sellStock(sid, cprice, amount);
+			}
+		}
+		
+		// 买入操作
 		int iNeedBuyCnt = iMaxHoldCnt - m_cUserAcc.stockList.size();
+		if(iNeedBuyCnt > iMaxHoldCnt) iNeedBuyCnt = iMaxHoldCnt; //意外保护
 		for(int iBuy = 0; iBuy< iNeedBuyCnt; iBuy++) // 手中持票数量不足时进行买入
 		{
 			float usedMoney = m_cUserAcc.money/(iNeedBuyCnt-iBuy);//拿出相应仓位钱
@@ -275,10 +438,14 @@ public class ANLBTEngine {
 				if(!alreayHas)
 				{
 					String buy_id = stockId;
-					float buy_price = m_cANLStockPool.getStock(buy_id).GetLastPrice();
-					int buy_amount = (int)(usedMoney/buy_price)/100*100;
-					m_cUserAcc.buyStock(buy_id, buy_price, buy_amount);
-					break;
+					float fLastOpenRatio = m_cANLStockPool.getStock(buy_id).GetLastOpenRatio(); // 开盘涨跌幅
+					if(fLastOpenRatio < 0.095) // 只有没涨停时候才能买入
+					{
+						float buy_price = m_cANLStockPool.getStock(buy_id).GetLastOpenPrice();//开盘价买入
+						int buy_amount = (int)(usedMoney/buy_price)/100*100;
+						m_cUserAcc.buyStock(buy_id, buy_price, buy_amount);
+						break;
+					}
 				}
 			}
 		}
@@ -294,6 +461,10 @@ public class ANLBTEngine {
 	private List<ANLStock> m_stockListstore;
 	// 每天回调给用户的股票池
 	private ANLStockPool m_cANLStockPool;
+	// 用户昨日选的股票
+	List<String> m_cSelectStockList;
+	// 用户昨日判断需要卖出的股票
+	List<String> m_cSellStockList;
 	// 操作账户对象
 	public ANLUserAcc m_cUserAcc;
 	// 用户添加的特征表
