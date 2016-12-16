@@ -73,21 +73,32 @@ public class ANLUtils {
 	
 	/*
 	 *  转换日期对象Date到字符串
-	 *  如果时分秒都为0 则返回  "yyyy-MM-dd"
-	 *  否则返回  "yyyy-MM-dd HH:mm:ss"
+	 *  返回  "yyyy-MM-dd"
 	 */
 	static public String GetDateStr(Date cDate)
 	{
-		if(cDate.getHours() == 0 && cDate.getMinutes() == 0 && cDate.getSeconds() == 0) 
-		{
-			SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd");
-			return sdf.format(cDate);
-		}
-		else
-		{
-			SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			return sdf.format(cDate);
-		}
+		SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd");
+		return sdf.format(cDate);
+	}
+	
+	/*
+	 *  转换日期对象Date到字符串
+	 *  返回  "HH:mm:ss"
+	 */
+	static public String GetTimeStr(Date cDate)
+	{
+		SimpleDateFormat sdf =new SimpleDateFormat("HH:mm:ss");
+		return sdf.format(cDate);
+	}
+	
+	/*
+	 *  转换日期对象Date到字符串
+	 *  返回  "yyyy-MM-dd HH:mm:ss"
+	 */
+	static public String GetDateTimeStr(Date cDate)
+	{
+		SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return sdf.format(cDate);
 	}
 	
 	/*

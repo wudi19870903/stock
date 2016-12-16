@@ -1,6 +1,7 @@
 package stormstock.analysis;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -12,6 +13,7 @@ import stormstock.analysis.ANLUtils;
 import stormstock.analysis.ANLImgShow.CurvePoint;
 import stormstock.analysis.ANLStockDayKData.DetailData;
 import stormstock.analysis.ANLStrategy.SelectResult;
+import stormstock.data.DataEngine;
 
 /*
  * ANL Back Test Engine class
@@ -123,22 +125,22 @@ public class ANLBTEngine {
 		for(int i = iB; i <= iE; i++)  
         {  
 			ANLStockDayKData cShangZhengKData = cANLStock.historyData.get(i);  
-			String curDate = cShangZhengKData.date;
+			String curDateStr = cShangZhengKData.date;
 			m_poiList_shangzheng.add(new CurvePoint(i,cShangZhengKData.close));
 			
 			// 做成当天股票池
-			generateStockPoolToday(curDate);
+			generateStockPoolToday(curDateStr);
             
 			// 更新账户到当前日期
-			m_cUserAcc.update(curDate);
-			ANLLog.outputLog("--> # date(%s) stockCnt(%d)\n", curDate, m_cANLStockPool.stockList.size());
+			m_cUserAcc.update(curDateStr);
+			ANLLog.outputLog("--> # date(%s) stockCnt(%d)\n", curDateStr, m_cANLStockPool.stockList.size());
 			
 			// 开盘操作：模拟账户交易（根据昨天晚上算出的买入卖出表）
-			mockTransaction(curDate, m_cSelectStockList, m_cSellStockList);
+			mockTransaction(curDateStr, m_cSelectStockList, m_cSellStockList);
 			
 			// 收盘操作：晚上执行策略回调，获得选入股票列表与卖出列表（再下一次循环中做交易）
-			callStockPoolUserSelect(curDate, m_cSelectStockList); // 回调策略获得选入列表
-			callStockPoolAccSell(curDate, m_cSellStockList); // 回调账户获得卖出列表
+			callStockPoolUserSelect(curDateStr, m_cSelectStockList); // 回调策略获得选入列表
+			callStockPoolAccSell(curDateStr, m_cSellStockList); // 回调账户获得卖出列表
 			callSelectSellFix(m_cSelectStockList, m_cSellStockList); // 买表中剔除卖出的重合部分
 			
 			m_cUserAcc.printInfo();
@@ -157,26 +159,6 @@ public class ANLBTEngine {
 			ANLLog.outputConsole("m_strategyObj is null\n");
 			return;
 		}
-		
-		// ------------------------------------------------------------------------------
-		// 账户对象初始化
-		m_cUserAcc.init(100000.0f);
-		
-		// ------------------------------------------------------------------------------
-		// 遍历所有股票，预加载到所有股票列表
-		ANLLog.outputLog("==> # loading test stock list ... \n");
-		List<String> cStockList = ANLDataProvider.getAllStocks();
-		for(int i=0; i<cStockList.size();i++)
-		{
-			String stockId = cStockList.get(i);
-			ANLStock cANLStock = ANLDataProvider.getANLStock(stockId);
-			if(null!= cANLStock && m_strategyObj.strategy_preload(cANLStock))
-			{
-				m_stockListstore.add(cANLStock);
-				// ANLLog.outputConsole("stockListstore id:%s \n", cANLStock.id);
-			}
-		}
-		ANLLog.outputLog("    # load success, stockCnt(%d) \n", m_stockListstore.size());
 		
 		// ------------------------------------------------------------------------------
 		// 获得实时回到区间，调用realtimeEngine接口
@@ -242,7 +224,87 @@ public class ANLBTEngine {
 	
 	private void realtimeEngine(Date datetime, boolean realFlag)
 	{
-		ANLLog.outputConsole("datetime: %s \n", datetime);
+		/*
+		 * 每天9点26分，执行一次
+		 * 1 判断当时是否是交易日，如果不是今天什么都不做
+		 */
+		String curDateStr = ANLUtils.GetDateStr(datetime);
+		String curTimeStr = ANLUtils.GetTimeStr(datetime);
+		if(adapter_IsTrasectionDay(curDateStr, realFlag))
+		{
+			/*
+			 * 每天9点27分，执行一次
+			 * 1 加载昨天选择结果（股票对象与买入策略）
+			 * 2 加载已经买入的结果（股票对象，买入策略，卖出策略）
+			 */
+			if(curTimeStr.compareTo("09:27:00")==0)
+			{
+				ANLLog.outputLog("--> # date(%s) loading all, stockCnt(%d)\n", curDateStr, m_cANLStockPool.stockList.size());
+			}
+			
+			/*
+			 * 每天 9点30分-11点30分  13点00分-15点00分，每分钟执行一次
+			 * 1 对昨天选择结果的股票回调买入策略
+			 * 2对已经买入的股票回调卖出策略
+			 */
+			if(curTimeStr.compareTo("09:30:00")==0)
+			{
+				ANLLog.outputConsole("    # [%s] begin trasection...\n", curTimeStr);
+			}
+			
+			/*
+			 * 每天 18点00分分，执行一次
+			 * 1 统计信息收集，当日报表更新至文件
+			 */
+			if(curTimeStr.compareTo("18:00:00")==0)
+			{
+				ANLLog.outputConsole("    # [%s] update report\n", curTimeStr);
+			}
+			
+			
+			/*
+			 * 每天22点00分，执行一次数据更新
+			 * 1 清除所有内存缓冲数据
+			 * 2 更新全部股票数据
+			 * 3 执行选股策略获得选股列表，选择结果（股票对象与买入策略）保存到文件
+			 */
+			if(curTimeStr.compareTo("22:00:00")==0)
+			{
+				ANLLog.outputConsole("    # [%s] clearall and run select strategy\n", curTimeStr);
+				
+				// 1 清除所有内存缓冲数据
+				m_stockListstore.clear();
+				m_cANLStockPool.clear();
+				m_cSelectStockList.clear();
+				
+				// 2 更新全部股票数据
+				DataEngine.updateAllLocalStocks();
+				
+				// 3 执行选股策略获得选股列表，选择结果（股票对象与买入策略）保存到文件
+				// preload 获得preload股票表，做成股票池
+				ANLLog.outputLog("      loading test stock list ... \n");
+				List<String> cStockList = ANLDataProvider.getAllStocks();
+				for(int i=0; i<cStockList.size();i++)
+				{
+					String stockId = cStockList.get(i);
+					ANLStock cANLStock = ANLDataProvider.getANLStock(stockId, curDateStr); 
+					if(null!= cANLStock && m_strategyObj.strategy_preload(cANLStock))
+					{
+						m_stockListstore.add(cANLStock);
+						// ANLLog.outputConsole("stockListstore id:%s \n", cANLStock.id);
+					}
+				}
+				generateStockPoolToday(curDateStr);
+				ANLLog.outputLog("      load success, stockCnt(%d) \n", m_stockListstore.size());
+				// select 回调策略获得选入列表
+				callStockPoolUserSelect(curDateStr, m_cSelectStockList);
+			}
+		}
+	}
+	
+	private boolean adapter_IsTrasectionDay(String curDateStr,  boolean realFlag)
+	{
+		return true;
 	}
 	
 	private void generateStockPoolToday(String date)

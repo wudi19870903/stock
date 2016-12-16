@@ -8,6 +8,11 @@ public class ANLStockPool {
 	{
 		stockList = new ArrayList<ANLStock>();
 	}
+	public boolean clear()
+	{
+		stockList.clear();
+		return true;
+	}
 	public ANLStock getStock(String id)
 	{
 		ANLStock cANLStock = null;

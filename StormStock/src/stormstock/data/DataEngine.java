@@ -626,6 +626,60 @@ public class DataEngine extends DataEngineBase
 		return retList;
 	}
 	
+	public static int updateAllLocalStocks()
+	{
+		int iRetupdateStock = 0;
+		// 更新指数k
+		String ShangZhiId = "999999";
+		String ShangZhiName = "上证指数";
+		iRetupdateStock = DataEngineBase.updateStock(ShangZhiId);
+		String newestDate = "";
+		List<DayKData> retListDK = new ArrayList<DayKData>();
+		int iRetGetDK = DataEngine.getDayKDataQianFuQuan(ShangZhiId, retListDK);
+		if(0 == iRetGetDK && retListDK.size() > 0)
+		{
+			newestDate = retListDK.get(retListDK.size()-1).date;
+		}
+		if(iRetupdateStock >= 0)
+		{
+
+			fmt.format("update success: %s (%s) item:%d date:%s\n", ShangZhiId, ShangZhiName, iRetupdateStock, newestDate);
+		}
+		else
+		{
+			fmt.format("update ERROR: %s (%s) item:%d date:%s\n", ShangZhiId, ShangZhiName, iRetupdateStock, newestDate);
+		}
+		
+		// 更新所有k
+		List<StockItem> retList = new ArrayList<StockItem>();
+		iRetGetDK = DataWebStockAllList.getAllStockList(retList);
+		if(0 == iRetGetDK)
+		{
+			for(int i = 0; i < retList.size(); i++)  
+	        {  
+				StockItem cStockItem = retList.get(i);  
+	            iRetupdateStock = DataEngineBase.updateStock(cStockItem.id);
+	            retListDK = new ArrayList<DayKData>();
+	            iRetGetDK = DataEngine.getDayKDataQianFuQuan(ShangZhiId, retListDK);
+	    		if(0 == iRetGetDK && retListDK.size() > 0)
+	    		{
+	    			fmt.format("update success: %s (%s) item:%d date:%s\n", cStockItem.id, cStockItem.name, iRetupdateStock, newestDate);
+	    		}
+	            else
+	            {
+	            	fmt.format("update ERROR: %s (%s) item:%d date:%s\n", cStockItem.id, cStockItem.name, iRetupdateStock, newestDate);
+	            }
+	            
+	        } 
+			System.out.println("update finish, count:" + retList.size()); 
+		}
+		else
+		{
+			System.out.println("ERROR:" + iRetGetDK);
+		}
+		return iRetupdateStock;
+	}
+	
 	private static StockItem popRandomStock(List<StockItem> in_list)
 	{
 		if(in_list.size() == 0) return null;
