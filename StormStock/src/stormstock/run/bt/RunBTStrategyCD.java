@@ -10,7 +10,6 @@ import stormstock.data.DataEngine;
 import stormstock.data.DataWebStockAllList.StockItem;
 import stormstock.data.DataWebStockDayK.DayKData;
 import stormstock.analysis.ANLLog;
-import stormstock.analysis.ANLStrategyEngine;
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
 import stormstock.analysis.ANLDataProvider;
