@@ -1,0 +1,6 @@
+package stormstock.fw.event; 
+
+message notifytest1  { 
+  required int32 ID = 1; 
+  required string data = 2; 
+}

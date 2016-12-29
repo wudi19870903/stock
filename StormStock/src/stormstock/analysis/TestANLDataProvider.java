@@ -3,8 +3,8 @@ package stormstock.analysis;
 import java.util.Formatter;
 import java.util.List;
 
-import stormstock.data.DataEngine;
-import stormstock.data.DataWebStockAllList.StockItem;
+import stormstock.ori.stockdata.DataEngine;
+import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
 
 public class TestANLDataProvider {
 	public static Formatter fmt = new Formatter(System.out);
@@ -39,5 +39,9 @@ public class TestANLDataProvider {
             	}
             }
         } 
+		
+		
+		ANLDataProvider.getANLStock("600010", "2100-01-01"); 
+		
 	}
 }

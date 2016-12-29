@@ -11,10 +11,10 @@ import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
 import stormstock.analysis.ANLDataProvider;
 import stormstock.analysis.ANLLog;
-import stormstock.data.DataEngine;
-import stormstock.data.DataWebStockAllList.StockItem;
-import stormstock.data.DataWebStockDayDetail.DayDetailItem;
-import stormstock.data.DataWebStockDayK.DayKData;
+import stormstock.ori.stockdata.DataEngine;
+import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
+import stormstock.ori.stockdata.DataWebStockDayDetail.DayDetailItem;
+import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
 
 /*
  * 简单取得股票信息数据的方式

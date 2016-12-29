@@ -84,5 +84,6 @@ public class RunBTStrategySample {
 		cANLBTEngine.setStrategy(new StrategySample());
 		// ½øÐÐ»Ø²â
 		cANLBTEngine.runBT("2010-01-01", "2016-12-31");
+		//cANLBTEngine.runBTRealtimeMock("2016-11-01", "2016-11-20");
 	}
 }

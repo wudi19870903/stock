@@ -10,8 +10,8 @@ import java.util.List;
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;
 import stormstock.analysis.ANLDataProvider;
-import stormstock.data.DataEngine;
-import stormstock.data.DataWebStockAllList.StockItem;
+import stormstock.ori.stockdata.DataEngine;
+import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
 
 public class RunBTStrategyAve {
 	public static Formatter fmt = new Formatter(System.out);

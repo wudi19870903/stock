@@ -3,9 +3,9 @@ package stormstock.analysis;
 import java.util.ArrayList;
 import java.util.List;
 
-import stormstock.data.DataEngine;
-import stormstock.data.DataEngine.ExKData;
-import stormstock.data.DataWebStockAllList.StockItem;
+import stormstock.ori.stockdata.DataEngine;
+import stormstock.ori.stockdata.DataEngine.ExKData;
+import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
  
 public class ANLStockDayKData {
 	public class DetailData

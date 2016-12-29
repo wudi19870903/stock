@@ -13,7 +13,7 @@ import stormstock.analysis.ANLUtils;
 import stormstock.analysis.ANLImgShow.CurvePoint;
 import stormstock.analysis.ANLStockDayKData.DetailData;
 import stormstock.analysis.ANLStrategy.SelectResult;
-import stormstock.data.DataEngine;
+import stormstock.ori.stockdata.DataEngine;
 
 /*
  * ANL Back Test Engine class
@@ -278,24 +278,24 @@ public class ANLBTEngine {
 				m_cSelectStockList.clear();
 				
 				// 2 更新全部股票数据
-				DataEngine.updateAllLocalStocks();
+				DataEngine.updateAllLocalStocks(curDateStr);
 				
 				// 3 执行选股策略获得选股列表，选择结果（股票对象与买入策略）保存到文件
 				// preload 获得preload股票表，做成股票池
-				ANLLog.outputLog("      loading test stock list ... \n");
+				ANLLog.outputLog("    # loading test stock list ... \n");
 				List<String> cStockList = ANLDataProvider.getAllStocks();
 				for(int i=0; i<cStockList.size();i++)
 				{
 					String stockId = cStockList.get(i);
-					ANLStock cANLStock = ANLDataProvider.getANLStock(stockId, curDateStr); 
+					ANLStock cANLStock = ANLDataProvider.getANLStock(stockId, curDateStr);
 					if(null!= cANLStock && m_strategyObj.strategy_preload(cANLStock))
 					{
 						m_stockListstore.add(cANLStock);
-						// ANLLog.outputConsole("stockListstore id:%s \n", cANLStock.id);
+						//ANLLog.outputConsole("stockListstore id:%s \n", cANLStock.id);
 					}
 				}
 				generateStockPoolToday(curDateStr);
-				ANLLog.outputLog("      load success, stockCnt(%d) \n", m_stockListstore.size());
+				ANLLog.outputLog("    # load success, stockCnt(%d) \n", m_stockListstore.size());
 				// select 回调策略获得选入列表
 				callStockPoolUserSelect(curDateStr, m_cSelectStockList);
 			}

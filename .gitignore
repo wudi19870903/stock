@@ -1,5 +1,5 @@
 *target*
-*.jar
+#*.jar
 *.war
 *.ear
 *.class
@@ -34,3 +34,4 @@ local.properties
 StormStock/data/
 StormStock/out/
 *.txt
+*/output/*

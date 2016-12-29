@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import stormstock.analysis.ANLStockDayKData.DetailData;
-import stormstock.data.DataEngine;
-import stormstock.data.DataEngineBase.StockBaseInfo;
-import stormstock.data.DataWebStockAllList.StockItem;
-import stormstock.data.DataWebStockDayDetail.DayDetailItem;
-import stormstock.data.DataWebStockDayK.DayKData;
-import stormstock.data.DataWebStockRealTimeInfo.RealTimeInfo;
+import stormstock.ori.stockdata.DataEngine;
+import stormstock.ori.stockdata.DataEngineBase.StockBaseInfo;
+import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
+import stormstock.ori.stockdata.DataWebStockDayDetail.DayDetailItem;
+import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
+import stormstock.ori.stockdata.DataWebStockRealTimeInfo.RealTimeInfo;
 
 public class ANLDataProvider {
 	// 获得所有股票id列表

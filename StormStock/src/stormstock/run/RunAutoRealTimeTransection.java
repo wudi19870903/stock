@@ -23,11 +23,11 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import stormstock.analysis.ANLStockDayKData;
-import stormstock.capi.CATHSAccount;
-import stormstock.data.DataWebStockRealTimeInfo;
-import stormstock.data.DataWebStockDayDetail.DayDetailItem;
-import stormstock.data.DataWebStockDayK.DayKData;
-import stormstock.data.DataWebStockRealTimeInfo.RealTimeInfo;
+import stormstock.ori.capi.CATHSAccount;
+import stormstock.ori.stockdata.DataWebStockRealTimeInfo;
+import stormstock.ori.stockdata.DataWebStockDayDetail.DayDetailItem;
+import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
+import stormstock.ori.stockdata.DataWebStockRealTimeInfo.RealTimeInfo;
 
 public class RunAutoRealTimeTransection {
 	public static Random random = new Random();

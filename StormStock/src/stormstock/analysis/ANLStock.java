@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import stormstock.data.DataEngine;
-import stormstock.data.DataEngineBase.StockBaseInfo;
-import stormstock.data.DataWebStockDayK.DayKData;
+import stormstock.ori.stockdata.DataEngine;
+import stormstock.ori.stockdata.DataEngineBase.StockBaseInfo;
+import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
 
 public class ANLStock {
 	

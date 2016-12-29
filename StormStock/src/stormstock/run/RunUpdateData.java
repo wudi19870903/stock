@@ -9,21 +9,21 @@ import java.util.List;
 
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLDataProvider;
-import stormstock.data.DataEngine;
-import stormstock.data.DataEngineBase;
-import stormstock.data.DataWebStockAllList;
-import stormstock.data.DataWebStockAllList.StockItem;
-import stormstock.data.DataWebStockDayK;
-import stormstock.data.DataWebStockDayK.DayKData;
-import stormstock.data.DataWebStockDividendPayout.DividendPayout;
-import stormstock.data.DataWebStockRealTimeInfo;
-import stormstock.data.DataWebStockRealTimeInfo.RealTimeInfo;
+import stormstock.ori.stockdata.DataEngine;
+import stormstock.ori.stockdata.DataEngineBase;
+import stormstock.ori.stockdata.DataWebStockAllList;
+import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
+import stormstock.ori.stockdata.DataWebStockDayK;
+import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
+import stormstock.ori.stockdata.DataWebStockDividendPayout.DividendPayout;
+import stormstock.ori.stockdata.DataWebStockRealTimeInfo;
+import stormstock.ori.stockdata.DataWebStockRealTimeInfo.RealTimeInfo;
 
 public class RunUpdateData {
 	public static Formatter fmt = new Formatter(System.out);
 	public static void main(String[] args) {
 		
-		DataEngine.updateAllLocalStocks();
+		DataEngine.updateAllLocalStocks("2016-12-18");
 		
 	}
 }

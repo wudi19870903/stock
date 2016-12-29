@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
-import stormstock.data.DataEngine;
-import stormstock.data.DataWebStockAllList.StockItem;
-import stormstock.data.DataWebStockDayK.DayKData;
+import stormstock.ori.stockdata.DataEngine;
+import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
+import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
 import stormstock.analysis.ANLLog;
 import stormstock.analysis.ANLStock;
 import stormstock.analysis.ANLStockDayKData;

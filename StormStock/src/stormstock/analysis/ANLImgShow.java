@@ -17,7 +17,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import stormstock.analysis.ANLStockDayKData.DetailData;
-import stormstock.data.DataEngine.ExKData;
+import stormstock.ori.stockdata.DataEngine.ExKData;
 
 public class ANLImgShow {
 	public static class CurvePoint
