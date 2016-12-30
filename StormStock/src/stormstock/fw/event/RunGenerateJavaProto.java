@@ -2,6 +2,9 @@ package stormstock.fw.event;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.OutputStream;
 
 import stormstock.fw.base.BLog;
 
@@ -9,13 +12,16 @@ public class RunGenerateJavaProto {
 
 	public static void runCmd(String command)
 	{
-		Runtime rn = Runtime.getRuntime();
 		try {
-			Process p = rn.exec(command);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            Process process = Runtime.getRuntime().exec(command);
+            InputStreamReader ir = new InputStreamReader(process.getErrorStream());
+            LineNumberReader input = new LineNumberReader(ir);
+            String line;
+            while ((line = input.readLine()) != null)
+            	System.out.println(line);
+        } catch (java.io.IOException e) {
+            System.err.println("IOException " + e.getMessage());
+        }
 	}
 	public static String getCurDir()
 	{
@@ -50,8 +56,6 @@ public class RunGenerateJavaProto {
 				runCmd(cmd);
 			}
 		}
-		
-		BLog.output("EVENT", "RunGenerateJavaProto OK!\n");
-		
+		System.out.println("RunGenerateJavaProto END\n");
 	}
 }

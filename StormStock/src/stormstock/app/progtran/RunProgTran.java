@@ -15,7 +15,6 @@ public class RunProgTran {
 		
 		//BLog.config_setTag("EVENT", true);
 		//BLog.config_setTag("BASE", true);
-		BLog.config_setTag("CTRL", true);
 				
 		TranEngine cTranEngine = new TranEngine();
 
