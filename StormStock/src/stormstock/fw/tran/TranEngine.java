@@ -11,6 +11,7 @@ import stormstock.fw.event.Base;
 import stormstock.fw.event.EventDef;
 import stormstock.fw.event.Notifytest2;
 import stormstock.fw.event.Transaction;
+import stormstock.fw.objmgr.ObjManager;
 import stormstock.fw.report.ReportModule;
 import stormstock.fw.select.Selector;
 
@@ -82,7 +83,7 @@ public class TranEngine {
 		cSender.Send("BEV_BASE_STORMEXIT", Base.StormExit.newBuilder().build());
 	}
 	
-	public void setStockSet(ITranStockSet cTranStockSet)
+	public void setStockSet(ITranStockSetFilter cTranStockSet)
 	{
 		m_cTranStockSet = cTranStockSet;
 	}
@@ -92,14 +93,14 @@ public class TranEngine {
 		m_cStrategySelect = cStrategySelect;
 	}
 	
-	public void setCreatePositonStrategy()
+	public void setCreatePositonStrategy(IStrategyCreate cStrategyCreate)
 	{
-		
+		m_cStrategyCreate = cStrategyCreate;
 	}
 	
-	public void setClearPositonStrategy()
+	public void setClearPositonStrategy(IStrategyClear cStrategyClear)
 	{
-		
+		m_cStrategyClear = cStrategyClear;
 	}
 	
 	public void setTimeSpan(String beginDate, String endDate)
@@ -117,24 +118,54 @@ public class TranEngine {
 	{
 		if(null == m_cTranStockSet)
 		{
-			m_cTranStockSet = new ITranStockSet();
+			m_cTranStockSet = new DefaultTranStockSet();
 			BLog.output("TRAN", "m_cTranStockSet is null, set default\n");
 		}
+		if(null == m_cStrategySelect)
+		{
+			m_cStrategySelect = new DefaultStrategySelect();
+			BLog.output("TRAN", "m_cStrategySelect is null, set default\n");
+		}
+		if(null == m_cStrategyCreate)
+		{
+			m_cStrategyCreate = new DefaultStrategyCreate();
+			BLog.output("TRAN", "m_cStrategyCreate is null, set default\n");
+		}
+		if(null == m_cStrategyClear)
+		{
+			m_cStrategyClear = new DefaultStrategyClear();
+			BLog.output("TRAN", "m_cStrategyClear is null, set default\n");
+		}
 		
-		// 发送开始交易命令道控制器
+		// 保存对象
+		ObjManager.setCurrentTranStockSetFilter(m_cTranStockSet);
+		ObjManager.setCurrentStrategySelect(m_cStrategySelect);
+		ObjManager.setCurrentStrategyCreate(m_cStrategyCreate);
+		ObjManager.setCurrentStrategyClear(m_cStrategyClear);
+		
+		// 发送开始交易命令到控制器
 		BLog.output("TRAN", "Start Trasection\n");
 		BEventSys.EventSender cSender = new BEventSys.EventSender();
 		Transaction.StartNotify.Builder msg_builder = Transaction.StartNotify.newBuilder();
-		msg_builder.setHistoryTestTran(true);
-		msg_builder.setBeginDate(m_beginDate);
-		msg_builder.setEndDate(m_endDate);
+		if(null == m_beginDate && null == m_endDate)
+		{
+			msg_builder.setHistoryTestTran(false);
+		}
+		else
+		{
+			msg_builder.setHistoryTestTran(true);
+			msg_builder.setBeginDate(m_beginDate);
+			msg_builder.setEndDate(m_endDate);
+		}
 		Transaction.StartNotify msg = msg_builder.build();
 		cSender.Send("BEV_TRAN_STARTNOTIFY", msg);
 	}
 	
 	// 用户设置
-	ITranStockSet            m_cTranStockSet; 
+	ITranStockSetFilter      m_cTranStockSet; 
 	IStrategySelect          m_cStrategySelect;
+	IStrategyCreate          m_cStrategyCreate;
+	IStrategyClear           m_cStrategyClear;
 	String                   m_beginDate;
 	String                   m_endDate;
 	IAccount                 m_cAcc;
