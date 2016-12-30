@@ -1,4 +1,0 @@
-package stormstock.fw.event; 
-
-message StormExit  { 
-}

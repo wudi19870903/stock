@@ -7,15 +7,19 @@ import stormstock.fw.base.BLog;
 import stormstock.fw.base.BModuleManager;
 import stormstock.fw.base.BEventSys.EventReceiver;
 import stormstock.fw.control.Controller;
-import stormstock.fw.event.Base;
 import stormstock.fw.event.EventDef;
-import stormstock.fw.event.Notifytest2;
 import stormstock.fw.event.Transaction;
 import stormstock.fw.objmgr.ObjManager;
 import stormstock.fw.report.ReportModule;
 import stormstock.fw.select.Selector;
 
 public class TranEngine {
+	
+	public enum TRANMODE
+	{
+		HISTORYMOCK,
+		REALTIME,
+	}
 	
 	public TranEngine()
 	{
@@ -27,7 +31,7 @@ public class TranEngine {
 		BEventSys.start();
 		// subscribe BEV_BASE_STORMEXIT
 		m_eventRecever = new EventReceiver("BModuleManager");
-		m_eventRecever.Subscribe("BEV_BASE_STORMEXIT", this, "onStormExit");
+		m_eventRecever.Subscribe("BEV_TRAN_ENGINEEXIT", this, "onTranEngineExitNotify");
 		m_eventRecever.startReceive();
 		
 		// start modules
@@ -42,12 +46,15 @@ public class TranEngine {
 		// 初始化用户设置
 		m_cTranStockSet = null; 
 		m_cStrategySelect = null; 
+		m_cStrategyCreate = null;
+		m_cStrategyClear = null;
+		m_eTranMode = null;
 		m_beginDate = null; 
 		m_endDate = null; 
 		m_cAcc = null; 
 	}
 	
-	public void onStormExit(com.google.protobuf.GeneratedMessage msg) {
+	public void onTranEngineExitNotify(com.google.protobuf.GeneratedMessage msg) {
 		m_exitFlag = true;
 		synchronized (m_waitObj) {
 			m_waitObj.notify();
@@ -80,7 +87,7 @@ public class TranEngine {
 	public void exitCommand()
 	{
 		BEventSys.EventSender cSender = new BEventSys.EventSender();
-		cSender.Send("BEV_BASE_STORMEXIT", Base.StormExit.newBuilder().build());
+		cSender.Send("BEV_TRAN_ENGINEEXIT", Transaction.TranEngineExitNotify.newBuilder().build());
 	}
 	
 	public void setStockSet(ITranStockSetFilter cTranStockSet)
@@ -103,7 +110,12 @@ public class TranEngine {
 		m_cStrategyClear = cStrategyClear;
 	}
 	
-	public void setTimeSpan(String beginDate, String endDate)
+	public void setTranMode(TRANMODE eTranMode)
+	{
+		m_eTranMode = eTranMode;
+	}
+	
+	public void setHistoryTimeSpan(String beginDate, String endDate)
 	{
 		m_beginDate = beginDate;
 		m_endDate = endDate;
@@ -136,6 +148,12 @@ public class TranEngine {
 			m_cStrategyClear = new DefaultStrategyClear();
 			BLog.output("TRAN", "m_cStrategyClear is null, set default\n");
 		}
+		if(null == m_eTranMode)
+		{
+			BLog.error("TRAN", "m_eTranMode is null!\n");
+			exitCommand();
+			return;
+		}
 		
 		// 保存对象
 		ObjManager.setCurrentTranStockSetFilter(m_cTranStockSet);
@@ -146,19 +164,31 @@ public class TranEngine {
 		// 发送开始交易命令到控制器
 		BLog.output("TRAN", "Start Trasection\n");
 		BEventSys.EventSender cSender = new BEventSys.EventSender();
-		Transaction.StartNotify.Builder msg_builder = Transaction.StartNotify.newBuilder();
-		if(null == m_beginDate && null == m_endDate)
+		Transaction.ControllerStartNotify.Builder msg_builder = Transaction.ControllerStartNotify.newBuilder();
+		if (TRANMODE.HISTORYMOCK == m_eTranMode)
 		{
-			msg_builder.setHistoryTestTran(false);
-		}
-		else
-		{
+			if(null == m_beginDate || null == m_endDate)
+			{
+				BLog.error("TRAN", "HISTORYMOCK need set beginDate endDate!\n");
+				exitCommand();
+				return;
+			}
 			msg_builder.setHistoryTestTran(true);
 			msg_builder.setBeginDate(m_beginDate);
 			msg_builder.setEndDate(m_endDate);
 		}
-		Transaction.StartNotify msg = msg_builder.build();
-		cSender.Send("BEV_TRAN_STARTNOTIFY", msg);
+		else if (TRANMODE.REALTIME == m_eTranMode)
+		{
+			if(null != m_beginDate || null != m_endDate)
+			{
+				BLog.error("TRAN", "REALTIME need NOT to set beginDate or endDate!\n");
+				exitCommand();
+				return;
+			}
+			msg_builder.setHistoryTestTran(false);
+		}
+		Transaction.ControllerStartNotify msg = msg_builder.build();
+		cSender.Send("BEV_TRAN_CONTROLLERSTARTNOTIFY", msg);
 	}
 	
 	// 用户设置
@@ -166,6 +196,7 @@ public class TranEngine {
 	IStrategySelect          m_cStrategySelect;
 	IStrategyCreate          m_cStrategyCreate;
 	IStrategyClear           m_cStrategyClear;
+	TRANMODE                 m_eTranMode;
 	String                   m_beginDate;
 	String                   m_endDate;
 	IAccount                 m_cAcc;

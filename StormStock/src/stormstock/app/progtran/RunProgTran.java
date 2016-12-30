@@ -6,6 +6,7 @@ import stormstock.fw.base.BModuleManager;
 import stormstock.fw.control.Controller;
 import stormstock.fw.select.Selector;
 import stormstock.fw.tran.TranEngine;
+import stormstock.fw.tran.TranEngine.TRANMODE;
 
 public class RunProgTran {
 
@@ -20,7 +21,8 @@ public class RunProgTran {
 		cTranEngine.setStockSet(new TranStockSet());
 		cTranEngine.setSelectStockStrategy(new StrategySelect());
 		cTranEngine.setAccount(new MockAccount(100000.00f, 0.0016f)); 
-		cTranEngine.setTimeSpan("2010-01-01", "2016-12-31");
+		cTranEngine.setTranMode(TRANMODE.HISTORYMOCK);
+		cTranEngine.setHistoryTimeSpan("2010-01-01", "2016-12-31");
 		cTranEngine.run();
 		
 		cTranEngine.mainLoop();

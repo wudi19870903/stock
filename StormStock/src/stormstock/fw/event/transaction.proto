@@ -1,7 +1,11 @@
 package stormstock.fw.event; 
 
-// 交易开始通知
-message StartNotify  { 
+// 交易引擎退出通知
+message TranEngineExitNotify  { 
+}
+
+// 控制器启动通知
+message ControllerStartNotify  { 
 	// 是否是历史测试交易
 	// true-历史测试交易
 	// false-实时交易

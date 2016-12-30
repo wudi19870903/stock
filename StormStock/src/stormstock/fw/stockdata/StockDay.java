@@ -15,18 +15,18 @@ public class StockDay {
 		high = c.high;
 		low = c.low;
 		volume = c.volume;
-		ref_TRStock = refStock;
+		ref_stock = refStock;
 	} 
 	
 	public int LoadDetail()
 	{
-		if(null != ref_TRStock)
+		if(null != ref_stock)
 		{
 			return -80;
 		}
 		else
 		{
-			return ref_TRStock.LoadDetail(date);
+			return ref_stock.LoadDetail(date);
 		}
 	}
 	
@@ -39,5 +39,5 @@ public class StockDay {
 
 	public StockDayDetail detail;
 	
-	public Stock ref_TRStock;
+	public Stock ref_stock;
 }

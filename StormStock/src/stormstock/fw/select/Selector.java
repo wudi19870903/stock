@@ -2,7 +2,6 @@ package stormstock.fw.select;
 
 import stormstock.fw.base.BModuleBase;
 import stormstock.fw.base.BEventSys.EventSender;
-import stormstock.fw.event.Base;
 
 public class Selector extends BModuleBase {
 
