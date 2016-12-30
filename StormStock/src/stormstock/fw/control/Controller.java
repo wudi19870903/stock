@@ -40,14 +40,14 @@ public class Controller extends BModuleBase {
 	public void onTranStartNotify(com.google.protobuf.GeneratedMessage msg) {
 		Transaction.ControllerStartNotify startNotify = (Transaction.ControllerStartNotify)msg;
 
-		m_ctrlWorkThread = new CtrlWorkThread(startNotify);
-		m_ctrlWorkThread.startThread();
+		BLog.output("CTRL", "Controller onTranStartNotify\n");
 		
-//		BEventSys.EventSender cSender = new BEventSys.EventSender();
-//		cSender.Send("BEV_BASE_STORMEXIT", Base.StormExit.newBuilder().build());
+		m_cWorkThread = new WorkThread(startNotify);
+		m_cWorkThread.startThread();
+
 	}
 	
 	// event receiver
 	private EventReceiver m_eventRecever;
-	private CtrlWorkThread m_ctrlWorkThread;
+	private WorkThread m_cWorkThread;
 }

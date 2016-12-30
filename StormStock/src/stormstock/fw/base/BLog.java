@@ -39,6 +39,11 @@ public class BLog {
 	
 	public static void output(String target, String format, Object... args)
 	{
+		if(null != target && "" != target && !s_tagMap.containsKey(target))
+		{
+			s_tagMap.put(target, false);
+		}
+		
 		if(!s_tagMap.containsKey(target) || s_tagMap.get(target) == false)
 		{
 				return;
