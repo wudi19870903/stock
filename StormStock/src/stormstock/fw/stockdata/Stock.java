@@ -2,11 +2,13 @@ package stormstock.fw.stockdata;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import stormstock.ori.stockdata.DataEngine;
 import stormstock.ori.stockdata.DataEngine.ExKData;
 import stormstock.ori.stockdata.DataEngineBase.StockBaseInfo;
 import stormstock.fw.stockdata.StockDayDetail.DetailData;
+import stormstock.fw.tran.IEigen;
 
 public class Stock {
 	public Stock()
@@ -189,7 +191,17 @@ public class Stock {
 		return -30;
 	}
 	
+	public Object getEngen(String name, Object... args)
+	{
+		if(null == m_eigenObjMap) return null;
+		IEigen cEigen = m_eigenObjMap.get(name);
+		if(null == cEigen) return null;
+		Object engenObj = cEigen.calc(this, args);
+		return engenObj;
+	}
+	
 	public String id;
 	public StockBaseInfo curBaseInfo;
 	public List<StockDay> historyData;
+	private Map<String, IEigen> m_eigenObjMap;
 }

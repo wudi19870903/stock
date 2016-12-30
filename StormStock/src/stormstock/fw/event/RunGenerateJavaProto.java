@@ -46,7 +46,7 @@ public class RunGenerateJavaProto {
 				String cmd = protocPath 
 						+ " --java_out=" + "src"
 						+ " " + projEventDir + "\\" + filename;
-				BLog.output("EVENT", "%s\n", cmd);
+				BLog.output("TEST", "%s\n", cmd);
 				runCmd(cmd);
 			}
 		}

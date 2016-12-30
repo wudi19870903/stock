@@ -1,51 +1,30 @@
 package stormstock.app.progtran;
 
+import stormstock.fw.acc.MockAccount;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BModuleManager;
 import stormstock.fw.control.Controller;
 import stormstock.fw.select.Selector;
+import stormstock.fw.tran.TranEngine;
 
 public class RunProgTran {
-	public static void ProgTran()
-	{
-//		// 设置股票集  支持分类，自定义，全局
-//		ProgTran.setStockSet();
-//		
-//		// 设置选股策略，建仓清仓策略（可选）
-//		ProgTran.setSelectStockStrategy();
-//		ProgTran.setCreatePositonStrategy();
-//		ProgTran.setClearPositonStrategy();
-//		
-//		// 设置测试时间段，支持历史时间段，实盘时间
-//		ProgTran.setTimeSpan();
-//		
-//		// 设置账户，支持模拟与真实
-//		ProgTran.setAccount(); 
-		
-		//		ProgTran.Start();
-	}
-	 
+
 	public static void main(String[] args) {
 		BLog.output("TEST", "--->>> MainBegin\n");
+		
 		//BLog.config_setTag("EVENT", true);
-		BLog.config_setTag("BASE", true);
+		//BLog.config_setTag("BASE", true);
+				
+		TranEngine cTranEngine = new TranEngine();
+
+		cTranEngine.setStockSet(new TranStockSet());
+		cTranEngine.setSelectStockStrategy(new StrategySelect());
+		cTranEngine.setAccount(new MockAccount(100000.00f, 0.0016f)); 
+		cTranEngine.setTimeSpan("2010-01-01", "2016-12-31");
+		cTranEngine.run();
 		
-		BModuleManager cModuleMgr = new BModuleManager();
-		cModuleMgr.regModule(new Controller()); 
-		cModuleMgr.regModule(new Selector()); 
-		
-		cModuleMgr.initialize();
-		cModuleMgr.start();
-		
-		// program transaction
-		ProgTran();
-		
-		cModuleMgr.mainLoop();
-		
-		cModuleMgr.stop();
-		cModuleMgr.unInitialize();
+		cTranEngine.mainLoop();
 		
 		BLog.output("TEST", "--->>> MainEnd\n");
-		BLog.config_output();
 	}
 }

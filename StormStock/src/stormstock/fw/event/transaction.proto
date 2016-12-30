@@ -1,0 +1,13 @@
+package stormstock.fw.event; 
+
+// 交易开始通知
+message StartNotify  { 
+	// 是否是历史测试交易
+	// true-历史测试交易
+	// false-实时交易
+	required bool historyTestTran = 1; 
+	
+	// 是历史测试交易时，表示开始时间与结束时间
+	optional string beginDate = 2;
+	optional string endDate = 3; 
+}

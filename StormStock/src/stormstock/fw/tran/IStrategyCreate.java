@@ -1,6 +1,6 @@
 package stormstock.fw.tran;
 
-abstract public class StrategyCreate {
+abstract public class IStrategyCreate {
 	// 建仓下单策略
 	public static class CreateResult {
 	}

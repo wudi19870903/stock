@@ -94,14 +94,15 @@ public class BEventSys {
 		public boolean Send(String name, com.google.protobuf.GeneratedMessage proto)
 		{
 			s_PubSync.Lock();
-			BLog.output("EVENT", "Sender EvName(%s)\n", name);
 			if(null == proto) 
 			{
+				BLog.output("EVENT", "Sender EvName(%s) Data(null)\n", name);
 				s_PubSocket.send(name.getBytes(), ZMQ.SNDMORE); 
 				s_PubSocket.send("null".getBytes(), 0);
 			}
 			else
 			{
+				BLog.output("EVENT", "Sender EvName(%s) Data(...)\n", name);
 				byte[] protoData= proto.toByteArray();
 				s_PubSocket.send(name.getBytes(), ZMQ.SNDMORE); 
 				s_PubSocket.send(protoData, 0);
@@ -129,6 +130,7 @@ public class BEventSys {
 			@Override
 	        public void run()
 	        {
+				BLog.output("EVENT", "EventReceiver(%s) thread running.\n",  m_receiver.m_ReceiverName);
 				while(!m_receiver.m_Quit){
 					
 					m_receiver.m_SubSync.Lock();
@@ -137,8 +139,7 @@ public class BEventSys {
 					String name = new String(namebyte);
 					byte[] databyte = m_receiver.m_SubSocket.recv(0);
 					
-					//BLog.output("EVENT", "Receiver(%s) EvName(%s) Data(...)\n", m_receiver.m_ReceiverName, name);
-					//BLog.output("EVENT", "Receiver(%s) quitcmd(%s)\n", m_receiver.m_ReceiverName, s_QuitCmdPrefix+m_receiver.m_ReceiverName);
+					BLog.output("EVENT", "Receiver(%s) EvName(%s) Data(...)\n", m_receiver.m_ReceiverName, name);
 					
 					// ÍË³öÃüÁî
 					if((s_QuitCmdPrefix+m_receiver.m_ReceiverName).compareTo(name) == 0)
@@ -180,6 +181,7 @@ public class BEventSys {
 					
 				}
 				m_receiver.m_SubSocket.close();
+				BLog.output("EVENT", "EventReceiver(%s) thread exit!\n", m_receiver.m_ReceiverName);
 	        }
 			public EventReceiver m_receiver;
 		}
@@ -235,14 +237,14 @@ public class BEventSys {
 		
 		public boolean startReceive()
 		{
-			BLog.output("EVENT", "EventReceiver[%s] startReceive\n", m_ReceiverName);
+			BLog.output("EVENT", "EventReceiver(%s) startReceive\n", m_ReceiverName);
 			m_receiverThread.start();
 			return true;
 		}
 		
 		public boolean stopReceive()
 		{
-			BLog.output("EVENT", "EventReceiver[%s] stopReceive\n", m_ReceiverName);
+			BLog.output("EVENT", "EventReceiver(%s) stopReceive\n", m_ReceiverName);
 			EventSender cSender = new EventSender();
 			cSender.Send(s_QuitCmdPrefix+m_ReceiverName, null);
 			try {

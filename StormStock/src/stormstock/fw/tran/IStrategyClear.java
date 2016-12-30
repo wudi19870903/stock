@@ -1,6 +1,6 @@
 package stormstock.fw.tran;
 
-abstract public class StrategyClear {
+abstract public class IStrategyClear {
 	// 清仓下单策略
 	public static class ClearResult {
 	}

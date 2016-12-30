@@ -31,6 +31,12 @@ public class BLog {
 		outputConsole("BLog.config_output ----------------->>>>>> end\n");
 	}
 	
+	public static void error(String target, String format, Object... args)
+	{
+		String logstr = String.format(format, args);
+		output("ERROR", "(%s) %s", target, logstr);
+	}
+	
 	public static void output(String target, String format, Object... args)
 	{
 		if(!s_tagMap.containsKey(target) || s_tagMap.get(target) == false)
@@ -70,6 +76,7 @@ public class BLog {
 	static private Map<String, Boolean> s_tagMap = new HashMap<String, Boolean>() {
 		{
 			put("TEST", true);
+			put("ERROR", true);
 		}
 	};
 }

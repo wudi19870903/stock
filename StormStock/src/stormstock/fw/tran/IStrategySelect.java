@@ -1,6 +1,6 @@
 package stormstock.fw.tran;
 
-abstract public class StrategySelect {
+abstract public class IStrategySelect {
 	// Ñ¡¹É²ßÂÔ
 	public static class SelectResult {
 		public SelectResult() {

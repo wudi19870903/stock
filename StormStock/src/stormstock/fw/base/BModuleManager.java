@@ -4,21 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import stormstock.fw.base.BEventSys.EventReceiver;
+import stormstock.fw.base.BEventSys.EventSender;
+import stormstock.fw.event.Base;
 import stormstock.fw.event.EventDef;
 
 public class BModuleManager {
 	
 	public BModuleManager()
 	{
-		m_waitObj = new Object();
-		m_exitFlag = false;
-		
-		// init eventsys
-		BEventSys.registerEventMap(EventDef.s_EventNameMap);
-		BEventSys.start();
-		
 		m_moduleList = new ArrayList<BModuleBase>();
-		m_eventRecever = new EventReceiver("BModuleManager");
 	}
 	
 	public void regModule(BModuleBase module)
@@ -31,9 +25,6 @@ public class BModuleManager {
 	
 	public void initialize()
 	{
-		m_eventRecever.Subscribe("BEV_BASE_STORMEXIT", this, "onStormExit");
-		m_eventRecever.startReceive();
-		
 		// init modules
 		for(int i = 0; i< m_moduleList.size(); i++)
 		{
@@ -53,22 +44,6 @@ public class BModuleManager {
 			String moduleName = cModule.getClass().getSimpleName();
 			BLog.output( "BASE", "BModuleManager Call Start for module [%s]\n", moduleName);
 			cModule.start();
-		}
-	}
-	
-	public void mainLoop()
-	{
-		BLog.output( "BASE", "BModuleManager enter mainLoop ...\n");
-		while(!m_exitFlag)
-		{
-			try {
-				synchronized (m_waitObj) {
-					m_waitObj.wait(1000);
-				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
 		}
 	}
 	
@@ -94,23 +69,7 @@ public class BModuleManager {
 			BLog.output( "BASE", "BModuleManager Call UnInitialize for module [%s]\n", moduleName);
 			cModule.unInitialize();
 		}
-		
-		//m_eventRecever.stop();
-		
-		// eventsys stop
-		BEventSys.stop();
 	}
-	
-	public void onStormExit(com.google.protobuf.GeneratedMessage msg) {
-		m_exitFlag = true;
-		synchronized (m_waitObj) {
-			m_waitObj.notify();
-		}
-	}
-	
-	private Object m_waitObj;
-	private boolean m_exitFlag;
 	
 	private List<BModuleBase> m_moduleList;
-	private EventReceiver m_eventRecever;
 }

@@ -13,8 +13,8 @@ public class Selector extends BModuleBase {
 
 	@Override
 	public void start() {
-		EventSender cSender = new EventSender();
-		cSender.Send("BEV_BASE_STORMEXIT", Base.StormExit.newBuilder().build());
+//		EventSender cSender = new EventSender();
+//		cSender.Send("BEV_BASE_STORMEXIT", Base.StormExit.newBuilder().build());
 	}
 
 	@Override
