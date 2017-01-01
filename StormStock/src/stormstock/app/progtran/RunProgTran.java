@@ -3,7 +3,6 @@ package stormstock.app.progtran;
 import stormstock.fw.acc.MockAccount;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BModuleManager;
-import stormstock.fw.control.Controller;
 import stormstock.fw.select.Selector;
 import stormstock.fw.tran.TranEngine;
 import stormstock.fw.tran.TranEngine.TRANMODE;
@@ -15,6 +14,7 @@ public class RunProgTran {
 		
 		//BLog.config_setTag("EVENT", true);
 		//BLog.config_setTag("BASE", true);
+		BLog.config_setTag("CTRL", true);
 				
 		TranEngine cTranEngine = new TranEngine();
 
@@ -22,12 +22,12 @@ public class RunProgTran {
 		cTranEngine.setSelectStockStrategy(new StrategySelect());
 		cTranEngine.setAccount(new MockAccount(100000.00f, 0.0016f)); 
 		cTranEngine.setTranMode(TRANMODE.HISTORYMOCK);
-		cTranEngine.setHistoryTimeSpan("2010-01-01", "2016-12-31");
+		cTranEngine.setHistoryTimeSpan("2016-01-01", "2016-01-11");
 		cTranEngine.run();
 		
 		cTranEngine.mainLoop();
 		
 		BLog.output("TEST", "--->>> MainEnd\n");
-		BLog.config_output();
+		//BLog.config_output();
 	}
 }

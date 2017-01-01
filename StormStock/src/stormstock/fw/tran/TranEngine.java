@@ -6,9 +6,10 @@ import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BModuleManager;
 import stormstock.fw.base.BEventSys.EventReceiver;
-import stormstock.fw.control.Controller;
+import stormstock.fw.control.ModuleController;
 import stormstock.fw.event.EventDef;
 import stormstock.fw.event.Transaction;
+import stormstock.fw.event.Transaction.ControllerStartNotify;
 import stormstock.fw.objmgr.ObjManager;
 import stormstock.fw.report.ReportModule;
 import stormstock.fw.select.Selector;
@@ -36,8 +37,8 @@ public class TranEngine {
 		
 		// start modules
 		m_cModuleMgr = new BModuleManager();
-		m_cModuleMgr.regModule(new Controller());  // Controller Module
-		m_cModuleMgr.regModule(new Selector()); 	// Selector Module
+		m_cModuleMgr.regModule(new ModuleController());  // Controller Module
+		m_cModuleMgr.regModule(new Selector()); 		// Selector Module
 		m_cModuleMgr.regModule(new AccountModule()); 	// AccountModule Module
 		m_cModuleMgr.regModule(new ReportModule()); 	// ReportEngine Module
 		m_cModuleMgr.initialize();
@@ -173,7 +174,7 @@ public class TranEngine {
 				exitCommand();
 				return;
 			}
-			msg_builder.setHistoryTestTran(true);
+			msg_builder.setETranMode(ControllerStartNotify.TRANMODE.HISTORYMOCK);
 			msg_builder.setBeginDate(m_beginDate);
 			msg_builder.setEndDate(m_endDate);
 		}
@@ -185,7 +186,7 @@ public class TranEngine {
 				exitCommand();
 				return;
 			}
-			msg_builder.setHistoryTestTran(false);
+			msg_builder.setETranMode(ControllerStartNotify.TRANMODE.REALTIME);
 		}
 		Transaction.ControllerStartNotify msg = msg_builder.build();
 		cSender.Send("BEV_TRAN_CONTROLLERSTARTNOTIFY", msg);

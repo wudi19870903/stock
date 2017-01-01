@@ -1,7 +1,10 @@
 package stormstock.fw.base;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+
+import com.google.protobuf.TextFormat.ParseException;
 
 public class BUtilsDateTime {
 	/*
@@ -61,4 +64,80 @@ public class BUtilsDateTime {
 		}  
 		return cDate;
 	}
+	
+	/*
+     * 获得指定日期偏移后的日期字符串
+     * 例如传入 "2016-01-06", 4 则返回  "2016-01-10"
+     */  
+    public static String getDateStrForSpecifiedDateOffsetD(String specifiedDate, int offset) {
+        Calendar c = Calendar.getInstance();  
+        Date date = null;  
+        try {  
+            date = new SimpleDateFormat("yyyy-MM-dd").parse(specifiedDate);  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        }  
+        c.setTime(date);  
+        int day = c.get(Calendar.DATE);  
+        c.set(Calendar.DATE, day + offset);  
+  
+        String dayNew = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());  
+        return dayNew;  
+    } 
+    
+	/*
+     * 获得指定时间偏移若干分钟后的时间字符串
+     * 例如传入 "12:33:05", 4 则返回  "12:37:05"
+     */  
+    public static String getTimeStrForSpecifiedTimeOffsetM(String specifiedTime, int offset_m) {
+        Calendar c = Calendar.getInstance();  
+        Date date = null;  
+        try {  
+            date = new SimpleDateFormat("HH:mm:ss").parse(specifiedTime);  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        }  
+        c.setTime(date);  
+        int minute = c.get(Calendar.MINUTE);  
+        c.set(Calendar.MINUTE, minute + offset_m);  
+  
+        String timeNew = new SimpleDateFormat("HH:mm:ss").format(c.getTime());  
+        return timeNew;  
+    } 
+    
+    /*
+     * 等待日期时间
+     * 等待到时间后返回true
+     * 调用时已经超时返回false
+     */
+    public static boolean waitDateTime(String date, String time)
+    {
+    	String waitDateTimeStr = date + " " + time;
+    	
+    	{
+        	Date curDate = new Date();
+    		SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    		String curDateTimeStr = sdf.format(curDate);
+    		if(curDateTimeStr.compareTo(waitDateTimeStr) > 0) 
+    			return false;
+    	}
+    	
+    	while(true)
+    	{
+    		Date curDate = new Date();
+    		SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    		String curDateTimeStr = sdf.format(curDate);
+    		
+    		if(curDateTimeStr.compareTo(waitDateTimeStr) > 0) 
+    		{
+    			return true;
+    		}
+  
+    		try {
+				Thread.sleep(300);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+    	}
+    }
 }

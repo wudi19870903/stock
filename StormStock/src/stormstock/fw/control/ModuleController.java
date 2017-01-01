@@ -13,7 +13,7 @@ import stormstock.fw.base.BEventSys.EventSender;
  * 控制器模块
  * 负责指定时间点做任务的调度
  */
-public class Controller extends BModuleBase {
+public class ModuleController extends BModuleBase {
 
 	@Override
 	public void initialize() {

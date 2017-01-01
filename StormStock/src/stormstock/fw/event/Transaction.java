@@ -287,9 +287,9 @@ public final class Transaction {
   public interface ControllerStartNotifyOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
-    // required bool historyTestTran = 1;
-    boolean hasHistoryTestTran();
-    boolean getHistoryTestTran();
+    // required .stormstock.fw.event.ControllerStartNotify.TRANMODE eTranMode = 1;
+    boolean hasETranMode();
+    stormstock.fw.event.Transaction.ControllerStartNotify.TRANMODE getETranMode();
     
     // optional string beginDate = 2;
     boolean hasBeginDate();
@@ -327,15 +327,84 @@ public final class Transaction {
       return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_ControllerStartNotify_fieldAccessorTable;
     }
     
+    public enum TRANMODE
+        implements com.google.protobuf.ProtocolMessageEnum {
+      HISTORYMOCK(0, 1),
+      REALTIME(1, 2),
+      ;
+      
+      public static final int HISTORYMOCK_VALUE = 1;
+      public static final int REALTIME_VALUE = 2;
+      
+      
+      public final int getNumber() { return value; }
+      
+      public static TRANMODE valueOf(int value) {
+        switch (value) {
+          case 1: return HISTORYMOCK;
+          case 2: return REALTIME;
+          default: return null;
+        }
+      }
+      
+      public static com.google.protobuf.Internal.EnumLiteMap<TRANMODE>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static com.google.protobuf.Internal.EnumLiteMap<TRANMODE>
+          internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<TRANMODE>() {
+              public TRANMODE findValueByNumber(int number) {
+                return TRANMODE.valueOf(number);
+              }
+            };
+      
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(index);
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return stormstock.fw.event.Transaction.ControllerStartNotify.getDescriptor().getEnumTypes().get(0);
+      }
+      
+      private static final TRANMODE[] VALUES = {
+        HISTORYMOCK, REALTIME, 
+      };
+      
+      public static TRANMODE valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        return VALUES[desc.getIndex()];
+      }
+      
+      private final int index;
+      private final int value;
+      
+      private TRANMODE(int index, int value) {
+        this.index = index;
+        this.value = value;
+      }
+      
+      // @@protoc_insertion_point(enum_scope:stormstock.fw.event.ControllerStartNotify.TRANMODE)
+    }
+    
     private int bitField0_;
-    // required bool historyTestTran = 1;
-    public static final int HISTORYTESTTRAN_FIELD_NUMBER = 1;
-    private boolean historyTestTran_;
-    public boolean hasHistoryTestTran() {
+    // required .stormstock.fw.event.ControllerStartNotify.TRANMODE eTranMode = 1;
+    public static final int ETRANMODE_FIELD_NUMBER = 1;
+    private stormstock.fw.event.Transaction.ControllerStartNotify.TRANMODE eTranMode_;
+    public boolean hasETranMode() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public boolean getHistoryTestTran() {
-      return historyTestTran_;
+    public stormstock.fw.event.Transaction.ControllerStartNotify.TRANMODE getETranMode() {
+      return eTranMode_;
     }
     
     // optional string beginDate = 2;
@@ -403,7 +472,7 @@ public final class Transaction {
     }
     
     private void initFields() {
-      historyTestTran_ = false;
+      eTranMode_ = stormstock.fw.event.Transaction.ControllerStartNotify.TRANMODE.HISTORYMOCK;
       beginDate_ = "";
       endDate_ = "";
     }
@@ -412,7 +481,7 @@ public final class Transaction {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
-      if (!hasHistoryTestTran()) {
+      if (!hasETranMode()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -424,7 +493,7 @@ public final class Transaction {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBool(1, historyTestTran_);
+        output.writeEnum(1, eTranMode_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeBytes(2, getBeginDateBytes());
@@ -443,7 +512,7 @@ public final class Transaction {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(1, historyTestTran_);
+          .computeEnumSize(1, eTranMode_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
@@ -577,7 +646,7 @@ public final class Transaction {
       
       public Builder clear() {
         super.clear();
-        historyTestTran_ = false;
+        eTranMode_ = stormstock.fw.event.Transaction.ControllerStartNotify.TRANMODE.HISTORYMOCK;
         bitField0_ = (bitField0_ & ~0x00000001);
         beginDate_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -624,7 +693,7 @@ public final class Transaction {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.historyTestTran_ = historyTestTran_;
+        result.eTranMode_ = eTranMode_;
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
@@ -649,8 +718,8 @@ public final class Transaction {
       
       public Builder mergeFrom(stormstock.fw.event.Transaction.ControllerStartNotify other) {
         if (other == stormstock.fw.event.Transaction.ControllerStartNotify.getDefaultInstance()) return this;
-        if (other.hasHistoryTestTran()) {
-          setHistoryTestTran(other.getHistoryTestTran());
+        if (other.hasETranMode()) {
+          setETranMode(other.getETranMode());
         }
         if (other.hasBeginDate()) {
           setBeginDate(other.getBeginDate());
@@ -663,7 +732,7 @@ public final class Transaction {
       }
       
       public final boolean isInitialized() {
-        if (!hasHistoryTestTran()) {
+        if (!hasETranMode()) {
           
           return false;
         }
@@ -694,8 +763,14 @@ public final class Transaction {
               break;
             }
             case 8: {
-              bitField0_ |= 0x00000001;
-              historyTestTran_ = input.readBool();
+              int rawValue = input.readEnum();
+              stormstock.fw.event.Transaction.ControllerStartNotify.TRANMODE value = stormstock.fw.event.Transaction.ControllerStartNotify.TRANMODE.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(1, rawValue);
+              } else {
+                bitField0_ |= 0x00000001;
+                eTranMode_ = value;
+              }
               break;
             }
             case 18: {
@@ -714,23 +789,26 @@ public final class Transaction {
       
       private int bitField0_;
       
-      // required bool historyTestTran = 1;
-      private boolean historyTestTran_ ;
-      public boolean hasHistoryTestTran() {
+      // required .stormstock.fw.event.ControllerStartNotify.TRANMODE eTranMode = 1;
+      private stormstock.fw.event.Transaction.ControllerStartNotify.TRANMODE eTranMode_ = stormstock.fw.event.Transaction.ControllerStartNotify.TRANMODE.HISTORYMOCK;
+      public boolean hasETranMode() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public boolean getHistoryTestTran() {
-        return historyTestTran_;
+      public stormstock.fw.event.Transaction.ControllerStartNotify.TRANMODE getETranMode() {
+        return eTranMode_;
       }
-      public Builder setHistoryTestTran(boolean value) {
+      public Builder setETranMode(stormstock.fw.event.Transaction.ControllerStartNotify.TRANMODE value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
         bitField0_ |= 0x00000001;
-        historyTestTran_ = value;
+        eTranMode_ = value;
         onChanged();
         return this;
       }
-      public Builder clearHistoryTestTran() {
+      public Builder clearETranMode() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        historyTestTran_ = false;
+        eTranMode_ = stormstock.fw.event.Transaction.ControllerStartNotify.TRANMODE.HISTORYMOCK;
         onChanged();
         return this;
       }
@@ -839,9 +917,11 @@ public final class Transaction {
     java.lang.String[] descriptorData = {
       "\n)src/stormstock/fw/event/transaction.pr" +
       "oto\022\023stormstock.fw.event\"\026\n\024TranEngineEx" +
-      "itNotify\"T\n\025ControllerStartNotify\022\027\n\017his" +
-      "toryTestTran\030\001 \002(\010\022\021\n\tbeginDate\030\002 \001(\t\022\017\n" +
-      "\007endDate\030\003 \001(\t"
+      "itNotify\"\256\001\n\025ControllerStartNotify\022F\n\teT" +
+      "ranMode\030\001 \002(\01623.stormstock.fw.event.Cont" +
+      "rollerStartNotify.TRANMODE\022\021\n\tbeginDate\030" +
+      "\002 \001(\t\022\017\n\007endDate\030\003 \001(\t\")\n\010TRANMODE\022\017\n\013HI" +
+      "STORYMOCK\020\001\022\014\n\010REALTIME\020\002"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -861,7 +941,7 @@ public final class Transaction {
           internal_static_stormstock_fw_event_ControllerStartNotify_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_stormstock_fw_event_ControllerStartNotify_descriptor,
-              new java.lang.String[] { "HistoryTestTran", "BeginDate", "EndDate", },
+              new java.lang.String[] { "ETranMode", "BeginDate", "EndDate", },
               stormstock.fw.event.Transaction.ControllerStartNotify.class,
               stormstock.fw.event.Transaction.ControllerStartNotify.Builder.class);
           return null;
