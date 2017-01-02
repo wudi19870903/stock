@@ -7,11 +7,14 @@ import java.util.List;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BUtilsDateTime;
+import stormstock.fw.base.BWaitObj;
 import stormstock.fw.event.Transaction;
+import stormstock.fw.event.Transaction.ControllerStartNotify;
 import stormstock.fw.stockdata.Stock;
 import stormstock.fw.stockdata.StockDataProvider;
 import stormstock.fw.stockdata.StockDay;
 import stormstock.fw.stockdata.StockUtils;
+import stormstock.fw.tran.TranEngine.TRANMODE;
 
 public class WorkEntity {
 	public WorkEntity(boolean bHistoryTest, String beginDate, String endDate)
@@ -37,8 +40,12 @@ public class WorkEntity {
 	        }
 		}
 		
+		m_entityDataUpdate = new WorkEntityDataUpdate();
+		m_entitySelect = new WorkEntitySelect();
+		m_entityCreate = new WorkEntityCreate();
+		m_entityClear = new WorkEntityClear();
 	}
-
+	
 	void work()
 	{
 		String dateStr = getStartDate();
@@ -56,7 +63,9 @@ public class WorkEntity {
 				{
 					if(waitForDateTime(dateStr, timestr))
 					{
-						BLog.output("CTRL", "[%s %s] tran \n", dateStr, timestr);
+						BLog.output("CTRL", "[%s %s] stockClear & stockCreate \n", dateStr, timestr);
+						m_entityClear.stockClear(dateStr, timestr);
+						m_entityCreate.stockCreate(dateStr, timestr);
 					}
 					timestr = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(timestr, 60);
 					if(timestr.compareTo(timestr_end) > 0) break;
@@ -69,18 +78,20 @@ public class WorkEntity {
 				{
 					if(waitForDateTime(dateStr, timestr))
 					{
-						BLog.output("CTRL", "[%s %s] tran \n", dateStr, timestr);
+						BLog.output("CTRL", "[%s %s] stockClear & stockCreate \n", dateStr, timestr);
+						m_entityClear.stockClear(dateStr, timestr);
+						m_entityCreate.stockCreate(dateStr, timestr);
 					}
 					timestr = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(timestr, 60);
 					if(timestr.compareTo(timestr_end) > 0) break;
 				}
 				
-				
 				// 20:00 更新历史数据通知 等待更新完毕通知
 				timestr = "20:00:00";
 				if(waitForDateTime(dateStr, timestr))
 				{
-					BLog.output("CTRL", "[%s %s] UpdateDataReq \n", dateStr, timestr);
+					BLog.output("CTRL", "[%s %s] updateStockData \n", dateStr, timestr);
+					m_entityDataUpdate.updateStockData(dateStr, timestr);
 				}
 				
 				// 22:00 选股 等待选股完毕
@@ -88,8 +99,8 @@ public class WorkEntity {
 				if(waitForDateTime(dateStr, timestr))
 				{
 					BLog.output("CTRL", "[%s %s] Select \n", dateStr, timestr);
+					m_entitySelect.selectStock(dateStr, timestr);
 				}
-				
 			}
 			
 			// 获取下一日期
@@ -99,6 +110,22 @@ public class WorkEntity {
 		
 		BEventSys.EventSender cSender = new BEventSys.EventSender();
 		cSender.Send("BEV_TRAN_ENGINEEXIT", Transaction.TranEngineExitNotify.newBuilder().build());
+	}
+	
+	public void onDataUpdateCompleteNotify(com.google.protobuf.GeneratedMessage m)
+	{
+		m_entityDataUpdate.onDataUpdateCompleteNotify(m);
+	}
+	public void onSelectStockCompleteNotify(com.google.protobuf.GeneratedMessage m) 
+	{
+		m_entitySelect.onSelectStockCompleteNotify(m);
+	}
+	public void onStockCreateCompleteNotify(com.google.protobuf.GeneratedMessage m)
+	{
+		m_entityCreate.onStockCreateCompleteNotify(m);
+	}
+	public void onStockClearCompleteNotify(com.google.protobuf.GeneratedMessage m) {
+		m_entityClear.onStockClearCompleteNotify(m);
 	}
 	
 	/*
@@ -175,10 +202,20 @@ public class WorkEntity {
 		}
 	}
 	
+	// 基本参数
 	private boolean m_bHistoryTest;
 	private String m_beginDate;
 	private String m_endDate;
 	
+	// 历史交易日
 	private List<String> m_hisTranDate;
+	
+	// 当前日期
 	private String m_curDate;
+	
+	private WorkEntityDataUpdate m_entityDataUpdate;
+	private WorkEntitySelect m_entitySelect;
+	private WorkEntityCreate m_entityCreate;
+	private WorkEntityClear m_entityClear;
+
 }

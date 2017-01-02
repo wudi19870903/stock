@@ -14,12 +14,21 @@ public class TestBWatiObj {
 			BLog.output("TEST", "TestThread run begin\n");
 			
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(700);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			
 			m_WaitObj.Notify();
+			
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			m_WaitObj.Notify();
+			
+			
 			BLog.output("TEST", "TestThread run end\n");
 		}
 		
@@ -32,8 +41,25 @@ public class TestBWatiObj {
 		
 		TestThread cThread = new TestThread(cBWaitObj);
 		cThread.start();
-		BLog.output("TEST", "BWaitObj.Wait ...\n");
+		
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		BLog.output("TEST", "BWaitObj.Wait ...1\n");
 		cBWaitObj.Wait();
-		BLog.output("TEST", "BWaitObj.Wait Return\n");
+		BLog.output("TEST", "BWaitObj.Wait ...1 Return\n");
+		
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		BLog.output("TEST", "BWaitObj.Wait ...2\n");
+		cBWaitObj.Wait();
+		BLog.output("TEST", "BWaitObj.Wait ...2 Return\n");
 	}
 }

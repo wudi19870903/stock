@@ -1,10 +1,14 @@
 package stormstock.fw.base;
 
+import stormstock.fw.base.BAutoSync.BSyncObj;
+
 public class BWaitObj {
 	
 	public BWaitObj()
 	{
+		m_sync = new BSyncObj();
 		m_waitObj = new Object();
+		m_bNotified = false;
 	}
 
 	public boolean Wait()
@@ -12,7 +16,11 @@ public class BWaitObj {
 		try {
 			synchronized(m_waitObj)
 			{
-				m_waitObj.wait();
+				if(!m_bNotified)
+				{
+					m_waitObj.wait();
+				}
+				m_bNotified = false;
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -25,9 +33,12 @@ public class BWaitObj {
 		synchronized(m_waitObj)
 		{
 			m_waitObj.notify();
+			m_bNotified = true;
 		}
 		return true;
 	}
 	
+	private BSyncObj m_sync;
 	private Object m_waitObj;
+	private boolean m_bNotified;
 }

@@ -4,19 +4,70 @@ package stormstock.fw.event;
 message TranEngineExitNotify  { 
 }
 
+// ------------------------------------------------------------------
 // 控制器启动通知
 message ControllerStartNotify  { 
 	enum TRANMODE {
-    	HISTORYMOCK = 1;
-    	REALTIME = 2;
+    	HISTORYMOCK = 1;                  // 历史测试交易
+    	REALTIME = 2;                     // 实时交易
   	}
-
-	// 是否是历史测试交易
-	// true-历史测试交易
-	// false-实时交易
 	required TRANMODE eTranMode = 1; 
-	
-	// 是历史测试交易时，表示开始时间与结束时间
-	optional string beginDate = 2;
+	optional string beginDate = 2;        // 是历史测试交易时，表示开始时间与结束时间
 	optional string endDate = 3; 
 }
+
+// ------------------------------------------------------------------
+// 股票数据更新通知
+message DataUpdateNotify  { 
+    required string date = 1;
+    required string time = 2;
+}
+// 股票数据更新完毕通知
+message DataUpdateCompleteNotify  { 
+    required string date = 1;
+    required string time = 2;
+}
+
+// ------------------------------------------------------------------
+// 选股任务通知
+message SelectStockNotify  { 
+    required string date = 1;
+    required string time = 2;
+}
+// 选股任务完毕通知
+message SelectStockCompleteNotify  { 
+    required string date = 1;
+    required string time = 2;
+}
+
+// ------------------------------------------------------------------
+// 建仓任务通知
+message StockCreateNotify  { 
+    required string date = 1;
+    required string time = 2;
+}
+// 建仓任务完毕通知
+message StockCreateCompleteNotify  { 
+    required string date = 1;
+    required string time = 2;
+}
+
+// ------------------------------------------------------------------
+// 清仓任务通知
+message StockClearNotify  { 
+    required string date = 1;
+    required string time = 2;
+}
+// 清仓任务完毕通知
+message StockClearCompleteNotify  { 
+    required string date = 1;
+    required string time = 2;
+}
+
+
+
+
+
+
+
+

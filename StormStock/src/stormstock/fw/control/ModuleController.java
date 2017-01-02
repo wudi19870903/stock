@@ -19,6 +19,11 @@ public class ModuleController extends BModuleBase {
 	public void initialize() {
 		m_eventRecever = new EventReceiver("ControllerReceiver");
 		m_eventRecever.Subscribe("BEV_TRAN_CONTROLLERSTARTNOTIFY", this, "onTranStartNotify");
+		m_eventRecever.Subscribe("BEV_TRAN_DATAUPDATECOMPLETENOTIFY", this, "onDataUpdateCompleteNotify");
+		m_eventRecever.Subscribe("BEV_TRAN_SELECTSTOCKCOMPLETENOTIFY", this, "onSelectStockCompleteNotify");
+		m_eventRecever.Subscribe("BEV_TRAN_STOCKCREATECOMPLETENOTIFY", this, "onStockCreateCompleteNotify");
+		m_eventRecever.Subscribe("BEV_TRAN_STOCKCLEARCOMPLETENOTIFY", this, "onStockClearCompleteNotify");
+		
 	}
 
 	@Override
@@ -37,14 +42,42 @@ public class ModuleController extends BModuleBase {
 	}
 	
 	// callback
-	public void onTranStartNotify(com.google.protobuf.GeneratedMessage msg) {
-		Transaction.ControllerStartNotify startNotify = (Transaction.ControllerStartNotify)msg;
+	public void onTranStartNotify(com.google.protobuf.GeneratedMessage m) {
+		Transaction.ControllerStartNotify startNotify = (Transaction.ControllerStartNotify)m;
 
-		BLog.output("CTRL", "Controller onTranStartNotify\n");
+		BLog.output("CTRL", "    Controller onTranStartNotify\n");
 		
 		m_cWorkThread = new WorkThread(startNotify);
 		m_cWorkThread.startThread();
 
+	}
+	public void onDataUpdateCompleteNotify(com.google.protobuf.GeneratedMessage m) {
+		BLog.output("CTRL", "    Controller onDataUpdateCompleteNotify\n");
+		if(null != m_cWorkThread)
+		{
+			m_cWorkThread.onDataUpdateCompleteNotify(m);
+		}
+	}
+	public void onSelectStockCompleteNotify(com.google.protobuf.GeneratedMessage m) {
+		BLog.output("CTRL", "    Controller onSelectStockCompleteNotify\n");
+		if(null != m_cWorkThread)
+		{
+			m_cWorkThread.onSelectStockCompleteNotify(m);
+		}
+	}
+	public void onStockCreateCompleteNotify(com.google.protobuf.GeneratedMessage m) {
+		BLog.output("CTRL", "    Controller onStockCreateCompleteNotify\n");
+		if(null != m_cWorkThread)
+		{
+			m_cWorkThread.onStockCreateCompleteNotify(m);
+		}
+	}
+	public void onStockClearCompleteNotify(com.google.protobuf.GeneratedMessage m) {
+		BLog.output("CTRL", "    Controller onStockClearCompleteNotify\n");
+		if(null != m_cWorkThread)
+		{
+			m_cWorkThread.onStockClearCompleteNotify(m);
+		}
 	}
 	
 	// event receiver

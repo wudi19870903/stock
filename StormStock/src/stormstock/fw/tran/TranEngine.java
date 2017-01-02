@@ -12,7 +12,10 @@ import stormstock.fw.event.Transaction;
 import stormstock.fw.event.Transaction.ControllerStartNotify;
 import stormstock.fw.objmgr.ObjManager;
 import stormstock.fw.report.ReportModule;
-import stormstock.fw.select.Selector;
+import stormstock.fw.stockclear.ModuleClear;
+import stormstock.fw.stockcreate.ModuleCreate;
+import stormstock.fw.stockselect.ModuleSelector;
+import stormstock.fw.stockdata.ModuleStockData;
 
 public class TranEngine {
 	
@@ -38,7 +41,10 @@ public class TranEngine {
 		// start modules
 		m_cModuleMgr = new BModuleManager();
 		m_cModuleMgr.regModule(new ModuleController());  // Controller Module
-		m_cModuleMgr.regModule(new Selector()); 		// Selector Module
+		m_cModuleMgr.regModule(new ModuleStockData());   // StockData Module
+		m_cModuleMgr.regModule(new ModuleSelector()); 	// Selector Module
+		m_cModuleMgr.regModule(new ModuleCreate()); 	// Create Module
+		m_cModuleMgr.regModule(new ModuleClear()); 		// Clear Module
 		m_cModuleMgr.regModule(new AccountModule()); 	// AccountModule Module
 		m_cModuleMgr.regModule(new ReportModule()); 	// ReportEngine Module
 		m_cModuleMgr.initialize();

@@ -3,7 +3,6 @@ package stormstock.app.progtran;
 import stormstock.fw.acc.MockAccount;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BModuleManager;
-import stormstock.fw.select.Selector;
 import stormstock.fw.tran.TranEngine;
 import stormstock.fw.tran.TranEngine.TRANMODE;
 
@@ -15,6 +14,7 @@ public class RunProgTran {
 		//BLog.config_setTag("EVENT", true);
 		//BLog.config_setTag("BASE", true);
 		BLog.config_setTag("CTRL", true);
+		//BLog.config_setTag("STOCKDATA", true);
 				
 		TranEngine cTranEngine = new TranEngine();
 

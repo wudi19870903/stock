@@ -41,6 +41,33 @@ public class WorkThread extends BThread {
 		m_cWorkEntity = new WorkEntity(bHistoryTest, beginDate, endDate);
 		m_cWorkEntity.work();
 	}
+	
+	public void onDataUpdateCompleteNotify(com.google.protobuf.GeneratedMessage m)
+	{
+		if(null != m_cWorkEntity)
+		{
+			m_cWorkEntity.onDataUpdateCompleteNotify(m);
+		}
+	}
+	public void onSelectStockCompleteNotify(com.google.protobuf.GeneratedMessage m) {
+		if(null != m_cWorkEntity)
+		{
+			m_cWorkEntity.onSelectStockCompleteNotify(m);
+		}
+	}
+	public void onStockCreateCompleteNotify(com.google.protobuf.GeneratedMessage m)
+	{
+		if(null != m_cWorkEntity)
+		{
+			m_cWorkEntity.onStockCreateCompleteNotify(m);
+		}
+	}
+	public void onStockClearCompleteNotify(com.google.protobuf.GeneratedMessage m) {
+		if(null != m_cWorkEntity)
+		{
+			m_cWorkEntity.onStockClearCompleteNotify(m);
+		}
+	}
 
 	private WorkEntity m_cWorkEntity;
 	private Transaction.ControllerStartNotify m_cControllerStartNotify;

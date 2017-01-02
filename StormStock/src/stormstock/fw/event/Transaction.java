@@ -896,6 +896,3886 @@ public final class Transaction {
     // @@protoc_insertion_point(class_scope:stormstock.fw.event.ControllerStartNotify)
   }
   
+  public interface DataUpdateNotifyOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // required string date = 1;
+    boolean hasDate();
+    String getDate();
+    
+    // required string time = 2;
+    boolean hasTime();
+    String getTime();
+  }
+  public static final class DataUpdateNotify extends
+      com.google.protobuf.GeneratedMessage
+      implements DataUpdateNotifyOrBuilder {
+    // Use DataUpdateNotify.newBuilder() to construct.
+    private DataUpdateNotify(Builder builder) {
+      super(builder);
+    }
+    private DataUpdateNotify(boolean noInit) {}
+    
+    private static final DataUpdateNotify defaultInstance;
+    public static DataUpdateNotify getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public DataUpdateNotify getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_DataUpdateNotify_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_DataUpdateNotify_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // required string date = 1;
+    public static final int DATE_FIELD_NUMBER = 1;
+    private java.lang.Object date_;
+    public boolean hasDate() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getDate() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          date_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getDateBytes() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        date_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // required string time = 2;
+    public static final int TIME_FIELD_NUMBER = 2;
+    private java.lang.Object time_;
+    public boolean hasTime() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public String getTime() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          time_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getTimeBytes() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        time_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    private void initFields() {
+      date_ = "";
+      time_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      if (!hasDate()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasTime()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getTimeBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getTimeBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static stormstock.fw.event.Transaction.DataUpdateNotify parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.DataUpdateNotify parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.DataUpdateNotify parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.DataUpdateNotify parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.DataUpdateNotify parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.DataUpdateNotify parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.DataUpdateNotify parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.Transaction.DataUpdateNotify parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.Transaction.DataUpdateNotify parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.DataUpdateNotify parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(stormstock.fw.event.Transaction.DataUpdateNotify prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements stormstock.fw.event.Transaction.DataUpdateNotifyOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_DataUpdateNotify_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_DataUpdateNotify_fieldAccessorTable;
+      }
+      
+      // Construct using stormstock.fw.event.Transaction.DataUpdateNotify.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        date_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        time_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return stormstock.fw.event.Transaction.DataUpdateNotify.getDescriptor();
+      }
+      
+      public stormstock.fw.event.Transaction.DataUpdateNotify getDefaultInstanceForType() {
+        return stormstock.fw.event.Transaction.DataUpdateNotify.getDefaultInstance();
+      }
+      
+      public stormstock.fw.event.Transaction.DataUpdateNotify build() {
+        stormstock.fw.event.Transaction.DataUpdateNotify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private stormstock.fw.event.Transaction.DataUpdateNotify buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        stormstock.fw.event.Transaction.DataUpdateNotify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public stormstock.fw.event.Transaction.DataUpdateNotify buildPartial() {
+        stormstock.fw.event.Transaction.DataUpdateNotify result = new stormstock.fw.event.Transaction.DataUpdateNotify(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.date_ = date_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.time_ = time_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof stormstock.fw.event.Transaction.DataUpdateNotify) {
+          return mergeFrom((stormstock.fw.event.Transaction.DataUpdateNotify)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(stormstock.fw.event.Transaction.DataUpdateNotify other) {
+        if (other == stormstock.fw.event.Transaction.DataUpdateNotify.getDefaultInstance()) return this;
+        if (other.hasDate()) {
+          setDate(other.getDate());
+        }
+        if (other.hasTime()) {
+          setTime(other.getTime());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        if (!hasDate()) {
+          
+          return false;
+        }
+        if (!hasTime()) {
+          
+          return false;
+        }
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              date_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              time_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // required string date = 1;
+      private java.lang.Object date_ = "";
+      public boolean hasDate() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public String getDate() {
+        java.lang.Object ref = date_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          date_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setDate(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearDate() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        date_ = getDefaultInstance().getDate();
+        onChanged();
+        return this;
+      }
+      void setDate(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+      }
+      
+      // required string time = 2;
+      private java.lang.Object time_ = "";
+      public boolean hasTime() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public String getTime() {
+        java.lang.Object ref = time_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          time_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setTime(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearTime() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        time_ = getDefaultInstance().getTime();
+        onChanged();
+        return this;
+      }
+      void setTime(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+      }
+      
+      // @@protoc_insertion_point(builder_scope:stormstock.fw.event.DataUpdateNotify)
+    }
+    
+    static {
+      defaultInstance = new DataUpdateNotify(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:stormstock.fw.event.DataUpdateNotify)
+  }
+  
+  public interface DataUpdateCompleteNotifyOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // required string date = 1;
+    boolean hasDate();
+    String getDate();
+    
+    // required string time = 2;
+    boolean hasTime();
+    String getTime();
+  }
+  public static final class DataUpdateCompleteNotify extends
+      com.google.protobuf.GeneratedMessage
+      implements DataUpdateCompleteNotifyOrBuilder {
+    // Use DataUpdateCompleteNotify.newBuilder() to construct.
+    private DataUpdateCompleteNotify(Builder builder) {
+      super(builder);
+    }
+    private DataUpdateCompleteNotify(boolean noInit) {}
+    
+    private static final DataUpdateCompleteNotify defaultInstance;
+    public static DataUpdateCompleteNotify getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public DataUpdateCompleteNotify getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_DataUpdateCompleteNotify_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_DataUpdateCompleteNotify_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // required string date = 1;
+    public static final int DATE_FIELD_NUMBER = 1;
+    private java.lang.Object date_;
+    public boolean hasDate() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getDate() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          date_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getDateBytes() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        date_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // required string time = 2;
+    public static final int TIME_FIELD_NUMBER = 2;
+    private java.lang.Object time_;
+    public boolean hasTime() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public String getTime() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          time_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getTimeBytes() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        time_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    private void initFields() {
+      date_ = "";
+      time_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      if (!hasDate()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasTime()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getTimeBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getTimeBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static stormstock.fw.event.Transaction.DataUpdateCompleteNotify parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.DataUpdateCompleteNotify parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.DataUpdateCompleteNotify parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.DataUpdateCompleteNotify parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.DataUpdateCompleteNotify parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.DataUpdateCompleteNotify parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.DataUpdateCompleteNotify parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.Transaction.DataUpdateCompleteNotify parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.Transaction.DataUpdateCompleteNotify parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.DataUpdateCompleteNotify parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(stormstock.fw.event.Transaction.DataUpdateCompleteNotify prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements stormstock.fw.event.Transaction.DataUpdateCompleteNotifyOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_DataUpdateCompleteNotify_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_DataUpdateCompleteNotify_fieldAccessorTable;
+      }
+      
+      // Construct using stormstock.fw.event.Transaction.DataUpdateCompleteNotify.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        date_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        time_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return stormstock.fw.event.Transaction.DataUpdateCompleteNotify.getDescriptor();
+      }
+      
+      public stormstock.fw.event.Transaction.DataUpdateCompleteNotify getDefaultInstanceForType() {
+        return stormstock.fw.event.Transaction.DataUpdateCompleteNotify.getDefaultInstance();
+      }
+      
+      public stormstock.fw.event.Transaction.DataUpdateCompleteNotify build() {
+        stormstock.fw.event.Transaction.DataUpdateCompleteNotify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private stormstock.fw.event.Transaction.DataUpdateCompleteNotify buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        stormstock.fw.event.Transaction.DataUpdateCompleteNotify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public stormstock.fw.event.Transaction.DataUpdateCompleteNotify buildPartial() {
+        stormstock.fw.event.Transaction.DataUpdateCompleteNotify result = new stormstock.fw.event.Transaction.DataUpdateCompleteNotify(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.date_ = date_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.time_ = time_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof stormstock.fw.event.Transaction.DataUpdateCompleteNotify) {
+          return mergeFrom((stormstock.fw.event.Transaction.DataUpdateCompleteNotify)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(stormstock.fw.event.Transaction.DataUpdateCompleteNotify other) {
+        if (other == stormstock.fw.event.Transaction.DataUpdateCompleteNotify.getDefaultInstance()) return this;
+        if (other.hasDate()) {
+          setDate(other.getDate());
+        }
+        if (other.hasTime()) {
+          setTime(other.getTime());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        if (!hasDate()) {
+          
+          return false;
+        }
+        if (!hasTime()) {
+          
+          return false;
+        }
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              date_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              time_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // required string date = 1;
+      private java.lang.Object date_ = "";
+      public boolean hasDate() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public String getDate() {
+        java.lang.Object ref = date_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          date_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setDate(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearDate() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        date_ = getDefaultInstance().getDate();
+        onChanged();
+        return this;
+      }
+      void setDate(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+      }
+      
+      // required string time = 2;
+      private java.lang.Object time_ = "";
+      public boolean hasTime() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public String getTime() {
+        java.lang.Object ref = time_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          time_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setTime(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearTime() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        time_ = getDefaultInstance().getTime();
+        onChanged();
+        return this;
+      }
+      void setTime(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+      }
+      
+      // @@protoc_insertion_point(builder_scope:stormstock.fw.event.DataUpdateCompleteNotify)
+    }
+    
+    static {
+      defaultInstance = new DataUpdateCompleteNotify(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:stormstock.fw.event.DataUpdateCompleteNotify)
+  }
+  
+  public interface SelectStockNotifyOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // required string date = 1;
+    boolean hasDate();
+    String getDate();
+    
+    // required string time = 2;
+    boolean hasTime();
+    String getTime();
+  }
+  public static final class SelectStockNotify extends
+      com.google.protobuf.GeneratedMessage
+      implements SelectStockNotifyOrBuilder {
+    // Use SelectStockNotify.newBuilder() to construct.
+    private SelectStockNotify(Builder builder) {
+      super(builder);
+    }
+    private SelectStockNotify(boolean noInit) {}
+    
+    private static final SelectStockNotify defaultInstance;
+    public static SelectStockNotify getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public SelectStockNotify getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_SelectStockNotify_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_SelectStockNotify_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // required string date = 1;
+    public static final int DATE_FIELD_NUMBER = 1;
+    private java.lang.Object date_;
+    public boolean hasDate() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getDate() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          date_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getDateBytes() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        date_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // required string time = 2;
+    public static final int TIME_FIELD_NUMBER = 2;
+    private java.lang.Object time_;
+    public boolean hasTime() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public String getTime() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          time_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getTimeBytes() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        time_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    private void initFields() {
+      date_ = "";
+      time_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      if (!hasDate()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasTime()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getTimeBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getTimeBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static stormstock.fw.event.Transaction.SelectStockNotify parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.SelectStockNotify parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.SelectStockNotify parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.SelectStockNotify parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.SelectStockNotify parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.SelectStockNotify parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.SelectStockNotify parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.Transaction.SelectStockNotify parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.Transaction.SelectStockNotify parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.SelectStockNotify parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(stormstock.fw.event.Transaction.SelectStockNotify prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements stormstock.fw.event.Transaction.SelectStockNotifyOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_SelectStockNotify_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_SelectStockNotify_fieldAccessorTable;
+      }
+      
+      // Construct using stormstock.fw.event.Transaction.SelectStockNotify.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        date_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        time_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return stormstock.fw.event.Transaction.SelectStockNotify.getDescriptor();
+      }
+      
+      public stormstock.fw.event.Transaction.SelectStockNotify getDefaultInstanceForType() {
+        return stormstock.fw.event.Transaction.SelectStockNotify.getDefaultInstance();
+      }
+      
+      public stormstock.fw.event.Transaction.SelectStockNotify build() {
+        stormstock.fw.event.Transaction.SelectStockNotify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private stormstock.fw.event.Transaction.SelectStockNotify buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        stormstock.fw.event.Transaction.SelectStockNotify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public stormstock.fw.event.Transaction.SelectStockNotify buildPartial() {
+        stormstock.fw.event.Transaction.SelectStockNotify result = new stormstock.fw.event.Transaction.SelectStockNotify(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.date_ = date_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.time_ = time_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof stormstock.fw.event.Transaction.SelectStockNotify) {
+          return mergeFrom((stormstock.fw.event.Transaction.SelectStockNotify)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(stormstock.fw.event.Transaction.SelectStockNotify other) {
+        if (other == stormstock.fw.event.Transaction.SelectStockNotify.getDefaultInstance()) return this;
+        if (other.hasDate()) {
+          setDate(other.getDate());
+        }
+        if (other.hasTime()) {
+          setTime(other.getTime());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        if (!hasDate()) {
+          
+          return false;
+        }
+        if (!hasTime()) {
+          
+          return false;
+        }
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              date_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              time_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // required string date = 1;
+      private java.lang.Object date_ = "";
+      public boolean hasDate() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public String getDate() {
+        java.lang.Object ref = date_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          date_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setDate(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearDate() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        date_ = getDefaultInstance().getDate();
+        onChanged();
+        return this;
+      }
+      void setDate(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+      }
+      
+      // required string time = 2;
+      private java.lang.Object time_ = "";
+      public boolean hasTime() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public String getTime() {
+        java.lang.Object ref = time_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          time_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setTime(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearTime() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        time_ = getDefaultInstance().getTime();
+        onChanged();
+        return this;
+      }
+      void setTime(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+      }
+      
+      // @@protoc_insertion_point(builder_scope:stormstock.fw.event.SelectStockNotify)
+    }
+    
+    static {
+      defaultInstance = new SelectStockNotify(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:stormstock.fw.event.SelectStockNotify)
+  }
+  
+  public interface SelectStockCompleteNotifyOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // required string date = 1;
+    boolean hasDate();
+    String getDate();
+    
+    // required string time = 2;
+    boolean hasTime();
+    String getTime();
+  }
+  public static final class SelectStockCompleteNotify extends
+      com.google.protobuf.GeneratedMessage
+      implements SelectStockCompleteNotifyOrBuilder {
+    // Use SelectStockCompleteNotify.newBuilder() to construct.
+    private SelectStockCompleteNotify(Builder builder) {
+      super(builder);
+    }
+    private SelectStockCompleteNotify(boolean noInit) {}
+    
+    private static final SelectStockCompleteNotify defaultInstance;
+    public static SelectStockCompleteNotify getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public SelectStockCompleteNotify getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_SelectStockCompleteNotify_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_SelectStockCompleteNotify_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // required string date = 1;
+    public static final int DATE_FIELD_NUMBER = 1;
+    private java.lang.Object date_;
+    public boolean hasDate() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getDate() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          date_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getDateBytes() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        date_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // required string time = 2;
+    public static final int TIME_FIELD_NUMBER = 2;
+    private java.lang.Object time_;
+    public boolean hasTime() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public String getTime() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          time_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getTimeBytes() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        time_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    private void initFields() {
+      date_ = "";
+      time_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      if (!hasDate()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasTime()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getTimeBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getTimeBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static stormstock.fw.event.Transaction.SelectStockCompleteNotify parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.SelectStockCompleteNotify parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.SelectStockCompleteNotify parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.SelectStockCompleteNotify parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.SelectStockCompleteNotify parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.SelectStockCompleteNotify parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.SelectStockCompleteNotify parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.Transaction.SelectStockCompleteNotify parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.Transaction.SelectStockCompleteNotify parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.SelectStockCompleteNotify parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(stormstock.fw.event.Transaction.SelectStockCompleteNotify prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements stormstock.fw.event.Transaction.SelectStockCompleteNotifyOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_SelectStockCompleteNotify_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_SelectStockCompleteNotify_fieldAccessorTable;
+      }
+      
+      // Construct using stormstock.fw.event.Transaction.SelectStockCompleteNotify.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        date_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        time_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return stormstock.fw.event.Transaction.SelectStockCompleteNotify.getDescriptor();
+      }
+      
+      public stormstock.fw.event.Transaction.SelectStockCompleteNotify getDefaultInstanceForType() {
+        return stormstock.fw.event.Transaction.SelectStockCompleteNotify.getDefaultInstance();
+      }
+      
+      public stormstock.fw.event.Transaction.SelectStockCompleteNotify build() {
+        stormstock.fw.event.Transaction.SelectStockCompleteNotify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private stormstock.fw.event.Transaction.SelectStockCompleteNotify buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        stormstock.fw.event.Transaction.SelectStockCompleteNotify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public stormstock.fw.event.Transaction.SelectStockCompleteNotify buildPartial() {
+        stormstock.fw.event.Transaction.SelectStockCompleteNotify result = new stormstock.fw.event.Transaction.SelectStockCompleteNotify(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.date_ = date_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.time_ = time_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof stormstock.fw.event.Transaction.SelectStockCompleteNotify) {
+          return mergeFrom((stormstock.fw.event.Transaction.SelectStockCompleteNotify)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(stormstock.fw.event.Transaction.SelectStockCompleteNotify other) {
+        if (other == stormstock.fw.event.Transaction.SelectStockCompleteNotify.getDefaultInstance()) return this;
+        if (other.hasDate()) {
+          setDate(other.getDate());
+        }
+        if (other.hasTime()) {
+          setTime(other.getTime());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        if (!hasDate()) {
+          
+          return false;
+        }
+        if (!hasTime()) {
+          
+          return false;
+        }
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              date_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              time_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // required string date = 1;
+      private java.lang.Object date_ = "";
+      public boolean hasDate() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public String getDate() {
+        java.lang.Object ref = date_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          date_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setDate(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearDate() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        date_ = getDefaultInstance().getDate();
+        onChanged();
+        return this;
+      }
+      void setDate(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+      }
+      
+      // required string time = 2;
+      private java.lang.Object time_ = "";
+      public boolean hasTime() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public String getTime() {
+        java.lang.Object ref = time_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          time_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setTime(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearTime() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        time_ = getDefaultInstance().getTime();
+        onChanged();
+        return this;
+      }
+      void setTime(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+      }
+      
+      // @@protoc_insertion_point(builder_scope:stormstock.fw.event.SelectStockCompleteNotify)
+    }
+    
+    static {
+      defaultInstance = new SelectStockCompleteNotify(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:stormstock.fw.event.SelectStockCompleteNotify)
+  }
+  
+  public interface StockCreateNotifyOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // required string date = 1;
+    boolean hasDate();
+    String getDate();
+    
+    // required string time = 2;
+    boolean hasTime();
+    String getTime();
+  }
+  public static final class StockCreateNotify extends
+      com.google.protobuf.GeneratedMessage
+      implements StockCreateNotifyOrBuilder {
+    // Use StockCreateNotify.newBuilder() to construct.
+    private StockCreateNotify(Builder builder) {
+      super(builder);
+    }
+    private StockCreateNotify(boolean noInit) {}
+    
+    private static final StockCreateNotify defaultInstance;
+    public static StockCreateNotify getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public StockCreateNotify getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockCreateNotify_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockCreateNotify_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // required string date = 1;
+    public static final int DATE_FIELD_NUMBER = 1;
+    private java.lang.Object date_;
+    public boolean hasDate() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getDate() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          date_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getDateBytes() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        date_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // required string time = 2;
+    public static final int TIME_FIELD_NUMBER = 2;
+    private java.lang.Object time_;
+    public boolean hasTime() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public String getTime() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          time_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getTimeBytes() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        time_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    private void initFields() {
+      date_ = "";
+      time_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      if (!hasDate()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasTime()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getTimeBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getTimeBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static stormstock.fw.event.Transaction.StockCreateNotify parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockCreateNotify parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockCreateNotify parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockCreateNotify parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockCreateNotify parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockCreateNotify parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockCreateNotify parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.Transaction.StockCreateNotify parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.Transaction.StockCreateNotify parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockCreateNotify parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(stormstock.fw.event.Transaction.StockCreateNotify prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements stormstock.fw.event.Transaction.StockCreateNotifyOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockCreateNotify_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockCreateNotify_fieldAccessorTable;
+      }
+      
+      // Construct using stormstock.fw.event.Transaction.StockCreateNotify.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        date_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        time_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return stormstock.fw.event.Transaction.StockCreateNotify.getDescriptor();
+      }
+      
+      public stormstock.fw.event.Transaction.StockCreateNotify getDefaultInstanceForType() {
+        return stormstock.fw.event.Transaction.StockCreateNotify.getDefaultInstance();
+      }
+      
+      public stormstock.fw.event.Transaction.StockCreateNotify build() {
+        stormstock.fw.event.Transaction.StockCreateNotify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private stormstock.fw.event.Transaction.StockCreateNotify buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        stormstock.fw.event.Transaction.StockCreateNotify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public stormstock.fw.event.Transaction.StockCreateNotify buildPartial() {
+        stormstock.fw.event.Transaction.StockCreateNotify result = new stormstock.fw.event.Transaction.StockCreateNotify(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.date_ = date_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.time_ = time_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof stormstock.fw.event.Transaction.StockCreateNotify) {
+          return mergeFrom((stormstock.fw.event.Transaction.StockCreateNotify)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(stormstock.fw.event.Transaction.StockCreateNotify other) {
+        if (other == stormstock.fw.event.Transaction.StockCreateNotify.getDefaultInstance()) return this;
+        if (other.hasDate()) {
+          setDate(other.getDate());
+        }
+        if (other.hasTime()) {
+          setTime(other.getTime());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        if (!hasDate()) {
+          
+          return false;
+        }
+        if (!hasTime()) {
+          
+          return false;
+        }
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              date_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              time_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // required string date = 1;
+      private java.lang.Object date_ = "";
+      public boolean hasDate() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public String getDate() {
+        java.lang.Object ref = date_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          date_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setDate(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearDate() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        date_ = getDefaultInstance().getDate();
+        onChanged();
+        return this;
+      }
+      void setDate(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+      }
+      
+      // required string time = 2;
+      private java.lang.Object time_ = "";
+      public boolean hasTime() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public String getTime() {
+        java.lang.Object ref = time_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          time_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setTime(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearTime() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        time_ = getDefaultInstance().getTime();
+        onChanged();
+        return this;
+      }
+      void setTime(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+      }
+      
+      // @@protoc_insertion_point(builder_scope:stormstock.fw.event.StockCreateNotify)
+    }
+    
+    static {
+      defaultInstance = new StockCreateNotify(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:stormstock.fw.event.StockCreateNotify)
+  }
+  
+  public interface StockCreateCompleteNotifyOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // required string date = 1;
+    boolean hasDate();
+    String getDate();
+    
+    // required string time = 2;
+    boolean hasTime();
+    String getTime();
+  }
+  public static final class StockCreateCompleteNotify extends
+      com.google.protobuf.GeneratedMessage
+      implements StockCreateCompleteNotifyOrBuilder {
+    // Use StockCreateCompleteNotify.newBuilder() to construct.
+    private StockCreateCompleteNotify(Builder builder) {
+      super(builder);
+    }
+    private StockCreateCompleteNotify(boolean noInit) {}
+    
+    private static final StockCreateCompleteNotify defaultInstance;
+    public static StockCreateCompleteNotify getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public StockCreateCompleteNotify getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockCreateCompleteNotify_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockCreateCompleteNotify_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // required string date = 1;
+    public static final int DATE_FIELD_NUMBER = 1;
+    private java.lang.Object date_;
+    public boolean hasDate() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getDate() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          date_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getDateBytes() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        date_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // required string time = 2;
+    public static final int TIME_FIELD_NUMBER = 2;
+    private java.lang.Object time_;
+    public boolean hasTime() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public String getTime() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          time_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getTimeBytes() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        time_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    private void initFields() {
+      date_ = "";
+      time_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      if (!hasDate()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasTime()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getTimeBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getTimeBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static stormstock.fw.event.Transaction.StockCreateCompleteNotify parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockCreateCompleteNotify parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockCreateCompleteNotify parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockCreateCompleteNotify parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockCreateCompleteNotify parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockCreateCompleteNotify parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockCreateCompleteNotify parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.Transaction.StockCreateCompleteNotify parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.Transaction.StockCreateCompleteNotify parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockCreateCompleteNotify parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(stormstock.fw.event.Transaction.StockCreateCompleteNotify prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements stormstock.fw.event.Transaction.StockCreateCompleteNotifyOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockCreateCompleteNotify_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockCreateCompleteNotify_fieldAccessorTable;
+      }
+      
+      // Construct using stormstock.fw.event.Transaction.StockCreateCompleteNotify.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        date_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        time_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return stormstock.fw.event.Transaction.StockCreateCompleteNotify.getDescriptor();
+      }
+      
+      public stormstock.fw.event.Transaction.StockCreateCompleteNotify getDefaultInstanceForType() {
+        return stormstock.fw.event.Transaction.StockCreateCompleteNotify.getDefaultInstance();
+      }
+      
+      public stormstock.fw.event.Transaction.StockCreateCompleteNotify build() {
+        stormstock.fw.event.Transaction.StockCreateCompleteNotify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private stormstock.fw.event.Transaction.StockCreateCompleteNotify buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        stormstock.fw.event.Transaction.StockCreateCompleteNotify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public stormstock.fw.event.Transaction.StockCreateCompleteNotify buildPartial() {
+        stormstock.fw.event.Transaction.StockCreateCompleteNotify result = new stormstock.fw.event.Transaction.StockCreateCompleteNotify(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.date_ = date_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.time_ = time_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof stormstock.fw.event.Transaction.StockCreateCompleteNotify) {
+          return mergeFrom((stormstock.fw.event.Transaction.StockCreateCompleteNotify)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(stormstock.fw.event.Transaction.StockCreateCompleteNotify other) {
+        if (other == stormstock.fw.event.Transaction.StockCreateCompleteNotify.getDefaultInstance()) return this;
+        if (other.hasDate()) {
+          setDate(other.getDate());
+        }
+        if (other.hasTime()) {
+          setTime(other.getTime());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        if (!hasDate()) {
+          
+          return false;
+        }
+        if (!hasTime()) {
+          
+          return false;
+        }
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              date_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              time_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // required string date = 1;
+      private java.lang.Object date_ = "";
+      public boolean hasDate() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public String getDate() {
+        java.lang.Object ref = date_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          date_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setDate(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearDate() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        date_ = getDefaultInstance().getDate();
+        onChanged();
+        return this;
+      }
+      void setDate(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+      }
+      
+      // required string time = 2;
+      private java.lang.Object time_ = "";
+      public boolean hasTime() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public String getTime() {
+        java.lang.Object ref = time_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          time_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setTime(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearTime() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        time_ = getDefaultInstance().getTime();
+        onChanged();
+        return this;
+      }
+      void setTime(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+      }
+      
+      // @@protoc_insertion_point(builder_scope:stormstock.fw.event.StockCreateCompleteNotify)
+    }
+    
+    static {
+      defaultInstance = new StockCreateCompleteNotify(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:stormstock.fw.event.StockCreateCompleteNotify)
+  }
+  
+  public interface StockClearNotifyOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // required string date = 1;
+    boolean hasDate();
+    String getDate();
+    
+    // required string time = 2;
+    boolean hasTime();
+    String getTime();
+  }
+  public static final class StockClearNotify extends
+      com.google.protobuf.GeneratedMessage
+      implements StockClearNotifyOrBuilder {
+    // Use StockClearNotify.newBuilder() to construct.
+    private StockClearNotify(Builder builder) {
+      super(builder);
+    }
+    private StockClearNotify(boolean noInit) {}
+    
+    private static final StockClearNotify defaultInstance;
+    public static StockClearNotify getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public StockClearNotify getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockClearNotify_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockClearNotify_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // required string date = 1;
+    public static final int DATE_FIELD_NUMBER = 1;
+    private java.lang.Object date_;
+    public boolean hasDate() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getDate() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          date_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getDateBytes() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        date_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // required string time = 2;
+    public static final int TIME_FIELD_NUMBER = 2;
+    private java.lang.Object time_;
+    public boolean hasTime() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public String getTime() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          time_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getTimeBytes() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        time_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    private void initFields() {
+      date_ = "";
+      time_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      if (!hasDate()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasTime()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getTimeBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getTimeBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static stormstock.fw.event.Transaction.StockClearNotify parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockClearNotify parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockClearNotify parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockClearNotify parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockClearNotify parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockClearNotify parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockClearNotify parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.Transaction.StockClearNotify parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.Transaction.StockClearNotify parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockClearNotify parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(stormstock.fw.event.Transaction.StockClearNotify prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements stormstock.fw.event.Transaction.StockClearNotifyOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockClearNotify_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockClearNotify_fieldAccessorTable;
+      }
+      
+      // Construct using stormstock.fw.event.Transaction.StockClearNotify.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        date_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        time_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return stormstock.fw.event.Transaction.StockClearNotify.getDescriptor();
+      }
+      
+      public stormstock.fw.event.Transaction.StockClearNotify getDefaultInstanceForType() {
+        return stormstock.fw.event.Transaction.StockClearNotify.getDefaultInstance();
+      }
+      
+      public stormstock.fw.event.Transaction.StockClearNotify build() {
+        stormstock.fw.event.Transaction.StockClearNotify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private stormstock.fw.event.Transaction.StockClearNotify buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        stormstock.fw.event.Transaction.StockClearNotify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public stormstock.fw.event.Transaction.StockClearNotify buildPartial() {
+        stormstock.fw.event.Transaction.StockClearNotify result = new stormstock.fw.event.Transaction.StockClearNotify(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.date_ = date_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.time_ = time_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof stormstock.fw.event.Transaction.StockClearNotify) {
+          return mergeFrom((stormstock.fw.event.Transaction.StockClearNotify)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(stormstock.fw.event.Transaction.StockClearNotify other) {
+        if (other == stormstock.fw.event.Transaction.StockClearNotify.getDefaultInstance()) return this;
+        if (other.hasDate()) {
+          setDate(other.getDate());
+        }
+        if (other.hasTime()) {
+          setTime(other.getTime());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        if (!hasDate()) {
+          
+          return false;
+        }
+        if (!hasTime()) {
+          
+          return false;
+        }
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              date_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              time_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // required string date = 1;
+      private java.lang.Object date_ = "";
+      public boolean hasDate() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public String getDate() {
+        java.lang.Object ref = date_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          date_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setDate(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearDate() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        date_ = getDefaultInstance().getDate();
+        onChanged();
+        return this;
+      }
+      void setDate(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+      }
+      
+      // required string time = 2;
+      private java.lang.Object time_ = "";
+      public boolean hasTime() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public String getTime() {
+        java.lang.Object ref = time_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          time_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setTime(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearTime() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        time_ = getDefaultInstance().getTime();
+        onChanged();
+        return this;
+      }
+      void setTime(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+      }
+      
+      // @@protoc_insertion_point(builder_scope:stormstock.fw.event.StockClearNotify)
+    }
+    
+    static {
+      defaultInstance = new StockClearNotify(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:stormstock.fw.event.StockClearNotify)
+  }
+  
+  public interface StockClearCompleteNotifyOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // required string date = 1;
+    boolean hasDate();
+    String getDate();
+    
+    // required string time = 2;
+    boolean hasTime();
+    String getTime();
+  }
+  public static final class StockClearCompleteNotify extends
+      com.google.protobuf.GeneratedMessage
+      implements StockClearCompleteNotifyOrBuilder {
+    // Use StockClearCompleteNotify.newBuilder() to construct.
+    private StockClearCompleteNotify(Builder builder) {
+      super(builder);
+    }
+    private StockClearCompleteNotify(boolean noInit) {}
+    
+    private static final StockClearCompleteNotify defaultInstance;
+    public static StockClearCompleteNotify getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public StockClearCompleteNotify getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockClearCompleteNotify_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockClearCompleteNotify_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // required string date = 1;
+    public static final int DATE_FIELD_NUMBER = 1;
+    private java.lang.Object date_;
+    public boolean hasDate() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getDate() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          date_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getDateBytes() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        date_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // required string time = 2;
+    public static final int TIME_FIELD_NUMBER = 2;
+    private java.lang.Object time_;
+    public boolean hasTime() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public String getTime() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          time_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getTimeBytes() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        time_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    private void initFields() {
+      date_ = "";
+      time_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      if (!hasDate()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasTime()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getTimeBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getTimeBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static stormstock.fw.event.Transaction.StockClearCompleteNotify parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockClearCompleteNotify parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockClearCompleteNotify parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockClearCompleteNotify parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockClearCompleteNotify parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockClearCompleteNotify parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockClearCompleteNotify parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.Transaction.StockClearCompleteNotify parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.Transaction.StockClearCompleteNotify parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.Transaction.StockClearCompleteNotify parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(stormstock.fw.event.Transaction.StockClearCompleteNotify prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements stormstock.fw.event.Transaction.StockClearCompleteNotifyOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockClearCompleteNotify_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockClearCompleteNotify_fieldAccessorTable;
+      }
+      
+      // Construct using stormstock.fw.event.Transaction.StockClearCompleteNotify.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        date_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        time_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return stormstock.fw.event.Transaction.StockClearCompleteNotify.getDescriptor();
+      }
+      
+      public stormstock.fw.event.Transaction.StockClearCompleteNotify getDefaultInstanceForType() {
+        return stormstock.fw.event.Transaction.StockClearCompleteNotify.getDefaultInstance();
+      }
+      
+      public stormstock.fw.event.Transaction.StockClearCompleteNotify build() {
+        stormstock.fw.event.Transaction.StockClearCompleteNotify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private stormstock.fw.event.Transaction.StockClearCompleteNotify buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        stormstock.fw.event.Transaction.StockClearCompleteNotify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public stormstock.fw.event.Transaction.StockClearCompleteNotify buildPartial() {
+        stormstock.fw.event.Transaction.StockClearCompleteNotify result = new stormstock.fw.event.Transaction.StockClearCompleteNotify(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.date_ = date_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.time_ = time_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof stormstock.fw.event.Transaction.StockClearCompleteNotify) {
+          return mergeFrom((stormstock.fw.event.Transaction.StockClearCompleteNotify)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(stormstock.fw.event.Transaction.StockClearCompleteNotify other) {
+        if (other == stormstock.fw.event.Transaction.StockClearCompleteNotify.getDefaultInstance()) return this;
+        if (other.hasDate()) {
+          setDate(other.getDate());
+        }
+        if (other.hasTime()) {
+          setTime(other.getTime());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        if (!hasDate()) {
+          
+          return false;
+        }
+        if (!hasTime()) {
+          
+          return false;
+        }
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              date_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              time_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // required string date = 1;
+      private java.lang.Object date_ = "";
+      public boolean hasDate() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public String getDate() {
+        java.lang.Object ref = date_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          date_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setDate(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearDate() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        date_ = getDefaultInstance().getDate();
+        onChanged();
+        return this;
+      }
+      void setDate(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+      }
+      
+      // required string time = 2;
+      private java.lang.Object time_ = "";
+      public boolean hasTime() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public String getTime() {
+        java.lang.Object ref = time_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          time_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setTime(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearTime() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        time_ = getDefaultInstance().getTime();
+        onChanged();
+        return this;
+      }
+      void setTime(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+      }
+      
+      // @@protoc_insertion_point(builder_scope:stormstock.fw.event.StockClearCompleteNotify)
+    }
+    
+    static {
+      defaultInstance = new StockClearCompleteNotify(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:stormstock.fw.event.StockClearCompleteNotify)
+  }
+  
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_stormstock_fw_event_TranEngineExitNotify_descriptor;
   private static
@@ -906,6 +4786,46 @@ public final class Transaction {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_stormstock_fw_event_ControllerStartNotify_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_stormstock_fw_event_DataUpdateNotify_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_stormstock_fw_event_DataUpdateNotify_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_stormstock_fw_event_DataUpdateCompleteNotify_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_stormstock_fw_event_DataUpdateCompleteNotify_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_stormstock_fw_event_SelectStockNotify_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_stormstock_fw_event_SelectStockNotify_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_stormstock_fw_event_SelectStockCompleteNotify_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_stormstock_fw_event_SelectStockCompleteNotify_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_stormstock_fw_event_StockCreateNotify_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_stormstock_fw_event_StockCreateNotify_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_stormstock_fw_event_StockCreateCompleteNotify_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_stormstock_fw_event_StockCreateCompleteNotify_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_stormstock_fw_event_StockClearNotify_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_stormstock_fw_event_StockClearNotify_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_stormstock_fw_event_StockClearCompleteNotify_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_stormstock_fw_event_StockClearCompleteNotify_fieldAccessorTable;
   
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -921,7 +4841,18 @@ public final class Transaction {
       "ranMode\030\001 \002(\01623.stormstock.fw.event.Cont" +
       "rollerStartNotify.TRANMODE\022\021\n\tbeginDate\030" +
       "\002 \001(\t\022\017\n\007endDate\030\003 \001(\t\")\n\010TRANMODE\022\017\n\013HI" +
-      "STORYMOCK\020\001\022\014\n\010REALTIME\020\002"
+      "STORYMOCK\020\001\022\014\n\010REALTIME\020\002\".\n\020DataUpdateN" +
+      "otify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(\t\"6\n\030Dat" +
+      "aUpdateCompleteNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004t" +
+      "ime\030\002 \002(\t\"/\n\021SelectStockNotify\022\014\n\004date\030\001",
+      " \002(\t\022\014\n\004time\030\002 \002(\t\"7\n\031SelectStockComplet" +
+      "eNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(\t\"/\n\021S" +
+      "tockCreateNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002" +
+      " \002(\t\"7\n\031StockCreateCompleteNotify\022\014\n\004dat" +
+      "e\030\001 \002(\t\022\014\n\004time\030\002 \002(\t\".\n\020StockClearNotif" +
+      "y\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(\t\"6\n\030StockCl" +
+      "earCompleteNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030" +
+      "\002 \002(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -944,6 +4875,70 @@ public final class Transaction {
               new java.lang.String[] { "ETranMode", "BeginDate", "EndDate", },
               stormstock.fw.event.Transaction.ControllerStartNotify.class,
               stormstock.fw.event.Transaction.ControllerStartNotify.Builder.class);
+          internal_static_stormstock_fw_event_DataUpdateNotify_descriptor =
+            getDescriptor().getMessageTypes().get(2);
+          internal_static_stormstock_fw_event_DataUpdateNotify_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_stormstock_fw_event_DataUpdateNotify_descriptor,
+              new java.lang.String[] { "Date", "Time", },
+              stormstock.fw.event.Transaction.DataUpdateNotify.class,
+              stormstock.fw.event.Transaction.DataUpdateNotify.Builder.class);
+          internal_static_stormstock_fw_event_DataUpdateCompleteNotify_descriptor =
+            getDescriptor().getMessageTypes().get(3);
+          internal_static_stormstock_fw_event_DataUpdateCompleteNotify_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_stormstock_fw_event_DataUpdateCompleteNotify_descriptor,
+              new java.lang.String[] { "Date", "Time", },
+              stormstock.fw.event.Transaction.DataUpdateCompleteNotify.class,
+              stormstock.fw.event.Transaction.DataUpdateCompleteNotify.Builder.class);
+          internal_static_stormstock_fw_event_SelectStockNotify_descriptor =
+            getDescriptor().getMessageTypes().get(4);
+          internal_static_stormstock_fw_event_SelectStockNotify_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_stormstock_fw_event_SelectStockNotify_descriptor,
+              new java.lang.String[] { "Date", "Time", },
+              stormstock.fw.event.Transaction.SelectStockNotify.class,
+              stormstock.fw.event.Transaction.SelectStockNotify.Builder.class);
+          internal_static_stormstock_fw_event_SelectStockCompleteNotify_descriptor =
+            getDescriptor().getMessageTypes().get(5);
+          internal_static_stormstock_fw_event_SelectStockCompleteNotify_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_stormstock_fw_event_SelectStockCompleteNotify_descriptor,
+              new java.lang.String[] { "Date", "Time", },
+              stormstock.fw.event.Transaction.SelectStockCompleteNotify.class,
+              stormstock.fw.event.Transaction.SelectStockCompleteNotify.Builder.class);
+          internal_static_stormstock_fw_event_StockCreateNotify_descriptor =
+            getDescriptor().getMessageTypes().get(6);
+          internal_static_stormstock_fw_event_StockCreateNotify_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_stormstock_fw_event_StockCreateNotify_descriptor,
+              new java.lang.String[] { "Date", "Time", },
+              stormstock.fw.event.Transaction.StockCreateNotify.class,
+              stormstock.fw.event.Transaction.StockCreateNotify.Builder.class);
+          internal_static_stormstock_fw_event_StockCreateCompleteNotify_descriptor =
+            getDescriptor().getMessageTypes().get(7);
+          internal_static_stormstock_fw_event_StockCreateCompleteNotify_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_stormstock_fw_event_StockCreateCompleteNotify_descriptor,
+              new java.lang.String[] { "Date", "Time", },
+              stormstock.fw.event.Transaction.StockCreateCompleteNotify.class,
+              stormstock.fw.event.Transaction.StockCreateCompleteNotify.Builder.class);
+          internal_static_stormstock_fw_event_StockClearNotify_descriptor =
+            getDescriptor().getMessageTypes().get(8);
+          internal_static_stormstock_fw_event_StockClearNotify_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_stormstock_fw_event_StockClearNotify_descriptor,
+              new java.lang.String[] { "Date", "Time", },
+              stormstock.fw.event.Transaction.StockClearNotify.class,
+              stormstock.fw.event.Transaction.StockClearNotify.Builder.class);
+          internal_static_stormstock_fw_event_StockClearCompleteNotify_descriptor =
+            getDescriptor().getMessageTypes().get(9);
+          internal_static_stormstock_fw_event_StockClearCompleteNotify_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_stormstock_fw_event_StockClearCompleteNotify_descriptor,
+              new java.lang.String[] { "Date", "Time", },
+              stormstock.fw.event.Transaction.StockClearCompleteNotify.class,
+              stormstock.fw.event.Transaction.StockClearCompleteNotify.Builder.class);
           return null;
         }
       };
