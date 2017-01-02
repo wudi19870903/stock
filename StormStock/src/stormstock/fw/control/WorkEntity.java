@@ -56,6 +56,7 @@ public class WorkEntity {
 				String timestr = "00:00:00";
 				
 				// 9:30-11:30 1:00-3:00 定期间隔发送交易信号，等待信号处理完毕通知
+				int interval_min = 60;
 				String timestr_begin = "09:30:00";
 				String timestr_end = "11:30:00";
 				timestr = timestr_begin;
@@ -67,7 +68,7 @@ public class WorkEntity {
 						m_entityClear.stockClear(dateStr, timestr);
 						m_entityCreate.stockCreate(dateStr, timestr);
 					}
-					timestr = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(timestr, 60);
+					timestr = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(timestr, interval_min);
 					if(timestr.compareTo(timestr_end) > 0) break;
 				}
 				
@@ -82,7 +83,7 @@ public class WorkEntity {
 						m_entityClear.stockClear(dateStr, timestr);
 						m_entityCreate.stockCreate(dateStr, timestr);
 					}
-					timestr = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(timestr, 60);
+					timestr = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(timestr, interval_min);
 					if(timestr.compareTo(timestr_end) > 0) break;
 				}
 				
