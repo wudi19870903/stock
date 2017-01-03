@@ -6,17 +6,17 @@ public class StockDay {
 	{
 		detail = new StockDayDetail();
 	} 
-	public StockDay(StockDay c, Stock refStock)
+	
+	public void CopyFrom(StockDay c)
 	{
-
 		date = c.date;
 		open = c.open;
 		close = c.close;
 		high = c.high;
 		low = c.low;
 		volume = c.volume;
-		ref_stock = refStock;
-	} 
+		ref_stock = c.ref_stock;
+	}
 	
 	public int LoadDetail()
 	{

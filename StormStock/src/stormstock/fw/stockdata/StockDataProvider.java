@@ -1,7 +1,9 @@
 package stormstock.fw.stockdata;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import stormstock.ori.stockdata.DataEngine;
 import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
@@ -24,8 +26,54 @@ public class StockDataProvider {
 		return retList;
 	}
 	
+	public static Stock getStock(String id, String endDate)
+	{
+		return getStock(id, "2000-01-01", endDate);
+	}
+	
+	// 新数据加载
+	public static Stock getStock(String id)
+	{
+		return getStock(id, "2100-01-01");
+	}
+	
 	public static Stock getStock(String id, String fromDate, String endDate)
 	{
+		boolean bEnableCache = false;
+		
+		// cache check
+		if(bEnableCache)
+		{
+			String endDateActual = endDate;
+			String fromDateActual = fromDate;
+			if(null == s_localLatestDate)
+			{
+				s_localLatestDate = DataEngine.getUpdatedStocksDate();
+			}
+			if(endDateActual.compareTo(s_localLatestDate) > 0)
+			{
+				endDateActual = s_localLatestDate;
+			}
+			if(fromDateActual.compareTo("2008-01-01") < 0)
+			{
+				fromDateActual = "2008-01-01";
+			}
+			if(s_stockCacheMap.containsKey(id))
+			{
+				Stock cStock = s_stockCacheMap.get(id);
+				if(fromDateActual.compareTo("2008-01-01")>=0 && 
+						endDateActual.compareTo(s_localLatestDate) <=0)
+				{
+					Stock cNewStock = cStock.subObj(fromDate, endDate);
+					return cNewStock;
+				}
+				else
+				{
+					s_stockCacheMap.remove(id);
+				}
+			}
+		}
+		
 		List<DayKData> retList = new ArrayList<DayKData>();
 		int ret = DataEngine.getDayKDataQianFuQuan(id, retList);
 		if(0 != ret || retList.size() == 0)
@@ -58,15 +106,21 @@ public class StockDataProvider {
 			}
         } 
 		
+		// cache
+		if(bEnableCache)
+		{
+			s_stockCacheMap.put(id, cStock);
+		}
+		
 		return cStock;
 	}
-	public static Stock getStock(String id, String endDate)
+
+	
+	public static void clearStockCache()
 	{
-		return getStock(id, "2000-01-01", endDate);
+		s_localLatestDate = null;
+		s_stockCacheMap.clear();
 	}
-	// 新数据加载
-	public static Stock getStock(String id)
-	{
-		return getStock(id, "2100-01-01");
-	}
+	private static String s_localLatestDate = null;
+	private static Map<String, Stock> s_stockCacheMap = new HashMap<String, Stock>();
 }

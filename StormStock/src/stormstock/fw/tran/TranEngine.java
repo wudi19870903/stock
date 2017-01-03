@@ -10,7 +10,8 @@ import stormstock.fw.control.ModuleController;
 import stormstock.fw.event.EventDef;
 import stormstock.fw.event.Transaction;
 import stormstock.fw.event.Transaction.ControllerStartNotify;
-import stormstock.fw.objmgr.ObjManager;
+import stormstock.fw.objmgr.GlobalUserObj;
+import stormstock.fw.objmgr.GlobalModuleObj;
 import stormstock.fw.report.ReportModule;
 import stormstock.fw.stockclear.ModuleClear;
 import stormstock.fw.stockcreate.ModuleCreate;
@@ -163,10 +164,10 @@ public class TranEngine {
 		}
 		
 		// 保存对象
-		ObjManager.setCurrentTranStockSetFilter(m_cTranStockSet);
-		ObjManager.setCurrentStrategySelect(m_cStrategySelect);
-		ObjManager.setCurrentStrategyCreate(m_cStrategyCreate);
-		ObjManager.setCurrentStrategyClear(m_cStrategyClear);
+		GlobalUserObj.setCurrentTranStockSetFilter(m_cTranStockSet);
+		GlobalUserObj.setCurrentStrategySelect(m_cStrategySelect);
+		GlobalUserObj.setCurrentStrategyCreate(m_cStrategyCreate);
+		GlobalUserObj.setCurrentStrategyClear(m_cStrategyClear);
 		
 		// 发送开始交易命令到控制器
 		BLog.output("TRAN", "Start Trasection\n");

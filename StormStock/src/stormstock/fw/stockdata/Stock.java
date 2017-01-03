@@ -19,10 +19,27 @@ public class Stock {
 	public Stock(String sid, StockBaseInfo scurBaseInfo)
 	{
 		id = sid;
-		curBaseInfo = scurBaseInfo;
 		historyData = new ArrayList<StockDay>();
 		curBaseInfo = new StockBaseInfo();
+		curBaseInfo.CopyFrom(scurBaseInfo);
 	}	 
+	public Stock subObj(String fromDate, String endDate)
+	{
+		Stock cSubObj = new Stock(id, curBaseInfo);
+		for(int i = 0; i < historyData.size(); i++)  
+        {  
+			StockDay cDayKData = historyData.get(i);  
+			if(cDayKData.date.compareTo(fromDate) >= 0 &&
+					cDayKData.date.compareTo(endDate) <= 0)
+			{
+				StockDay cNewStockDay = new StockDay();
+				cNewStockDay.CopyFrom(cDayKData);
+				cSubObj.historyData.add(cNewStockDay);
+			}
+        }
+		
+		return cSubObj;
+	}
 	
 	// 获得最后一天的昨日收盘价
 	public float GetLastYesterdayClosePrice()
@@ -67,6 +84,15 @@ public class Stock {
 			return 0.0f;
 	}
 	
+	// 获得第一天的日期
+	public String GetFirstDate()
+	{
+		if(historyData.size() > 0)
+			return historyData.get(0).date;
+		else
+			return "0000-00-00";
+	}
+	
 	// 获得最后一天的日期
 	public String GetLastDate()
 	{
@@ -75,7 +101,7 @@ public class Stock {
 		else
 			return "0000-00-00";
 	}
-		
+	
 	// 均线计算，计算date日期前count天均线价格
 	public float GetMA(int count, String date)
 	{

@@ -314,6 +314,14 @@ public class DataEngineBase {
 			circulatedMarketValue = 0.0f;
 			peRatio = 0.0f;
 		}
+		public void CopyFrom(StockBaseInfo cCopyFromObj)
+		{
+			name = cCopyFromObj.name;
+			price = cCopyFromObj.price;
+			allMarketValue = cCopyFromObj.allMarketValue;
+			circulatedMarketValue = cCopyFromObj.circulatedMarketValue;
+			peRatio = cCopyFromObj.peRatio;
+		}
 	}
 	public static int saveStockBaseData(String id, StockBaseInfo baseData) 
 	{

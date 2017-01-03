@@ -4,16 +4,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import stormstock.analysis.ANLDataProvider;
+import stormstock.analysis.ANLLog;
+import stormstock.analysis.ANLStock;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BUtilsDateTime;
 import stormstock.fw.base.BWaitObj;
 import stormstock.fw.event.Transaction;
 import stormstock.fw.event.Transaction.ControllerStartNotify;
+import stormstock.fw.objmgr.GlobalStockObj;
+import stormstock.fw.objmgr.GlobalUserObj;
 import stormstock.fw.stockdata.Stock;
 import stormstock.fw.stockdata.StockDataProvider;
 import stormstock.fw.stockdata.StockDay;
 import stormstock.fw.stockdata.StockUtils;
+import stormstock.fw.tran.ITranStockSetFilter;
 import stormstock.fw.tran.TranEngine.TRANMODE;
 
 public class WorkEntity {
@@ -48,11 +54,20 @@ public class WorkEntity {
 	
 	void work()
 	{
+		// 加载测试集
+		BLog.output("CTRL", "LoadStockIDSet ...\n");
+		int stockSetSize = LoadStockIDSet();
+		BLog.output("CTRL", "LoadStockIDSet OK stockCnt(%d) \n", stockSetSize);
+		
+		// 每天进行循环
 		String dateStr = getStartDate();
-		while(true) // 每天进行循环
+		while(true) 
 		{
 			if(isTranDate(dateStr))
 			{
+				BLog.output("CTRL", "[%s] #################################################### \n", 
+						dateStr);
+				
 				String timestr = "00:00:00";
 				
 				// 9:30-11:30 1:00-3:00 定期间隔发送交易信号，等待信号处理完毕通知
@@ -201,6 +216,26 @@ public class WorkEntity {
 		{
 			return BUtilsDateTime.waitDateTime(date, time);
 		}
+	}
+	
+	private int LoadStockIDSet()
+	{
+		ITranStockSetFilter cTranStockSetFilter = GlobalUserObj.getCurrentTranStockSetFilter();
+		
+		List<String> cStockSet = new ArrayList<String>();
+		
+		List<String> cStockAllList = StockDataProvider.getAllStocks();
+		for(int i=0; i<cStockAllList.size();i++)
+		{
+			String stockId = cStockAllList.get(i);
+			Stock cStock = StockDataProvider.getStock(stockId);
+			if(null != cStock && cTranStockSetFilter.strategy_stockset(cStock))
+			{
+				cStockSet.add(stockId);
+			}
+		}
+		GlobalStockObj.setStockIDSet(cStockSet);
+		return cStockSet.size();
 	}
 	
 	// 基本参数
