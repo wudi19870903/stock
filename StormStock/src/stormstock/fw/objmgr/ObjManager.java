@@ -1,5 +1,9 @@
 package stormstock.fw.objmgr;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import stormstock.fw.base.BModuleBase;
 import stormstock.fw.tran.IStrategyClear;
 import stormstock.fw.tran.IStrategyCreate;
 import stormstock.fw.tran.IStrategySelect;
@@ -17,6 +21,7 @@ public class ObjManager {
 	{
 		s_tranStockSetFilter = cFilter;
 	}
+	private static ITranStockSetFilter s_tranStockSetFilter = null;
 	
 	/*
 	 * CurrentStrategySelect
@@ -29,6 +34,7 @@ public class ObjManager {
 	{
 		s_strategySelect = strategySelect;
 	}
+	private static IStrategySelect s_strategySelect = null;
 
 	/*
 	 * CurrentStrategyCreate
@@ -41,6 +47,7 @@ public class ObjManager {
 	{
 		s_strategyCreate = strategyCreate;
 	}
+	private static IStrategyCreate s_strategyCreate = null;
 	
 	/*
 	 * CurrentStrategyCreate
@@ -49,14 +56,26 @@ public class ObjManager {
 	{
 		return s_strategyClear;
 	}
-	
 	public static void setCurrentStrategyClear(IStrategyClear strategyClear)
 	{
 		s_strategyClear = strategyClear;
 	}
-	
-	private static ITranStockSetFilter s_tranStockSetFilter = null;
-	private static IStrategySelect s_strategySelect = null;
-	private static IStrategyCreate s_strategyCreate = null;
 	private static IStrategyClear s_strategyClear = null;
+	
+	
+	/*
+	 * Modules
+	 */
+	public static BModuleBase getModule(String moduleName)
+	{
+		if(s_moduleMap.containsKey(moduleName))
+			return s_moduleMap.get(moduleName);
+		else
+			return null;
+	}
+	public static void addModule(BModuleBase moduleObj)
+	{
+		s_moduleMap.put(moduleObj.moduleName(), moduleObj);
+	}
+	private static Map<String, BModuleBase> s_moduleMap = new HashMap<String, BModuleBase>();
 }

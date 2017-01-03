@@ -8,6 +8,11 @@ import stormstock.fw.event.Transaction;
 
 public class ModuleCreate extends BModuleBase {
 
+	public ModuleCreate() {
+		super("Create");
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public void initialize() {
 		m_eventRecever = new EventReceiver("CreateReceiver");
@@ -30,7 +35,13 @@ public class ModuleCreate extends BModuleBase {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	@Override
+	public BModuleInterface getIF() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	// callback
 	public void onStockCreateNotify(com.google.protobuf.GeneratedMessage m) {
 		Transaction.StockCreateNotify stockCreateNotify = (Transaction.StockCreateNotify)m;

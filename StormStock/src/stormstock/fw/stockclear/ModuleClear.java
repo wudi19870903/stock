@@ -8,6 +8,11 @@ import stormstock.fw.event.Transaction;
 
 public class ModuleClear  extends BModuleBase {
 
+	public ModuleClear() {
+		super("Clear");
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public void initialize() {
 		m_eventRecever = new EventReceiver("ClearReceiver");
@@ -30,7 +35,13 @@ public class ModuleClear  extends BModuleBase {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	@Override
+	public BModuleInterface getIF() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	// callback
 	public void onStockClearNotify(com.google.protobuf.GeneratedMessage m) {
 		Transaction.StockClearNotify stockClearNotify = (Transaction.StockClearNotify)m;

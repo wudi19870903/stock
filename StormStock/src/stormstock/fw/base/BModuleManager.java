@@ -3,6 +3,8 @@ package stormstock.fw.base;
 import java.util.ArrayList;
 import java.util.List;
 
+import stormstock.fw.objmgr.ObjManager;
+
 public class BModuleManager {
 	
 	public BModuleManager()
@@ -24,8 +26,7 @@ public class BModuleManager {
 		for(int i = 0; i< m_moduleList.size(); i++)
 		{
 			BModuleBase cModule = m_moduleList.get(i);
-			String moduleName = cModule.getClass().getSimpleName();
-			BLog.output( "BASE", "BModuleManager Call Initialize for module [%s]\n", moduleName);
+			BLog.output( "BASE", "BModuleManager Call Initialize for module [%s]\n", cModule.moduleName());
 			cModule.initialize();
 		}
 	}
@@ -36,9 +37,9 @@ public class BModuleManager {
 		for(int i = 0; i< m_moduleList.size(); i++)
 		{
 			BModuleBase cModule = m_moduleList.get(i);
-			String moduleName = cModule.getClass().getSimpleName();
-			BLog.output( "BASE", "BModuleManager Call Start for module [%s]\n", moduleName);
+			BLog.output( "BASE", "BModuleManager Call Start for module [%s]\n", cModule.moduleName());
 			cModule.start();
+			ObjManager.addModule(cModule);
 		}
 	}
 	
@@ -48,8 +49,7 @@ public class BModuleManager {
 		for(int i = m_moduleList.size()-1; i>=0; i--)
 		{
 			BModuleBase cModule = m_moduleList.get(i);
-			String moduleName = cModule.getClass().getSimpleName();
-			BLog.output( "BASE", "BModuleManager Call Stop for module [%s]\n", moduleName);
+			BLog.output( "BASE", "BModuleManager Call Stop for module [%s]\n", cModule.moduleName());
 			cModule.stop();
 		}
 	}
@@ -60,8 +60,7 @@ public class BModuleManager {
 		for(int i = m_moduleList.size()-1; i>=0; i--)
 		{
 			BModuleBase cModule = m_moduleList.get(i);
-			String moduleName = cModule.getClass().getSimpleName();
-			BLog.output( "BASE", "BModuleManager Call UnInitialize for module [%s]\n", moduleName);
+			BLog.output( "BASE", "BModuleManager Call UnInitialize for module [%s]\n", cModule.moduleName());
 			cModule.unInitialize();
 		}
 	}

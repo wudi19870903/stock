@@ -15,6 +15,11 @@ import stormstock.fw.base.BEventSys.EventSender;
  */
 public class ModuleController extends BModuleBase {
 
+	public ModuleController() {
+		super("Controller");
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public void initialize() {
 		m_eventRecever = new EventReceiver("ControllerReceiver");
@@ -39,6 +44,12 @@ public class ModuleController extends BModuleBase {
 	@Override
 	public void unInitialize() {
 		
+	}
+	
+	@Override
+	public BModuleInterface getIF() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	// callback

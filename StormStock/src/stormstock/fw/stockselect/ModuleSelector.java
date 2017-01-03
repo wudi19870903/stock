@@ -9,6 +9,11 @@ import stormstock.fw.event.Transaction;
 
 public class ModuleSelector extends BModuleBase {
 
+	public ModuleSelector() {
+		super("Selector");
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public void initialize() {
 		m_eventRecever = new EventReceiver("SelectorReceiver");
@@ -28,6 +33,12 @@ public class ModuleSelector extends BModuleBase {
 	@Override
 	public void unInitialize() {
 
+	}
+	
+	@Override
+	public BModuleInterface getIF() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	// callback

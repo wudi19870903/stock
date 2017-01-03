@@ -8,6 +8,11 @@ import stormstock.fw.control.WorkThread;
 import stormstock.fw.event.Transaction;
 
 public class ModuleStockData extends BModuleBase {
+	
+	public ModuleStockData() {
+		super("StockData");
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public void initialize() {
@@ -28,6 +33,12 @@ public class ModuleStockData extends BModuleBase {
 	public void unInitialize() {
 	}
 
+	@Override
+	public BModuleInterface getIF() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	// callback
 	public void onDataUpdateNotify(com.google.protobuf.GeneratedMessage m) {
 		Transaction.DataUpdateNotify dataUpdateNotify = (Transaction.DataUpdateNotify)m;
