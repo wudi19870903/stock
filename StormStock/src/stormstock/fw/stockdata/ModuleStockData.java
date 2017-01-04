@@ -19,11 +19,13 @@ public class ModuleStockData extends BModuleBase {
 	public void initialize() {
 		m_eventRecever = new EventReceiver("StockDataReceiver");
 		m_eventRecever.Subscribe("BEV_TRAN_DATAUPDATENOTIFY", this, "onDataUpdateNotify");
+		m_cIF = null;
 	}
 
 	@Override
 	public void start() {
 		m_eventRecever.startReceive();
+		m_cIF = new ModuleStockDataIF();
 	}
 
 	@Override
@@ -36,8 +38,7 @@ public class ModuleStockData extends BModuleBase {
 
 	@Override
 	public BModuleInterface getIF() {
-		// TODO Auto-generated method stub
-		return null;
+		return m_cIF;
 	}
 	
 	// callback
@@ -70,4 +71,6 @@ public class ModuleStockData extends BModuleBase {
 	
 	// event receiver
 	private EventReceiver m_eventRecever;
+	// module IF
+	private ModuleStockDataIF m_cIF;
 }

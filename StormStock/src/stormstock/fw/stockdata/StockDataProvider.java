@@ -84,7 +84,7 @@ public class StockDataProvider {
 		Stock cStock = new Stock();
 		cStock.id = id;
 		
-		DataEngine.getStockBaseData(id, cStock.curBaseInfo);
+		DataEngine.getStockBaseData(id, cStock.latestBaseInfo);
 		
 		for(int i = 0; i < retList.size(); i++)  
         {  

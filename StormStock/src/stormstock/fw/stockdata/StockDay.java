@@ -4,7 +4,6 @@ public class StockDay {
 
 	public StockDay()
 	{
-		detail = new StockDayDetail();
 	} 
 	
 	public void CopyFrom(StockDay c)
@@ -18,26 +17,12 @@ public class StockDay {
 		ref_stock = c.ref_stock;
 	}
 	
-	public int LoadDetail()
-	{
-		if(null != ref_stock)
-		{
-			return -80;
-		}
-		else
-		{
-			return ref_stock.LoadDetail(date);
-		}
-	}
-	
 	public String date;
 	public float open;
 	public float close;
 	public float high;
 	public float low;
 	public float volume;
-
-	public StockDayDetail detail;
 	
 	public Stock ref_stock;
 }

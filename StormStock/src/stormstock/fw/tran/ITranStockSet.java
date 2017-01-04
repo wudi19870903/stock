@@ -8,7 +8,7 @@ public class ITranStockSet {
 	public boolean strategy_stockset(Stock cStock) // Ä¬ÈÏÇ°200Ö»
 	{
 		if(cStock.id.compareTo("000001") >= 0 && cStock.id.compareTo("000200") <= 0) {	
-			BLog.output("TEST", "add stockpool %s %s\n", cStock.id, cStock.curBaseInfo.name);
+			BLog.output("TEST", "add stockpool %s %s\n", cStock.id, cStock.latestBaseInfo.name);
 			return true;
 		}
 		return false;

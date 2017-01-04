@@ -7,26 +7,23 @@ import java.util.Map;
 import stormstock.ori.stockdata.DataEngine;
 import stormstock.ori.stockdata.DataEngine.ExKData;
 import stormstock.ori.stockdata.DataEngineBase.StockBaseInfo;
-import stormstock.fw.stockdata.StockDayDetail.DetailData;
 import stormstock.fw.tran.IEigen;
 
 public class Stock {
 	public Stock()
 	{
+		latestBaseInfo = new StockBaseInfo();
 		historyData = new ArrayList<StockDay>();
-		curBaseInfo = new StockBaseInfo();
 	}	 
-	public Stock(String sid, StockBaseInfo scurBaseInfo)
-	{
-		id = sid;
-		historyData = new ArrayList<StockDay>();
-		curBaseInfo = new StockBaseInfo();
-		curBaseInfo.CopyFrom(scurBaseInfo);
-	}	 
+ 
 	public Stock subObj(String fromDate, String endDate)
 	{
-		Stock cSubObj = new Stock(id, curBaseInfo);
-		for(int i = 0; i < historyData.size(); i++)  
+		Stock cSubObj = new Stock();
+		cSubObj.id = this.id;
+		cSubObj.latestBaseInfo = new StockBaseInfo();
+		cSubObj.latestBaseInfo.CopyFrom(this.latestBaseInfo);
+		cSubObj.historyData = new ArrayList<StockDay>();
+		for(int i = 0; i < this.historyData.size(); i++)  
         {  
 			StockDay cDayKData = historyData.get(i);  
 			if(cDayKData.date.compareTo(fromDate) >= 0 &&
@@ -37,7 +34,6 @@ public class Stock {
 				cSubObj.historyData.add(cNewStockDay);
 			}
         }
-		
 		return cSubObj;
 	}
 	
@@ -176,58 +172,44 @@ public class Stock {
 		}
 	}
 	
-	public int LoadDetail(String date)
+	public StockDetailDay getDetailDay(String date)
 	{
-		StockDay cDayKData = GetDayK(date);
-		if(null == cDayKData) return 0;
-	
-		if(date.length() < 6) return -10;
+		StockDetailDay cStockDetailDay = new StockDetailDay();
 		
-		// load new detail data
-		List<ExKData> retList = new ArrayList<ExKData>();
-		int ret = DataEngine.get1MinKDataOneDay(id, date, retList);
-		if(0 == ret && retList.size() != 0)
+		StockDay cDayKData = GetDayK(date);
+		if(null != cDayKData && date.length() == 6)
 		{
-			// 由于可能是复权价位，需要重新计算相对价格
-			float baseOpenPrice = cDayKData.open;
-			float actruaFirstPrice = retList.get(0).open;
-			for(int i = 0; i < retList.size(); i++)  
-	        {  
-				ExKData cExKData = retList.get(i);  
-//	            System.out.println(cExKData.datetime + "," 
-//	            		+ cExKData.open + "," + cExKData.close + "," 
-//	            		+ cExKData.low + "," + cExKData.high + "," 
-//	            		+ cExKData.volume);  
-				
-				float actrualprice = cExKData.close;
-				float changeper = (actrualprice - actruaFirstPrice)/actruaFirstPrice;
-				float changedprice = baseOpenPrice + baseOpenPrice * changeper;
-				
-				DetailData cDetail = new DetailData();
-				cDetail.price = changedprice;
-				cDetail.time = cExKData.getTime();
-				cDayKData.detail.detailDataList.add(cDetail);
-	        } 
+			// load new detail data
+			List<ExKData> retList = new ArrayList<ExKData>();
+			int ret = DataEngine.get1MinKDataOneDay(id, date, retList);
+			if(0 == ret && retList.size() != 0)
+			{
+				// 由于可能是复权价位，需要重新计算相对价格
+				float baseOpenPrice = cDayKData.open;
+				float actruaFirstPrice = retList.get(0).open;
+				for(int i = 0; i < retList.size(); i++)  
+		        {  
+					ExKData cExKData = retList.get(i);  
+//		            System.out.println(cExKData.datetime + "," 
+//		            		+ cExKData.open + "," + cExKData.close + "," 
+//		            		+ cExKData.low + "," + cExKData.high + "," 
+//		            		+ cExKData.volume);  
+					
+					float actrualprice = cExKData.close;
+					float changeper = (actrualprice - actruaFirstPrice)/actruaFirstPrice;
+					float changedprice = baseOpenPrice + baseOpenPrice * changeper;
+					
+					StockDetailTime cStockDetailTime = new StockDetailTime();
+					cStockDetailTime.price = changedprice;
+					cStockDetailTime.time = cExKData.getTime();
+					cStockDetailDay.detailDataList.add(cStockDetailTime);
+		        } 
+			}
 		}
-		else
-		{
-			// System.out.println("ERROR: LoadDetail");
-			return -20;
-		}
-		return -30;
-	}
-	
-	public Object getEngen(String name, Object... args)
-	{
-		if(null == m_eigenObjMap) return null;
-		IEigen cEigen = m_eigenObjMap.get(name);
-		if(null == cEigen) return null;
-		Object engenObj = cEigen.calc(this, args);
-		return engenObj;
+		return cStockDetailDay;
 	}
 	
 	public String id;
-	public StockBaseInfo curBaseInfo;
-	public List<StockDay> historyData;
-	private Map<String, IEigen> m_eigenObjMap;
+	public StockBaseInfo latestBaseInfo; // 最新基本信息
+	public List<StockDay> historyData; // 股票历史数据
 }

@@ -7,11 +7,11 @@ public class StrategySelect extends IStrategySelect {
 	@Override
 	public void strategy_select(Context ctx, SelectResult out_sr) {
 		// 特征：价值位置250日周期
-		float EigenPriceLocLong = (float)ctx.stock.getEngen("EigenSamplePriceLoc", 250);
+		float EigenPriceLocLong = 0;
 		// 离60日均线偏离百分比
-		float MADeviation60 = (float)ctx.stock.getEngen("EigenSampleMADeviation", 60);
+		float MADeviation60 = 0;
 		// 离250日均线偏离百分比
-		float MADeviation250 = (float)ctx.stock.getEngen("EigenSampleMADeviation", 250);
+		float MADeviation250 = 0;
 		if(MADeviation60 < -0.1 && MADeviation250 < -0.06 
 				&& EigenPriceLocLong < 0.4 && EigenPriceLocLong > 0.1) {
 			out_sr.bSelect = true;
