@@ -12,7 +12,7 @@ import stormstock.fw.tran.IEigen;
 public class Stock {
 	public Stock()
 	{
-		latestBaseInfo = new StockBaseInfo();
+		latestInfo = new StockInfo();
 		historyData = new ArrayList<StockDay>();
 	}	 
  
@@ -20,8 +20,8 @@ public class Stock {
 	{
 		Stock cSubObj = new Stock();
 		cSubObj.id = this.id;
-		cSubObj.latestBaseInfo = new StockBaseInfo();
-		cSubObj.latestBaseInfo.CopyFrom(this.latestBaseInfo);
+		cSubObj.latestInfo = new StockInfo();
+		cSubObj.latestInfo.CopyFrom(this.latestInfo);
 		cSubObj.historyData = new ArrayList<StockDay>();
 		for(int i = 0; i < this.historyData.size(); i++)  
         {  
@@ -210,6 +210,6 @@ public class Stock {
 	}
 	
 	public String id;
-	public StockBaseInfo latestBaseInfo; // 最新基本信息
+	public StockInfo latestInfo; // 最新基本信息
 	public List<StockDay> historyData; // 股票历史数据
 }

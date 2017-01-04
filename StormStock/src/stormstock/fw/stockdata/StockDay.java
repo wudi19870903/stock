@@ -14,15 +14,13 @@ public class StockDay {
 		high = c.high;
 		low = c.low;
 		volume = c.volume;
-		ref_stock = c.ref_stock;
 	}
 	
 	public String date;
+	
 	public float open;
 	public float close;
 	public float high;
 	public float low;
 	public float volume;
-	
-	public Stock ref_stock;
 }
