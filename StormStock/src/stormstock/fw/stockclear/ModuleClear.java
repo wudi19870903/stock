@@ -46,7 +46,7 @@ public class ModuleClear  extends BModuleBase {
 	public void onStockClearNotify(com.google.protobuf.GeneratedMessage m) {
 		Transaction.StockClearNotify stockClearNotify = (Transaction.StockClearNotify)m;
 
-		BLog.output("SELECT", "ModuleClear onStockClearNotify\n");
+		BLog.output("CLEAR", "ModuleClear onStockClearNotify\n");
 		String dateStr = stockClearNotify.getDate();
 		String timeStr = stockClearNotify.getTime();
 		

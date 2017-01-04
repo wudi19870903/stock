@@ -1,6 +1,7 @@
 package stormstock.fw.stockdata;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -71,5 +72,22 @@ public class StockUtils {
 			}
 		}
 		return index;
+	}
+	
+	public static List<StockDay> subStockDayData(List<StockDay> oriList, String fromDate, String endDate)
+	{
+		List<StockDay> newStockDayData = new ArrayList<StockDay>();
+		for(int i = 0; i <oriList.size(); i++)  
+        {  
+			StockDay cStockDay = oriList.get(i);  
+			if(cStockDay.date.compareTo(fromDate) >= 0 &&
+					cStockDay.date.compareTo(endDate) <= 0)
+			{
+				StockDay cNewStockDay = new StockDay();
+				cNewStockDay.CopyFrom(cStockDay);
+				newStockDayData.add(cNewStockDay);
+			}
+        }
+		return newStockDayData;
 	}
 }

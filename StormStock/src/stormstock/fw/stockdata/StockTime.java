@@ -3,12 +3,13 @@ package stormstock.fw.stockdata;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StockDayDetail {
+public class StockTime {
 	
-	public StockDayDetail()
+	public StockTime()
 	{
 	}
-	public void CopyFrom(StockDayDetail fromObj)
+	
+	public void CopyFrom(StockTime fromObj)
 	{
 		this.time = fromObj.time;
 		this.price = fromObj.price;

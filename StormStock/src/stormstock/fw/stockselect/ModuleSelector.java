@@ -3,6 +3,7 @@ package stormstock.fw.stockselect;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BModuleBase;
+import stormstock.fw.base.BQThread;
 import stormstock.fw.base.BEventSys.EventReceiver;
 import stormstock.fw.base.BEventSys.EventSender;
 import stormstock.fw.event.Transaction;
@@ -11,23 +12,25 @@ public class ModuleSelector extends BModuleBase {
 
 	public ModuleSelector() {
 		super("Selector");
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void initialize() {
+		m_qThread = new BQThread();
 		m_eventRecever = new EventReceiver("SelectorReceiver");
 		m_eventRecever.Subscribe("BEV_TRAN_SELECTSTOCKNOTIFY", this, "onSelectStockNotify");
 	}
 
 	@Override
 	public void start() {
+		m_qThread.startThread();
 		m_eventRecever.startReceive();
 	}
 
 	@Override
 	public void stop() {
-
+		m_eventRecever.stopReceive();
+		m_qThread.stopThread();
 	}
 
 	@Override
@@ -49,14 +52,10 @@ public class ModuleSelector extends BModuleBase {
 		String dateStr = selectStockNotify.getDate();
 		String timeStr = selectStockNotify.getTime();
 		
-		Transaction.SelectStockCompleteNotify.Builder msg_builder = Transaction.SelectStockCompleteNotify.newBuilder();
-		msg_builder.setDate(dateStr);
-		msg_builder.setTime(timeStr);
-		Transaction.SelectStockCompleteNotify msg = msg_builder.build();
-		BEventSys.EventSender cSender = new BEventSys.EventSender();
-		cSender.Send("BEV_TRAN_SELECTSTOCKCOMPLETENOTIFY", msg);
+		m_qThread.postRequest(new SelectWorkRequest(dateStr, timeStr));
 	}
 	
 	// event receiver
 	private EventReceiver m_eventRecever;
+	private BQThread m_qThread;
 }

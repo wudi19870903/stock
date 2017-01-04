@@ -8,11 +8,11 @@ public class GlobalStockObj {
 	/*
 	 * StockIDSet
 	 */
-	public static void setStockIDSet(List<String> stockSet)
+	public static void setTranStockIDSet(List<String> stockSet)
 	{
 		s_stockIDSet = stockSet;
 	}
-	public static List<String> getStockIDSet()
+	public static List<String> getTranStockIDSet()
 	{
 		return s_stockIDSet;
 	}

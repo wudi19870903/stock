@@ -8,6 +8,4 @@ public class ModuleStockDataIF extends BModuleInterface {
 	{
 		return true;
 	}
-	
-	public 
 }

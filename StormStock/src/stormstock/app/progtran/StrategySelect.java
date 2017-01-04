@@ -1,11 +1,15 @@
 package stormstock.app.progtran;
-import stormstock.fw.tran.Context;
+import java.util.List;
+
+import stormstock.analysis.ANLStock;
+import stormstock.fw.stockdata.StockDay;
 import stormstock.fw.tran.IStrategySelect;
+import stormstock.fw.tran.StockContext;
 
 public class StrategySelect extends IStrategySelect {
 
 	@Override
-	public void strategy_select(Context ctx, SelectResult out_sr) {
+	public void strategy_select(StockContext ctx, SelectResult out_sr) {
 		// 特征：价值位置250日周期
 		float EigenPriceLocLong = 0;
 		// 离60日均线偏离百分比

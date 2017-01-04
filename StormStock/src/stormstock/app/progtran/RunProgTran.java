@@ -11,10 +11,13 @@ public class RunProgTran {
 	public static void main(String[] args) {
 		BLog.output("TEST", "--->>> MainBegin\n");
 		
-		//BLog.config_setTag("EVENT", true);
 		//BLog.config_setTag("BASE", true);
+		//BLog.config_setTag("EVENT", true);
 		BLog.config_setTag("CTRL", true);
 		//BLog.config_setTag("STOCKDATA", true);
+		BLog.config_setTag("SELECT", true);
+		
+		
 				
 		TranEngine cTranEngine = new TranEngine();
 

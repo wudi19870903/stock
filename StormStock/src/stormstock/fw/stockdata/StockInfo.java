@@ -1,25 +1,34 @@
 package stormstock.fw.stockdata;
 
 public class StockInfo {
-	public String name;
-	public float price; // 元
-	public float allMarketValue; // 亿
-	public float circulatedMarketValue; // 亿
-	public float peRatio;
+
 	public StockInfo()
 	{
+		ID = "";
 		name = "";
 		price = 0.0f;
 		allMarketValue = 0.0f;
 		circulatedMarketValue = 0.0f;
 		peRatio = 0.0f;
 	}
+	
 	public void CopyFrom(StockInfo cCopyFromObj)
 	{
-		name = cCopyFromObj.name;
-		price = cCopyFromObj.price;
-		allMarketValue = cCopyFromObj.allMarketValue;
-		circulatedMarketValue = cCopyFromObj.circulatedMarketValue;
-		peRatio = cCopyFromObj.peRatio;
+		if(null != cCopyFromObj)
+		{
+			ID = cCopyFromObj.ID;
+			name = cCopyFromObj.name;
+			price = cCopyFromObj.price;
+			allMarketValue = cCopyFromObj.allMarketValue;
+			circulatedMarketValue = cCopyFromObj.circulatedMarketValue;
+			peRatio = cCopyFromObj.peRatio;
+		}
 	}
+	
+	public String ID;
+	public String name;
+	public float price; // 元
+	public float allMarketValue; // 亿
+	public float circulatedMarketValue; // 亿
+	public float peRatio;
 }

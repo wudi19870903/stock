@@ -172,43 +172,6 @@ public class Stock {
 		}
 	}
 	
-	public StockDetailDay getDetailDay(String date)
-	{
-		StockDetailDay cStockDetailDay = new StockDetailDay();
-		
-		StockDay cDayKData = GetDayK(date);
-		if(null != cDayKData && date.length() == 6)
-		{
-			// load new detail data
-			List<ExKData> retList = new ArrayList<ExKData>();
-			int ret = DataEngine.get1MinKDataOneDay(id, date, retList);
-			if(0 == ret && retList.size() != 0)
-			{
-				// 由于可能是复权价位，需要重新计算相对价格
-				float baseOpenPrice = cDayKData.open;
-				float actruaFirstPrice = retList.get(0).open;
-				for(int i = 0; i < retList.size(); i++)  
-		        {  
-					ExKData cExKData = retList.get(i);  
-//		            System.out.println(cExKData.datetime + "," 
-//		            		+ cExKData.open + "," + cExKData.close + "," 
-//		            		+ cExKData.low + "," + cExKData.high + "," 
-//		            		+ cExKData.volume);  
-					
-					float actrualprice = cExKData.close;
-					float changeper = (actrualprice - actruaFirstPrice)/actruaFirstPrice;
-					float changedprice = baseOpenPrice + baseOpenPrice * changeper;
-					
-					StockDetailTime cStockDetailTime = new StockDetailTime();
-					cStockDetailTime.price = changedprice;
-					cStockDetailTime.time = cExKData.getTime();
-					cStockDetailDay.detailDataList.add(cStockDetailTime);
-		        } 
-			}
-		}
-		return cStockDetailDay;
-	}
-	
 	public String id;
 	public StockInfo latestInfo; // 最新基本信息
 	public List<StockDay> historyData; // 股票历史数据

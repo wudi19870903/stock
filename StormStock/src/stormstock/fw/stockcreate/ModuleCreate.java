@@ -46,7 +46,7 @@ public class ModuleCreate extends BModuleBase {
 	public void onStockCreateNotify(com.google.protobuf.GeneratedMessage m) {
 		Transaction.StockCreateNotify stockCreateNotify = (Transaction.StockCreateNotify)m;
 
-		BLog.output("SELECT", "ModuleCreate onStockCreateNotify\n");
+		BLog.output("CREATE", "ModuleCreate onStockCreateNotify\n");
 		String dateStr = stockCreateNotify.getDate();
 		String timeStr = stockCreateNotify.getTime();
 		

@@ -18,6 +18,7 @@ import stormstock.fw.objmgr.GlobalUserObj;
 import stormstock.fw.stockdata.Stock;
 import stormstock.fw.stockdata.StockDataProvider;
 import stormstock.fw.stockdata.StockDay;
+import stormstock.fw.stockdata.StockInfo;
 import stormstock.fw.stockdata.StockUtils;
 import stormstock.fw.tran.ITranStockSetFilter;
 import stormstock.fw.tran.TranEngine.TRANMODE;
@@ -222,20 +223,38 @@ public class WorkEntity {
 	{
 		ITranStockSetFilter cTranStockSetFilter = GlobalUserObj.getCurrentTranStockSetFilter();
 		
-		List<String> cStockSet = new ArrayList<String>();
+		List<String> cStockIDSet = new ArrayList<String>();
 		
-		List<String> cStockAllList = StockDataProvider.getAllStocks();
+		// 缓存所有ID
+		if(!StockDataProvider.isCachedAllStockID())
+		{
+			List<String> cStockAllList = StockDataProvider.getAllStockID();
+			StockDataProvider.cacheAllStockID(cStockAllList);
+		}
+		
+		List<String> cStockAllList = StockDataProvider.getAllStockID();
+		
 		for(int i=0; i<cStockAllList.size();i++)
 		{
-			String stockId = cStockAllList.get(i);
-			Stock cStock = StockDataProvider.getStock(stockId);
-			if(null != cStock && cTranStockSetFilter.strategy_stockset(cStock))
+			String stockID = cStockAllList.get(i);
+			StockInfo cStockInfo = StockDataProvider.getLatestStockInfo(stockID);
+
+			if(null != cStockInfo && cTranStockSetFilter.tran_stockset_byLatestInfo(cStockInfo))
 			{
-				cStockSet.add(stockId);
+				
+				
+				// 缓存交易集股票的基本信息
+				if(!StockDataProvider.isLatestStockInfo(stockID))
+				{
+					StockDataProvider.cacheLatestStockInfo(cStockInfo);
+				}
+				
+				cStockIDSet.add(stockID);
+				
 			}
 		}
-		GlobalStockObj.setStockIDSet(cStockSet);
-		return cStockSet.size();
+		GlobalStockObj.setTranStockIDSet(cStockIDSet);
+		return cStockIDSet.size();
 	}
 	
 	// 基本参数
