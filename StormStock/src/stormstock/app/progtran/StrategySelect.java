@@ -3,8 +3,8 @@ import java.util.List;
 
 import stormstock.analysis.ANLStock;
 import stormstock.fw.stockdata.StockDay;
-import stormstock.fw.tran.IStrategySelect;
-import stormstock.fw.tran.StockContext;
+import stormstock.fw.tran.strategy.IStrategySelect;
+import stormstock.fw.tran.strategy.StockContext;
 
 public class StrategySelect extends IStrategySelect {
 

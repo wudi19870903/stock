@@ -1,4 +1,4 @@
-package stormstock.fw.tran;
+package stormstock.fw.tran.strategy;
 
 abstract public class IStrategyCreate {
 	// 建仓下单策略

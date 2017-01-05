@@ -1,8 +1,8 @@
 package stormstock.fw.objmgr;
 
-import stormstock.fw.tran.IStrategyClear;
-import stormstock.fw.tran.IStrategyCreate;
-import stormstock.fw.tran.IStrategySelect;
+import stormstock.fw.tran.strategy.IStrategyClear;
+import stormstock.fw.tran.strategy.IStrategyCreate;
+import stormstock.fw.tran.strategy.IStrategySelect;
 import stormstock.fw.tran.ITranStockSetFilter;
 
 public class GlobalUserObj {

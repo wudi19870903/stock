@@ -16,6 +16,12 @@ import stormstock.fw.report.ReportModule;
 import stormstock.fw.stockclear.ModuleClear;
 import stormstock.fw.stockcreate.ModuleCreate;
 import stormstock.fw.stockselect.ModuleSelector;
+import stormstock.fw.tran.strategy.DefaultStrategyClear;
+import stormstock.fw.tran.strategy.DefaultStrategyCreate;
+import stormstock.fw.tran.strategy.DefaultStrategySelect;
+import stormstock.fw.tran.strategy.IStrategyClear;
+import stormstock.fw.tran.strategy.IStrategyCreate;
+import stormstock.fw.tran.strategy.IStrategySelect;
 import stormstock.fw.stockdata.ModuleStockData;
 
 public class TranEngine {

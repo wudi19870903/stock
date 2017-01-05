@@ -251,10 +251,8 @@ public class StockDataProvider {
 			
 		Stock cStock = new Stock();
 		
-		cStock.id = id;
-		
 		StockInfo cStockInfo = getLatestStockInfo(id);
-		cStock.latestInfo.CopyFrom(cStockInfo);
+		cStock.getCurLatestStockInfo().CopyFrom(cStockInfo);
 		
 		for(int i = 0; i < retList.size(); i++)  
         {  
@@ -271,7 +269,7 @@ public class StockDataProvider {
 				cStockDay.volume = cDayKData.volume;
 //		            System.out.println(cDayKData.date + "," 
 //		            		+ cDayKData.open + "," + cDayKData.close); 
-				cStock.historyData.add(cStockDay);
+				cStock.getCurStockDayData().add(cStockDay);
 			}
         } 
 		

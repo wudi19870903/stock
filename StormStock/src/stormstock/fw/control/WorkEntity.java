@@ -36,12 +36,12 @@ public class WorkEntity {
 		{
 			m_hisTranDate = new ArrayList<String>();
 			Stock cStockShangZheng = StockDataProvider.getStock("999999");
-			int iB = StockUtils.indexDayKAfterDate(cStockShangZheng.historyData, m_beginDate);
-			int iE = StockUtils.indexDayKBeforeDate(cStockShangZheng.historyData, m_endDate);
+			int iB = StockUtils.indexDayKAfterDate(cStockShangZheng.getCurStockDayData(), m_beginDate);
+			int iE = StockUtils.indexDayKBeforeDate(cStockShangZheng.getCurStockDayData(), m_endDate);
 			
 			for(int i = iB; i <= iE; i++)  
 	        {  
-				StockDay cStockDayShangZheng = cStockShangZheng.historyData.get(i);  
+				StockDay cStockDayShangZheng = cStockShangZheng.getCurStockDayData().get(i);  
 				String curDateStr = cStockDayShangZheng.date;
 				m_hisTranDate.add(curDateStr);
 	        }
@@ -239,7 +239,7 @@ public class WorkEntity {
 			String stockID = cStockAllList.get(i);
 			StockInfo cStockInfo = StockDataProvider.getLatestStockInfo(stockID);
 
-			if(null != cStockInfo && cTranStockSetFilter.tran_stockset_byLatestInfo(cStockInfo))
+			if(null != cStockInfo && cTranStockSetFilter.tran_stockset_byLatestStockInfo(cStockInfo))
 			{
 				
 				

@@ -9,12 +9,13 @@ import stormstock.fw.base.BQThread.BQThreadRequest;
 import stormstock.fw.event.Transaction;
 import stormstock.fw.objmgr.GlobalStockObj;
 import stormstock.fw.objmgr.GlobalUserObj;
+import stormstock.fw.stockdata.Stock;
 import stormstock.fw.stockdata.StockDataProvider;
 import stormstock.fw.stockdata.StockDay;
 import stormstock.fw.stockdata.StockInfo;
-import stormstock.fw.tran.IStrategySelect;
-import stormstock.fw.tran.IStrategySelect.SelectResult;
-import stormstock.fw.tran.StockContext;
+import stormstock.fw.tran.strategy.IStrategySelect;
+import stormstock.fw.tran.strategy.IStrategySelect.SelectResult;
+import stormstock.fw.tran.strategy.StockContext;
 
 public class SelectWorkRequest extends BQThreadRequest {
 	
@@ -51,12 +52,13 @@ public class SelectWorkRequest extends BQThreadRequest {
 					StockInfo cStockInfo = StockDataProvider.getLatestStockInfo(stockID);
 					
 					
-					
 					StockContext ctx = new StockContext();
-					ctx.setDate(m_date);
-					ctx.setTime(m_time);
-					ctx.setCurStockDayData(cStockDayList);
-					ctx.setCurStockInfo(cStockInfo);
+					Stock cStock = new Stock();
+					cStock.setDate(m_date);
+					cStock.setTime(m_time);
+					cStock.setCurStockDayData(cStockDayList);
+					cStock.setCurLatestStockInfo(cStockInfo);
+					ctx.setCurStock(cStock);
 					
 					SelectResult selectRes = new SelectResult();
 					

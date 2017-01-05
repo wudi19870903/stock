@@ -1,4 +1,4 @@
-package stormstock.fw.tran;
+package stormstock.fw.tran.strategy;
 
 public class DefaultStrategyCreate extends IStrategyCreate {
 

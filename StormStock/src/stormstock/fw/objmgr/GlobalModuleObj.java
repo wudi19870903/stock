@@ -4,10 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import stormstock.fw.base.BModuleBase;
-import stormstock.fw.tran.IStrategyClear;
-import stormstock.fw.tran.IStrategyCreate;
-import stormstock.fw.tran.IStrategySelect;
-import stormstock.fw.tran.ITranStockSetFilter;
 
 public class GlobalModuleObj {
 	/*
