@@ -3,6 +3,10 @@ package stormstock.fw.stockdata;
 import java.util.ArrayList;
 import java.util.List;
 
+import stormstock.analysis.ANLEigen;
+import stormstock.fw.objmgr.GlobalUserObj;
+import stormstock.fw.tran.eigen.IEigenStock;
+
 public class Stock {
 	
 	public Stock()
@@ -145,6 +149,14 @@ public class Stock {
 		{
 			return null;
 		}
+	}
+	
+	public Object getEngen(String name, Object... args)
+	{
+		IEigenStock cIEigenStock = GlobalUserObj.getStockEigen(name);
+		if(null == cIEigenStock) return null;
+		Object engenObj = cIEigenStock.calc(this, args);
+		return engenObj;
 	}
 	
 	/*

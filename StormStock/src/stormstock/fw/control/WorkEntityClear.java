@@ -15,7 +15,7 @@ public class WorkEntityClear {
 		m_reqClearDate = dateStr;
 		m_reqClearTime = timeStr;
 		String reqClearDateTime = m_reqClearDate + " " + m_reqClearTime;
-		BLog.output("CTRL", "    - reqClearDateTime [%s]\n", reqClearDateTime);
+		// BLog.output("CTRL", "    - reqClearDateTime [%s]\n", reqClearDateTime);
 		
 		Transaction.StockClearNotify.Builder msg_builder = Transaction.StockClearNotify.newBuilder();
 		msg_builder.setDate(dateStr);
@@ -34,7 +34,7 @@ public class WorkEntityClear {
 		String clearedDateTime = clearedDate + " " + clearedTime;
 		String reqClearDateTime = m_reqClearDate + " " + m_reqClearTime;
 
-		BLog.output("CTRL", "    - clearedDateTime [%s]\n", clearedDateTime);
+		BLog.output("CTRL", "    clearedDateTime [%s]\n", clearedDateTime);
 		if(clearedDateTime.compareTo(reqClearDateTime) == 0)
 		{
 			m_WaitObjForClear.Notify();

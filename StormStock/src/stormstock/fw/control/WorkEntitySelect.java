@@ -1,9 +1,12 @@
 package stormstock.fw.control;
 
+import java.util.List;
+
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BWaitObj;
 import stormstock.fw.event.Transaction;
+import stormstock.fw.objmgr.GlobalStockObj;
 
 public class WorkEntitySelect {
 	public WorkEntitySelect()
@@ -15,7 +18,7 @@ public class WorkEntitySelect {
 		m_reqSelectDate = dateStr;
 		m_reqSelectTime = timeStr;
 		String reqSelectDateTime = m_reqSelectDate + " " + m_reqSelectTime;
-		BLog.output("CTRL", "    - reqSelectDateTime [%s]\n", reqSelectDateTime);
+		BLog.output("CTRL", "    reqSelectDateTime [%s]\n", reqSelectDateTime);
 		
 		Transaction.SelectStockNotify.Builder msg_builder = Transaction.SelectStockNotify.newBuilder();
 		msg_builder.setDate(dateStr);
@@ -31,10 +34,29 @@ public class WorkEntitySelect {
 		Transaction.SelectStockCompleteNotify msg = (Transaction.SelectStockCompleteNotify)m;
 		String selectedDate = msg.getDate();
 		String selectedTime = msg.getTime();
+		List<String> cSelectedIDList = msg.getSelectedIDList();
 		String selectedDateTime = selectedDate + " " + selectedTime;
 		String reqSelectDateTime = m_reqSelectDate + " " + m_reqSelectTime;
-
-		BLog.output("CTRL", "    - selectedDateTime [%s]\n", selectedDateTime);
+		
+		String logStr = "";
+		logStr += String.format("    select(%d) [ ", cSelectedIDList.size());
+		if(cSelectedIDList.size() == 0) logStr += "null ";
+		for(int i=0; i< cSelectedIDList.size(); i++)
+		{
+			String stockId = cSelectedIDList.get(i);
+			logStr += String.format("%s ", stockId);
+			if (i >= 7 && cSelectedIDList.size()-1 > 8) {
+				logStr += String.format("... ", stockId);
+				break;
+			}
+		}
+		logStr += String.format("]");
+		
+		BLog.output("CTRL", "%s\n", logStr);
+		
+		// 保存到全局对象
+		GlobalStockObj.setStockIDSelect(cSelectedIDList);
+		
 		if(selectedDateTime.compareTo(reqSelectDateTime) == 0)
 		{
 			m_WaitObjForSelect.Notify();

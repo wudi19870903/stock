@@ -1,6 +1,8 @@
 package stormstock.fw.stockselect;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import stormstock.fw.base.BEventSys;
@@ -19,64 +21,94 @@ import stormstock.fw.tran.strategy.StockContext;
 
 public class SelectWorkRequest extends BQThreadRequest {
 	
+	/*
+	 * SelectResultWrapper类，用于选股优先级排序
+	 */
+	static private class SelectResultWrapper {
+		public SelectResultWrapper(){
+			selectRes = new SelectResult();
+		}
+		// 优先级从大到小排序
+		static public class SelectResultCompare implements Comparator 
+		{
+			public int compare(Object object1, Object object2) {
+				SelectResultWrapper c1 = (SelectResultWrapper)object1;
+				SelectResultWrapper c2 = (SelectResultWrapper)object2;
+				int iCmp = Float.compare(c1.selectRes.fPriority, c2.selectRes.fPriority);
+				if(iCmp > 0) 
+					return -1;
+				else if(iCmp < 0) 
+					return 1;
+				else
+					return 0;
+			}
+		}
+		public String stockId;
+		public SelectResult selectRes;
+	}
+	
 	public SelectWorkRequest(String date, String time)
 	{
 		m_date = date;
 		m_time = time;
 	}
 	@Override
-	public void doAction() {
+	public void doAction() 
+	{
 		BLog.output("SELECT", "WorkRequest.doAction [%s %s]\n", m_date, m_time);
 		
-		List<String> selectList = new ArrayList<String>();
+		IStrategySelect cIStrategySelect = GlobalUserObj.getCurrentStrategySelect();
+		List<String> cTranStockIDSet = GlobalStockObj.getTranStockIDSet();
 		
+		// 回调给用户生成cSelectResultWrapperList后进行排序
+		List<SelectResultWrapper> cSelectResultWrapperList = new ArrayList<SelectResultWrapper>();
+		if(null!=cTranStockIDSet)
 		{
-			IStrategySelect cIStrategySelect = GlobalUserObj.getCurrentStrategySelect();
-			List<String> cTranStockIDSet = GlobalStockObj.getTranStockIDSet();
-			if(null!=cTranStockIDSet && null!=cIStrategySelect)
+			for(int i=0; i<cTranStockIDSet.size(); i++)
 			{
-				for(int i=0; i<cTranStockIDSet.size(); i++)
+				String stockID = cTranStockIDSet.get(i);
+				SelectResultWrapper cSRW = new SelectResultWrapper();
+				cSRW.stockId = stockID;
+				
+				// 缓存交易股票的所有历史数据
+				if(!StockDataProvider.isCachedStockDayData(stockID))
 				{
-					String stockID = cTranStockIDSet.get(i);
-					
-					// 缓存交易股票的所有历史数据
-					if(!StockDataProvider.isCachedStockDayData(stockID))
-					{
-						List<StockDay> cStockDayList = StockDataProvider.getHistoryData(stockID);
-						StockDataProvider.cacheHistoryData(stockID, cStockDayList);
-					}
-					
-					// 进行选股
-					
-					List<StockDay> cStockDayList = StockDataProvider.getHistoryData(stockID, m_date);
-					StockInfo cStockInfo = StockDataProvider.getLatestStockInfo(stockID);
-					
-					
-					StockContext ctx = new StockContext();
-					Stock cStock = new Stock();
-					cStock.setDate(m_date);
-					cStock.setTime(m_time);
-					cStock.setCurStockDayData(cStockDayList);
-					cStock.setCurLatestStockInfo(cStockInfo);
-					ctx.setCurStock(cStock);
-					
-					SelectResult selectRes = new SelectResult();
-					
-					cIStrategySelect.strategy_select(ctx, selectRes);
-					
-					if(selectRes.bSelect == true)
-					{
-						selectList.add(stockID);
-						BLog.output("TEST", "selectList %d\n", stockID);
-					}
+					List<StockDay> cStockDayList = StockDataProvider.getHistoryData(stockID);
+					StockDataProvider.cacheHistoryData(stockID, cStockDayList);
+				}
+				
+				// 构造当时股票数据
+				Stock cStock = new Stock();
+				List<StockDay> cStockDayList = StockDataProvider.getHistoryData(stockID, m_date);
+				StockInfo cStockInfo = StockDataProvider.getLatestStockInfo(stockID);
+				StockContext ctx = new StockContext();
+				cStock.setDate(m_date);
+				cStock.setTime(m_time);
+				cStock.setCurStockDayData(cStockDayList);
+				cStock.setCurLatestStockInfo(cStockInfo);
+				ctx.setCurStock(cStock);
+				
+				// 进行用户选股
+				cIStrategySelect.strategy_select(ctx, cSRW.selectRes);
+				
+				// 如果选择后，把结果添加到cSelectResultWrapperList
+				if(cSRW.selectRes.bSelect){
+					cSelectResultWrapperList.add(cSRW);
 				}
 			}
+			Collections.sort(cSelectResultWrapperList, new SelectResultWrapper.SelectResultCompare());
 		}
+		
 		
 		
 		Transaction.SelectStockCompleteNotify.Builder msg_builder = Transaction.SelectStockCompleteNotify.newBuilder();
 		msg_builder.setDate(m_date);
 		msg_builder.setTime(m_time);
+		for(int i=0; i<cSelectResultWrapperList.size(); i++)
+		{
+			msg_builder.addSelectedID(cSelectResultWrapperList.get(i).stockId);
+		}
+		
 		Transaction.SelectStockCompleteNotify msg = msg_builder.build();
 		BEventSys.EventSender cSender = new BEventSys.EventSender();
 		cSender.Send("BEV_TRAN_SELECTSTOCKCOMPLETENOTIFY", msg);

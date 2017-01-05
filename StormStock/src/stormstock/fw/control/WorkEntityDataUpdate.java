@@ -15,7 +15,7 @@ public class WorkEntityDataUpdate {
 		m_reqUpdateDate = dateStr;
 		m_reqUpdateTime = timeStr;
 		String reqUpdateDateTime = m_reqUpdateDate + " " + m_reqUpdateTime;
-		BLog.output("CTRL", "    - reqUpdateDateTime [%s]\n", reqUpdateDateTime);
+		// BLog.output("CTRL", "    - reqUpdateDateTime [%s]\n", reqUpdateDateTime);
 		
 		// 发送数据更新通知
 		Transaction.DataUpdateNotify.Builder msg_builder = Transaction.DataUpdateNotify.newBuilder();
@@ -34,7 +34,7 @@ public class WorkEntityDataUpdate {
 		String updatedTime = msg.getTime();
 		String updatedDateTime = updatedDate + " " + updatedTime;
 		String reqUpdateDateTime = m_reqUpdateDate + " " + m_reqUpdateTime;
-		BLog.output("CTRL", "    - updatedDateTime [%s]\n", updatedDateTime);
+		BLog.output("CTRL", "    updatedDateTime [%s]\n", updatedDateTime);
 		if(updatedDateTime.compareTo(reqUpdateDateTime) >= 0)
 		{
 			m_WaitObjForDataUpate.Notify();

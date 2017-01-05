@@ -15,7 +15,7 @@ public class WorkEntityCreate {
 		m_reqCreateDate = dateStr;
 		m_reqCreateTime = timeStr;
 		String reqCreateDateTime = m_reqCreateDate + " " + m_reqCreateTime;
-		BLog.output("CTRL", "    - reqCreateDateTime [%s]\n", reqCreateDateTime);
+		// BLog.output("CTRL", "    - reqCreateDateTime [%s]\n", reqCreateDateTime);
 		
 		Transaction.StockCreateNotify.Builder msg_builder = Transaction.StockCreateNotify.newBuilder();
 		msg_builder.setDate(dateStr);
@@ -34,7 +34,7 @@ public class WorkEntityCreate {
 		String createdDateTime = createdDate + " " + createdTime;
 		String reqCreateDateTime = m_reqCreateDate + " " + m_reqCreateTime;
 
-		BLog.output("CTRL", "    - createdDateTime [%s]\n", createdDateTime);
+		BLog.output("CTRL", "    createdDateTime [%s]\n", createdDateTime);
 		if(createdDateTime.compareTo(reqCreateDateTime) == 0)
 		{
 			m_WaitObjForCreate.Notify();

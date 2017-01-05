@@ -55,36 +55,34 @@ public class ModuleController extends BModuleBase {
 	// callback
 	public void onTranStartNotify(com.google.protobuf.GeneratedMessage m) {
 		Transaction.ControllerStartNotify startNotify = (Transaction.ControllerStartNotify)m;
-
-		BLog.output("CTRL", "    Controller onTranStartNotify\n");
-		
+		// BLog.output("CTRL", "    Controller onTranStartNotify\n");
 		m_cWorkThread = new WorkThread(startNotify);
 		m_cWorkThread.startThread();
 
 	}
 	public void onDataUpdateCompleteNotify(com.google.protobuf.GeneratedMessage m) {
-		BLog.output("CTRL", "    Controller onDataUpdateCompleteNotify\n");
+		// BLog.output("CTRL", "    Controller onDataUpdateCompleteNotify\n");
 		if(null != m_cWorkThread)
 		{
 			m_cWorkThread.onDataUpdateCompleteNotify(m);
 		}
 	}
 	public void onSelectStockCompleteNotify(com.google.protobuf.GeneratedMessage m) {
-		BLog.output("CTRL", "    Controller onSelectStockCompleteNotify\n");
+		// BLog.output("CTRL", "    Controller onSelectStockCompleteNotify\n");
 		if(null != m_cWorkThread)
 		{
 			m_cWorkThread.onSelectStockCompleteNotify(m);
 		}
 	}
 	public void onStockCreateCompleteNotify(com.google.protobuf.GeneratedMessage m) {
-		BLog.output("CTRL", "    Controller onStockCreateCompleteNotify\n");
+		// BLog.output("CTRL", "    Controller onStockCreateCompleteNotify\n");
 		if(null != m_cWorkThread)
 		{
 			m_cWorkThread.onStockCreateCompleteNotify(m);
 		}
 	}
 	public void onStockClearCompleteNotify(com.google.protobuf.GeneratedMessage m) {
-		BLog.output("CTRL", "    Controller onStockClearCompleteNotify\n");
+		// BLog.output("CTRL", "    Controller onStockClearCompleteNotify\n");
 		if(null != m_cWorkThread)
 		{
 			m_cWorkThread.onStockClearCompleteNotify(m);

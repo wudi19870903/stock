@@ -4,6 +4,6 @@ import java.util.List;
 
 import stormstock.fw.stockdata.Stock;
 
-abstract public class IEigenStockDayList {
+abstract public class IEigenStock {
 	abstract public Object calc(Stock cStock, Object... args);
 }

@@ -3,7 +3,11 @@ package stormstock.fw.objmgr;
 import stormstock.fw.tran.strategy.IStrategyClear;
 import stormstock.fw.tran.strategy.IStrategyCreate;
 import stormstock.fw.tran.strategy.IStrategySelect;
+
+import java.util.Map;
+
 import stormstock.fw.tran.ITranStockSetFilter;
+import stormstock.fw.tran.eigen.IEigenStock;
 
 public class GlobalUserObj {
 	/*
@@ -57,4 +61,21 @@ public class GlobalUserObj {
 		s_strategyClear = strategyClear;
 	}
 	private static IStrategyClear s_strategyClear = null;
+	
+	/*
+	 * CurrentStockEigenMap
+	 */
+	public static IEigenStock getStockEigen(String name)
+	{
+		if(s_cStockEigenMap.containsKey(name))
+		{
+			return s_cStockEigenMap.get(name);
+		}
+		return null;
+	}
+	public static void setCurrentStockEigenMap(Map<String, IEigenStock> cStockEigenMap)
+	{
+		s_cStockEigenMap = cStockEigenMap;
+	}
+	private static Map<String, IEigenStock> s_cStockEigenMap;
 }

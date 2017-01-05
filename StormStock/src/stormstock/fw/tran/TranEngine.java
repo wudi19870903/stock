@@ -1,5 +1,8 @@
 package stormstock.fw.tran;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import stormstock.fw.acc.AccountModule;
 import stormstock.fw.acc.IAccount;
 import stormstock.fw.base.BEventSys;
@@ -16,6 +19,7 @@ import stormstock.fw.report.ReportModule;
 import stormstock.fw.stockclear.ModuleClear;
 import stormstock.fw.stockcreate.ModuleCreate;
 import stormstock.fw.stockselect.ModuleSelector;
+import stormstock.fw.tran.eigen.IEigenStock;
 import stormstock.fw.tran.strategy.DefaultStrategyClear;
 import stormstock.fw.tran.strategy.DefaultStrategyCreate;
 import stormstock.fw.tran.strategy.DefaultStrategySelect;
@@ -66,6 +70,7 @@ public class TranEngine {
 		m_beginDate = null; 
 		m_endDate = null; 
 		m_cAcc = null; 
+		m_cEigenMap = new HashMap<String, IEigenStock>();
 	}
 	
 	public void onTranEngineExitNotify(com.google.protobuf.GeneratedMessage msg) {
@@ -140,6 +145,12 @@ public class TranEngine {
 		m_cAcc = cAcc;
 	}
 	
+	public void addStockEigen(IEigenStock cIEigenStock)
+	{
+		String name = cIEigenStock.getClass().getSimpleName();
+		m_cEigenMap.put(name, cIEigenStock);
+	}
+	
 	public void run()
 	{
 		if(null == m_cTranStockSet)
@@ -174,6 +185,7 @@ public class TranEngine {
 		GlobalUserObj.setCurrentStrategySelect(m_cStrategySelect);
 		GlobalUserObj.setCurrentStrategyCreate(m_cStrategyCreate);
 		GlobalUserObj.setCurrentStrategyClear(m_cStrategyClear);
+		GlobalUserObj.setCurrentStockEigenMap(m_cEigenMap);
 		
 		// 发送开始交易命令到控制器
 		BLog.output("TRAN", "Start Trasection\n");
@@ -214,6 +226,7 @@ public class TranEngine {
 	String                   m_beginDate;
 	String                   m_endDate;
 	IAccount                 m_cAcc;
+	Map<String, IEigenStock> m_cEigenMap;
 	
 	// module manager
 	private BModuleManager m_cModuleMgr;

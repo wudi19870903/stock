@@ -2361,6 +2361,11 @@ public final class Transaction {
     // required string time = 2;
     boolean hasTime();
     String getTime();
+    
+    // repeated string selectedID = 3;
+    java.util.List<String> getSelectedIDList();
+    int getSelectedIDCount();
+    String getSelectedID(int index);
   }
   public static final class SelectStockCompleteNotify extends
       com.google.protobuf.GeneratedMessage
@@ -2455,9 +2460,24 @@ public final class Transaction {
       }
     }
     
+    // repeated string selectedID = 3;
+    public static final int SELECTEDID_FIELD_NUMBER = 3;
+    private com.google.protobuf.LazyStringList selectedID_;
+    public java.util.List<String>
+        getSelectedIDList() {
+      return selectedID_;
+    }
+    public int getSelectedIDCount() {
+      return selectedID_.size();
+    }
+    public String getSelectedID(int index) {
+      return selectedID_.get(index);
+    }
+    
     private void initFields() {
       date_ = "";
       time_ = "";
+      selectedID_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -2485,6 +2505,9 @@ public final class Transaction {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeBytes(2, getTimeBytes());
       }
+      for (int i = 0; i < selectedID_.size(); i++) {
+        output.writeBytes(3, selectedID_.getByteString(i));
+      }
       getUnknownFields().writeTo(output);
     }
     
@@ -2501,6 +2524,15 @@ public final class Transaction {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(2, getTimeBytes());
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < selectedID_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(selectedID_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getSelectedIDList().size();
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2630,6 +2662,8 @@ public final class Transaction {
         bitField0_ = (bitField0_ & ~0x00000001);
         time_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
+        selectedID_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
       
@@ -2676,6 +2710,12 @@ public final class Transaction {
           to_bitField0_ |= 0x00000002;
         }
         result.time_ = time_;
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          selectedID_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              selectedID_);
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.selectedID_ = selectedID_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -2697,6 +2737,16 @@ public final class Transaction {
         }
         if (other.hasTime()) {
           setTime(other.getTime());
+        }
+        if (!other.selectedID_.isEmpty()) {
+          if (selectedID_.isEmpty()) {
+            selectedID_ = other.selectedID_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureSelectedIDIsMutable();
+            selectedID_.addAll(other.selectedID_);
+          }
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -2745,6 +2795,11 @@ public final class Transaction {
             case 18: {
               bitField0_ |= 0x00000002;
               time_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              ensureSelectedIDIsMutable();
+              selectedID_.add(input.readBytes());
               break;
             }
           }
@@ -2822,6 +2877,62 @@ public final class Transaction {
       void setTime(com.google.protobuf.ByteString value) {
         bitField0_ |= 0x00000002;
         time_ = value;
+        onChanged();
+      }
+      
+      // repeated string selectedID = 3;
+      private com.google.protobuf.LazyStringList selectedID_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureSelectedIDIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          selectedID_ = new com.google.protobuf.LazyStringArrayList(selectedID_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+      public java.util.List<String>
+          getSelectedIDList() {
+        return java.util.Collections.unmodifiableList(selectedID_);
+      }
+      public int getSelectedIDCount() {
+        return selectedID_.size();
+      }
+      public String getSelectedID(int index) {
+        return selectedID_.get(index);
+      }
+      public Builder setSelectedID(
+          int index, String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureSelectedIDIsMutable();
+        selectedID_.set(index, value);
+        onChanged();
+        return this;
+      }
+      public Builder addSelectedID(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureSelectedIDIsMutable();
+        selectedID_.add(value);
+        onChanged();
+        return this;
+      }
+      public Builder addAllSelectedID(
+          java.lang.Iterable<String> values) {
+        ensureSelectedIDIsMutable();
+        super.addAll(values, selectedID_);
+        onChanged();
+        return this;
+      }
+      public Builder clearSelectedID() {
+        selectedID_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+        return this;
+      }
+      void addSelectedID(com.google.protobuf.ByteString value) {
+        ensureSelectedIDIsMutable();
+        selectedID_.add(value);
         onChanged();
       }
       
@@ -4845,14 +4956,14 @@ public final class Transaction {
       "otify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(\t\"6\n\030Dat" +
       "aUpdateCompleteNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004t" +
       "ime\030\002 \002(\t\"/\n\021SelectStockNotify\022\014\n\004date\030\001",
-      " \002(\t\022\014\n\004time\030\002 \002(\t\"7\n\031SelectStockComplet" +
-      "eNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(\t\"/\n\021S" +
-      "tockCreateNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002" +
-      " \002(\t\"7\n\031StockCreateCompleteNotify\022\014\n\004dat" +
-      "e\030\001 \002(\t\022\014\n\004time\030\002 \002(\t\".\n\020StockClearNotif" +
-      "y\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(\t\"6\n\030StockCl" +
-      "earCompleteNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030" +
-      "\002 \002(\t"
+      " \002(\t\022\014\n\004time\030\002 \002(\t\"K\n\031SelectStockComplet" +
+      "eNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(\t\022\022\n\ns" +
+      "electedID\030\003 \003(\t\"/\n\021StockCreateNotify\022\014\n\004" +
+      "date\030\001 \002(\t\022\014\n\004time\030\002 \002(\t\"7\n\031StockCreateC" +
+      "ompleteNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(" +
+      "\t\".\n\020StockClearNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004t" +
+      "ime\030\002 \002(\t\"6\n\030StockClearCompleteNotify\022\014\n" +
+      "\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -4904,7 +5015,7 @@ public final class Transaction {
           internal_static_stormstock_fw_event_SelectStockCompleteNotify_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_stormstock_fw_event_SelectStockCompleteNotify_descriptor,
-              new java.lang.String[] { "Date", "Time", },
+              new java.lang.String[] { "Date", "Time", "SelectedID", },
               stormstock.fw.event.Transaction.SelectStockCompleteNotify.class,
               stormstock.fw.event.Transaction.SelectStockCompleteNotify.Builder.class);
           internal_static_stormstock_fw_event_StockCreateNotify_descriptor =

@@ -38,6 +38,7 @@ message SelectStockNotify  {
 message SelectStockCompleteNotify  { 
     required string date = 1;
     required string time = 2;
+    repeated string selectedID = 3; 
 }
 
 // ------------------------------------------------------------------
