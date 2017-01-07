@@ -26,4 +26,10 @@ public class StrategySelect extends IStrategySelect {
 		}
 	}
 
+	@Override
+	public int strategy_select_max_count() {
+		// TODO Auto-generated method stub
+		return 5;
+	}
+
 }

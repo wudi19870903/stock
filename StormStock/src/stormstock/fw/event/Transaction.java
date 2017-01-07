@@ -1876,6 +1876,11 @@ public final class Transaction {
     // required string time = 2;
     boolean hasTime();
     String getTime();
+    
+    // repeated string stockID = 3;
+    java.util.List<String> getStockIDList();
+    int getStockIDCount();
+    String getStockID(int index);
   }
   public static final class SelectStockNotify extends
       com.google.protobuf.GeneratedMessage
@@ -1970,9 +1975,24 @@ public final class Transaction {
       }
     }
     
+    // repeated string stockID = 3;
+    public static final int STOCKID_FIELD_NUMBER = 3;
+    private com.google.protobuf.LazyStringList stockID_;
+    public java.util.List<String>
+        getStockIDList() {
+      return stockID_;
+    }
+    public int getStockIDCount() {
+      return stockID_.size();
+    }
+    public String getStockID(int index) {
+      return stockID_.get(index);
+    }
+    
     private void initFields() {
       date_ = "";
       time_ = "";
+      stockID_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -2000,6 +2020,9 @@ public final class Transaction {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeBytes(2, getTimeBytes());
       }
+      for (int i = 0; i < stockID_.size(); i++) {
+        output.writeBytes(3, stockID_.getByteString(i));
+      }
       getUnknownFields().writeTo(output);
     }
     
@@ -2016,6 +2039,15 @@ public final class Transaction {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(2, getTimeBytes());
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < stockID_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(stockID_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getStockIDList().size();
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2145,6 +2177,8 @@ public final class Transaction {
         bitField0_ = (bitField0_ & ~0x00000001);
         time_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
+        stockID_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
       
@@ -2191,6 +2225,12 @@ public final class Transaction {
           to_bitField0_ |= 0x00000002;
         }
         result.time_ = time_;
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          stockID_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              stockID_);
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.stockID_ = stockID_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -2212,6 +2252,16 @@ public final class Transaction {
         }
         if (other.hasTime()) {
           setTime(other.getTime());
+        }
+        if (!other.stockID_.isEmpty()) {
+          if (stockID_.isEmpty()) {
+            stockID_ = other.stockID_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureStockIDIsMutable();
+            stockID_.addAll(other.stockID_);
+          }
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -2260,6 +2310,11 @@ public final class Transaction {
             case 18: {
               bitField0_ |= 0x00000002;
               time_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              ensureStockIDIsMutable();
+              stockID_.add(input.readBytes());
               break;
             }
           }
@@ -2337,6 +2392,62 @@ public final class Transaction {
       void setTime(com.google.protobuf.ByteString value) {
         bitField0_ |= 0x00000002;
         time_ = value;
+        onChanged();
+      }
+      
+      // repeated string stockID = 3;
+      private com.google.protobuf.LazyStringList stockID_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureStockIDIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          stockID_ = new com.google.protobuf.LazyStringArrayList(stockID_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+      public java.util.List<String>
+          getStockIDList() {
+        return java.util.Collections.unmodifiableList(stockID_);
+      }
+      public int getStockIDCount() {
+        return stockID_.size();
+      }
+      public String getStockID(int index) {
+        return stockID_.get(index);
+      }
+      public Builder setStockID(
+          int index, String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureStockIDIsMutable();
+        stockID_.set(index, value);
+        onChanged();
+        return this;
+      }
+      public Builder addStockID(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureStockIDIsMutable();
+        stockID_.add(value);
+        onChanged();
+        return this;
+      }
+      public Builder addAllStockID(
+          java.lang.Iterable<String> values) {
+        ensureStockIDIsMutable();
+        super.addAll(values, stockID_);
+        onChanged();
+        return this;
+      }
+      public Builder clearStockID() {
+        stockID_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+        return this;
+      }
+      void addStockID(com.google.protobuf.ByteString value) {
+        ensureStockIDIsMutable();
+        stockID_.add(value);
         onChanged();
       }
       
@@ -2957,6 +3068,11 @@ public final class Transaction {
     // required string time = 2;
     boolean hasTime();
     String getTime();
+    
+    // repeated string stockID = 3;
+    java.util.List<String> getStockIDList();
+    int getStockIDCount();
+    String getStockID(int index);
   }
   public static final class StockCreateNotify extends
       com.google.protobuf.GeneratedMessage
@@ -3051,9 +3167,24 @@ public final class Transaction {
       }
     }
     
+    // repeated string stockID = 3;
+    public static final int STOCKID_FIELD_NUMBER = 3;
+    private com.google.protobuf.LazyStringList stockID_;
+    public java.util.List<String>
+        getStockIDList() {
+      return stockID_;
+    }
+    public int getStockIDCount() {
+      return stockID_.size();
+    }
+    public String getStockID(int index) {
+      return stockID_.get(index);
+    }
+    
     private void initFields() {
       date_ = "";
       time_ = "";
+      stockID_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -3081,6 +3212,9 @@ public final class Transaction {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeBytes(2, getTimeBytes());
       }
+      for (int i = 0; i < stockID_.size(); i++) {
+        output.writeBytes(3, stockID_.getByteString(i));
+      }
       getUnknownFields().writeTo(output);
     }
     
@@ -3097,6 +3231,15 @@ public final class Transaction {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(2, getTimeBytes());
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < stockID_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(stockID_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getStockIDList().size();
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -3226,6 +3369,8 @@ public final class Transaction {
         bitField0_ = (bitField0_ & ~0x00000001);
         time_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
+        stockID_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
       
@@ -3272,6 +3417,12 @@ public final class Transaction {
           to_bitField0_ |= 0x00000002;
         }
         result.time_ = time_;
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          stockID_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              stockID_);
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.stockID_ = stockID_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -3293,6 +3444,16 @@ public final class Transaction {
         }
         if (other.hasTime()) {
           setTime(other.getTime());
+        }
+        if (!other.stockID_.isEmpty()) {
+          if (stockID_.isEmpty()) {
+            stockID_ = other.stockID_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureStockIDIsMutable();
+            stockID_.addAll(other.stockID_);
+          }
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -3341,6 +3502,11 @@ public final class Transaction {
             case 18: {
               bitField0_ |= 0x00000002;
               time_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              ensureStockIDIsMutable();
+              stockID_.add(input.readBytes());
               break;
             }
           }
@@ -3421,6 +3587,62 @@ public final class Transaction {
         onChanged();
       }
       
+      // repeated string stockID = 3;
+      private com.google.protobuf.LazyStringList stockID_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureStockIDIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          stockID_ = new com.google.protobuf.LazyStringArrayList(stockID_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+      public java.util.List<String>
+          getStockIDList() {
+        return java.util.Collections.unmodifiableList(stockID_);
+      }
+      public int getStockIDCount() {
+        return stockID_.size();
+      }
+      public String getStockID(int index) {
+        return stockID_.get(index);
+      }
+      public Builder setStockID(
+          int index, String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureStockIDIsMutable();
+        stockID_.set(index, value);
+        onChanged();
+        return this;
+      }
+      public Builder addStockID(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureStockIDIsMutable();
+        stockID_.add(value);
+        onChanged();
+        return this;
+      }
+      public Builder addAllStockID(
+          java.lang.Iterable<String> values) {
+        ensureStockIDIsMutable();
+        super.addAll(values, stockID_);
+        onChanged();
+        return this;
+      }
+      public Builder clearStockID() {
+        stockID_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+        return this;
+      }
+      void addStockID(com.google.protobuf.ByteString value) {
+        ensureStockIDIsMutable();
+        stockID_.add(value);
+        onChanged();
+      }
+      
       // @@protoc_insertion_point(builder_scope:stormstock.fw.event.StockCreateNotify)
     }
     
@@ -3442,6 +3664,16 @@ public final class Transaction {
     // required string time = 2;
     boolean hasTime();
     String getTime();
+    
+    // repeated .stormstock.fw.event.StockCreateCompleteNotify.CreateItem item = 3;
+    java.util.List<stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem> 
+        getItemList();
+    stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem getItem(int index);
+    int getItemCount();
+    java.util.List<? extends stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItemOrBuilder> 
+        getItemOrBuilderList();
+    stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItemOrBuilder getItemOrBuilder(
+        int index);
   }
   public static final class StockCreateCompleteNotify extends
       com.google.protobuf.GeneratedMessage
@@ -3469,6 +3701,454 @@ public final class Transaction {
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockCreateCompleteNotify_fieldAccessorTable;
+    }
+    
+    public interface CreateItemOrBuilder
+        extends com.google.protobuf.MessageOrBuilder {
+      
+      // required string stockID = 1;
+      boolean hasStockID();
+      String getStockID();
+      
+      // required float price = 2;
+      boolean hasPrice();
+      float getPrice();
+    }
+    public static final class CreateItem extends
+        com.google.protobuf.GeneratedMessage
+        implements CreateItemOrBuilder {
+      // Use CreateItem.newBuilder() to construct.
+      private CreateItem(Builder builder) {
+        super(builder);
+      }
+      private CreateItem(boolean noInit) {}
+      
+      private static final CreateItem defaultInstance;
+      public static CreateItem getDefaultInstance() {
+        return defaultInstance;
+      }
+      
+      public CreateItem getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+      
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockCreateCompleteNotify_CreateItem_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockCreateCompleteNotify_CreateItem_fieldAccessorTable;
+      }
+      
+      private int bitField0_;
+      // required string stockID = 1;
+      public static final int STOCKID_FIELD_NUMBER = 1;
+      private java.lang.Object stockID_;
+      public boolean hasStockID() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public String getStockID() {
+        java.lang.Object ref = stockID_;
+        if (ref instanceof String) {
+          return (String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+            stockID_ = s;
+          }
+          return s;
+        }
+      }
+      private com.google.protobuf.ByteString getStockIDBytes() {
+        java.lang.Object ref = stockID_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+          stockID_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      
+      // required float price = 2;
+      public static final int PRICE_FIELD_NUMBER = 2;
+      private float price_;
+      public boolean hasPrice() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public float getPrice() {
+        return price_;
+      }
+      
+      private void initFields() {
+        stockID_ = "";
+        price_ = 0F;
+      }
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized != -1) return isInitialized == 1;
+        
+        if (!hasStockID()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        if (!hasPrice()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        memoizedIsInitialized = 1;
+        return true;
+      }
+      
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        getSerializedSize();
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeBytes(1, getStockIDBytes());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          output.writeFloat(2, price_);
+        }
+        getUnknownFields().writeTo(output);
+      }
+      
+      private int memoizedSerializedSize = -1;
+      public int getSerializedSize() {
+        int size = memoizedSerializedSize;
+        if (size != -1) return size;
+      
+        size = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(1, getStockIDBytes());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeFloatSize(2, price_);
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSerializedSize = size;
+        return size;
+      }
+      
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
+      }
+      
+      public static stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return newBuilder().mergeFrom(data).buildParsed();
+      }
+      public static stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return newBuilder().mergeFrom(data, extensionRegistry)
+                 .buildParsed();
+      }
+      public static stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return newBuilder().mergeFrom(data).buildParsed();
+      }
+      public static stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return newBuilder().mergeFrom(data, extensionRegistry)
+                 .buildParsed();
+      }
+      public static stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return newBuilder().mergeFrom(input).buildParsed();
+      }
+      public static stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return newBuilder().mergeFrom(input, extensionRegistry)
+                 .buildParsed();
+      }
+      public static stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        Builder builder = newBuilder();
+        if (builder.mergeDelimitedFrom(input)) {
+          return builder.buildParsed();
+        } else {
+          return null;
+        }
+      }
+      public static stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        Builder builder = newBuilder();
+        if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+          return builder.buildParsed();
+        } else {
+          return null;
+        }
+      }
+      public static stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return newBuilder().mergeFrom(input).buildParsed();
+      }
+      public static stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return newBuilder().mergeFrom(input, extensionRegistry)
+                 .buildParsed();
+      }
+      
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder(stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem prototype) {
+        return newBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() { return newBuilder(this); }
+      
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessage.Builder<Builder>
+         implements stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItemOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockCreateCompleteNotify_CreateItem_descriptor;
+        }
+        
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return stormstock.fw.event.Transaction.internal_static_stormstock_fw_event_StockCreateCompleteNotify_CreateItem_fieldAccessorTable;
+        }
+        
+        // Construct using stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+        
+        private Builder(BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          }
+        }
+        private static Builder create() {
+          return new Builder();
+        }
+        
+        public Builder clear() {
+          super.clear();
+          stockID_ = "";
+          bitField0_ = (bitField0_ & ~0x00000001);
+          price_ = 0F;
+          bitField0_ = (bitField0_ & ~0x00000002);
+          return this;
+        }
+        
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+        
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.getDescriptor();
+        }
+        
+        public stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem getDefaultInstanceForType() {
+          return stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.getDefaultInstance();
+        }
+        
+        public stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem build() {
+          stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+        
+        private stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem buildParsed()
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(
+              result).asInvalidProtocolBufferException();
+          }
+          return result;
+        }
+        
+        public stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem buildPartial() {
+          stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem result = new stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.stockID_ = stockID_;
+          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+            to_bitField0_ |= 0x00000002;
+          }
+          result.price_ = price_;
+          result.bitField0_ = to_bitField0_;
+          onBuilt();
+          return result;
+        }
+        
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem) {
+            return mergeFrom((stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+        
+        public Builder mergeFrom(stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem other) {
+          if (other == stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.getDefaultInstance()) return this;
+          if (other.hasStockID()) {
+            setStockID(other.getStockID());
+          }
+          if (other.hasPrice()) {
+            setPrice(other.getPrice());
+          }
+          this.mergeUnknownFields(other.getUnknownFields());
+          return this;
+        }
+        
+        public final boolean isInitialized() {
+          if (!hasStockID()) {
+            
+            return false;
+          }
+          if (!hasPrice()) {
+            
+            return false;
+          }
+          return true;
+        }
+        
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder(
+              this.getUnknownFields());
+          while (true) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              default: {
+                if (!parseUnknownField(input, unknownFields,
+                                       extensionRegistry, tag)) {
+                  this.setUnknownFields(unknownFields.build());
+                  onChanged();
+                  return this;
+                }
+                break;
+              }
+              case 10: {
+                bitField0_ |= 0x00000001;
+                stockID_ = input.readBytes();
+                break;
+              }
+              case 21: {
+                bitField0_ |= 0x00000002;
+                price_ = input.readFloat();
+                break;
+              }
+            }
+          }
+        }
+        
+        private int bitField0_;
+        
+        // required string stockID = 1;
+        private java.lang.Object stockID_ = "";
+        public boolean hasStockID() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        public String getStockID() {
+          java.lang.Object ref = stockID_;
+          if (!(ref instanceof String)) {
+            String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+            stockID_ = s;
+            return s;
+          } else {
+            return (String) ref;
+          }
+        }
+        public Builder setStockID(String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          stockID_ = value;
+          onChanged();
+          return this;
+        }
+        public Builder clearStockID() {
+          bitField0_ = (bitField0_ & ~0x00000001);
+          stockID_ = getDefaultInstance().getStockID();
+          onChanged();
+          return this;
+        }
+        void setStockID(com.google.protobuf.ByteString value) {
+          bitField0_ |= 0x00000001;
+          stockID_ = value;
+          onChanged();
+        }
+        
+        // required float price = 2;
+        private float price_ ;
+        public boolean hasPrice() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        public float getPrice() {
+          return price_;
+        }
+        public Builder setPrice(float value) {
+          bitField0_ |= 0x00000002;
+          price_ = value;
+          onChanged();
+          return this;
+        }
+        public Builder clearPrice() {
+          bitField0_ = (bitField0_ & ~0x00000002);
+          price_ = 0F;
+          onChanged();
+          return this;
+        }
+        
+        // @@protoc_insertion_point(builder_scope:stormstock.fw.event.StockCreateCompleteNotify.CreateItem)
+      }
+      
+      static {
+        defaultInstance = new CreateItem(true);
+        defaultInstance.initFields();
+      }
+      
+      // @@protoc_insertion_point(class_scope:stormstock.fw.event.StockCreateCompleteNotify.CreateItem)
     }
     
     private int bitField0_;
@@ -3536,9 +4216,31 @@ public final class Transaction {
       }
     }
     
+    // repeated .stormstock.fw.event.StockCreateCompleteNotify.CreateItem item = 3;
+    public static final int ITEM_FIELD_NUMBER = 3;
+    private java.util.List<stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem> item_;
+    public java.util.List<stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem> getItemList() {
+      return item_;
+    }
+    public java.util.List<? extends stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItemOrBuilder> 
+        getItemOrBuilderList() {
+      return item_;
+    }
+    public int getItemCount() {
+      return item_.size();
+    }
+    public stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem getItem(int index) {
+      return item_.get(index);
+    }
+    public stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItemOrBuilder getItemOrBuilder(
+        int index) {
+      return item_.get(index);
+    }
+    
     private void initFields() {
       date_ = "";
       time_ = "";
+      item_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -3553,6 +4255,12 @@ public final class Transaction {
         memoizedIsInitialized = 0;
         return false;
       }
+      for (int i = 0; i < getItemCount(); i++) {
+        if (!getItem(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -3565,6 +4273,9 @@ public final class Transaction {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeBytes(2, getTimeBytes());
+      }
+      for (int i = 0; i < item_.size(); i++) {
+        output.writeMessage(3, item_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -3582,6 +4293,10 @@ public final class Transaction {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(2, getTimeBytes());
+      }
+      for (int i = 0; i < item_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, item_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -3699,6 +4414,7 @@ public final class Transaction {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getItemFieldBuilder();
         }
       }
       private static Builder create() {
@@ -3711,6 +4427,12 @@ public final class Transaction {
         bitField0_ = (bitField0_ & ~0x00000001);
         time_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
+        if (itemBuilder_ == null) {
+          item_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        } else {
+          itemBuilder_.clear();
+        }
         return this;
       }
       
@@ -3757,6 +4479,15 @@ public final class Transaction {
           to_bitField0_ |= 0x00000002;
         }
         result.time_ = time_;
+        if (itemBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+            item_ = java.util.Collections.unmodifiableList(item_);
+            bitField0_ = (bitField0_ & ~0x00000004);
+          }
+          result.item_ = item_;
+        } else {
+          result.item_ = itemBuilder_.build();
+        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -3779,6 +4510,32 @@ public final class Transaction {
         if (other.hasTime()) {
           setTime(other.getTime());
         }
+        if (itemBuilder_ == null) {
+          if (!other.item_.isEmpty()) {
+            if (item_.isEmpty()) {
+              item_ = other.item_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+            } else {
+              ensureItemIsMutable();
+              item_.addAll(other.item_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.item_.isEmpty()) {
+            if (itemBuilder_.isEmpty()) {
+              itemBuilder_.dispose();
+              itemBuilder_ = null;
+              item_ = other.item_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+              itemBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getItemFieldBuilder() : null;
+            } else {
+              itemBuilder_.addAllMessages(other.item_);
+            }
+          }
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -3791,6 +4548,12 @@ public final class Transaction {
         if (!hasTime()) {
           
           return false;
+        }
+        for (int i = 0; i < getItemCount(); i++) {
+          if (!getItem(i).isInitialized()) {
+            
+            return false;
+          }
         }
         return true;
       }
@@ -3826,6 +4589,12 @@ public final class Transaction {
             case 18: {
               bitField0_ |= 0x00000002;
               time_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.Builder subBuilder = stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.newBuilder();
+              input.readMessage(subBuilder, extensionRegistry);
+              addItem(subBuilder.buildPartial());
               break;
             }
           }
@@ -3904,6 +4673,192 @@ public final class Transaction {
         bitField0_ |= 0x00000002;
         time_ = value;
         onChanged();
+      }
+      
+      // repeated .stormstock.fw.event.StockCreateCompleteNotify.CreateItem item = 3;
+      private java.util.List<stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem> item_ =
+        java.util.Collections.emptyList();
+      private void ensureItemIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          item_ = new java.util.ArrayList<stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem>(item_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+      
+      private com.google.protobuf.RepeatedFieldBuilder<
+          stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem, stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.Builder, stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItemOrBuilder> itemBuilder_;
+      
+      public java.util.List<stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem> getItemList() {
+        if (itemBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(item_);
+        } else {
+          return itemBuilder_.getMessageList();
+        }
+      }
+      public int getItemCount() {
+        if (itemBuilder_ == null) {
+          return item_.size();
+        } else {
+          return itemBuilder_.getCount();
+        }
+      }
+      public stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem getItem(int index) {
+        if (itemBuilder_ == null) {
+          return item_.get(index);
+        } else {
+          return itemBuilder_.getMessage(index);
+        }
+      }
+      public Builder setItem(
+          int index, stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem value) {
+        if (itemBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureItemIsMutable();
+          item_.set(index, value);
+          onChanged();
+        } else {
+          itemBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      public Builder setItem(
+          int index, stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.Builder builderForValue) {
+        if (itemBuilder_ == null) {
+          ensureItemIsMutable();
+          item_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          itemBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      public Builder addItem(stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem value) {
+        if (itemBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureItemIsMutable();
+          item_.add(value);
+          onChanged();
+        } else {
+          itemBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      public Builder addItem(
+          int index, stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem value) {
+        if (itemBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureItemIsMutable();
+          item_.add(index, value);
+          onChanged();
+        } else {
+          itemBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      public Builder addItem(
+          stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.Builder builderForValue) {
+        if (itemBuilder_ == null) {
+          ensureItemIsMutable();
+          item_.add(builderForValue.build());
+          onChanged();
+        } else {
+          itemBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      public Builder addItem(
+          int index, stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.Builder builderForValue) {
+        if (itemBuilder_ == null) {
+          ensureItemIsMutable();
+          item_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          itemBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      public Builder addAllItem(
+          java.lang.Iterable<? extends stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem> values) {
+        if (itemBuilder_ == null) {
+          ensureItemIsMutable();
+          super.addAll(values, item_);
+          onChanged();
+        } else {
+          itemBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      public Builder clearItem() {
+        if (itemBuilder_ == null) {
+          item_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+          onChanged();
+        } else {
+          itemBuilder_.clear();
+        }
+        return this;
+      }
+      public Builder removeItem(int index) {
+        if (itemBuilder_ == null) {
+          ensureItemIsMutable();
+          item_.remove(index);
+          onChanged();
+        } else {
+          itemBuilder_.remove(index);
+        }
+        return this;
+      }
+      public stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.Builder getItemBuilder(
+          int index) {
+        return getItemFieldBuilder().getBuilder(index);
+      }
+      public stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItemOrBuilder getItemOrBuilder(
+          int index) {
+        if (itemBuilder_ == null) {
+          return item_.get(index);  } else {
+          return itemBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      public java.util.List<? extends stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItemOrBuilder> 
+           getItemOrBuilderList() {
+        if (itemBuilder_ != null) {
+          return itemBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(item_);
+        }
+      }
+      public stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.Builder addItemBuilder() {
+        return getItemFieldBuilder().addBuilder(
+            stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.getDefaultInstance());
+      }
+      public stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.Builder addItemBuilder(
+          int index) {
+        return getItemFieldBuilder().addBuilder(
+            index, stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.getDefaultInstance());
+      }
+      public java.util.List<stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.Builder> 
+           getItemBuilderList() {
+        return getItemFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem, stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.Builder, stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItemOrBuilder> 
+          getItemFieldBuilder() {
+        if (itemBuilder_ == null) {
+          itemBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem, stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.Builder, stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItemOrBuilder>(
+                  item_,
+                  ((bitField0_ & 0x00000004) == 0x00000004),
+                  getParentForChildren(),
+                  isClean());
+          item_ = null;
+        }
+        return itemBuilder_;
       }
       
       // @@protoc_insertion_point(builder_scope:stormstock.fw.event.StockCreateCompleteNotify)
@@ -4928,6 +5883,11 @@ public final class Transaction {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_stormstock_fw_event_StockCreateCompleteNotify_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_stormstock_fw_event_StockCreateCompleteNotify_CreateItem_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_stormstock_fw_event_StockCreateCompleteNotify_CreateItem_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_stormstock_fw_event_StockClearNotify_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -4955,15 +5915,19 @@ public final class Transaction {
       "STORYMOCK\020\001\022\014\n\010REALTIME\020\002\".\n\020DataUpdateN" +
       "otify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(\t\"6\n\030Dat" +
       "aUpdateCompleteNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004t" +
-      "ime\030\002 \002(\t\"/\n\021SelectStockNotify\022\014\n\004date\030\001",
-      " \002(\t\022\014\n\004time\030\002 \002(\t\"K\n\031SelectStockComplet" +
-      "eNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(\t\022\022\n\ns" +
-      "electedID\030\003 \003(\t\"/\n\021StockCreateNotify\022\014\n\004" +
-      "date\030\001 \002(\t\022\014\n\004time\030\002 \002(\t\"7\n\031StockCreateC" +
-      "ompleteNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(" +
-      "\t\".\n\020StockClearNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004t" +
-      "ime\030\002 \002(\t\"6\n\030StockClearCompleteNotify\022\014\n" +
-      "\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(\t"
+      "ime\030\002 \002(\t\"@\n\021SelectStockNotify\022\014\n\004date\030\001",
+      " \002(\t\022\014\n\004time\030\002 \002(\t\022\017\n\007stockID\030\003 \003(\t\"K\n\031S" +
+      "electStockCompleteNotify\022\014\n\004date\030\001 \002(\t\022\014" +
+      "\n\004time\030\002 \002(\t\022\022\n\nselectedID\030\003 \003(\t\"@\n\021Stoc" +
+      "kCreateNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(" +
+      "\t\022\017\n\007stockID\030\003 \003(\t\"\256\001\n\031StockCreateComple" +
+      "teNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(\t\022G\n\004" +
+      "item\030\003 \003(\01329.stormstock.fw.event.StockCr" +
+      "eateCompleteNotify.CreateItem\032,\n\nCreateI" +
+      "tem\022\017\n\007stockID\030\001 \002(\t\022\r\n\005price\030\002 \002(\002\".\n\020S" +
+      "tockClearNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 ",
+      "\002(\t\"6\n\030StockClearCompleteNotify\022\014\n\004date\030" +
+      "\001 \002(\t\022\014\n\004time\030\002 \002(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -5007,7 +5971,7 @@ public final class Transaction {
           internal_static_stormstock_fw_event_SelectStockNotify_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_stormstock_fw_event_SelectStockNotify_descriptor,
-              new java.lang.String[] { "Date", "Time", },
+              new java.lang.String[] { "Date", "Time", "StockID", },
               stormstock.fw.event.Transaction.SelectStockNotify.class,
               stormstock.fw.event.Transaction.SelectStockNotify.Builder.class);
           internal_static_stormstock_fw_event_SelectStockCompleteNotify_descriptor =
@@ -5023,7 +5987,7 @@ public final class Transaction {
           internal_static_stormstock_fw_event_StockCreateNotify_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_stormstock_fw_event_StockCreateNotify_descriptor,
-              new java.lang.String[] { "Date", "Time", },
+              new java.lang.String[] { "Date", "Time", "StockID", },
               stormstock.fw.event.Transaction.StockCreateNotify.class,
               stormstock.fw.event.Transaction.StockCreateNotify.Builder.class);
           internal_static_stormstock_fw_event_StockCreateCompleteNotify_descriptor =
@@ -5031,9 +5995,17 @@ public final class Transaction {
           internal_static_stormstock_fw_event_StockCreateCompleteNotify_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_stormstock_fw_event_StockCreateCompleteNotify_descriptor,
-              new java.lang.String[] { "Date", "Time", },
+              new java.lang.String[] { "Date", "Time", "Item", },
               stormstock.fw.event.Transaction.StockCreateCompleteNotify.class,
               stormstock.fw.event.Transaction.StockCreateCompleteNotify.Builder.class);
+          internal_static_stormstock_fw_event_StockCreateCompleteNotify_CreateItem_descriptor =
+            internal_static_stormstock_fw_event_StockCreateCompleteNotify_descriptor.getNestedTypes().get(0);
+          internal_static_stormstock_fw_event_StockCreateCompleteNotify_CreateItem_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_stormstock_fw_event_StockCreateCompleteNotify_CreateItem_descriptor,
+              new java.lang.String[] { "StockID", "Price", },
+              stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.class,
+              stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.Builder.class);
           internal_static_stormstock_fw_event_StockClearNotify_descriptor =
             getDescriptor().getMessageTypes().get(8);
           internal_static_stormstock_fw_event_StockClearNotify_fieldAccessorTable = new

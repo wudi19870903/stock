@@ -6,7 +6,6 @@ import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BWaitObj;
 import stormstock.fw.event.Transaction;
-import stormstock.fw.objmgr.GlobalStockObj;
 
 public class WorkEntitySelect {
 	public WorkEntitySelect()
@@ -23,6 +22,11 @@ public class WorkEntitySelect {
 		Transaction.SelectStockNotify.Builder msg_builder = Transaction.SelectStockNotify.newBuilder();
 		msg_builder.setDate(dateStr);
 		msg_builder.setTime(timeStr);
+		List<String> cTranStockIDSet = StockObjFlow.getTranStockIDSet();
+		for(int i=0;i<cTranStockIDSet.size();i++)
+		{
+			msg_builder.addStockID(cTranStockIDSet.get(i));
+		}
 		Transaction.SelectStockNotify msg = msg_builder.build();
 		BEventSys.EventSender cSender = new BEventSys.EventSender();
 		cSender.Send("BEV_TRAN_SELECTSTOCKNOTIFY", msg);
@@ -54,9 +58,9 @@ public class WorkEntitySelect {
 		
 		BLog.output("CTRL", "%s\n", logStr);
 		
-		// 保存到全局对象
-		GlobalStockObj.setStockIDSelect(cSelectedIDList);
-		
+		// 保存选择结果到股票对象流
+		StockObjFlow.setStockIDSelect(cSelectedIDList);
+
 		if(selectedDateTime.compareTo(reqSelectDateTime) == 0)
 		{
 			m_WaitObjForSelect.Notify();

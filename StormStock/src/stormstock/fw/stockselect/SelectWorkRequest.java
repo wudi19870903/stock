@@ -9,7 +9,6 @@ import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BQThread.BQThreadRequest;
 import stormstock.fw.event.Transaction;
-import stormstock.fw.objmgr.GlobalStockObj;
 import stormstock.fw.objmgr.GlobalUserObj;
 import stormstock.fw.stockdata.Stock;
 import stormstock.fw.stockdata.StockDataProvider;
@@ -47,18 +46,21 @@ public class SelectWorkRequest extends BQThreadRequest {
 		public SelectResult selectRes;
 	}
 	
-	public SelectWorkRequest(String date, String time)
+	public SelectWorkRequest(String date, String time, List<String> stockIDList)
 	{
 		m_date = date;
 		m_time = time;
+		m_stockIDList = stockIDList;
 	}
 	@Override
 	public void doAction() 
 	{
-		BLog.output("SELECT", "WorkRequest.doAction [%s %s]\n", m_date, m_time);
+		BLog.output("SELECT", "SelectWorkRequest.doAction [%s %s]\n", m_date, m_time);
 		
 		IStrategySelect cIStrategySelect = GlobalUserObj.getCurrentStrategySelect();
-		List<String> cTranStockIDSet = GlobalStockObj.getTranStockIDSet();
+		List<String> cTranStockIDSet = m_stockIDList;
+		
+		BLog.output("SELECT", "    TranStockIDSet count(%s)\n",cTranStockIDSet.size());
 		
 		// 回调给用户生成cSelectResultWrapperList后进行排序
 		List<SelectResultWrapper> cSelectResultWrapperList = new ArrayList<SelectResultWrapper>();
@@ -99,21 +101,25 @@ public class SelectWorkRequest extends BQThreadRequest {
 			Collections.sort(cSelectResultWrapperList, new SelectResultWrapper.SelectResultCompare());
 		}
 		
-		
+		int iSelectCount = cSelectResultWrapperList.size();
+		int iSelectMaxCount  = cIStrategySelect.strategy_select_max_count();
+		int iAddCount = iSelectCount>iSelectMaxCount?iSelectMaxCount:iSelectCount;
 		
 		Transaction.SelectStockCompleteNotify.Builder msg_builder = Transaction.SelectStockCompleteNotify.newBuilder();
 		msg_builder.setDate(m_date);
 		msg_builder.setTime(m_time);
-		for(int i=0; i<cSelectResultWrapperList.size(); i++)
+		for(int i=0; i<iAddCount; i++)
 		{
 			msg_builder.addSelectedID(cSelectResultWrapperList.get(i).stockId);
 		}
-		
 		Transaction.SelectStockCompleteNotify msg = msg_builder.build();
+		BLog.output("SELECT", "    Selected count(%s)\n",msg.getSelectedIDList().size());
+		
 		BEventSys.EventSender cSender = new BEventSys.EventSender();
 		cSender.Send("BEV_TRAN_SELECTSTOCKCOMPLETENOTIFY", msg);
 	}
 
 	private String m_date;
 	private String m_time;
+	private List<String> m_stockIDList;
 }

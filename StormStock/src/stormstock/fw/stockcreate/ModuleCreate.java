@@ -1,8 +1,11 @@
 package stormstock.fw.stockcreate;
 
+import java.util.List;
+
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BModuleBase;
+import stormstock.fw.base.BQThread;
 import stormstock.fw.base.BEventSys.EventReceiver;
 import stormstock.fw.event.Transaction;
 
@@ -15,12 +18,14 @@ public class ModuleCreate extends BModuleBase {
 
 	@Override
 	public void initialize() {
+		m_qThread = new BQThread();
 		m_eventRecever = new EventReceiver("CreateReceiver");
 		m_eventRecever.Subscribe("BEV_TRAN_STOCKCREATENOTIFY", this, "onStockCreateNotify");
 	}
 
 	@Override
 	public void start() {
+		m_qThread.startThread();
 		m_eventRecever.startReceive();
 	}
 
@@ -49,15 +54,11 @@ public class ModuleCreate extends BModuleBase {
 		BLog.output("CREATE", "ModuleCreate onStockCreateNotify\n");
 		String dateStr = stockCreateNotify.getDate();
 		String timeStr = stockCreateNotify.getTime();
+		List<String> stockIDList = stockCreateNotify.getStockIDList();
 		
-		Transaction.StockCreateCompleteNotify.Builder msg_builder = Transaction.StockCreateCompleteNotify.newBuilder();
-		msg_builder.setDate(dateStr);
-		msg_builder.setTime(timeStr);
-		Transaction.StockCreateCompleteNotify msg = msg_builder.build();
-		BEventSys.EventSender cSender = new BEventSys.EventSender();
-		cSender.Send("BEV_TRAN_STOCKCREATECOMPLETENOTIFY", msg);
+		m_qThread.postRequest(new CreateWorkRequest(dateStr, timeStr, stockIDList));
 	}
 	
-	// event receiver
 	private EventReceiver m_eventRecever;
+	private BQThread m_qThread;
 }

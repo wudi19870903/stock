@@ -50,7 +50,7 @@ public class GlobalUserObj {
 	private static IStrategyCreate s_strategyCreate = null;
 	
 	/*
-	 * CurrentStrategyCreate
+	 * CurrenStrategyClear
 	 */
 	public static IStrategyClear getCurrenStrategyClear()
 	{

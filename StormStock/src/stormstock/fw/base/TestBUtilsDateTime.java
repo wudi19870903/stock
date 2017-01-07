@@ -7,15 +7,24 @@ public class TestBUtilsDateTime {
 	public static void main(String[] args) {
 		BLog.output("TEST", "TestBUtilsDateTime begin\n");
 		
+		String time1 = "12:22:23";
+		String time2 = "13:20:21";
+		long diffSec = BUtilsDateTime.subTime(time1,time2);
+		BLog.output("TEST", "time1(%s) - time2(%s) = %ds\n", time1,time2,diffSec);
+		
+		
 		String testdate = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD("2016-01-31", 2);
 		BLog.output("TEST", "testdate = %s\n", testdate);
 		
 		String testtime = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM("12:22:34", 2);
 		BLog.output("TEST", "testtime = %s\n", testtime);
 		
-		Date curDate = new Date();
-		String curTimeStr = BUtilsDateTime.GetTimeStr(curDate);
-		String curDateStr = BUtilsDateTime.GetDateStr(curDate);
+		String curDateStr = BUtilsDateTime.GetCurDateStr();
+		String curTimeStr = BUtilsDateTime.GetCurTimeStr();
+		String curDateTimeStr = BUtilsDateTime.GetCurDateTimeStr();
+		BLog.output("TEST", "curDate %s curTime %s \n", curDateStr, curTimeStr);
+		BLog.output("TEST", "curDateTimeStr %s \n", curDateTimeStr);
+		
 		String beforeTimeStr = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(curTimeStr, -2);
 		String afterTimeStr = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(curTimeStr, 2);
 		BLog.output("TEST", "curDateStr %s beforeTimeStr = %s\n", curDateStr, beforeTimeStr);

@@ -7,5 +7,10 @@ public class DefaultStrategySelect extends IStrategySelect {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	@Override
+	public int strategy_select_max_count()
+	{ 
+		return 5; 
+	}
 }

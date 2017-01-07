@@ -1,5 +1,7 @@
 package stormstock.fw.stockselect;
 
+import java.util.List;
+
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BModuleBase;
@@ -51,8 +53,9 @@ public class ModuleSelector extends BModuleBase {
 		BLog.output("SELECT", "ModuleSelector onSelectStockNotify\n");
 		String dateStr = selectStockNotify.getDate();
 		String timeStr = selectStockNotify.getTime();
+		List<String> stockIDList = selectStockNotify.getStockIDList();
 		
-		m_qThread.postRequest(new SelectWorkRequest(dateStr, timeStr));
+		m_qThread.postRequest(new SelectWorkRequest(dateStr, timeStr, stockIDList));
 	}
 	
 	// event receiver

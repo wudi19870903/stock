@@ -13,8 +13,5 @@ abstract public class IStrategySelect {
 	
 	abstract public void strategy_select(StockContext ctx, SelectResult out_sr);
 	
-	public int strategy_select_max_count()
-	{ 
-		return 10; 
-	}
+	abstract public int strategy_select_max_count();
 }

@@ -5,11 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import stormstock.fw.base.BLog;
+import stormstock.fw.base.BUtilsDateTime;
 import stormstock.ori.stockdata.DataEngine;
+import stormstock.ori.stockdata.DataWebStockRealTimeInfo;
 import stormstock.ori.stockdata.DataEngine.ExKData;
 import stormstock.ori.stockdata.DataEngineBase.StockBaseInfo;
 import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
 import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
+import stormstock.ori.stockdata.DataWebStockRealTimeInfo.RealTimeInfo;
 
 /*
  * 注意：取得的数据均为前复权价格
@@ -142,6 +146,57 @@ public class StockDataProvider {
 	}
 	
 	/*
+	 * 获取某只股票某天某时间的价格
+	 */
+	public static boolean getStockTime(String id, String date, String time, StockTime out_cStockTime)
+	{
+		boolean bRealTime = false;
+		String curDate = BUtilsDateTime.GetCurDateStr();
+		String curTime = "";
+		if(date.compareTo(curDate) == 0)
+		{
+			curTime = BUtilsDateTime.GetCurTimeStr();
+			if(Math.abs(BUtilsDateTime.subTime(time,curTime)) < 10) // 离当前时间10秒内
+			{
+				bRealTime = true;
+			}
+		}
+		
+		if(bRealTime)
+		{
+			RealTimeInfo cRealTimeInfo = new RealTimeInfo();
+			int ret = DataWebStockRealTimeInfo.getRealTimeInfo(id, cRealTimeInfo);
+			if(0 == ret)
+			{
+				out_cStockTime.time = curTime;
+				out_cStockTime.price = cRealTimeInfo.curPrice;
+				return true;
+			}
+		}
+		else
+		{
+			List<StockDay> cStockDayList = getHistoryData(id, date, date);
+			if(cStockDayList.size() > 0)
+			{
+				StockDay cStockDay = cStockDayList.get(0);
+				float open = cStockDay.open;
+				float close = cStockDay.close;
+				out_cStockTime.time = time;
+				if(time.compareTo("09:30:00") >= 0 && time.compareTo("11:30:00") <= 0)
+				{
+					out_cStockTime.price = open;
+				}
+				else if(time.compareTo("13:00:00") >= 0 && time.compareTo("15:00:00") <= 0)
+				{
+					out_cStockTime.price = close;
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/*
 	 * 获取某只股票某天某时间的细节数据
 	 */
 	public static List<StockTime> getDayDetail(String id, String date, String endTime)
@@ -166,10 +221,10 @@ public class StockDataProvider {
 					for(int i = 0; i < retList.size(); i++)  
 			        {  
 						ExKData cExKData = retList.get(i);  
-			            System.out.println(cExKData.datetime + "," 
-			            		+ cExKData.open + "," + cExKData.close + "," 
-			            		+ cExKData.low + "," + cExKData.high + "," 
-			            		+ cExKData.volume);  
+//			            System.out.println(cExKData.datetime + "," 
+//			            		+ cExKData.open + "," + cExKData.close + "," 
+//			            		+ cExKData.low + "," + cExKData.high + "," 
+//			            		+ cExKData.volume);  
 						
 						float actrualprice = cExKData.close;
 						float changeper = (actrualprice - actruaFirstPrice)/actruaFirstPrice;
@@ -189,7 +244,26 @@ public class StockDataProvider {
 		
 		return detailDataList;
 	}
-	
+	public static List<StockTime> getDayDetail(String id, String date)
+	{
+		return getDayDetail(id, date, "15:00:00");
+	}
+	public static void cacheDayDetail(String id, String date, List<StockTime> cStockTimeList)
+	{
+		if(null == s_cache_stockTimeData)
+		{
+			s_cache_stockTimeData = new HashMap<String, List<StockTime>>();
+		}
+		String key = id + "_" + date;
+		s_cache_stockTimeData.put(key, cStockTimeList);
+	}
+	public static boolean isCachedDayDetailData(String id, String date) 
+	{
+		if(null == s_cache_stockTimeData) return false;
+		String key = id + "_" + date;
+		if(!s_cache_stockTimeData.containsKey(key)) return false;
+		return true;
+	}
 	
 	// ******************************************************************************************
 	
@@ -289,8 +363,10 @@ public class StockDataProvider {
 	{
 	}
 	
+	
 	private static String s_localLatestDate = null;
 	private static List<String> s_cache_allStockID = null;
 	private static Map<String,StockInfo> s_cache_latestStockInfo = null;
 	private static Map<String,List<StockDay>> s_cache_stockDayData = null;
+	private static Map<String, List<StockTime>> s_cache_stockTimeData = null;
 }

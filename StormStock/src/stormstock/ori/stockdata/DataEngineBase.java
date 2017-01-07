@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.List;
 
 import org.htmlparser.Node;
@@ -258,6 +259,7 @@ public class DataEngineBase {
 		return 0;
 	}
 	public static int downloadStockDataDetail(String id, String date) {
+		s_fmt.format("@downloadStockDataDetail stockID(%s) date(%s)\n",id,date);
 		if(0 != mkStocDataDir(id)) return -20;
 		String stockDataDetailFileName = s_DataDir + "/" + id + "/" + date + ".txt";
 		
@@ -637,5 +639,6 @@ public class DataEngineBase {
 	private static String s_daykFile = "dayk.txt";
 	private static String s_DividendPayoutFile = "dividendPayout.txt";
 	private static String s_BaseInfoFile = "baseInfo.txt";
-
+	
+	static private Formatter s_fmt = new Formatter(System.out);
 }

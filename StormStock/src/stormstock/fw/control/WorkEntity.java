@@ -13,7 +13,6 @@ import stormstock.fw.base.BUtilsDateTime;
 import stormstock.fw.base.BWaitObj;
 import stormstock.fw.event.Transaction;
 import stormstock.fw.event.Transaction.ControllerStartNotify;
-import stormstock.fw.objmgr.GlobalStockObj;
 import stormstock.fw.objmgr.GlobalUserObj;
 import stormstock.fw.stockdata.Stock;
 import stormstock.fw.stockdata.StockDataProvider;
@@ -225,15 +224,7 @@ public class WorkEntity {
 		
 		List<String> cStockIDSet = new ArrayList<String>();
 		
-		// 缓存所有ID
-		if(!StockDataProvider.isCachedAllStockID())
-		{
-			List<String> cStockAllList = StockDataProvider.getAllStockID();
-			StockDataProvider.cacheAllStockID(cStockAllList);
-		}
-		
 		List<String> cStockAllList = StockDataProvider.getAllStockID();
-		
 		for(int i=0; i<cStockAllList.size();i++)
 		{
 			String stockID = cStockAllList.get(i);
@@ -241,19 +232,11 @@ public class WorkEntity {
 
 			if(null != cStockInfo && cTranStockSetFilter.tran_stockset_byLatestStockInfo(cStockInfo))
 			{
-				
-				
-				// 缓存交易集股票的基本信息
-				if(!StockDataProvider.isLatestStockInfo(stockID))
-				{
-					StockDataProvider.cacheLatestStockInfo(cStockInfo);
-				}
-				
 				cStockIDSet.add(stockID);
-				
 			}
 		}
-		GlobalStockObj.setTranStockIDSet(cStockIDSet);
+		// 股票交易集保存
+		StockObjFlow.setTranStockIDSet(cStockIDSet);
 		return cStockIDSet.size();
 	}
 	

@@ -14,16 +14,18 @@ public class Application {
 		//BLog.config_setTag("EVENT", true);
 		BLog.config_setTag("CTRL", true);
 		//BLog.config_setTag("STOCKDATA", true);
-		BLog.config_setTag("SELECT", true);
+		//BLog.config_setTag("SELECT", true);
+		BLog.config_setTag("CREATE", true);
 		
 		TranEngine cTranEngine = new TranEngine();
 		cTranEngine.setStockSet(new TranStockSet());
 		cTranEngine.addStockEigen(new StockEigen.EigenSamplePriceLoc());
 		cTranEngine.addStockEigen(new StockEigen.EigenSampleMADeviation());
 		cTranEngine.setSelectStockStrategy(new StrategySelect());
+		cTranEngine.setCreatePositonStrategy(new StrategyCreate());
 		cTranEngine.setAccount(new MockAccount(100000.00f, 0.0016f)); 
 		cTranEngine.setTranMode(TRANMODE.HISTORYMOCK);
-		cTranEngine.setHistoryTimeSpan("2016-01-01", "2016-01-11");
+		cTranEngine.setHistoryTimeSpan("2016-01-01", "2016-01-06");
 		cTranEngine.run();
 		
 		cTranEngine.mainLoop();

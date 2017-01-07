@@ -8,6 +8,30 @@ import com.google.protobuf.TextFormat.ParseException;
 
 public class BUtilsDateTime {
 	/*
+	 *  当前日期
+	 */
+	static public String GetCurDateStr()
+	{
+		return GetDateStr(new Date());
+	}
+	
+	/*
+	 *  当前时间
+	 */
+	static public String GetCurTimeStr()
+	{
+		return GetTimeStr(new Date());
+	}
+	
+	/*
+	 *  当前日期时间
+	 */
+	static public String GetCurDateTimeStr()
+	{
+		return GetDateTimeStr(new Date());
+	}
+	
+	/*
 	 *  转换日期对象Date到字符串
 	 *  返回  "yyyy-MM-dd"
 	 */
@@ -139,5 +163,22 @@ public class BUtilsDateTime {
 				e.printStackTrace();
 			}
     	}
+    }
+    
+    /*
+     * 时间差（秒）
+     */
+    public static long subTime(String time1, String time2)
+    {  
+    	long diffsec = 0;
+		try {
+			Date date1 = new SimpleDateFormat("HH:mm:ss").parse(time1);
+			Date date2 = new SimpleDateFormat("HH:mm:ss").parse(time2);  
+	        long diff = date1.getTime() - date2.getTime();
+	        diffsec = diff / 1000; 
+		} catch (java.text.ParseException e) {
+			e.printStackTrace();
+		} 
+        return diffsec;
     }
 }
