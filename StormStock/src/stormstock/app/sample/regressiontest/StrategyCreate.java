@@ -31,4 +31,10 @@ public class StrategyCreate extends IStrategyCreate {
 		
 	}
 
+	@Override
+	public int strategy_create_max_count(StockContext ctx, CreateResult out_sr) {
+		// TODO Auto-generated method stub
+		return 3;
+	}
+
 }
