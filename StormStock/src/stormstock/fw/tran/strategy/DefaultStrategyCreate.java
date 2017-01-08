@@ -8,7 +8,7 @@ public class DefaultStrategyCreate extends IStrategyCreate {
 	}
 
 	@Override
-	public int strategy_create_max_count(StockContext ctx, CreateResult out_sr) {
+	public int strategy_create_max_count() {
 		return 0;
 	}
 

@@ -6,6 +6,8 @@ public class AccountModule extends BModuleBase {
 
 	public AccountModule() {
 		super("Account");
+		m_accountControler = new AccountControler();
+		m_accountModuleIF = new AccountModuleIF(m_accountControler);
 	}
 
 	@Override
@@ -34,8 +36,9 @@ public class AccountModule extends BModuleBase {
 
 	@Override
 	public BModuleInterface getIF() {
-		// TODO Auto-generated method stub
-		return null;
+		return m_accountModuleIF;
 	}
 
+	private AccountModuleIF m_accountModuleIF;
+	private AccountControler m_accountControler;
 }

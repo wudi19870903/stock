@@ -54,6 +54,7 @@ message StockCreateCompleteNotify  {
 	message CreateItem {
 	    required string stockID = 1;
 	    required float price = 2;
+	    required int32 amount = 3;
 	}
     required string date = 1;
     required string time = 2;

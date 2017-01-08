@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import stormstock.fw.acc.AccountModuleIF;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BQThread.BQThreadRequest;
 import stormstock.fw.base.BUtilsDateTime;
 import stormstock.fw.event.Transaction;
+import stormstock.fw.objmgr.GlobalModuleObj;
 import stormstock.fw.objmgr.GlobalUserObj;
 import stormstock.fw.stockdata.Stock;
 import stormstock.fw.stockdata.StockDataProvider;
@@ -71,7 +73,7 @@ public class CreateWorkRequest extends BQThreadRequest {
 			}
 			List<StockTime> cStockTimeList = StockTimeDataCache.getStockTimeList(stockID, m_date);
 			
-			BLog.output("CREATE", "    ID:%s cStockTimeList size(%d)\n", stockID, cStockTimeList.size());
+			BLog.output("CREATE", "        -Stock:%s cStockTimeList size(%d)\n", stockID, cStockTimeList.size());
 			
 			Stock cStock = new Stock();
 			cStock.setDate(m_date);
@@ -96,20 +98,44 @@ public class CreateWorkRequest extends BQThreadRequest {
 			}
 		}
 			
+		int create_max_count = cIStrategyCreate.strategy_create_max_count();
+		AccountModuleIF accIF = (AccountModuleIF)GlobalModuleObj.getModuleIF("Account");
+		int alreadyHoldCount = accIF.getStockCreateList().size();
+		int buyStockCount = create_max_count - alreadyHoldCount;
+		buyStockCount = Math.min(buyStockCount,cCreateResultWrapperList.size());
+		
 		Transaction.StockCreateCompleteNotify.Builder msg_builder = Transaction.StockCreateCompleteNotify.newBuilder();
 		msg_builder.setDate(m_date);
 		msg_builder.setTime(m_time);
-		for(int i = 0; i< cCreateResultWrapperList.size(); i++)
+		for(int i = 0; i< buyStockCount; i++)
 		{
 			CreateResultWrapper cCreateResultWrapper = cCreateResultWrapperList.get(i);
 			Transaction.StockCreateCompleteNotify.CreateItem.Builder cItemBuild = msg_builder.addItemBuilder();
 			cItemBuild.setStockID(cCreateResultWrapper.stockId);
 			cItemBuild.setPrice(cCreateResultWrapper.fPrice);
+			
+			// 买入量
+			float totalAssets = accIF.getTotalAssets();
+			float fMaxPositionRatio = cCreateResultWrapper.createRes.fMaxPositionRatio; 
+			float fMaxPositionMoney = totalAssets*fMaxPositionRatio; // 最大买入仓位钱
+			float fMaxMoney = cCreateResultWrapper.createRes.fMaxMoney; // 最大买入钱
+			float buyMoney = Math.min(fMaxMoney, fMaxPositionMoney);
+			
+			int amount = (int)(buyMoney/cCreateResultWrapper.fPrice);
+			cItemBuild.setAmount(amount);
 		}
 		Transaction.StockCreateCompleteNotify msg = msg_builder.build();
 		BEventSys.EventSender cSender = new BEventSys.EventSender();
 		
 		BLog.output("CREATE", "    stockIDCreateList count(%d)\n", msg.getItemList().size());
+		for(int i=0; i< msg.getItemList().size(); i++)
+		{
+			String stockID = msg.getItemList().get(i).getStockID();
+			float price = msg.getItemList().get(i).getPrice();
+			int amount = msg.getItemList().get(i).getAmount();
+			BLog.output("CREATE", "        -Stock(%s) price(%.2f) amount(%d)\n", stockID,price,amount);
+		}
+		
 		cSender.Send("BEV_TRAN_STOCKCREATECOMPLETENOTIFY", msg);
 		
 	}

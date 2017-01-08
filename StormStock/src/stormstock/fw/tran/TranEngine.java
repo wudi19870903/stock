@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import stormstock.fw.acc.AccountModule;
+import stormstock.fw.acc.AccountModuleIF;
 import stormstock.fw.acc.IAccount;
+import stormstock.fw.acc.MockAccount;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BModuleManager;
@@ -153,6 +155,13 @@ public class TranEngine {
 	
 	public void run()
 	{
+		if(null == m_eTranMode)
+		{
+			BLog.error("TRAN", "m_eTranMode is null!\n");
+			exitCommand();
+			return; // 交易模式未设置 直接退出
+		}
+		
 		if(null == m_cTranStockSet)
 		{
 			m_cTranStockSet = new DefaultTranStockSet();
@@ -173,11 +182,10 @@ public class TranEngine {
 			m_cStrategyClear = new DefaultStrategyClear();
 			BLog.output("TRAN", "m_cStrategyClear is null, set default\n");
 		}
-		if(null == m_eTranMode)
+		if(null == m_cAcc)
 		{
-			BLog.error("TRAN", "m_eTranMode is null!\n");
-			exitCommand();
-			return;
+			m_cAcc = new MockAccount(100000.00f, 0.0016f);
+			BLog.error("TRAN", "m_cAcc is null!, set default\n");
 		}
 		
 		// 保存对象
@@ -186,6 +194,10 @@ public class TranEngine {
 		GlobalUserObj.setCurrentStrategyCreate(m_cStrategyCreate);
 		GlobalUserObj.setCurrentStrategyClear(m_cStrategyClear);
 		GlobalUserObj.setCurrentStockEigenMap(m_cEigenMap);
+		
+		// 设置账户
+		AccountModuleIF accIF = (AccountModuleIF)GlobalModuleObj.getModuleIF("Account");
+		accIF.setCurAccount(m_cAcc);
 		
 		// 发送开始交易命令到控制器
 		BLog.output("TRAN", "Start Trasection\n");

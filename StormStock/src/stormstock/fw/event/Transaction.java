@@ -3713,6 +3713,10 @@ public final class Transaction {
       // required float price = 2;
       boolean hasPrice();
       float getPrice();
+      
+      // required int32 amount = 3;
+      boolean hasAmount();
+      int getAmount();
     }
     public static final class CreateItem extends
         com.google.protobuf.GeneratedMessage
@@ -3785,9 +3789,20 @@ public final class Transaction {
         return price_;
       }
       
+      // required int32 amount = 3;
+      public static final int AMOUNT_FIELD_NUMBER = 3;
+      private int amount_;
+      public boolean hasAmount() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      public int getAmount() {
+        return amount_;
+      }
+      
       private void initFields() {
         stockID_ = "";
         price_ = 0F;
+        amount_ = 0;
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -3799,6 +3814,10 @@ public final class Transaction {
           return false;
         }
         if (!hasPrice()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        if (!hasAmount()) {
           memoizedIsInitialized = 0;
           return false;
         }
@@ -3814,6 +3833,9 @@ public final class Transaction {
         }
         if (((bitField0_ & 0x00000002) == 0x00000002)) {
           output.writeFloat(2, price_);
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          output.writeInt32(3, amount_);
         }
         getUnknownFields().writeTo(output);
       }
@@ -3831,6 +3853,10 @@ public final class Transaction {
         if (((bitField0_ & 0x00000002) == 0x00000002)) {
           size += com.google.protobuf.CodedOutputStream
             .computeFloatSize(2, price_);
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeInt32Size(3, amount_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSerializedSize = size;
@@ -3960,6 +3986,8 @@ public final class Transaction {
           bitField0_ = (bitField0_ & ~0x00000001);
           price_ = 0F;
           bitField0_ = (bitField0_ & ~0x00000002);
+          amount_ = 0;
+          bitField0_ = (bitField0_ & ~0x00000004);
           return this;
         }
         
@@ -4006,6 +4034,10 @@ public final class Transaction {
             to_bitField0_ |= 0x00000002;
           }
           result.price_ = price_;
+          if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+            to_bitField0_ |= 0x00000004;
+          }
+          result.amount_ = amount_;
           result.bitField0_ = to_bitField0_;
           onBuilt();
           return result;
@@ -4028,6 +4060,9 @@ public final class Transaction {
           if (other.hasPrice()) {
             setPrice(other.getPrice());
           }
+          if (other.hasAmount()) {
+            setAmount(other.getAmount());
+          }
           this.mergeUnknownFields(other.getUnknownFields());
           return this;
         }
@@ -4038,6 +4073,10 @@ public final class Transaction {
             return false;
           }
           if (!hasPrice()) {
+            
+            return false;
+          }
+          if (!hasAmount()) {
             
             return false;
           }
@@ -4075,6 +4114,11 @@ public final class Transaction {
               case 21: {
                 bitField0_ |= 0x00000002;
                 price_ = input.readFloat();
+                break;
+              }
+              case 24: {
+                bitField0_ |= 0x00000004;
+                amount_ = input.readInt32();
                 break;
               }
             }
@@ -4136,6 +4180,27 @@ public final class Transaction {
         public Builder clearPrice() {
           bitField0_ = (bitField0_ & ~0x00000002);
           price_ = 0F;
+          onChanged();
+          return this;
+        }
+        
+        // required int32 amount = 3;
+        private int amount_ ;
+        public boolean hasAmount() {
+          return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+        public int getAmount() {
+          return amount_;
+        }
+        public Builder setAmount(int value) {
+          bitField0_ |= 0x00000004;
+          amount_ = value;
+          onChanged();
+          return this;
+        }
+        public Builder clearAmount() {
+          bitField0_ = (bitField0_ & ~0x00000004);
+          amount_ = 0;
           onChanged();
           return this;
         }
@@ -5920,14 +5985,14 @@ public final class Transaction {
       "electStockCompleteNotify\022\014\n\004date\030\001 \002(\t\022\014" +
       "\n\004time\030\002 \002(\t\022\022\n\nselectedID\030\003 \003(\t\"@\n\021Stoc" +
       "kCreateNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(" +
-      "\t\022\017\n\007stockID\030\003 \003(\t\"\256\001\n\031StockCreateComple" +
+      "\t\022\017\n\007stockID\030\003 \003(\t\"\276\001\n\031StockCreateComple" +
       "teNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(\t\022G\n\004" +
       "item\030\003 \003(\01329.stormstock.fw.event.StockCr" +
-      "eateCompleteNotify.CreateItem\032,\n\nCreateI" +
-      "tem\022\017\n\007stockID\030\001 \002(\t\022\r\n\005price\030\002 \002(\002\".\n\020S" +
-      "tockClearNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 ",
-      "\002(\t\"6\n\030StockClearCompleteNotify\022\014\n\004date\030" +
-      "\001 \002(\t\022\014\n\004time\030\002 \002(\t"
+      "eateCompleteNotify.CreateItem\032<\n\nCreateI" +
+      "tem\022\017\n\007stockID\030\001 \002(\t\022\r\n\005price\030\002 \002(\002\022\016\n\006a" +
+      "mount\030\003 \002(\005\".\n\020StockClearNotify\022\014\n\004date\030",
+      "\001 \002(\t\022\014\n\004time\030\002 \002(\t\"6\n\030StockClearComplet" +
+      "eNotify\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -6003,7 +6068,7 @@ public final class Transaction {
           internal_static_stormstock_fw_event_StockCreateCompleteNotify_CreateItem_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_stormstock_fw_event_StockCreateCompleteNotify_CreateItem_descriptor,
-              new java.lang.String[] { "StockID", "Price", },
+              new java.lang.String[] { "StockID", "Price", "Amount", },
               stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.class,
               stormstock.fw.event.Transaction.StockCreateCompleteNotify.CreateItem.Builder.class);
           internal_static_stormstock_fw_event_StockClearNotify_descriptor =
