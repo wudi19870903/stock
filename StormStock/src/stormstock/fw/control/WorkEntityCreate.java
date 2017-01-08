@@ -25,12 +25,15 @@ public class WorkEntityCreate {
 		Transaction.StockCreateNotify.Builder msg_builder = Transaction.StockCreateNotify.newBuilder();
 		msg_builder.setDate(dateStr);
 		msg_builder.setTime(timeStr);
+		
+		// 从账户拉取已选股票
 		AccountModuleIF accIF = (AccountModuleIF)GlobalModuleObj.getModuleIF("Account");
-		List<String> cSelectIDList = accIF.getStockSelectList(); // 从账户模块获选入列表
+		List<String> cSelectIDList = accIF.getStockSelectList(); 
 		for(int i=0;i<cSelectIDList.size();i++)
 		{
 			msg_builder.addStockID(cSelectIDList.get(i));
 		}
+		
 		Transaction.StockCreateNotify msg = msg_builder.build();
 		BEventSys.EventSender cSender = new BEventSys.EventSender();
 		cSender.Send("BEV_TRAN_STOCKCREATENOTIFY", msg);

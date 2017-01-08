@@ -16,6 +16,7 @@ public class Application {
 		//BLog.config_setTag("STOCKDATA", true);
 		//BLog.config_setTag("SELECT", true);
 		BLog.config_setTag("CREATE", true);
+		BLog.config_setTag("CLEAR", true);
 		
 		TranEngine cTranEngine = new TranEngine();
 		cTranEngine.setStockSet(new TranStockSet());
@@ -23,6 +24,7 @@ public class Application {
 		cTranEngine.addStockEigen(new StockEigen.EigenSampleMADeviation());
 		cTranEngine.setSelectStockStrategy(new StrategySelect());
 		cTranEngine.setCreatePositonStrategy(new StrategyCreate());
+		cTranEngine.setClearPositonStrategy(new StrategyClear());
 		cTranEngine.setAccount(new MockAccount(100000.00f, 0.0016f)); 
 		cTranEngine.setTranMode(TRANMODE.HISTORYMOCK);
 		cTranEngine.setHistoryTimeSpan("2016-01-01", "2016-01-06");

@@ -46,12 +46,21 @@ public class AccountModuleIF extends BModuleInterface {
 	{
 		return m_accountControler.getStockCreateList();
 	}
+	public StockCreate getStockCreate(String stockID)
+	{
+		return m_accountControler.getStockCreate(stockID);
+	}
 	// 是否已经持有判断
 	public boolean isInStockCreate(String stockID)
 	{
 		return m_accountControler.isInStockCreate(stockID);
 	}
 	
+	// 卖出调用
+	public int sellStock(String stockID, float price, int amount)
+	{
+		return m_accountControler.sellStock(stockID, price, amount);
+	}
 	
 	private AccountControler m_accountControler;
 }

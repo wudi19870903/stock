@@ -86,10 +86,43 @@ public class AccountControler {
 		}
 		return 0;
 	}
+	// 卖出
+	public int sellStock(String stockID, float price, int amount)
+	{
+		StockCreate cStockCreate = getStockCreate(stockID);
+		int sellmount = Math.min(cStockCreate.amount, amount);
+		if(sellmount<=0) return 0;
+		
+		int succCount = m_account.pushSellOrder(stockID, price, sellmount);
+		if(succCount > 0)
+		{
+			cStockCreate.amount = cStockCreate.amount - succCount;
+			
+			// 移除掉已有列表
+			if(cStockCreate.amount == 0)
+			{
+				m_stockCreateList.remove(cStockCreate);
+			}
+
+			return succCount;
+		}
+		return 0;
+	}
+	
 	// 获得买入列表
 	public List<StockCreate> getStockCreateList()
 	{
 		return m_stockCreateList;
+	}
+	public StockCreate getStockCreate(String stockID)
+	{
+		for(int i=0;i<m_stockCreateList.size();i++)
+		{
+			StockCreate cStockCreate = m_stockCreateList.get(i);
+			if(cStockCreate.stockID.equals(stockID))
+				return cStockCreate;
+		}
+		return null;
 	}
 	public boolean isInStockCreate(String stockID)
 	{
@@ -112,9 +145,9 @@ public class AccountControler {
 	// 已买入列表
 	public static class StockCreate
 	{
-		String stockID;
-		float price;
-		int amount;
+		public String stockID;
+		public float price;
+		public int amount;
 	}
 	private List<StockCreate> m_stockCreateList;
 }

@@ -32,7 +32,8 @@ public class ModuleCreate extends BModuleBase {
 	@Override
 	public void stop() {
 		// TODO Auto-generated method stub
-		
+		m_eventRecever.stopReceive();
+		m_qThread.stopThread();
 	}
 
 	@Override

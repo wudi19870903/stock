@@ -47,7 +47,7 @@ message SelectStockCompleteNotify  {
 message StockCreateNotify  { 
     required string date = 1;
     required string time = 2;
-    repeated string stockID = 3;  //建仓考察股票ID（选股结果）
+    repeated string stockID = 3;  //建仓考察股票ID（已选list）
 }
 // 建仓任务完毕通知
 message StockCreateCompleteNotify  { 
@@ -66,11 +66,18 @@ message StockCreateCompleteNotify  {
 message StockClearNotify  { 
     required string date = 1;
     required string time = 2;
+    repeated string stockID = 3;  //清仓考察股票ID（已持list）
 }
 // 清仓任务完毕通知
-message StockClearCompleteNotify  { 
+message StockClearCompleteNotify  {
+	message ClearItem {
+	    required string stockID = 1;
+	    required float price = 2;
+	    required int32 amount = 3;
+	} 
     required string date = 1;
     required string time = 2;
+    repeated ClearItem item = 3;
 }
 
 

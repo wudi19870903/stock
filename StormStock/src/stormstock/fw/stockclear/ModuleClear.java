@@ -1,10 +1,14 @@
 package stormstock.fw.stockclear;
 
+import java.util.List;
+
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BModuleBase;
+import stormstock.fw.base.BQThread;
 import stormstock.fw.base.BEventSys.EventReceiver;
 import stormstock.fw.event.Transaction;
+import stormstock.fw.stockcreate.CreateWorkRequest;
 
 public class ModuleClear  extends BModuleBase {
 
@@ -15,19 +19,22 @@ public class ModuleClear  extends BModuleBase {
 
 	@Override
 	public void initialize() {
+		m_qThread = new BQThread();
 		m_eventRecever = new EventReceiver("ClearReceiver");
 		m_eventRecever.Subscribe("BEV_TRAN_STOCKCLEARNOTIFY", this, "onStockClearNotify");
 	}
 
 	@Override
 	public void start() {
+		m_qThread.startThread();
 		m_eventRecever.startReceive();
 	}
 
 	@Override
 	public void stop() {
 		// TODO Auto-generated method stub
-		
+		m_eventRecever.stopReceive();
+		m_qThread.stopThread();
 	}
 
 	@Override
@@ -49,15 +56,11 @@ public class ModuleClear  extends BModuleBase {
 		BLog.output("CLEAR", "ModuleClear onStockClearNotify\n");
 		String dateStr = stockClearNotify.getDate();
 		String timeStr = stockClearNotify.getTime();
+		List<String> stockIDList = stockClearNotify.getStockIDList();
 		
-		Transaction.StockClearCompleteNotify.Builder msg_builder = Transaction.StockClearCompleteNotify.newBuilder();
-		msg_builder.setDate(dateStr);
-		msg_builder.setTime(timeStr);
-		Transaction.StockClearCompleteNotify msg = msg_builder.build();
-		BEventSys.EventSender cSender = new BEventSys.EventSender();
-		cSender.Send("BEV_TRAN_STOCKCLEARCOMPLETENOTIFY", msg);
+		m_qThread.postRequest(new ClearWorkRequest(dateStr, timeStr, stockIDList));
 	}
 	
-	// event receiver
 	private EventReceiver m_eventRecever;
+	private BQThread m_qThread;
 }

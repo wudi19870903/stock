@@ -52,7 +52,7 @@ public class GlobalUserObj {
 	/*
 	 * CurrenStrategyClear
 	 */
-	public static IStrategyClear getCurrenStrategyClear()
+	public static IStrategyClear getCurrentStrategyClear()
 	{
 		return s_strategyClear;
 	}
