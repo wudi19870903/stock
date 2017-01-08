@@ -3,7 +3,6 @@ package stormstock.fw.control;
 import java.util.List;
 
 import stormstock.fw.acc.AccountModuleIF;
-import stormstock.fw.acc.AccountControler.StockCreate;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BWaitObj;
@@ -61,7 +60,7 @@ public class WorkEntityCreate {
 				
 				
 				AccountModuleIF accIF = (AccountModuleIF)GlobalModuleObj.getModuleIF("Account");
-				int succCnt = accIF.buyStock(stockID, price, amount); // 调用账户模块买入股票
+				int succCnt = accIF.pushBuyOrder(stockID, price, amount); // 调用账户模块买入股票
 				if(succCnt > 0)
 				{
 					BLog.output("CTRL", "        -buyStock(%s) price(%.2f) amount(%d)\n", stockID, price,succCnt);

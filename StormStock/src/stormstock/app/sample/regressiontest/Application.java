@@ -1,9 +1,9 @@
 package stormstock.app.sample.regressiontest;
 
-import stormstock.fw.acc.MockAccount;
 import stormstock.fw.base.BLog;
 import stormstock.fw.tran.TranEngine;
-import stormstock.fw.tran.TranEngine.TRANMODE;
+import stormstock.fw.tran.TranEngine.TRANACCOUNTTYPE;
+import stormstock.fw.tran.TranEngine.TRANTIMEMODE;
 
 public class Application {
 
@@ -19,15 +19,21 @@ public class Application {
 		BLog.config_setTag("CLEAR", true);
 		
 		TranEngine cTranEngine = new TranEngine();
+		
 		cTranEngine.setStockSet(new TranStockSet());
+		
 		cTranEngine.addStockEigen(new StockEigen.EigenSamplePriceLoc());
 		cTranEngine.addStockEigen(new StockEigen.EigenSampleMADeviation());
+		
 		cTranEngine.setSelectStockStrategy(new StrategySelect());
 		cTranEngine.setCreatePositonStrategy(new StrategyCreate());
 		cTranEngine.setClearPositonStrategy(new StrategyClear());
-		cTranEngine.setAccount(new MockAccount(100000.00f, 0.0016f)); 
-		cTranEngine.setTranMode(TRANMODE.HISTORYMOCK);
+		
+		cTranEngine.setAccountType(TRANACCOUNTTYPE.MOCK); 
+		
+		cTranEngine.setTranMode(TRANTIMEMODE.HISTORYMOCK);
 		cTranEngine.setHistoryTimeSpan("2016-01-01", "2016-01-06");
+		
 		cTranEngine.run();
 		
 		cTranEngine.mainLoop();

@@ -7,12 +7,14 @@ import java.util.List;
 import stormstock.analysis.ANLDataProvider;
 import stormstock.analysis.ANLLog;
 import stormstock.analysis.ANLStock;
+import stormstock.fw.acc.AccountModuleIF;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BUtilsDateTime;
 import stormstock.fw.base.BWaitObj;
 import stormstock.fw.event.Transaction;
 import stormstock.fw.event.Transaction.ControllerStartNotify;
+import stormstock.fw.objmgr.GlobalModuleObj;
 import stormstock.fw.objmgr.GlobalUserObj;
 import stormstock.fw.stockdata.Stock;
 import stormstock.fw.stockdata.StockDataProvider;
@@ -20,7 +22,6 @@ import stormstock.fw.stockdata.StockDay;
 import stormstock.fw.stockdata.StockInfo;
 import stormstock.fw.stockdata.StockUtils;
 import stormstock.fw.tran.ITranStockSetFilter;
-import stormstock.fw.tran.TranEngine.TRANMODE;
 
 public class WorkEntity {
 	public WorkEntity(boolean bHistoryTest, String beginDate, String endDate)
@@ -69,6 +70,15 @@ public class WorkEntity {
 						dateStr);
 				
 				String timestr = "00:00:00";
+				
+				// 01:00 账户新交易日初始化
+				timestr = "01:00:00";
+				if(waitForDateTime(dateStr, timestr))
+				{
+					AccountModuleIF accIF = (AccountModuleIF)GlobalModuleObj.getModuleIF("Account");
+					BLog.output("CTRL", "[%s %s] account newDayInit \n", dateStr, timestr);
+					accIF.newDayInit();
+				}
 				
 				// 9:30-11:30 1:00-3:00 定期间隔发送交易信号，等待信号处理完毕通知
 				int interval_min = 60;

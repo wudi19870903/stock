@@ -5,8 +5,7 @@ import java.util.Map;
 
 import stormstock.fw.acc.AccountModule;
 import stormstock.fw.acc.AccountModuleIF;
-import stormstock.fw.acc.IAccount;
-import stormstock.fw.acc.MockAccount;
+import stormstock.fw.acc.AccountModuleIF.ACCIFTYPE;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BModuleManager;
@@ -32,10 +31,16 @@ import stormstock.fw.stockdata.ModuleStockData;
 
 public class TranEngine {
 	
-	public enum TRANMODE
+	public enum TRANTIMEMODE
 	{
 		HISTORYMOCK,
 		REALTIME,
+	}
+	
+	public enum TRANACCOUNTTYPE
+	{
+		MOCK,
+		REAL,
 	}
 	
 	public TranEngine()
@@ -71,7 +76,7 @@ public class TranEngine {
 		m_eTranMode = null;
 		m_beginDate = null; 
 		m_endDate = null; 
-		m_cAcc = null; 
+		m_eAccType = null; 
 		m_cEigenMap = new HashMap<String, IEigenStock>();
 	}
 	
@@ -131,7 +136,7 @@ public class TranEngine {
 		m_cStrategyClear = cStrategyClear;
 	}
 	
-	public void setTranMode(TRANMODE eTranMode)
+	public void setTranMode(TRANTIMEMODE eTranMode)
 	{
 		m_eTranMode = eTranMode;
 	}
@@ -142,9 +147,9 @@ public class TranEngine {
 		m_endDate = endDate;
 	}
 	
-	public void setAccount(IAccount cAcc)
+	public void setAccountType(TRANACCOUNTTYPE accType)
 	{
-		m_cAcc = cAcc;
+		m_eAccType = accType;
 	}
 	
 	public void addStockEigen(IEigenStock cIEigenStock)
@@ -182,10 +187,10 @@ public class TranEngine {
 			m_cStrategyClear = new DefaultStrategyClear();
 			BLog.output("TRAN", "m_cStrategyClear is null, set default\n");
 		}
-		if(null == m_cAcc)
+		if(null == m_eAccType)
 		{
-			m_cAcc = new MockAccount(100000.00f, 0.0016f);
-			BLog.error("TRAN", "m_cAcc is null!, set default\n");
+			m_eAccType = TRANACCOUNTTYPE.MOCK;
+			BLog.output("TRAN", "m_cAcc is null!, set default\n");
 		}
 		
 		// 保存对象
@@ -197,13 +202,21 @@ public class TranEngine {
 		
 		// 设置账户
 		AccountModuleIF accIF = (AccountModuleIF)GlobalModuleObj.getModuleIF("Account");
-		accIF.setCurAccount(m_cAcc);
+		if(m_eAccType == TRANACCOUNTTYPE.MOCK)
+		{
+			accIF.setAccountIFType(ACCIFTYPE.MOCK);
+		}
+		else
+		{
+			accIF.setAccountIFType(ACCIFTYPE.REAL);
+		}
+		
 		
 		// 发送开始交易命令到控制器
 		BLog.output("TRAN", "Start Trasection\n");
 		BEventSys.EventSender cSender = new BEventSys.EventSender();
 		Transaction.ControllerStartNotify.Builder msg_builder = Transaction.ControllerStartNotify.newBuilder();
-		if (TRANMODE.HISTORYMOCK == m_eTranMode)
+		if (TRANTIMEMODE.HISTORYMOCK == m_eTranMode)
 		{
 			if(null == m_beginDate || null == m_endDate)
 			{
@@ -215,7 +228,7 @@ public class TranEngine {
 			msg_builder.setBeginDate(m_beginDate);
 			msg_builder.setEndDate(m_endDate);
 		}
-		else if (TRANMODE.REALTIME == m_eTranMode)
+		else if (TRANTIMEMODE.REALTIME == m_eTranMode)
 		{
 			if(null != m_beginDate || null != m_endDate)
 			{
@@ -234,10 +247,10 @@ public class TranEngine {
 	IStrategySelect          m_cStrategySelect;
 	IStrategyCreate          m_cStrategyCreate;
 	IStrategyClear           m_cStrategyClear;
-	TRANMODE                 m_eTranMode;
+	TRANTIMEMODE             m_eTranMode;
 	String                   m_beginDate;
 	String                   m_endDate;
-	IAccount                 m_cAcc;
+	TRANACCOUNTTYPE          m_eAccType;
 	Map<String, IEigenStock> m_cEigenMap;
 	
 	// module manager

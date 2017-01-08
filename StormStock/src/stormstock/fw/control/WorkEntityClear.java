@@ -3,7 +3,7 @@ package stormstock.fw.control;
 import java.util.List;
 
 import stormstock.fw.acc.AccountModuleIF;
-import stormstock.fw.acc.AccountControler.StockCreate;
+import stormstock.fw.acc.IAccountOpe.HoldStock;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BWaitObj;
@@ -28,11 +28,14 @@ public class WorkEntityClear {
 		
 		// 从账户拉取已持股
 		AccountModuleIF accIF = (AccountModuleIF)GlobalModuleObj.getModuleIF("Account");
-		List<StockCreate> cStockCreateList = accIF.getStockCreateList(); 
-		for(int i=0;i<cStockCreateList.size();i++)
+		List<HoldStock> cStockHoldList = accIF.getStockHoldList();
+		for(int i=0;i<cStockHoldList.size();i++)
 		{
-			StockCreate cStockCreate = cStockCreateList.get(i);
-			msg_builder.addStockID(cStockCreate.stockID);
+			HoldStock cHoldStock = cStockHoldList.get(i);
+			if(cHoldStock.totalCanSell > 0)
+			{
+				msg_builder.addStockID(cHoldStock.id);
+			}
 		}
 		
 		Transaction.StockClearNotify msg = msg_builder.build();
@@ -61,7 +64,7 @@ public class WorkEntityClear {
 				int amount = cClearItemList.get(i).getAmount();	
 				
 				AccountModuleIF accIF = (AccountModuleIF)GlobalModuleObj.getModuleIF("Account");
-				int succCnt = accIF.sellStock(stockID, price, amount); // 调用账户模块卖出股票
+				int succCnt = accIF.pushSellOrder(stockID, price, amount); // 调用账户模块卖出股票
 				if(succCnt >= 0)
 				{
 					BLog.output("CTRL", "        -sellStock(%s) price(%.2f) amount(%d)\n", stockID, price,succCnt);

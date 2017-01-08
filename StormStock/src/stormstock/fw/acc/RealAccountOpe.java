@@ -2,8 +2,9 @@ package stormstock.fw.acc;
 
 import java.util.List;
 
-public class RealAccount extends IAccount {
-	public RealAccount()
+public class RealAccountOpe extends IAccountOpe {
+	
+	public RealAccountOpe()
 	{
 		super();
 	}
@@ -15,13 +16,7 @@ public class RealAccount extends IAccount {
 	}
 
 	@Override
-	public float GetTotalMoney() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public float GetAvailableTotalMoney() {
+	public float getAvailableMoney() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -42,5 +37,23 @@ public class RealAccount extends IAccount {
 	public int pushSellOrder(String id, float price, int amount) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public boolean newDayInit() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public List<StockTranOrder> getBuyOrderList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<StockTranOrder> getSellOrderList() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

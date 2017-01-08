@@ -3,37 +3,57 @@ package stormstock.fw.acc;
 import java.util.ArrayList;
 import java.util.List;
 
-import stormstock.analysis.ANLUserAcc.ANLUserAccStock;
-import stormstock.fw.acc.AccountControler.StockCreate;
+import stormstock.fw.acc.AccountModuleIF.ACCIFTYPE;
+import stormstock.fw.acc.IAccountOpe.HoldStock;
+import stormstock.fw.acc.IAccountOpe.StockTranOrder;
 import stormstock.fw.base.BLog;
 
 public class AccountControler {
 	
 	public AccountControler()
 	{
+		m_accountOpe = null;
 		m_stockSelectList = new ArrayList<String>();
-		m_stockCreateList = new ArrayList<StockCreate>();
 	}
 	
-	public void setCurAccount(IAccount cIAccount)
+	public void setAccountIFType(ACCIFTYPE eAccIFType)
 	{
-		m_account = cIAccount;
+		if(eAccIFType == ACCIFTYPE.MOCK)
+		{
+			m_accountOpe = new MockAccountOpe(100000.00f, 0.0016f);
+		} 
+		else if(eAccIFType == ACCIFTYPE.REAL)
+		{
+			m_accountOpe = new RealAccountOpe();
+		}
 	}
+	
+	public boolean newDayInit()
+	{
+		m_accountOpe.newDayInit();
+		return true;
+	}
+	
 	public float getTotalAssets()
 	{
-		float all_marketval = 0.0f;
-		for(int i=0;i<m_stockCreateList.size();i++)
-		{
-			StockCreate cStockCreate = m_stockCreateList.get(i);
-			all_marketval = all_marketval + cStockCreate.price*cStockCreate.amount;
-		}
-		float all_asset = all_marketval + m_account.GetAvailableTotalMoney();
-		return all_asset;
+		return m_accountOpe.getTotalAssets();
 	}
-	public float getAvailableTotalMoney()
+	
+	public float getAvailableMoney()
 	{
-		return m_account.GetAvailableTotalMoney();
+		return m_accountOpe.getAvailableMoney();
 	}
+
+	public int pushBuyOrder(String stockID, float price, int amount)
+	{
+		return m_accountOpe.pushBuyOrder(stockID, price, amount);
+	}
+
+	public int pushSellOrder(String stockID, float price, int amount)
+	{
+		return m_accountOpe.pushSellOrder(stockID, price, amount);
+	}
+	
 	
 	// 选股列表添加合并
 	public void addStockSelectList(List<String> stockIDList)
@@ -54,100 +74,81 @@ public class AccountControler {
 		for(int i=0; i< m_stockSelectList.size();i++)
 		{
 			String stockID = m_stockSelectList.get(i);
-			if(!isInStockCreate(stockID))  // 选股列表排除掉已经在买入列表的
+			if(!help_inAccount(stockID))  // 选股列表排除掉已经在买入列表的
 			{
 				newList.add(stockID);
 			}
 		}
 		return newList;
 	}
-
-	// 买入
-	public int buyStock(String stockID, float price, int amount)
+	// 判断股票是否存在于 买单委托列表，持有列表，卖单委托列表中
+	public boolean help_inAccount(String stockID)
 	{
-		for(int i=0; i< m_stockCreateList.size();i++)
+		List<StockTranOrder> cBuyOrderList = m_accountOpe.getBuyOrderList();
+		for(int i=0;i<cBuyOrderList.size();i++)
 		{
-			StockCreate cStockCreate = m_stockCreateList.get(i);
-			if(cStockCreate.stockID == stockID)
-			{
-				return 0;
-			}
-		}
-		
-		int succCount = m_account.pushBuyOrder(stockID, price, amount);
-		if(succCount >0)
-		{
-			StockCreate newStockCreate = new StockCreate();
-			newStockCreate.stockID = stockID;
-			newStockCreate.price = price;
-			newStockCreate.amount = amount;
-			m_stockCreateList.add(newStockCreate);
-			return succCount;
-		}
-		return 0;
-	}
-	// 卖出
-	public int sellStock(String stockID, float price, int amount)
-	{
-		StockCreate cStockCreate = getStockCreate(stockID);
-		int sellmount = Math.min(cStockCreate.amount, amount);
-		if(sellmount<=0) return 0;
-		
-		int succCount = m_account.pushSellOrder(stockID, price, sellmount);
-		if(succCount > 0)
-		{
-			cStockCreate.amount = cStockCreate.amount - succCount;
-			
-			// 移除掉已有列表
-			if(cStockCreate.amount == 0)
-			{
-				m_stockCreateList.remove(cStockCreate);
-			}
-
-			return succCount;
-		}
-		return 0;
-	}
-	
-	// 获得买入列表
-	public List<StockCreate> getStockCreateList()
-	{
-		return m_stockCreateList;
-	}
-	public StockCreate getStockCreate(String stockID)
-	{
-		for(int i=0;i<m_stockCreateList.size();i++)
-		{
-			StockCreate cStockCreate = m_stockCreateList.get(i);
-			if(cStockCreate.stockID.equals(stockID))
-				return cStockCreate;
-		}
-		return null;
-	}
-	public boolean isInStockCreate(String stockID)
-	{
-		for(int i=0;i<m_stockCreateList.size();i++)
-		{
-			StockCreate cStockCreate = m_stockCreateList.get(i);
-			if(cStockCreate.stockID.compareTo(stockID) == 0)
+			if(cBuyOrderList.get(i).id.equals(stockID))
 			{
 				return true;
 			}
 		}
+		
+		List<HoldStock> cHoldStockList = m_accountOpe.getHoldStockList();
+		for(int i=0;i<cHoldStockList.size();i++)
+		{
+			if(cHoldStockList.get(i).id.equals(stockID))
+			{
+				return true;
+			}
+		}
+		
+		List<StockTranOrder> cSellOrderList = m_accountOpe.getSellOrderList();
+		for(int i=0;i<cSellOrderList.size();i++)
+		{
+			if(cSellOrderList.get(i).id.equals(stockID))
+			{
+				return true;
+			}
+		}
+		
 		return false;
 	}
+	public boolean clearStockSelectList()
+	{
+		m_stockSelectList.clear();
+		return true;
+	}
+	
+	// 获得买单委托列表（未成交）
+	public List<StockTranOrder> getBuyOrderList()
+	{
+		return m_accountOpe.getBuyOrderList();
+	}
 	
 	
-	private IAccount m_account;
+	// 获得买入列表
+	public List<HoldStock> getStockHoldList()
+	{
+		return m_accountOpe.getHoldStockList();
+	}
+	public HoldStock getStockStock(String stockID)
+	{
+		List<HoldStock> cStockHoldList = getStockHoldList();
+		for(int i=0;i<cStockHoldList.size();i++)
+		{
+			if(cStockHoldList.get(i).id.equals(stockID))
+			{
+				return cStockHoldList.get(i);
+			}
+		}
+		return null;
+	}
 	
+	/**
+	 * 成员-----------------------------------------------------------------
+	 */
+	// 账户操作器
+	private IAccountOpe m_accountOpe;
 	// 选股列表
 	private List<String> m_stockSelectList;
-	// 已买入列表
-	public static class StockCreate
-	{
-		public String stockID;
-		public float price;
-		public int amount;
-	}
-	private List<StockCreate> m_stockCreateList;
 }

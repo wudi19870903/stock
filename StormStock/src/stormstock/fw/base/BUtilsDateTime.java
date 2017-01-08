@@ -181,4 +181,21 @@ public class BUtilsDateTime {
 		} 
         return diffsec;
     }
+    
+    /*
+     * ÈÕÆÚ²î£¨Ìì£©
+     */
+    public static long subDate(String date1, String date2)
+    {  
+    	long diffsec = 0;
+		try {
+			Date dateObj1 = new SimpleDateFormat("yyyy-MM-dd").parse(date1);
+			Date dateObj2 = new SimpleDateFormat("yyyy-MM-dd").parse(date2);  
+	        long diff = dateObj1.getTime() - dateObj2.getTime();
+	        diffsec = diff / 1000 / 3600 / 24; 
+		} catch (java.text.ParseException e) {
+			e.printStackTrace();
+		} 
+        return diffsec;
+    }
 }

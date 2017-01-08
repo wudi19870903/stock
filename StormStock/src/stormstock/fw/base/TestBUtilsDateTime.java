@@ -10,7 +10,12 @@ public class TestBUtilsDateTime {
 		String time1 = "12:22:23";
 		String time2 = "13:20:21";
 		long diffSec = BUtilsDateTime.subTime(time1,time2);
-		BLog.output("TEST", "time1(%s) - time2(%s) = %ds\n", time1,time2,diffSec);
+		BLog.output("TEST", "time1(%s) - time2(%s) = %d s\n", time1,time2,diffSec);
+		
+		String date1 = "2016-01-01";
+		String date2 = "0000-01-01";
+		long diffDay = BUtilsDateTime.subDate(date1, date2);
+		BLog.output("TEST", "date1(%s) - date2(%s) = %d day\n", date1,date2,diffDay);
 		
 		
 		String testdate = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD("2016-01-31", 2);

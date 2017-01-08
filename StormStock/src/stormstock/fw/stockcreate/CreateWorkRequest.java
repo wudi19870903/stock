@@ -100,8 +100,8 @@ public class CreateWorkRequest extends BQThreadRequest {
 			
 		int create_max_count = cIStrategyCreate.strategy_create_max_count();
 		AccountModuleIF accIF = (AccountModuleIF)GlobalModuleObj.getModuleIF("Account");
-		int alreadyHoldCount = accIF.getStockCreateList().size();
-		int buyStockCount = create_max_count - alreadyHoldCount;
+		int alreadyCount = accIF.getStockHoldList().size() + accIF.getBuyOrderList().size();
+		int buyStockCount = create_max_count - alreadyCount;
 		buyStockCount = Math.min(buyStockCount,cCreateResultWrapperList.size());
 		
 		Transaction.StockCreateCompleteNotify.Builder msg_builder = Transaction.StockCreateCompleteNotify.newBuilder();

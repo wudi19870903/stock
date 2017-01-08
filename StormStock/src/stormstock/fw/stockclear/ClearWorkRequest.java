@@ -3,7 +3,7 @@ package stormstock.fw.stockclear;
 import java.util.ArrayList;
 import java.util.List;
 
-import stormstock.fw.acc.AccountControler.StockCreate;
+import stormstock.fw.acc.IAccountOpe.HoldStock;
 import stormstock.fw.acc.AccountModuleIF;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
@@ -109,8 +109,8 @@ public class ClearWorkRequest  extends BQThreadRequest {
 			cItemBuild.setStockID(cClearResultWrapper.stockId);
 			cItemBuild.setPrice(cClearResultWrapper.fPrice);
 			// 调用账户获取持有量
-			StockCreate cStockCreate = accIF.getStockCreate(cClearResultWrapper.stockId);
-			cItemBuild.setAmount(cStockCreate.amount);
+			HoldStock cHoldStock = accIF.getStockHold(cClearResultWrapper.stockId);
+			cItemBuild.setAmount(cHoldStock.totalCanSell);
 		}
 		Transaction.StockClearCompleteNotify msg = msg_builder.build();
 		
