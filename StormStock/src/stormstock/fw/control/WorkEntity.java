@@ -15,6 +15,7 @@ import stormstock.fw.base.BWaitObj;
 import stormstock.fw.event.Transaction;
 import stormstock.fw.event.Transaction.ControllerStartNotify;
 import stormstock.fw.objmgr.GlobalModuleObj;
+import stormstock.fw.objmgr.GlobalTranTime;
 import stormstock.fw.objmgr.GlobalUserObj;
 import stormstock.fw.stockdata.Stock;
 import stormstock.fw.stockdata.StockDataProvider;
@@ -66,7 +67,7 @@ public class WorkEntity {
 		{
 			if(isTranDate(dateStr))
 			{
-				BLog.output("CTRL", "[%s] #################################################### \n", 
+				BLog.output("CTRL", "[%s] ############################################################################## \n", 
 						dateStr);
 				
 				String timestr = "00:00:00";
@@ -218,6 +219,7 @@ public class WorkEntity {
 	 */
 	private boolean waitForDateTime(String date, String time)
 	{
+		GlobalTranTime.setTranDateTime(date, time); // 设置当前交易时间
 		if(m_bHistoryTest)
 		{
 			return true;

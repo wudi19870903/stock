@@ -30,6 +30,7 @@ public class AccountControler {
 	
 	public boolean newDayInit()
 	{
+		// 账户重新初始化
 		m_accountOpe.newDayInit();
 		return true;
 	}
@@ -66,7 +67,15 @@ public class AccountControler {
 				m_stockSelectList.add(newstockID);
 			}
 		}
+		
+		// 选股中排除已经持有的
+		List<HoldStock> cStockHoldList =  getStockHoldList();
+		for(int i=0;i<cStockHoldList.size();i++)
+		{
+			m_stockSelectList.remove(cStockHoldList.get(i).id);
+		}
 	}
+	
 	// 选股列表获取
 	public List<String> getStockSelectList()
 	{

@@ -19,7 +19,7 @@ public class WorkEntitySelect {
 		m_reqSelectDate = dateStr;
 		m_reqSelectTime = timeStr;
 		String reqSelectDateTime = m_reqSelectDate + " " + m_reqSelectTime;
-		BLog.output("CTRL", "    reqSelectDateTime [%s]\n", reqSelectDateTime);
+		// BLog.output("CTRL", "    reqSelectDateTime [%s]\n", reqSelectDateTime);
 		
 		Transaction.SelectStockNotify.Builder msg_builder = Transaction.SelectStockNotify.newBuilder();
 		msg_builder.setDate(dateStr);
@@ -45,7 +45,7 @@ public class WorkEntitySelect {
 		String reqSelectDateTime = m_reqSelectDate + " " + m_reqSelectTime;
 		
 		String logStr = "";
-		logStr += String.format("    select(%d) [ ", cSelectedIDList.size());
+		logStr += String.format("    selectedDateTime[%s] (%d) [ ", selectedDateTime, cSelectedIDList.size());
 		if(cSelectedIDList.size() == 0) logStr += "null ";
 		for(int i=0; i< cSelectedIDList.size(); i++)
 		{

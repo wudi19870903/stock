@@ -5,6 +5,11 @@ import java.util.List;
 
 import stormstock.analysis.ANLLog;
 import stormstock.fw.acc.IAccountOpe.HoldStock;
+import stormstock.fw.objmgr.GlobalTranTime;
+import stormstock.fw.stockcreate.StockTimeDataCache;
+import stormstock.fw.stockdata.StockDataProvider;
+import stormstock.fw.stockdata.StockDay;
+import stormstock.fw.stockdata.StockTime;
 
 public class MockAccountOpe extends IAccountOpe {
 	
@@ -21,6 +26,7 @@ public class MockAccountOpe extends IAccountOpe {
 	@Override
 	public boolean newDayInit() 
 	{ 
+		// 新一天时，所有持股均可卖
 		HoldStock cHoldStock = null;
 		for(int i = 0; i< m_holdStockList.size(); i++)
 		{
@@ -113,12 +119,29 @@ public class MockAccountOpe extends IAccountOpe {
 
 	@Override
 	public float getTotalAssets() {
+		String curTranDate = GlobalTranTime.getTranDate();
+		String curTranTime = GlobalTranTime.getTranTime();
+		
 		float all_marketval = 0.0f;
 		List<HoldStock> cHoldStockList = getHoldStockList();
 		for(int i=0;i<cHoldStockList.size();i++)
 		{
 			HoldStock cHoldStock = cHoldStockList.get(i);
-			all_marketval = all_marketval + cHoldStock.buyPrice*cHoldStock.totalAmount;
+			float curTranPrice = 0.0f;
+
+			StockTime cStockTime = new StockTime();
+			boolean bGetStockTime = StockDataProvider.getStockTime(cHoldStock.id, curTranDate, curTranTime, cStockTime);
+			if(bGetStockTime)
+			{
+				curTranPrice = cStockTime.price;
+			}
+			else
+			{
+				List<StockDay> cStockDayList = StockDataProvider.getHistoryData(cHoldStock.id, curTranDate);
+				curTranPrice = cStockDayList.get(cStockDayList.size()-1).close;
+			}
+					
+			all_marketval = all_marketval + curTranPrice*cHoldStock.totalAmount;
 		}
 		float all_asset = all_marketval + getAvailableMoney();
 		return all_asset;
