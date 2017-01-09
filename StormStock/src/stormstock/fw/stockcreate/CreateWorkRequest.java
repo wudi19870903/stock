@@ -4,23 +4,21 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import stormstock.fw.acc.AccountModuleIF;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BQThread.BQThreadRequest;
 import stormstock.fw.base.BUtilsDateTime;
 import stormstock.fw.event.Transaction;
-import stormstock.fw.objmgr.GlobalModuleObj;
-import stormstock.fw.objmgr.GlobalUserObj;
-import stormstock.fw.stockdata.Stock;
-import stormstock.fw.stockdata.StockDataProvider;
-import stormstock.fw.stockdata.StockDay;
-import stormstock.fw.stockdata.StockInfo;
-import stormstock.fw.stockdata.StockTime;
-import stormstock.fw.tran.strategy.IStrategyCreate;
-import stormstock.fw.tran.strategy.IStrategyCreate.CreateResult;
-import stormstock.fw.tran.strategy.IStrategySelect.SelectResult;
-import stormstock.fw.tran.strategy.StockContext;
+import stormstock.fw.tranbase.account.AccountControlIF;
+import stormstock.fw.tranbase.com.GlobalUserObj;
+import stormstock.fw.tranbase.com.IStrategyCreate;
+import stormstock.fw.tranbase.com.IStrategyCreate.CreateResult;
+import stormstock.fw.tranbase.com.StockContext;
+import stormstock.fw.tranbase.stockdata.Stock;
+import stormstock.fw.tranbase.stockdata.StockDataIF;
+import stormstock.fw.tranbase.stockdata.StockDay;
+import stormstock.fw.tranbase.stockdata.StockInfo;
+import stormstock.fw.tranbase.stockdata.StockTime;
 
 public class CreateWorkRequest extends BQThreadRequest {
 	
@@ -60,13 +58,13 @@ public class CreateWorkRequest extends BQThreadRequest {
 			
 			// 构造当时股票数据(昨日日K，今日当前分时)
 			
-			StockInfo cStockInfo = StockDataProvider.getLatestStockInfo(stockID);
+			StockInfo cStockInfo = StockDataIF.getLatestStockInfo(stockID);
 			
 			String yesterday_date = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(m_date, -1);
-			List<StockDay> cStockDayList = StockDataProvider.getHistoryData(stockID, yesterday_date);
+			List<StockDay> cStockDayList = StockDataIF.getHistoryData(stockID, yesterday_date);
 			
 			StockTime cStockTime = new StockTime();
-			boolean bGetStockTime = StockDataProvider.getStockTime(stockID, m_date, m_time, cStockTime);
+			boolean bGetStockTime = StockDataIF.getStockTime(stockID, m_date, m_time, cStockTime);
 			if(bGetStockTime)
 			{
 				StockTimeDataCache.addStockTime(stockID, m_date, cStockTime);
@@ -99,7 +97,7 @@ public class CreateWorkRequest extends BQThreadRequest {
 		}
 			
 		int create_max_count = cIStrategyCreate.strategy_create_max_count();
-		AccountModuleIF accIF = (AccountModuleIF)GlobalModuleObj.getModuleIF("Account");
+		AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
 		int alreadyCount = accIF.getStockHoldList().size() + accIF.getBuyOrderList().size();
 		int buyStockCount = create_max_count - alreadyCount;
 		buyStockCount = Math.min(buyStockCount,cCreateResultWrapperList.size());

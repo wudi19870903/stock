@@ -5,10 +5,6 @@ import stormstock.fw.base.BLog;
 import stormstock.fw.base.BThread;
 import stormstock.fw.event.Transaction;
 import stormstock.fw.event.Transaction.ControllerStartNotify;
-import stormstock.fw.stockdata.Stock;
-import stormstock.fw.stockdata.StockDataProvider;
-import stormstock.fw.stockdata.StockDay;
-import stormstock.fw.stockdata.StockUtils;
 
 public class WorkThread extends BThread {
 	

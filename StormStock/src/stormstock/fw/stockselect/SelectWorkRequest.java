@@ -9,14 +9,14 @@ import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BQThread.BQThreadRequest;
 import stormstock.fw.event.Transaction;
-import stormstock.fw.objmgr.GlobalUserObj;
-import stormstock.fw.stockdata.Stock;
-import stormstock.fw.stockdata.StockDataProvider;
-import stormstock.fw.stockdata.StockDay;
-import stormstock.fw.stockdata.StockInfo;
-import stormstock.fw.tran.strategy.IStrategySelect;
-import stormstock.fw.tran.strategy.IStrategySelect.SelectResult;
-import stormstock.fw.tran.strategy.StockContext;
+import stormstock.fw.tranbase.com.GlobalUserObj;
+import stormstock.fw.tranbase.com.IStrategySelect;
+import stormstock.fw.tranbase.com.IStrategySelect.SelectResult;
+import stormstock.fw.tranbase.com.StockContext;
+import stormstock.fw.tranbase.stockdata.Stock;
+import stormstock.fw.tranbase.stockdata.StockDataIF;
+import stormstock.fw.tranbase.stockdata.StockDay;
+import stormstock.fw.tranbase.stockdata.StockInfo;
 
 public class SelectWorkRequest extends BQThreadRequest {
 	
@@ -73,16 +73,16 @@ public class SelectWorkRequest extends BQThreadRequest {
 				cSRW.stockId = stockID;
 				
 				// 缓存交易股票的所有历史数据
-				if(!StockDataProvider.isCachedStockDayData(stockID))
+				if(!StockDataIF.isCachedStockDayData(stockID))
 				{
-					List<StockDay> cStockDayList = StockDataProvider.getHistoryData(stockID);
-					StockDataProvider.cacheHistoryData(stockID, cStockDayList);
+					List<StockDay> cStockDayList = StockDataIF.getHistoryData(stockID);
+					StockDataIF.cacheHistoryData(stockID, cStockDayList);
 				}
 				
 				// 构造当时股票数据
 				Stock cStock = new Stock();
-				List<StockDay> cStockDayList = StockDataProvider.getHistoryData(stockID, m_date);
-				StockInfo cStockInfo = StockDataProvider.getLatestStockInfo(stockID);
+				List<StockDay> cStockDayList = StockDataIF.getHistoryData(stockID, m_date);
+				StockInfo cStockInfo = StockDataIF.getLatestStockInfo(stockID);
 				StockContext ctx = new StockContext();
 				cStock.setDate(m_date);
 				cStock.setTime(m_time);

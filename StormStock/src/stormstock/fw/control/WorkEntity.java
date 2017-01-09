@@ -4,25 +4,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import stormstock.analysis.ANLDataProvider;
-import stormstock.analysis.ANLLog;
-import stormstock.analysis.ANLStock;
-import stormstock.fw.acc.AccountModuleIF;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BUtilsDateTime;
 import stormstock.fw.base.BWaitObj;
 import stormstock.fw.event.Transaction;
 import stormstock.fw.event.Transaction.ControllerStartNotify;
-import stormstock.fw.objmgr.GlobalModuleObj;
-import stormstock.fw.objmgr.GlobalTranTime;
-import stormstock.fw.objmgr.GlobalUserObj;
-import stormstock.fw.stockdata.Stock;
-import stormstock.fw.stockdata.StockDataProvider;
-import stormstock.fw.stockdata.StockDay;
-import stormstock.fw.stockdata.StockInfo;
-import stormstock.fw.stockdata.StockUtils;
-import stormstock.fw.tran.ITranStockSetFilter;
+import stormstock.fw.tranbase.account.AccountControlIF;
+import stormstock.fw.tranbase.com.GlobalUserObj;
+import stormstock.fw.tranbase.com.ITranStockSetFilter;
+import stormstock.fw.tranbase.stockdata.Stock;
+import stormstock.fw.tranbase.stockdata.StockDataIF;
+import stormstock.fw.tranbase.stockdata.StockDay;
+import stormstock.fw.tranbase.stockdata.StockInfo;
+import stormstock.fw.tranbase.stockdata.StockUtils;
+
 
 public class WorkEntity {
 	public WorkEntity(boolean bHistoryTest, String beginDate, String endDate)
@@ -36,7 +32,7 @@ public class WorkEntity {
 		if(m_bHistoryTest)
 		{
 			m_hisTranDate = new ArrayList<String>();
-			Stock cStockShangZheng = StockDataProvider.getStock("999999");
+			Stock cStockShangZheng = StockDataIF.getStock("999999");
 			int iB = StockUtils.indexDayKAfterDate(cStockShangZheng.getCurStockDayData(), m_beginDate);
 			int iE = StockUtils.indexDayKBeforeDate(cStockShangZheng.getCurStockDayData(), m_endDate);
 			
@@ -76,7 +72,7 @@ public class WorkEntity {
 				timestr = "01:00:00";
 				if(waitForDateTime(dateStr, timestr))
 				{
-					AccountModuleIF accIF = (AccountModuleIF)GlobalModuleObj.getModuleIF("Account");
+					AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
 					BLog.output("CTRL", "[%s %s] account newDayInit \n", dateStr, timestr);
 					accIF.newDayInit();
 				}
@@ -118,7 +114,7 @@ public class WorkEntity {
 				if(waitForDateTime(dateStr, timestr))
 				{
 					BLog.output("CTRL", "[%s %s] updateStockData \n", dateStr, timestr);
-					m_entityDataUpdate.updateStockData(dateStr, timestr);
+					StockDataIF.updateAllLocalStocks(dateStr);
 				}
 				
 				// 22:00 选股 等待选股完毕
@@ -219,7 +215,6 @@ public class WorkEntity {
 	 */
 	private boolean waitForDateTime(String date, String time)
 	{
-		GlobalTranTime.setTranDateTime(date, time); // 设置当前交易时间
 		if(m_bHistoryTest)
 		{
 			return true;
@@ -236,11 +231,11 @@ public class WorkEntity {
 		
 		List<String> cStockIDSet = new ArrayList<String>();
 		
-		List<String> cStockAllList = StockDataProvider.getAllStockID();
+		List<String> cStockAllList = StockDataIF.getAllStockID();
 		for(int i=0; i<cStockAllList.size();i++)
 		{
 			String stockID = cStockAllList.get(i);
-			StockInfo cStockInfo = StockDataProvider.getLatestStockInfo(stockID);
+			StockInfo cStockInfo = StockDataIF.getLatestStockInfo(stockID);
 
 			if(null != cStockInfo && cTranStockSetFilter.tran_stockset_byLatestStockInfo(cStockInfo))
 			{

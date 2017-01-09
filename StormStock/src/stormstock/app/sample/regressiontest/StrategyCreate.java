@@ -3,9 +3,9 @@ package stormstock.app.sample.regressiontest;
 import java.util.List;
 
 import stormstock.fw.base.BLog;
-import stormstock.fw.stockdata.StockTime;
-import stormstock.fw.tran.strategy.IStrategyCreate;
-import stormstock.fw.tran.strategy.StockContext;
+import stormstock.fw.tranbase.com.IStrategyCreate;
+import stormstock.fw.tranbase.com.StockContext;
+import stormstock.fw.tranbase.stockdata.StockTime;
 
 public class StrategyCreate extends IStrategyCreate {
 

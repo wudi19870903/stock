@@ -3,8 +3,6 @@ package stormstock.fw.base;
 import java.util.ArrayList;
 import java.util.List;
 
-import stormstock.fw.objmgr.GlobalModuleObj;
-
 public class BModuleManager {
 	
 	public BModuleManager()
@@ -39,7 +37,6 @@ public class BModuleManager {
 			BModuleBase cModule = m_moduleList.get(i);
 			BLog.output( "BASE", "BModuleManager Call Start for module [%s]\n", cModule.moduleName());
 			cModule.start();
-			GlobalModuleObj.addModule(cModule);
 		}
 	}
 	

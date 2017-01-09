@@ -2,13 +2,13 @@ package stormstock.fw.control;
 
 import java.util.List;
 
-import stormstock.fw.acc.AccountModuleIF;
-import stormstock.fw.acc.IAccountOpe.HoldStock;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BWaitObj;
 import stormstock.fw.event.Transaction;
-import stormstock.fw.objmgr.GlobalModuleObj;
+import stormstock.fw.tranbase.account.AccountControlIF;
+import stormstock.fw.tranbase.account.IAccountOpe.HoldStock;
+import stormstock.fw.tranbase.com.GlobalUserObj;
 
 public class WorkEntityClear {
 	public WorkEntityClear()
@@ -27,7 +27,7 @@ public class WorkEntityClear {
 		msg_builder.setTime(timeStr);
 		
 		// 从账户拉取已持股
-		AccountModuleIF accIF = (AccountModuleIF)GlobalModuleObj.getModuleIF("Account");
+		AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
 		List<HoldStock> cStockHoldList = accIF.getStockHoldList();
 		for(int i=0;i<cStockHoldList.size();i++)
 		{
@@ -63,7 +63,7 @@ public class WorkEntityClear {
 				float price = cClearItemList.get(i).getPrice();
 				int amount = cClearItemList.get(i).getAmount();	
 				
-				AccountModuleIF accIF = (AccountModuleIF)GlobalModuleObj.getModuleIF("Account");
+				AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
 				int succCnt = accIF.pushSellOrder(stockID, price, amount); // 调用账户模块卖出股票
 				if(succCnt >= 0)
 				{

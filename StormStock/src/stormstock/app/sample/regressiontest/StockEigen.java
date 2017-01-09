@@ -1,7 +1,7 @@
 package stormstock.app.sample.regressiontest;
 
-import stormstock.fw.stockdata.Stock;
-import stormstock.fw.tran.eigen.IEigenStock;
+import stormstock.fw.tranbase.com.IEigenStock;
+import stormstock.fw.tranbase.stockdata.Stock;
 
 public class StockEigen {
 	/*

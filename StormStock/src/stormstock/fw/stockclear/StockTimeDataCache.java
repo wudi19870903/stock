@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import stormstock.fw.base.BLog;
-import stormstock.fw.stockdata.StockTime;
+import stormstock.fw.tranbase.stockdata.StockTime;
 
 public class StockTimeDataCache {
 	

@@ -2,12 +2,12 @@ package stormstock.fw.control;
 
 import java.util.List;
 
-import stormstock.fw.acc.AccountModuleIF;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BWaitObj;
 import stormstock.fw.event.Transaction;
-import stormstock.fw.objmgr.GlobalModuleObj;
+import stormstock.fw.tranbase.account.AccountControlIF;
+import stormstock.fw.tranbase.com.GlobalUserObj;
 
 public class WorkEntitySelect {
 	public WorkEntitySelect()
@@ -61,7 +61,7 @@ public class WorkEntitySelect {
 		BLog.output("CTRL", "%s\n", logStr);
 		
 		// 保存选股列表到账户模块
-		AccountModuleIF accIF = (AccountModuleIF)GlobalModuleObj.getModuleIF("Account");
+		AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
 		accIF.addStockSelectList(cSelectedIDList);
 
 		if(selectedDateTime.compareTo(reqSelectDateTime) == 0)

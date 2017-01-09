@@ -2,12 +2,12 @@ package stormstock.fw.control;
 
 import java.util.List;
 
-import stormstock.fw.acc.AccountModuleIF;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BWaitObj;
 import stormstock.fw.event.Transaction;
-import stormstock.fw.objmgr.GlobalModuleObj;
+import stormstock.fw.tranbase.account.AccountControlIF;
+import stormstock.fw.tranbase.com.GlobalUserObj;
 
 public class WorkEntityCreate {
 	public WorkEntityCreate()
@@ -26,7 +26,7 @@ public class WorkEntityCreate {
 		msg_builder.setTime(timeStr);
 		
 		// 从账户拉取已选股票
-		AccountModuleIF accIF = (AccountModuleIF)GlobalModuleObj.getModuleIF("Account");
+		AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
 		List<String> cSelectIDList = accIF.getStockSelectList(); 
 		for(int i=0;i<cSelectIDList.size();i++)
 		{
@@ -59,7 +59,7 @@ public class WorkEntityCreate {
 				int amount = cCreateItemList.get(i).getAmount();	
 				
 				
-				AccountModuleIF accIF = (AccountModuleIF)GlobalModuleObj.getModuleIF("Account");
+				AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
 				int succCnt = accIF.pushBuyOrder(stockID, price, amount); // 调用账户模块买入股票
 				if(succCnt > 0)
 				{
