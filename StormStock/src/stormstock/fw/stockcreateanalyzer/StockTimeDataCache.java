@@ -1,4 +1,4 @@
-package stormstock.fw.stockcreate;
+package stormstock.fw.stockcreateanalyzer;
 
 import java.util.List;
 import java.sql.Date;

@@ -1,4 +1,4 @@
-package stormstock.fw.stockcreate;
+package stormstock.fw.stockcreateanalyzer;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -8,6 +8,7 @@ import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BQThread.BQThreadRequest;
 import stormstock.fw.base.BUtilsDateTime;
+import stormstock.fw.event.StockCreateAnalysis;
 import stormstock.fw.event.Transaction;
 import stormstock.fw.tranbase.account.AccountControlIF;
 import stormstock.fw.tranbase.com.GlobalUserObj;
@@ -102,13 +103,13 @@ public class CreateWorkRequest extends BQThreadRequest {
 		int buyStockCount = create_max_count - alreadyCount;
 		buyStockCount = Math.min(buyStockCount,cCreateResultWrapperList.size());
 		
-		Transaction.StockCreateCompleteNotify.Builder msg_builder = Transaction.StockCreateCompleteNotify.newBuilder();
+		StockCreateAnalysis.StockCreateAnalysisCompleteNotify.Builder msg_builder = StockCreateAnalysis.StockCreateAnalysisCompleteNotify.newBuilder();
 		msg_builder.setDate(m_date);
 		msg_builder.setTime(m_time);
 		for(int i = 0; i< buyStockCount; i++)
 		{
 			CreateResultWrapper cCreateResultWrapper = cCreateResultWrapperList.get(i);
-			Transaction.StockCreateCompleteNotify.CreateItem.Builder cItemBuild = msg_builder.addItemBuilder();
+			StockCreateAnalysis.StockCreateAnalysisCompleteNotify.CreateItem.Builder cItemBuild = msg_builder.addItemBuilder();
 			cItemBuild.setStockID(cCreateResultWrapper.stockId);
 			cItemBuild.setPrice(cCreateResultWrapper.fPrice);
 			
@@ -122,7 +123,7 @@ public class CreateWorkRequest extends BQThreadRequest {
 			int amount = (int)(buyMoney/cCreateResultWrapper.fPrice);
 			cItemBuild.setAmount(amount);
 		}
-		Transaction.StockCreateCompleteNotify msg = msg_builder.build();
+		StockCreateAnalysis.StockCreateAnalysisCompleteNotify msg = msg_builder.build();
 		BEventSys.EventSender cSender = new BEventSys.EventSender();
 		
 		BLog.output("CREATE", "    stockIDCreateList count(%d)\n", msg.getItemList().size());
@@ -134,7 +135,7 @@ public class CreateWorkRequest extends BQThreadRequest {
 			BLog.output("CREATE", "        -Stock(%s) price(%.2f) amount(%d)\n", stockID,price,amount);
 		}
 		
-		cSender.Send("BEV_TRAN_STOCKCREATECOMPLETENOTIFY", msg);
+		cSender.Send("BEV_TRAN_STOCKCREATEANALYSISCOMPLETENOTIFY", msg);
 		
 	}
 	

@@ -5,6 +5,7 @@ import java.util.List;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BWaitObj;
+import stormstock.fw.event.StockSelectAnalysis;
 import stormstock.fw.event.Transaction;
 import stormstock.fw.tranbase.account.AccountControlIF;
 import stormstock.fw.tranbase.com.GlobalUserObj;
@@ -21,7 +22,7 @@ public class WorkEntitySelect {
 		String reqSelectDateTime = m_reqSelectDate + " " + m_reqSelectTime;
 		// BLog.output("CTRL", "    reqSelectDateTime [%s]\n", reqSelectDateTime);
 		
-		Transaction.SelectStockNotify.Builder msg_builder = Transaction.SelectStockNotify.newBuilder();
+		StockSelectAnalysis.StockSelectAnalysisRequest.Builder msg_builder = StockSelectAnalysis.StockSelectAnalysisRequest.newBuilder();
 		msg_builder.setDate(dateStr);
 		msg_builder.setTime(timeStr);
 		List<String> cTranStockIDSet = StockObjFlow.getTranStockIDSet();
@@ -29,18 +30,18 @@ public class WorkEntitySelect {
 		{
 			msg_builder.addStockID(cTranStockIDSet.get(i));
 		}
-		Transaction.SelectStockNotify msg = msg_builder.build();
+		StockSelectAnalysis.StockSelectAnalysisRequest msg = msg_builder.build();
 		BEventSys.EventSender cSender = new BEventSys.EventSender();
-		cSender.Send("BEV_TRAN_SELECTSTOCKNOTIFY", msg);
+		cSender.Send("BEV_TRAN_STOCKSELECTANALYSISREQUEST", msg);
 
 		m_WaitObjForSelect.Wait();
 	}
-	public void onSelectStockCompleteNotify(com.google.protobuf.GeneratedMessage m)
+	public void onStockSelectAnalysisCompleteNotify(com.google.protobuf.GeneratedMessage m)
 	{
-		Transaction.SelectStockCompleteNotify msg = (Transaction.SelectStockCompleteNotify)m;
+		StockSelectAnalysis.StockSelectAnalysisCompleteNotify msg = (StockSelectAnalysis.StockSelectAnalysisCompleteNotify)m;
 		String selectedDate = msg.getDate();
 		String selectedTime = msg.getTime();
-		List<String> cSelectedIDList = msg.getSelectedIDList();
+		List<String> cSelectedIDList = msg.getStockIDList();
 		String selectedDateTime = selectedDate + " " + selectedTime;
 		String reqSelectDateTime = m_reqSelectDate + " " + m_reqSelectTime;
 		

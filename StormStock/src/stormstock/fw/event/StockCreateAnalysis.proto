@@ -1,0 +1,19 @@
+package stormstock.fw.event; 
+
+// 股票建仓分析请求
+message StockCreateAnalysisRequest  { 
+    required string date = 1;
+    required string time = 2;
+    repeated string stockID = 3;  //建仓考察股票ID（已选list）
+}
+// 股票建仓分析完毕通知
+message StockCreateAnalysisCompleteNotify  { 
+	message CreateItem {
+	    required string stockID = 1;
+	    required float price = 2;
+	    required int32 amount = 3;
+	}
+    required string date = 1;
+    required string time = 2;
+    repeated CreateItem item = 3;
+}

@@ -44,7 +44,6 @@ public class WorkEntity {
 	        }
 		}
 		
-		m_entityDataUpdate = new WorkEntityDataUpdate();
 		m_entitySelect = new WorkEntitySelect();
 		m_entityCreate = new WorkEntityCreate();
 		m_entityClear = new WorkEntityClear();
@@ -86,7 +85,7 @@ public class WorkEntity {
 				{
 					if(waitForDateTime(dateStr, timestr))
 					{
-						BLog.output("CTRL", "[%s %s] stockClear & stockCreate \n", dateStr, timestr);
+						BLog.output("CTRL", "[%s %s] stockClearAnalysis & stockCreateAnalysis \n", dateStr, timestr);
 						m_entityClear.stockClear(dateStr, timestr);
 						m_entityCreate.stockCreate(dateStr, timestr);
 					}
@@ -101,7 +100,7 @@ public class WorkEntity {
 				{
 					if(waitForDateTime(dateStr, timestr))
 					{
-						BLog.output("CTRL", "[%s %s] stockClear & stockCreate \n", dateStr, timestr);
+						BLog.output("CTRL", "[%s %s] stockClearAnalysis & stockCreateAnalysis \n", dateStr, timestr);
 						m_entityClear.stockClear(dateStr, timestr);
 						m_entityCreate.stockCreate(dateStr, timestr);
 					}
@@ -121,7 +120,7 @@ public class WorkEntity {
 				timestr = "22:00:00";
 				if(waitForDateTime(dateStr, timestr))
 				{
-					BLog.output("CTRL", "[%s %s] Select \n", dateStr, timestr);
+					BLog.output("CTRL", "[%s %s] StockSelectAnalysis \n", dateStr, timestr);
 					m_entitySelect.selectStock(dateStr, timestr);
 				}
 			}
@@ -135,20 +134,16 @@ public class WorkEntity {
 		cSender.Send("BEV_TRAN_ENGINEEXIT", Transaction.TranEngineExitNotify.newBuilder().build());
 	}
 	
-	public void onDataUpdateCompleteNotify(com.google.protobuf.GeneratedMessage m)
+	public void onStockSelectAnalysisCompleteNotify(com.google.protobuf.GeneratedMessage m) 
 	{
-		m_entityDataUpdate.onDataUpdateCompleteNotify(m);
+		m_entitySelect.onStockSelectAnalysisCompleteNotify(m);
 	}
-	public void onSelectStockCompleteNotify(com.google.protobuf.GeneratedMessage m) 
+	public void onStockCreateAnalysisCompleteNotify(com.google.protobuf.GeneratedMessage m)
 	{
-		m_entitySelect.onSelectStockCompleteNotify(m);
+		m_entityCreate.onStockCreateAnalysisCompleteNotify(m);
 	}
-	public void onStockCreateCompleteNotify(com.google.protobuf.GeneratedMessage m)
-	{
-		m_entityCreate.onStockCreateCompleteNotify(m);
-	}
-	public void onStockClearCompleteNotify(com.google.protobuf.GeneratedMessage m) {
-		m_entityClear.onStockClearCompleteNotify(m);
+	public void onStockClearAnalysisCompleteNotify(com.google.protobuf.GeneratedMessage m) {
+		m_entityClear.onStockClearAnalysisCompleteNotify(m);
 	}
 	
 	/*
@@ -258,7 +253,6 @@ public class WorkEntity {
 	// 当前日期
 	private String m_curDate;
 	
-	private WorkEntityDataUpdate m_entityDataUpdate;
 	private WorkEntitySelect m_entitySelect;
 	private WorkEntityCreate m_entityCreate;
 	private WorkEntityClear m_entityClear;

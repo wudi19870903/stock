@@ -5,6 +5,7 @@ import java.util.List;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BWaitObj;
+import stormstock.fw.event.StockClearAnalysis;
 import stormstock.fw.event.Transaction;
 import stormstock.fw.tranbase.account.AccountControlIF;
 import stormstock.fw.tranbase.account.IAccountOpe.HoldStock;
@@ -22,7 +23,7 @@ public class WorkEntityClear {
 		String reqClearDateTime = m_reqClearDate + " " + m_reqClearTime;
 		// BLog.output("CTRL", "    - reqClearDateTime [%s]\n", reqClearDateTime);
 		
-		Transaction.StockClearNotify.Builder msg_builder = Transaction.StockClearNotify.newBuilder();
+		StockClearAnalysis.StockClearAnalysisRequest.Builder msg_builder = StockClearAnalysis.StockClearAnalysisRequest.newBuilder();
 		msg_builder.setDate(dateStr);
 		msg_builder.setTime(timeStr);
 		
@@ -38,15 +39,15 @@ public class WorkEntityClear {
 			}
 		}
 		
-		Transaction.StockClearNotify msg = msg_builder.build();
+		StockClearAnalysis.StockClearAnalysisRequest msg = msg_builder.build();
 		BEventSys.EventSender cSender = new BEventSys.EventSender();
-		cSender.Send("BEV_TRAN_STOCKCLEARNOTIFY", msg);
+		cSender.Send("BEV_TRAN_STOCKCLEARANALYSISREQUEST", msg);
 		
 		m_WaitObjForClear.Wait();
 	}
-	public void onStockClearCompleteNotify(com.google.protobuf.GeneratedMessage m)
+	public void onStockClearAnalysisCompleteNotify(com.google.protobuf.GeneratedMessage m)
 	{
-		Transaction.StockClearCompleteNotify msg = (Transaction.StockClearCompleteNotify)m;
+		StockClearAnalysis.StockClearAnalysisCompleteNotify msg = (StockClearAnalysis.StockClearAnalysisCompleteNotify)m;
 		String clearedDate = msg.getDate();
 		String clearedTime = msg.getTime();
 		String clearedDateTime = clearedDate + " " + clearedTime;
@@ -54,7 +55,7 @@ public class WorkEntityClear {
 
 		if(clearedDateTime.compareTo(reqClearDateTime) == 0)
 		{
-			List<Transaction.StockClearCompleteNotify.ClearItem> cClearItemList = msg.getItemList();
+			List<StockClearAnalysis.StockClearAnalysisCompleteNotify.ClearItem> cClearItemList = msg.getItemList();
 			BLog.output("CTRL", "    clearedDateTime [%s] count(%d)\n", clearedDateTime, cClearItemList.size());
 			
 			for(int i=0;i<cClearItemList.size();i++)

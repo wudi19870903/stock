@@ -38,30 +38,23 @@ public class WorkThread extends BThread {
 		m_cWorkEntity.work();
 	}
 	
-	public void onDataUpdateCompleteNotify(com.google.protobuf.GeneratedMessage m)
+	public void onStockSelectAnalysisCompleteNotify(com.google.protobuf.GeneratedMessage m) {
+		if(null != m_cWorkEntity)
+		{
+			m_cWorkEntity.onStockSelectAnalysisCompleteNotify(m);
+		}
+	}
+	public void onStockCreateAnalysisCompleteNotify(com.google.protobuf.GeneratedMessage m)
 	{
 		if(null != m_cWorkEntity)
 		{
-			m_cWorkEntity.onDataUpdateCompleteNotify(m);
+			m_cWorkEntity.onStockCreateAnalysisCompleteNotify(m);
 		}
 	}
-	public void onSelectStockCompleteNotify(com.google.protobuf.GeneratedMessage m) {
+	public void onStockClearAnalysisCompleteNotify(com.google.protobuf.GeneratedMessage m) {
 		if(null != m_cWorkEntity)
 		{
-			m_cWorkEntity.onSelectStockCompleteNotify(m);
-		}
-	}
-	public void onStockCreateCompleteNotify(com.google.protobuf.GeneratedMessage m)
-	{
-		if(null != m_cWorkEntity)
-		{
-			m_cWorkEntity.onStockCreateCompleteNotify(m);
-		}
-	}
-	public void onStockClearCompleteNotify(com.google.protobuf.GeneratedMessage m) {
-		if(null != m_cWorkEntity)
-		{
-			m_cWorkEntity.onStockClearCompleteNotify(m);
+			m_cWorkEntity.onStockClearAnalysisCompleteNotify(m);
 		}
 	}
 

@@ -1,4 +1,4 @@
-package stormstock.fw.stockclear;
+package stormstock.fw.stockclearanalyzer;
 
 import java.util.ArrayList;
 import java.util.HashMap;

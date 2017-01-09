@@ -1,4 +1,4 @@
-package stormstock.fw.stockselect;
+package stormstock.fw.stockselectanalyzer;
 
 import java.util.List;
 
@@ -8,19 +8,20 @@ import stormstock.fw.base.BModuleBase;
 import stormstock.fw.base.BQThread;
 import stormstock.fw.base.BEventSys.EventReceiver;
 import stormstock.fw.base.BEventSys.EventSender;
+import stormstock.fw.event.StockSelectAnalysis;
 import stormstock.fw.event.Transaction;
 
-public class ModuleSelector extends BModuleBase {
+public class StockSelectAnalyzer extends BModuleBase {
 
-	public ModuleSelector() {
-		super("Selector");
+	public StockSelectAnalyzer() {
+		super("StockSelectAnalyzer");
 	}
 
 	@Override
 	public void initialize() {
 		m_qThread = new BQThread();
 		m_eventRecever = new EventReceiver("SelectorReceiver");
-		m_eventRecever.Subscribe("BEV_TRAN_SELECTSTOCKNOTIFY", this, "onSelectStockNotify");
+		m_eventRecever.Subscribe("BEV_TRAN_STOCKSELECTANALYSISREQUEST", this, "onStockSelectAnalysisRequest");
 	}
 
 	@Override
@@ -47,13 +48,13 @@ public class ModuleSelector extends BModuleBase {
 	}
 	
 	// callback
-	public void onSelectStockNotify(com.google.protobuf.GeneratedMessage m) {
-		Transaction.SelectStockNotify selectStockNotify = (Transaction.SelectStockNotify)m;
+	public void onStockSelectAnalysisRequest(com.google.protobuf.GeneratedMessage m) {
+		StockSelectAnalysis.StockSelectAnalysisRequest stockSelectAnalysisRequest = (StockSelectAnalysis.StockSelectAnalysisRequest)m;
 
 		BLog.output("SELECT", "ModuleSelector onSelectStockNotify\n");
-		String dateStr = selectStockNotify.getDate();
-		String timeStr = selectStockNotify.getTime();
-		List<String> stockIDList = selectStockNotify.getStockIDList();
+		String dateStr = stockSelectAnalysisRequest.getDate();
+		String timeStr = stockSelectAnalysisRequest.getTime();
+		List<String> stockIDList = stockSelectAnalysisRequest.getStockIDList();
 		
 		m_qThread.postRequest(new SelectWorkRequest(dateStr, timeStr, stockIDList));
 	}

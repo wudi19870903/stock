@@ -13,10 +13,10 @@ import stormstock.fw.base.BEventSys.EventSender;
  * 控制器模块
  * 负责指定时间点做任务的调度
  */
-public class ModuleController extends BModuleBase {
+public class FlowController extends BModuleBase {
 
-	public ModuleController() {
-		super("Controller");
+	public FlowController() {
+		super("FlowController");
 		// TODO Auto-generated constructor stub
 	}
 
@@ -24,10 +24,9 @@ public class ModuleController extends BModuleBase {
 	public void initialize() {
 		m_eventRecever = new EventReceiver("ControllerReceiver");
 		m_eventRecever.Subscribe("BEV_TRAN_CONTROLLERSTARTNOTIFY", this, "onTranStartNotify");
-		m_eventRecever.Subscribe("BEV_TRAN_DATAUPDATECOMPLETENOTIFY", this, "onDataUpdateCompleteNotify");
-		m_eventRecever.Subscribe("BEV_TRAN_SELECTSTOCKCOMPLETENOTIFY", this, "onSelectStockCompleteNotify");
-		m_eventRecever.Subscribe("BEV_TRAN_STOCKCREATECOMPLETENOTIFY", this, "onStockCreateCompleteNotify");
-		m_eventRecever.Subscribe("BEV_TRAN_STOCKCLEARCOMPLETENOTIFY", this, "onStockClearCompleteNotify");
+		m_eventRecever.Subscribe("BEV_TRAN_STOCKSELECTANALYSISCOMPLETENOTIFY", this, "onStockSelectAnalysisCompleteNotify");
+		m_eventRecever.Subscribe("BEV_TRAN_STOCKCREATEANALYSISCOMPLETENOTIFY", this, "onStockCreateAnalysisCompleteNotify");
+		m_eventRecever.Subscribe("BEV_TRAN_STOCKCLEARANALYSISCOMPLETENOTIFY", this, "onStockClearAnalysisCompleteNotify");
 		
 	}
 
@@ -60,32 +59,26 @@ public class ModuleController extends BModuleBase {
 		m_cWorkThread.startThread();
 
 	}
-	public void onDataUpdateCompleteNotify(com.google.protobuf.GeneratedMessage m) {
-		// BLog.output("CTRL", "    Controller onDataUpdateCompleteNotify\n");
-		if(null != m_cWorkThread)
-		{
-			m_cWorkThread.onDataUpdateCompleteNotify(m);
-		}
-	}
-	public void onSelectStockCompleteNotify(com.google.protobuf.GeneratedMessage m) {
+
+	public void onStockSelectAnalysisCompleteNotify(com.google.protobuf.GeneratedMessage m) {
 		// BLog.output("CTRL", "    Controller onSelectStockCompleteNotify\n");
 		if(null != m_cWorkThread)
 		{
-			m_cWorkThread.onSelectStockCompleteNotify(m);
+			m_cWorkThread.onStockSelectAnalysisCompleteNotify(m);
 		}
 	}
-	public void onStockCreateCompleteNotify(com.google.protobuf.GeneratedMessage m) {
+	public void onStockCreateAnalysisCompleteNotify(com.google.protobuf.GeneratedMessage m) {
 		// BLog.output("CTRL", "    Controller onStockCreateCompleteNotify\n");
 		if(null != m_cWorkThread)
 		{
-			m_cWorkThread.onStockCreateCompleteNotify(m);
+			m_cWorkThread.onStockCreateAnalysisCompleteNotify(m);
 		}
 	}
-	public void onStockClearCompleteNotify(com.google.protobuf.GeneratedMessage m) {
+	public void onStockClearAnalysisCompleteNotify(com.google.protobuf.GeneratedMessage m) {
 		// BLog.output("CTRL", "    Controller onStockClearCompleteNotify\n");
 		if(null != m_cWorkThread)
 		{
-			m_cWorkThread.onStockClearCompleteNotify(m);
+			m_cWorkThread.onStockClearAnalysisCompleteNotify(m);
 		}
 	}
 	

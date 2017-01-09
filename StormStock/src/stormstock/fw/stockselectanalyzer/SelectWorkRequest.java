@@ -1,4 +1,4 @@
-package stormstock.fw.stockselect;
+package stormstock.fw.stockselectanalyzer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,6 +8,7 @@ import java.util.List;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BQThread.BQThreadRequest;
+import stormstock.fw.event.StockSelectAnalysis;
 import stormstock.fw.event.Transaction;
 import stormstock.fw.tranbase.com.GlobalUserObj;
 import stormstock.fw.tranbase.com.IStrategySelect;
@@ -105,18 +106,18 @@ public class SelectWorkRequest extends BQThreadRequest {
 		int iSelectMaxCount  = cIStrategySelect.strategy_select_max_count();
 		int iAddCount = iSelectCount>iSelectMaxCount?iSelectMaxCount:iSelectCount;
 		
-		Transaction.SelectStockCompleteNotify.Builder msg_builder = Transaction.SelectStockCompleteNotify.newBuilder();
+		StockSelectAnalysis.StockSelectAnalysisCompleteNotify.Builder msg_builder = StockSelectAnalysis.StockSelectAnalysisCompleteNotify.newBuilder();
 		msg_builder.setDate(m_date);
 		msg_builder.setTime(m_time);
 		for(int i=0; i<iAddCount; i++)
 		{
-			msg_builder.addSelectedID(cSelectResultWrapperList.get(i).stockId);
+			msg_builder.addStockID(cSelectResultWrapperList.get(i).stockId);
 		}
-		Transaction.SelectStockCompleteNotify msg = msg_builder.build();
-		BLog.output("SELECT", "    Selected count(%s)\n",msg.getSelectedIDList().size());
+		StockSelectAnalysis.StockSelectAnalysisCompleteNotify msg = msg_builder.build();
+		BLog.output("SELECT", "    Selected count(%s)\n",msg.getStockIDList().size());
 		
 		BEventSys.EventSender cSender = new BEventSys.EventSender();
-		cSender.Send("BEV_TRAN_SELECTSTOCKCOMPLETENOTIFY", msg);
+		cSender.Send("BEV_TRAN_STOCKSELECTANALYSISCOMPLETENOTIFY", msg);
 	}
 
 	private String m_date;

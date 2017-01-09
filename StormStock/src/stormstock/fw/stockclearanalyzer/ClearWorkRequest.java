@@ -1,4 +1,4 @@
-package stormstock.fw.stockclear;
+package stormstock.fw.stockclearanalyzer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BUtilsDateTime;
 import stormstock.fw.base.BQThread.BQThreadRequest;
+import stormstock.fw.event.StockClearAnalysis;
 import stormstock.fw.event.Transaction;
 import stormstock.fw.tranbase.account.AccountControlIF;
 import stormstock.fw.tranbase.account.IAccountOpe.HoldStock;
@@ -98,20 +99,20 @@ public class ClearWorkRequest  extends BQThreadRequest {
 		
 		AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
 		
-		Transaction.StockClearCompleteNotify.Builder msg_builder = Transaction.StockClearCompleteNotify.newBuilder();
+		StockClearAnalysis.StockClearAnalysisCompleteNotify.Builder msg_builder = StockClearAnalysis.StockClearAnalysisCompleteNotify.newBuilder();
 		msg_builder.setDate(m_date);
 		msg_builder.setTime(m_time);
 		for(int i = 0; i< cClearResultWrapperList.size(); i++)
 		{
 			ClearResultWrapper cClearResultWrapper = cClearResultWrapperList.get(i);
-			Transaction.StockClearCompleteNotify.ClearItem.Builder cItemBuild = msg_builder.addItemBuilder();
+			StockClearAnalysis.StockClearAnalysisCompleteNotify.ClearItem.Builder cItemBuild = msg_builder.addItemBuilder();
 			cItemBuild.setStockID(cClearResultWrapper.stockId);
 			cItemBuild.setPrice(cClearResultWrapper.fPrice);
 			// 调用账户获取持有量
 			HoldStock cHoldStock = accIF.getStockHold(cClearResultWrapper.stockId);
 			cItemBuild.setAmount(cHoldStock.totalCanSell);
 		}
-		Transaction.StockClearCompleteNotify msg = msg_builder.build();
+		StockClearAnalysis.StockClearAnalysisCompleteNotify msg = msg_builder.build();
 		
 		BLog.output("CLEAR", "    stockIDClearList count(%d)\n", msg.getItemList().size());
 		for(int i=0; i< msg.getItemList().size(); i++)
@@ -123,7 +124,7 @@ public class ClearWorkRequest  extends BQThreadRequest {
 		}
 		
 		BEventSys.EventSender cSender = new BEventSys.EventSender();
-		cSender.Send("BEV_TRAN_STOCKCLEARCOMPLETENOTIFY", msg);
+		cSender.Send("BEV_TRAN_STOCKCLEARANALYSISCOMPLETENOTIFY", msg);
 		
 	}
 

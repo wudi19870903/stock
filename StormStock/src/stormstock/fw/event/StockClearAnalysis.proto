@@ -1,0 +1,19 @@
+package stormstock.fw.event; 
+
+// 股票清仓分析请求
+message StockClearAnalysisRequest  { 
+    required string date = 1;
+    required string time = 2;
+    repeated string stockID = 3;  //清仓考察股票ID（已持list）
+}
+// 股票清仓分析完毕通知
+message StockClearAnalysisCompleteNotify  {
+	message ClearItem {
+	    required string stockID = 1;
+	    required float price = 2;
+	    required int32 amount = 3;
+	} 
+    required string date = 1;
+    required string time = 2;
+    repeated ClearItem item = 3;
+}

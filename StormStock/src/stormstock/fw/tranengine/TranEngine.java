@@ -10,11 +10,11 @@ import stormstock.fw.base.BEventSys.EventReceiver;
 import stormstock.fw.event.EventDef;
 import stormstock.fw.event.Transaction;
 import stormstock.fw.event.Transaction.ControllerStartNotify;
-import stormstock.fw.control.ModuleController;
+import stormstock.fw.control.FlowController;
 import stormstock.fw.report.ReportModule;
-import stormstock.fw.stockclear.ModuleClear;
-import stormstock.fw.stockcreate.ModuleCreate;
-import stormstock.fw.stockselect.ModuleSelector;
+import stormstock.fw.stockclearanalyzer.StockClearAnalyzer;
+import stormstock.fw.stockcreateanalyzer.StockCreateAnalyzer;
+import stormstock.fw.stockselectanalyzer.StockSelectAnalyzer;
 import stormstock.fw.tranbase.account.AccountControlIF;
 import stormstock.fw.tranbase.account.AccountControlIF.ACCOUNTTYPE;
 import stormstock.fw.tranbase.com.GlobalUserObj;
@@ -53,10 +53,10 @@ public class TranEngine {
 		
 		// start modules
 		m_cModuleMgr = new BModuleManager();
-		m_cModuleMgr.regModule(new ModuleController());  // Controller Module
-		m_cModuleMgr.regModule(new ModuleSelector()); 	// Selector Module
-		m_cModuleMgr.regModule(new ModuleCreate()); 	// Create Module
-		m_cModuleMgr.regModule(new ModuleClear()); 		// Clear Module
+		m_cModuleMgr.regModule(new FlowController());  // Controller Module
+		m_cModuleMgr.regModule(new StockSelectAnalyzer()); 	// Selector Module
+		m_cModuleMgr.regModule(new StockCreateAnalyzer()); 	// Create Module
+		m_cModuleMgr.regModule(new StockClearAnalyzer()); 		// Clear Module
 		m_cModuleMgr.regModule(new ReportModule()); 	// ReportEngine Module
 		m_cModuleMgr.initialize();
 		m_cModuleMgr.start();

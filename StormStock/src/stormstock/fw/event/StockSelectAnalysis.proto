@@ -1,0 +1,14 @@
+package stormstock.fw.event; 
+
+// 股票选择分析请求
+message StockSelectAnalysisRequest  { 
+    required string date = 1;
+    required string time = 2;
+    repeated string stockID = 3;  //选股考察股票ID（样本集）
+} 
+// 股票选择分析完毕通知
+message StockSelectAnalysisCompleteNotify  { 
+    required string date = 1;
+    required string time = 2;
+    repeated string StockID = 3; //选出的股票
+}

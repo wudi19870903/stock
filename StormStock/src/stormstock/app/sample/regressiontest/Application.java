@@ -14,9 +14,9 @@ public class Application {
 		//BLog.config_setTag("EVENT", true);
 		BLog.config_setTag("CTRL", true);
 		//BLog.config_setTag("STOCKDATA", true);
-		//BLog.config_setTag("SELECT", true);
-		//BLog.config_setTag("CREATE", true);
-		//BLog.config_setTag("CLEAR", true);
+		BLog.config_setTag("SELECT", true);
+		BLog.config_setTag("CREATE", true);
+		BLog.config_setTag("CLEAR", true);
 		
 		TranEngine cTranEngine = new TranEngine();
 		

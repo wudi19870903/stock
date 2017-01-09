@@ -1,4 +1,4 @@
-package stormstock.fw.stockcreate;
+package stormstock.fw.stockclearanalyzer;
 
 import java.util.List;
 
@@ -7,20 +7,21 @@ import stormstock.fw.base.BLog;
 import stormstock.fw.base.BModuleBase;
 import stormstock.fw.base.BQThread;
 import stormstock.fw.base.BEventSys.EventReceiver;
+import stormstock.fw.event.StockClearAnalysis;
 import stormstock.fw.event.Transaction;
 
-public class ModuleCreate extends BModuleBase {
+public class StockClearAnalyzer  extends BModuleBase {
 
-	public ModuleCreate() {
-		super("Create");
+	public StockClearAnalyzer() {
+		super("StockClearAnalyzer");
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void initialize() {
 		m_qThread = new BQThread();
-		m_eventRecever = new EventReceiver("CreateReceiver");
-		m_eventRecever.Subscribe("BEV_TRAN_STOCKCREATENOTIFY", this, "onStockCreateNotify");
+		m_eventRecever = new EventReceiver("ClearReceiver");
+		m_eventRecever.Subscribe("BEV_TRAN_STOCKCLEARANALYSISREQUEST", this, "onStockClearAnalysisRequest");
 	}
 
 	@Override
@@ -49,15 +50,15 @@ public class ModuleCreate extends BModuleBase {
 	}
 	
 	// callback
-	public void onStockCreateNotify(com.google.protobuf.GeneratedMessage m) {
-		Transaction.StockCreateNotify stockCreateNotify = (Transaction.StockCreateNotify)m;
+	public void onStockClearAnalysisRequest(com.google.protobuf.GeneratedMessage m) {
+		StockClearAnalysis.StockClearAnalysisRequest stockClearNotify = (StockClearAnalysis.StockClearAnalysisRequest)m;
 
-		BLog.output("CREATE", "ModuleCreate onStockCreateNotify\n");
-		String dateStr = stockCreateNotify.getDate();
-		String timeStr = stockCreateNotify.getTime();
-		List<String> stockIDList = stockCreateNotify.getStockIDList();
+		BLog.output("CLEAR", "ModuleClear onStockClearNotify\n");
+		String dateStr = stockClearNotify.getDate();
+		String timeStr = stockClearNotify.getTime();
+		List<String> stockIDList = stockClearNotify.getStockIDList();
 		
-		m_qThread.postRequest(new CreateWorkRequest(dateStr, timeStr, stockIDList));
+		m_qThread.postRequest(new ClearWorkRequest(dateStr, timeStr, stockIDList));
 	}
 	
 	private EventReceiver m_eventRecever;
