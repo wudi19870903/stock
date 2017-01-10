@@ -7,8 +7,8 @@ import java.util.Date;
 import java.util.Formatter;
 import java.util.List;
 
-import stormstock.analysis.ANLStock;
-import stormstock.analysis.ANLDataProvider;
+import stormstock.fw.tranengine_lite.ANLStock;
+import stormstock.fw.tranengine_lite.ANLDataProvider;
 import stormstock.ori.stockdata.DataEngine;
 import stormstock.ori.stockdata.DataEngineBase;
 import stormstock.ori.stockdata.DataWebStockAllList;

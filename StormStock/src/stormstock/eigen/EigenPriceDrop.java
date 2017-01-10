@@ -2,10 +2,10 @@ package stormstock.eigen;
 
 import java.util.List;
 
-import stormstock.analysis.ANLEigen;
-import stormstock.analysis.ANLStock;
-import stormstock.analysis.ANLStockDayKData;
-import stormstock.analysis.ANLUtils;
+import stormstock.fw.tranengine_lite.ANLEigen;
+import stormstock.fw.tranengine_lite.ANLStock;
+import stormstock.fw.tranengine_lite.ANLStockDayKData;
+import stormstock.fw.tranengine_lite.ANLUtils;
 
 public class EigenPriceDrop  extends ANLEigen {
 	// 确认i日是否是下挫企稳点

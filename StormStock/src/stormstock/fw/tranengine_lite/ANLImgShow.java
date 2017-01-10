@@ -1,4 +1,4 @@
-package stormstock.analysis;
+package stormstock.fw.tranengine_lite;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -16,7 +16,6 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import stormstock.analysis.ANLStockDayKData.DetailData;
 import stormstock.ori.stockdata.DataEngine.ExKData;
 
 public class ANLImgShow {

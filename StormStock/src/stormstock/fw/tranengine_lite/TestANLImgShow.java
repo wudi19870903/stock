@@ -1,10 +1,10 @@
-package stormstock.analysis;
+package stormstock.fw.tranengine_lite;
 
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
-import stormstock.analysis.ANLImgShow.CurvePoint;
+import stormstock.fw.tranengine_lite.ANLImgShow.CurvePoint;
 
 public class TestANLImgShow {
 	public static Formatter fmt = new Formatter(System.out);

@@ -1,7 +1,7 @@
 package stormstock.eigen;
 
-import stormstock.analysis.ANLEigen;
-import stormstock.analysis.ANLStock;
+import stormstock.fw.tranengine_lite.ANLEigen;
+import stormstock.fw.tranengine_lite.ANLStock;
 
 /*
  * ´¹Ö±Î»ÖÃ±ÈÀý

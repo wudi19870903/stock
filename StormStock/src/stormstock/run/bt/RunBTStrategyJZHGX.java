@@ -6,12 +6,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import stormstock.analysis.ANLImgShow;
-import stormstock.analysis.ANLLog;
-import stormstock.analysis.ANLStock;
-import stormstock.analysis.ANLStockDayKData;
-import stormstock.analysis.ANLStockPool;
-import stormstock.analysis.ANLUserAcc;
+import stormstock.fw.tranengine_lite.ANLImgShow;
+import stormstock.fw.tranengine_lite.ANLLog;
+import stormstock.fw.tranengine_lite.ANLStock;
+import stormstock.fw.tranengine_lite.ANLStockDayKData;
+import stormstock.fw.tranengine_lite.ANLStockPool;
+import stormstock.fw.tranengine_lite.ANLUserAcc;
 //
 //public class RunBTStrategyJZHGX extends ANLStrategyEngine  {
 //	

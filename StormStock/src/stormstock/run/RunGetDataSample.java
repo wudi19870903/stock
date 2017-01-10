@@ -7,10 +7,10 @@ import java.util.Collections;
 import java.util.Formatter;
 import java.util.List;
 
-import stormstock.analysis.ANLStock;
-import stormstock.analysis.ANLStockDayKData;
-import stormstock.analysis.ANLDataProvider;
-import stormstock.analysis.ANLLog;
+import stormstock.fw.tranengine_lite.ANLStock;
+import stormstock.fw.tranengine_lite.ANLStockDayKData;
+import stormstock.fw.tranengine_lite.ANLDataProvider;
+import stormstock.fw.tranengine_lite.ANLLog;
 import stormstock.ori.stockdata.DataEngine;
 import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
 import stormstock.ori.stockdata.DataWebStockDayDetail.DayDetailItem;

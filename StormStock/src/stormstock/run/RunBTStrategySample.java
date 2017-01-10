@@ -3,13 +3,13 @@ package stormstock.run;
 import java.util.Arrays;
 import java.util.List;
 
-import stormstock.analysis.ANLBTEngine;
-import stormstock.analysis.ANLEigen;
-import stormstock.analysis.ANLLog;
-import stormstock.analysis.ANLStock;
-import stormstock.analysis.ANLStockPool;
-import stormstock.analysis.ANLStrategy;
-import stormstock.analysis.ANLStrategy.SelectResult;
+import stormstock.fw.tranengine_lite.ANLBTEngine;
+import stormstock.fw.tranengine_lite.ANLEigen;
+import stormstock.fw.tranengine_lite.ANLLog;
+import stormstock.fw.tranengine_lite.ANLStock;
+import stormstock.fw.tranengine_lite.ANLStockPool;
+import stormstock.fw.tranengine_lite.ANLStrategy;
+import stormstock.fw.tranengine_lite.ANLStrategy.SelectResult;
 
 public class RunBTStrategySample {
 	/*
@@ -83,7 +83,7 @@ public class RunBTStrategySample {
 		// 设置策略
 		cANLBTEngine.setStrategy(new StrategySample());
 		// 进行回测
-		cANLBTEngine.runBT("2016-01-01", "2016-01-11");
+		cANLBTEngine.runBT("2010-01-01", "2016-11-01");
 		//cANLBTEngine.runBTRealtimeMock("2016-11-01", "2016-11-20");
 	}
 }

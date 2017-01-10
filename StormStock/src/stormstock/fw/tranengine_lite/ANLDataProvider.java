@@ -1,9 +1,8 @@
-package stormstock.analysis;
+package stormstock.fw.tranengine_lite;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import stormstock.analysis.ANLStockDayKData.DetailData;
 import stormstock.ori.stockdata.DataEngine;
 import stormstock.ori.stockdata.DataEngineBase.StockBaseInfo;
 import stormstock.ori.stockdata.DataWebStockAllList.StockItem;

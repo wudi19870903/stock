@@ -1,4 +1,4 @@
-package stormstock.analysis;
+package stormstock.fw.tranengine_lite;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,10 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import stormstock.analysis.ANLUtils;
-import stormstock.analysis.ANLImgShow.CurvePoint;
-import stormstock.analysis.ANLStockDayKData.DetailData;
-import stormstock.analysis.ANLStrategy.SelectResult;
+import stormstock.fw.tranengine_lite.ANLUtils;
+import stormstock.fw.tranengine_lite.ANLImgShow.CurvePoint;
+import stormstock.fw.tranengine_lite.ANLStockDayKData.DetailData;
+import stormstock.fw.tranengine_lite.ANLStrategy.SelectResult;
 import stormstock.ori.stockdata.DataEngine;
 
 /*

@@ -22,7 +22,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import stormstock.analysis.ANLStockDayKData;
+import stormstock.fw.tranengine_lite.ANLStockDayKData;
 import stormstock.ori.capi.CATHSAccount;
 import stormstock.ori.stockdata.DataWebStockRealTimeInfo;
 import stormstock.ori.stockdata.DataWebStockDayDetail.DayDetailItem;
