@@ -17,6 +17,7 @@ import stormstock.fw.tranbase.stockdata.Stock;
 import stormstock.fw.tranbase.stockdata.StockDataIF;
 import stormstock.fw.tranbase.stockdata.StockDay;
 import stormstock.fw.tranbase.stockdata.StockInfo;
+import stormstock.fw.tranbase.stockdata.StockTime;
 import stormstock.fw.tranbase.stockdata.StockUtils;
 
 
@@ -162,9 +163,30 @@ public class WorkEntity {
 		{
 			BUtilsDateTime.waitDateTime(date, "09:25:00"); //等到时间
 			
-			// date日期时 检查web上证是否是交易日
+			// 确认今天是否是交易日
+			String yesterdayDate = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(m_curDate, -1);
+			StockDataIF.updateLocalStocks("999999", yesterdayDate);
+			List<StockDay> cStockDayShangZhengList = StockDataIF.getHistoryData("999999");
+			for(int i = 0; i < cStockDayShangZhengList.size(); i++)  
+	        {  
+				StockDay cStockDayShangZheng = cStockDayShangZhengList.get(i);  
+				String checkDateStr = cStockDayShangZheng.date;
+				if(checkDateStr.equals(date))
+				{
+					return true;
+				}
+	        }
+			StockTime out_cStockTime = new StockTime();
+			boolean bRet = StockDataIF.getStockTime("999999", date, BUtilsDateTime.GetCurTimeStr(), out_cStockTime);
+			if(bRet)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
-		return false;
 	}
 	
 	private String getStartDate()
@@ -177,14 +199,15 @@ public class WorkEntity {
 		else
 		{
 			String curDateStr = BUtilsDateTime.GetDateStr(new Date());
+			m_curDate = curDateStr;
 			return curDateStr;
 		}
 	}
 	private String getNextDate()
 	{
+		m_curDate = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(m_curDate, 1);
 		if(m_bHistoryTest)
 		{
-			m_curDate = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(m_curDate, 1);
 			if(m_curDate.compareTo(m_endDate) > 0)
 			{
 				return null;
@@ -196,9 +219,8 @@ public class WorkEntity {
 		}
 		else
 		{
-			m_curDate = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(m_curDate, 1);
+			return m_curDate;
 		}
-		return null;
 	}
 	
 	/*
@@ -216,7 +238,10 @@ public class WorkEntity {
 		}
 		else
 		{
-			return BUtilsDateTime.waitDateTime(date, time);
+			BLog.output("CTRL", "realtime waitting DateTime (%s %s)... \n", date, time);
+			boolean bWait = BUtilsDateTime.waitDateTime(date, time);
+			BLog.output("CTRL", "realtime waitting DateTime (%s %s) complete! result(%b)\n", date, time, bWait);
+			return bWait;
 		}
 	}
 	

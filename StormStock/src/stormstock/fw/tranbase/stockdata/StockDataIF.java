@@ -39,6 +39,23 @@ public class StockDataIF {
 		return true;
 	}
 	
+	public static boolean updateLocalStocks(String stockID, String dateStr)
+	{
+		String updatedDate = DataEngine.getUpdatedStocksDate();
+		if(updatedDate.compareTo(dateStr) >= 0)
+		{
+			BLog.output("STOCKDATA", "update %s success! (current is newest, local: %s)\n",stockID, updatedDate);
+		}
+		else
+		{
+			int iUpdateCnt = DataEngine.updateStock(stockID);
+			updatedDate = DataEngine.getUpdatedStocksDate();
+			BLog.output("STOCKDATA", "update %s success to date: %s (count: %d)\n", stockID, updatedDate, iUpdateCnt);
+		}
+		
+		return true;
+	}
+	
 	/*
 	 * 获取所有股票Id列表
 	 */
@@ -119,6 +136,7 @@ public class StockDataIF {
 		
 		List<DayKData> retList = new ArrayList<DayKData>();
 		int ret = DataEngine.getDayKDataQianFuQuan(stockID, retList);
+		
 		if(0 == ret && retList.size() != 0)
 		{
 			for(int i = 0; i < retList.size(); i++)  
@@ -134,11 +152,13 @@ public class StockDataIF {
 					cStockDay.low = cDayKData.low;
 					cStockDay.high = cDayKData.high;
 					cStockDay.volume = cDayKData.volume;
-					// System.out.println(cDayKData.date + "," + cDayKData.open + "," + cDayKData.close); 
+					//System.out.println("historyData.add " + cDayKData.date + "," + cDayKData.open + "," + cDayKData.close); 
 					historyData.add(cStockDay);
 				}
 	        } 
 		}
+//		BLog.output("TEST", "DataEngine getDayKDataQianFuQuan(%d)\n", retList.size());
+//		BLog.output("TEST", "getHistoryData return! historyData(%d)\n", historyData.size());
 		return historyData;
 	}
 	public static List<StockDay> getHistoryData(String id, String endDate)

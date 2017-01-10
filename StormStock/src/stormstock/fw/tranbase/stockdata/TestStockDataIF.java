@@ -42,10 +42,20 @@ public class TestStockDataIF {
 	
 	public static void test_getHistoryData()
 	{
-		List<StockDay> historyData = StockDataIF.getHistoryData("000001", "2016-01-01",  "2016-12-31");
-		for(int i=0; i< historyData.size(); i++)
+//		List<StockDay> historyData = StockDataIF.getHistoryData("000001", "2016-01-01",  "2016-12-31");
+//		for(int i=0; i< historyData.size(); i++)
+//		{
+//			StockDay cStockDay = historyData.get(i);
+//			BLog.output("TEST", "cStockDay %s open %.3f close %.3f\n", 
+//					cStockDay.date, cStockDay.open, cStockDay.close);
+//		}
+		
+		List<StockDay> cStockDayShangZhengList = StockDataIF.getHistoryData("999999");
+		BLog.output("TEST", "cStockDayShangZhengList(%d)\n", 
+				cStockDayShangZhengList.size());
+		for(int i=cStockDayShangZhengList.size()-1; i > cStockDayShangZhengList.size()-10 ; i--)
 		{
-			StockDay cStockDay = historyData.get(i);
+			StockDay cStockDay = cStockDayShangZhengList.get(i);
 			BLog.output("TEST", "cStockDay %s open %.3f close %.3f\n", 
 					cStockDay.date, cStockDay.open, cStockDay.close);
 		}
@@ -70,8 +80,8 @@ public class TestStockDataIF {
 		
 		//test_getAllStocks();
 		//test_getLatestStockInfo();
-		//test_getHistoryData();
-		test_getDayDetail();
+		test_getHistoryData();
+		//test_getDayDetail();
 		
 		BLog.output("TEST", "TestStockDataProvider End\n");
 	}

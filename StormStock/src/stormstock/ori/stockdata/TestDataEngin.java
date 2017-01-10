@@ -11,7 +11,7 @@ public class TestDataEngin {
 	private static void test_getDayKDataQianFuQuan()
 	{
 		List<DayKData> retList = new ArrayList<DayKData>();
-		int ret = DataEngine.getDayKDataQianFuQuan("000546", retList);
+		int ret = DataEngine.getDayKDataQianFuQuan("999999", retList);
 		if(0 == ret)
 		{
 			for(int i = 0; i < retList.size(); i++)  
@@ -78,9 +78,9 @@ public class TestDataEngin {
         } 
 	}
 	public static void main(String[] args) {
-		//test_getDayKDataQianFuQuan();
+		test_getDayKDataQianFuQuan();
 		//test_get5MinKDataOneDay();
-		test_get1MinKDataOneDay();
+		//test_get1MinKDataOneDay();
 		//test_getLocalRandomStock();
 	}
 }

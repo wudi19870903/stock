@@ -11,7 +11,7 @@ public class TestDataEngineBase {
 	private static void test_getDayKData()
 	{
 		List<DayKData> retList = new ArrayList<DayKData>();
-		int ret = DataEngineBase.getDayKData("300163", retList);
+		int ret = DataEngineBase.getDayKData("999999", retList);
 		if(0 == ret)
 		{
 			for(int i = 0; i < retList.size(); i++)  
@@ -102,12 +102,12 @@ public class TestDataEngineBase {
 	}
 	
 	public static void main(String[] args) {
-//		test_getDayKData();
+		test_getDayKData();
 //		test_getDividendPayout();
 //		test_getDayDetail();
 //		test_downloadStockDayk();
 //		test_downloadStockDividendPayout();
 //		test_downloadStockDataDetail();
-		test_updateStock();
+//		test_updateStock();
 	}
 }

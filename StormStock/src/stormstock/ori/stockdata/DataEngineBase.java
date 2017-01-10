@@ -42,7 +42,13 @@ public class DataEngineBase {
 			int line = 1;
 			String tempString = null;
             while ((tempString = reader.readLine()) != null) {
-                //System.out.println("line " + line + ": " + tempString);
+            	
+//                System.out.println("line " + line + ": " + tempString);
+//                if(tempString.contains("2017-01-05"))
+//                {
+//                	System.out.println("line " + line + ": " + tempString);
+//                }
+                
             	DayKData cDayKData = new DayKData();
             	String[] cols = tempString.split(",");
             	
