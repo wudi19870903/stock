@@ -1,4 +1,4 @@
-package stormstock.run.bt;
+package stormstock.app.regressiontestlite;
 
 import java.io.File;
 import java.io.FileOutputStream;

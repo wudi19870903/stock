@@ -1,7 +1,6 @@
 package stormstock.app.sample.regressiontest;
 import java.util.List;
 
-import stormstock.fw.tranengine_lite.ANLStock;
 import stormstock.fw.tranbase.com.IStrategySelect;
 import stormstock.fw.tranbase.com.StockContext;
 import stormstock.fw.tranbase.stockdata.Stock;

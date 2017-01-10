@@ -2,29 +2,16 @@ package stormstock.fw.tranbase.account;
 
 import java.util.List;
 
+import stormstock.fw.tranbase.account.AccountElementDef.CommissionOrder;
+import stormstock.fw.tranbase.account.AccountElementDef.DeliveryOrder;
+import stormstock.fw.tranbase.account.AccountElementDef.HoldStock;
+
 public class RealAccountOpe extends IAccountOpe {
-	
-	public RealAccountOpe()
-	{
-		super();
-	}
 
 	@Override
-	public float getTotalAssets() {
+	public boolean newDayInit() {
 		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public float getAvailableMoney() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public List<HoldStock> getHoldStockList() {
-		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 
 	@Override
@@ -40,20 +27,27 @@ public class RealAccountOpe extends IAccountOpe {
 	}
 
 	@Override
-	public boolean newDayInit() {
+	public float getAvailableMoney() {
 		// TODO Auto-generated method stub
-		return true;
+		return 0;
 	}
 
 	@Override
-	public List<StockTranOrder> getBuyOrderList() {
+	public List<CommissionOrder> getCommissionOrderList() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<StockTranOrder> getSellOrderList() {
+	public List<HoldStock> getHoldStockList() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<DeliveryOrder> getDeliveryOrderList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

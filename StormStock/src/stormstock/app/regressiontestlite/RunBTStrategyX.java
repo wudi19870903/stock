@@ -1,4 +1,4 @@
-package stormstock.run.bt;
+package stormstock.app.regressiontestlite;
 
 import stormstock.fw.tranengine_lite.ANLBTEngine;
 import stormstock.fw.tranengine_lite.ANLLog;

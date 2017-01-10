@@ -1,4 +1,4 @@
-package stormstock.run;
+package stormstock.app.common;
 
 import java.io.File;
 import java.io.FileOutputStream;

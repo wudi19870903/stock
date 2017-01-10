@@ -10,7 +10,7 @@ import stormstock.fw.base.BQThread.BQThreadRequest;
 import stormstock.fw.event.StockClearAnalysis;
 import stormstock.fw.event.Transaction;
 import stormstock.fw.tranbase.account.AccountControlIF;
-import stormstock.fw.tranbase.account.IAccountOpe.HoldStock;
+import stormstock.fw.tranbase.account.AccountElementDef.HoldStock;
 import stormstock.fw.tranbase.com.GlobalUserObj;
 import stormstock.fw.tranbase.com.IStrategyClear;
 import stormstock.fw.tranbase.com.IStrategyClear.ClearResult;

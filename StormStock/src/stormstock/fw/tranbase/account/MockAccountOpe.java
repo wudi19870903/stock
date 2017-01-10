@@ -3,6 +3,11 @@ package stormstock.fw.tranbase.account;
 import java.util.ArrayList;
 import java.util.List;
 
+import stormstock.fw.base.BLog;
+import stormstock.fw.tranbase.account.AccountElementDef.CommissionOrder;
+import stormstock.fw.tranbase.account.AccountElementDef.DeliveryOrder;
+import stormstock.fw.tranbase.account.AccountElementDef.HoldStock;
+import stormstock.fw.tranbase.account.AccountElementDef.TRANACT;
 import stormstock.fw.tranbase.stockdata.StockDataIF;
 import stormstock.fw.tranbase.stockdata.StockDay;
 import stormstock.fw.tranbase.stockdata.StockTime;
@@ -14,14 +19,17 @@ public class MockAccountOpe extends IAccountOpe {
 		super();
 		m_money = money;
 		m_transactionCostsRatio = transactionCostsRatio;
-		m_buyOrderList = new ArrayList<StockTranOrder>();
+		m_commissionOrderList = new ArrayList<CommissionOrder>();
 		m_holdStockList = new ArrayList<HoldStock>();
-		m_sellOrderList = new ArrayList<StockTranOrder>();
+		m_deliveryOrderList = new ArrayList<DeliveryOrder>();
 	}
 	
 	@Override
 	public boolean newDayInit() 
 	{ 
+		// 新一天时，未成交委托单清空
+		m_commissionOrderList.clear();
+		
 		// 新一天时，所有持股均可卖
 		HoldStock cHoldStock = null;
 		for(int i = 0; i< m_holdStockList.size(); i++)
@@ -29,6 +37,10 @@ public class MockAccountOpe extends IAccountOpe {
 			cHoldStock = m_holdStockList.get(i);
 			cHoldStock.totalCanSell = cHoldStock.totalAmount;
 		}
+		
+		// 新一天时，交割单清空
+		m_deliveryOrderList.clear();
+		
 		return true; 
 	}
 
@@ -74,6 +86,15 @@ public class MockAccountOpe extends IAccountOpe {
 		
 		m_money = m_money - realBuyAmount*price;
 		
+		// 买入交割单
+		DeliveryOrder cDeliveryOrder = new DeliveryOrder();
+		cDeliveryOrder.tranOpe = TRANACT.BUY;
+		cDeliveryOrder.id = id;
+		cDeliveryOrder.price = price;
+		cDeliveryOrder.amount = realBuyAmount;
+		cDeliveryOrder.transactionCost = 0.0f; // 交割单的交易费用在全部卖出时结算
+		m_deliveryOrderList.add(cDeliveryOrder);
+		
 		return realBuyAmount;
 	}
 
@@ -98,14 +119,34 @@ public class MockAccountOpe extends IAccountOpe {
 			int oriAmount = cHoldStock.totalAmount;
 			float oriPrice = cHoldStock.buyPrice;
 			cHoldStock.totalAmount = cHoldStock.totalAmount - realSellAmount;
-			cHoldStock.buyPrice = (oriPrice*oriAmount - price*realSellAmount)/cHoldStock.totalAmount;
-			m_money = m_money + price*amount;
 			
+			if(cHoldStock.totalAmount == 0) // 卖光则不计算买入价格 清零
+			{
+				cHoldStock.buyPrice = 0.0f;
+			}
+			else
+			{
+				cHoldStock.buyPrice = (oriPrice*oriAmount - price*realSellAmount)/cHoldStock.totalAmount;
+			}
+			m_money = m_money + price*realSellAmount;
+			
+			
+			float DeliveryOrder_transactionCost = 0.0f;
 			if(cHoldStock.totalAmount == 0)
 			{
 				m_money = m_money - cHoldStock.transactionCosts;
+				DeliveryOrder_transactionCost = cHoldStock.transactionCosts;
 				m_holdStockList.remove(cHoldStock);
 			}
+			
+			// 卖出交割单
+			DeliveryOrder cDeliveryOrder = new DeliveryOrder();
+			cDeliveryOrder.tranOpe = TRANACT.SELL;
+			cDeliveryOrder.id = id;
+			cDeliveryOrder.price = price;
+			cDeliveryOrder.amount = realSellAmount;
+			cDeliveryOrder.transactionCost = DeliveryOrder_transactionCost; // 清仓时计算费用
+			m_deliveryOrderList.add(cDeliveryOrder);
 			
 			return realSellAmount;
 		}
@@ -114,27 +155,13 @@ public class MockAccountOpe extends IAccountOpe {
 	}
 
 	@Override
-	public float getTotalAssets() {
-		
-		float all_marketval = 0.0f;
-		List<HoldStock> cHoldStockList = getHoldStockList();
-		for(int i=0;i<cHoldStockList.size();i++)
-		{
-			HoldStock cHoldStock = cHoldStockList.get(i);
-			all_marketval = all_marketval + cHoldStock.buyPrice*cHoldStock.totalAmount;
-		}
-		float all_asset = all_marketval + getAvailableMoney();
-		return all_asset;
-	}
-
-	@Override
 	public float getAvailableMoney() {
 		return m_money;
 	}
 
 	@Override
-	public List<StockTranOrder> getBuyOrderList() {
-		return m_buyOrderList;
+	public List<CommissionOrder> getCommissionOrderList() {
+		return m_commissionOrderList;
 	}
 	
 	@Override
@@ -143,8 +170,8 @@ public class MockAccountOpe extends IAccountOpe {
 	}
 	
 	@Override
-	public List<StockTranOrder> getSellOrderList() {
-		return m_sellOrderList;
+	public List<DeliveryOrder> getDeliveryOrderList() {
+		return m_deliveryOrderList;
 	}
 	
 	/**
@@ -152,7 +179,7 @@ public class MockAccountOpe extends IAccountOpe {
 	 */
 	private float m_money;
 	private float m_transactionCostsRatio;
-	private List<StockTranOrder> m_buyOrderList; // 模拟账户中  下单直接成交，此list一直是空
+	private List<CommissionOrder> m_commissionOrderList; // 模拟账户中  下单直接成交, 次list一直未空
 	private List<HoldStock> m_holdStockList;
-	private List<StockTranOrder> m_sellOrderList; // 模拟账户中  下单直接成交，此list一直是空
+	private List<DeliveryOrder> m_deliveryOrderList;
 }
