@@ -86,7 +86,7 @@ public class AccountControlIF {
 		List<HoldStock> cStockHoldList =  getStockHoldList();
 		for(int i=0;i<cStockHoldList.size();i++)
 		{
-			m_stockSelectList.remove(cStockHoldList.get(i).id);
+			m_stockSelectList.remove(cStockHoldList.get(i).stockID);
 		}
 	}
 	
@@ -110,7 +110,7 @@ public class AccountControlIF {
 		List<CommissionOrder> cCommissionOrderList = m_account.getCommissionOrderList();
 		for(int i=0;i<cCommissionOrderList.size();i++)
 		{
-			if(cCommissionOrderList.get(i).id.equals(stockID))
+			if(cCommissionOrderList.get(i).stockID.equals(stockID))
 			{
 				return true;
 			}
@@ -119,7 +119,7 @@ public class AccountControlIF {
 		List<HoldStock> cHoldStockList = m_account.getHoldStockList();
 		for(int i=0;i<cHoldStockList.size();i++)
 		{
-			if(cHoldStockList.get(i).id.equals(stockID))
+			if(cHoldStockList.get(i).stockID.equals(stockID))
 			{
 				return true;
 			}
@@ -155,7 +155,7 @@ public class AccountControlIF {
 		List<HoldStock> cStockHoldList = getStockHoldList();
 		for(int i=0;i<cStockHoldList.size();i++)
 		{
-			if(cStockHoldList.get(i).id.equals(stockID))
+			if(cStockHoldList.get(i).stockID.equals(stockID))
 			{
 				return cStockHoldList.get(i);
 			}

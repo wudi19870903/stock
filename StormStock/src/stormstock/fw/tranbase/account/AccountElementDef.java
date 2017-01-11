@@ -17,14 +17,14 @@ public class AccountElementDef {
 	public static class CommissionOrder 
 	{
 		public TRANACT tranOpe; // 交易动作
-		public String id;
+		public String stockID;
 		public int amount; 
 		public float price;
 		
 		public void CopyFrom(CommissionOrder c)
 		{
 			tranOpe = c.tranOpe;
-			id = c.id;
+			stockID = c.stockID;
 			amount = c.amount;
 			price = c.price;
 		}
@@ -58,8 +58,8 @@ public class AccountElementDef {
 	 */
 	public static class HoldStock 
 	{
-		public String id; // 股票ID
-		public int totalAmount; // 持有量（股）
+		public String stockID; // 股票ID
+		public int totalAmount; // 持有总量（股）
 		public int totalCanSell; // 可卖数量
 		public float holdAvePrice; // 持有均价 
 		public float transactionCosts; // 交易费用

@@ -45,7 +45,7 @@ public class MockAccountOpe extends IAccountOpe {
 	}
 
 	@Override
-	public int pushBuyOrder(String id, float price, int amount) {
+	public int pushBuyOrder(String stockID, float price, int amount) {
 		
 		int maxBuyAmount = (int)(m_money/price);
 		int realBuyAmount = maxBuyAmount>amount?amount:maxBuyAmount;
@@ -54,7 +54,7 @@ public class MockAccountOpe extends IAccountOpe {
 		for(int i = 0; i< m_holdStockList.size(); i++)
 		{
 			HoldStock cTmpHoldStock = m_holdStockList.get(i);
-			if(cTmpHoldStock.id == id)
+			if(cTmpHoldStock.stockID == stockID)
 			{
 				cHoldStock = cTmpHoldStock;
 				break;
@@ -68,17 +68,17 @@ public class MockAccountOpe extends IAccountOpe {
 			cHoldStock.totalAmount = cHoldStock.totalAmount + realBuyAmount;
 			
 			int oriAmount = cHoldStock.totalAmount;
-			float oriPrice = cHoldStock.buyPrice;
+			float oriPrice = cHoldStock.holdAvePrice;
 			cHoldStock.totalAmount = cHoldStock.totalAmount + realBuyAmount;
-			cHoldStock.buyPrice = (oriPrice*oriAmount + price*realBuyAmount)/cHoldStock.totalAmount;
+			cHoldStock.holdAvePrice = (oriPrice*oriAmount + price*realBuyAmount)/cHoldStock.totalAmount;
 			cHoldStock.transactionCosts = cHoldStock.transactionCosts + transactionCosts;
 			
 		}
 		else
 		{
 			HoldStock cNewHoldStock = new HoldStock();
-			cNewHoldStock.id = id;
-			cNewHoldStock.buyPrice = price;
+			cNewHoldStock.stockID = stockID;
+			cNewHoldStock.holdAvePrice = price;
 			cNewHoldStock.totalAmount = realBuyAmount;
 			cNewHoldStock.transactionCosts = transactionCosts;
 			m_holdStockList.add(cNewHoldStock);
@@ -90,7 +90,8 @@ public class MockAccountOpe extends IAccountOpe {
 		DeliveryOrder cDeliveryOrder = new DeliveryOrder();
 		cDeliveryOrder.tranOpe = TRANACT.BUY;
 		cDeliveryOrder.stockID = stockID;
-		cDeliveryOrder.price = price;
+		// cDeliveryOrder.holdAvePrice = ; 需要保存
+		cDeliveryOrder.tranPrice = price;
 		cDeliveryOrder.amount = realBuyAmount;
 		cDeliveryOrder.transactionCost = 0.0f; // 交割单的交易费用在全部卖出时结算
 		m_deliveryOrderList.add(cDeliveryOrder);
@@ -99,13 +100,13 @@ public class MockAccountOpe extends IAccountOpe {
 	}
 
 	@Override
-	public int pushSellOrder(String id, float price, int amount) {
+	public int pushSellOrder(String stockID, float price, int amount) {
 		
 		HoldStock cHoldStock = null;
 		for(int i = 0; i< m_holdStockList.size(); i++)
 		{
 			HoldStock cTmpHoldStock = m_holdStockList.get(i);
-			if(cTmpHoldStock.id.equals(id))
+			if(cTmpHoldStock.stockID.equals(stockID))
 			{
 				cHoldStock = cTmpHoldStock;
 				break;
@@ -117,16 +118,16 @@ public class MockAccountOpe extends IAccountOpe {
 			int realSellAmount = Math.min(cHoldStock.totalAmount, amount);
 			
 			int oriAmount = cHoldStock.totalAmount;
-			float oriPrice = cHoldStock.buyPrice;
+			float oriPrice = cHoldStock.holdAvePrice;
 			cHoldStock.totalAmount = cHoldStock.totalAmount - realSellAmount;
 			
 			if(cHoldStock.totalAmount == 0) // 卖光则不计算买入价格 清零
 			{
-				cHoldStock.buyPrice = 0.0f;
+				cHoldStock.holdAvePrice = 0.0f;
 			}
 			else
 			{
-				cHoldStock.buyPrice = (oriPrice*oriAmount - price*realSellAmount)/cHoldStock.totalAmount;
+				cHoldStock.holdAvePrice = (oriPrice*oriAmount - price*realSellAmount)/cHoldStock.totalAmount;
 			}
 			m_money = m_money + price*realSellAmount;
 			
@@ -142,8 +143,9 @@ public class MockAccountOpe extends IAccountOpe {
 			// 卖出交割单
 			DeliveryOrder cDeliveryOrder = new DeliveryOrder();
 			cDeliveryOrder.tranOpe = TRANACT.SELL;
-			cDeliveryOrder.id = id;
-			cDeliveryOrder.price = price;
+			cDeliveryOrder.stockID = stockID;
+			// cDeliveryOrder.holdAvePrice = ; 需要保存
+			cDeliveryOrder.holdAvePrice = price;
 			cDeliveryOrder.amount = realSellAmount;
 			cDeliveryOrder.transactionCost = DeliveryOrder_transactionCost; // 清仓时计算费用
 			m_deliveryOrderList.add(cDeliveryOrder);

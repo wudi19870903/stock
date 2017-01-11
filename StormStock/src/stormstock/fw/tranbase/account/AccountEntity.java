@@ -145,7 +145,7 @@ public class AccountEntity {
 		for(int i=0;i<cHoldStockList.size();i++)
 		{
 			HoldStock cHoldStock = cHoldStockList.get(i);
-			all_marketval = all_marketval + cHoldStock.buyPrice*cHoldStock.totalAmount;
+			all_marketval = all_marketval + cHoldStock.holdAvePrice*cHoldStock.totalAmount;
 		}
 		float all_asset = all_marketval + getAvailableMoney();
 		return all_asset;
