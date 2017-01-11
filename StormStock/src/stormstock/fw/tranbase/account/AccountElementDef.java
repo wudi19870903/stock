@@ -35,18 +35,20 @@ public class AccountElementDef {
 	 */
 	public static class DeliveryOrder 
 	{
-		public TRANACT tranOpe; // 交易动作
-		public String id;
-		public int amount; 
-		public float price;
-		public float transactionCost;
+		public TRANACT tranOpe;       // 交易动作
+		public String stockID;        // 股票ID
+		public int amount;            // 交易量
+		public float holdAvePrice;    // 持有均价
+		public float tranPrice;       // 交易价格
+		public float transactionCost; // 交易费用
 		
 		public void CopyFrom(DeliveryOrder c)
 		{
 			tranOpe = c.tranOpe;
-			id = c.id;
+			stockID = c.stockID;
 			amount = c.amount;
-			price = c.price;
+			holdAvePrice = c.holdAvePrice;
+			tranPrice = c.tranPrice;
 			transactionCost = c.transactionCost;
 		}
 	}
@@ -59,7 +61,7 @@ public class AccountElementDef {
 		public String id; // 股票ID
 		public int totalAmount; // 持有量（股）
 		public int totalCanSell; // 可卖数量
-		public float buyPrice; // 成本价格 
+		public float holdAvePrice; // 持有均价 
 		public float transactionCosts; // 交易费用
 	}
 	

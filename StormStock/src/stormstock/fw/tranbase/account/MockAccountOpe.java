@@ -89,7 +89,7 @@ public class MockAccountOpe extends IAccountOpe {
 		// 买入交割单
 		DeliveryOrder cDeliveryOrder = new DeliveryOrder();
 		cDeliveryOrder.tranOpe = TRANACT.BUY;
-		cDeliveryOrder.id = id;
+		cDeliveryOrder.stockID = stockID;
 		cDeliveryOrder.price = price;
 		cDeliveryOrder.amount = realBuyAmount;
 		cDeliveryOrder.transactionCost = 0.0f; // 交割单的交易费用在全部卖出时结算

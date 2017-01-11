@@ -40,6 +40,6 @@ public class Application {
 		
 		cTranEngine.mainLoop();
 		BLog.output("TEST", "--->>> MainEnd\n");
-		BLog.config_output();
+		//BLog.config_output();
 	}
 }
