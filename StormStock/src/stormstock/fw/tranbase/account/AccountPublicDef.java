@@ -1,6 +1,6 @@
 package stormstock.fw.tranbase.account;
 
-public class AccountElementDef {
+public class AccountPublicDef {
 	
 	/*
 	 * 交易动作枚举
@@ -58,6 +58,14 @@ public class AccountElementDef {
 	 */
 	public static class HoldStock 
 	{
+		public HoldStock()
+		{
+			stockID = "";
+			totalAmount = 0;
+			totalCanSell = 0;
+			holdAvePrice = 0.0f;
+			transactionCosts = 0.0f;
+		}
 		public String stockID; // 股票ID
 		public int totalAmount; // 持有总量（股）
 		public int totalCanSell; // 可卖数量

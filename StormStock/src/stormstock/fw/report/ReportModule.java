@@ -1,6 +1,8 @@
 package stormstock.fw.report;
 
 import stormstock.fw.base.BModuleBase;
+import stormstock.fw.base.BQThread;
+import stormstock.fw.base.BEventSys.EventReceiver;
 
 public class ReportModule extends BModuleBase {
 
@@ -39,4 +41,6 @@ public class ReportModule extends BModuleBase {
 		return null;
 	}
 
+	private EventReceiver m_eventRecever;
+	private BQThread m_qThread;
 }

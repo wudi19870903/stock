@@ -8,7 +8,7 @@ import stormstock.fw.base.BWaitObj;
 import stormstock.fw.event.StockClearAnalysis;
 import stormstock.fw.event.Transaction;
 import stormstock.fw.tranbase.account.AccountControlIF;
-import stormstock.fw.tranbase.account.AccountElementDef.HoldStock;
+import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 import stormstock.fw.tranbase.com.GlobalUserObj;
 
 public class WorkEntityClear {

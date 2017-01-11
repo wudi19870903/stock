@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import stormstock.fw.base.BLog;
-import stormstock.fw.tranbase.account.AccountElementDef.CommissionOrder;
-import stormstock.fw.tranbase.account.AccountElementDef.HoldStock;
+import stormstock.fw.tranbase.account.AccountPublicDef.CommissionOrder;
+import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 
 public class AccountControlIF {
 	
@@ -29,7 +29,7 @@ public class AccountControlIF {
 		{
 			float moneyInit = 100000.00f;
 			float transactionCostsRatio = 0.0016f;
-			BLog.output("ACCOUNT", "setAccountType MOCK money:%.2f transactionCostsRatio:%.2f\n", 
+			BLog.output("ACCOUNT", "setAccountType MOCK money:%.2f transactionCostsRatio:%.4f\n", 
 					moneyInit, transactionCostsRatio);
 			cIAccountOpe = new MockAccountOpe(moneyInit, transactionCostsRatio);
 		} 
@@ -43,7 +43,7 @@ public class AccountControlIF {
 	
 	public boolean newDayInit()
 	{
-		BLog.output("ACCOUNT", "------>>> newDayInit <<<------ \n");
+		BLog.output("ACCOUNT", "new day reset...\n");
 		// 账户重新初始化
 		m_account.newDayInit();
 		return true;
