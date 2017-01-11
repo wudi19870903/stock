@@ -5,7 +5,7 @@ public class AccountPublicDef {
 	/*
 	 * 交易动作枚举
 	 */
-	enum TRANACT 
+	public enum TRANACT 
 	{
 		BUY,
 		SELL,

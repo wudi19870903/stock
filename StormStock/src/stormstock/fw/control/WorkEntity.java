@@ -48,6 +48,7 @@ public class WorkEntity {
 		m_entitySelect = new WorkEntitySelect();
 		m_entityCreate = new WorkEntityCreate();
 		m_entityClear = new WorkEntityClear();
+		m_entityReport = new WorkEntityReport();
 	}
 	
 	void work()
@@ -117,6 +118,14 @@ public class WorkEntity {
 					StockDataIF.updateAllLocalStocks(dateStr);
 				}
 				
+				// 21:30 收集交易信息
+				timestr = "21:30:00";
+				if(waitForDateTime(dateStr, timestr))
+				{
+					BLog.output("CTRL", "[%s %s] transaction info collection \n", dateStr, timestr);
+					m_entityReport.tranInfoCollect(dateStr, timestr);
+				}
+				
 				// 22:00 选股 等待选股完毕
 				timestr = "22:00:00";
 				if(waitForDateTime(dateStr, timestr))
@@ -145,6 +154,9 @@ public class WorkEntity {
 	}
 	public void onStockClearAnalysisCompleteNotify(com.google.protobuf.GeneratedMessage m) {
 		m_entityClear.onStockClearAnalysisCompleteNotify(m);
+	}
+	public void onTranInfoCollectCompleteNotify(com.google.protobuf.GeneratedMessage m) {
+		m_entityReport.onTranInfoCollectCompleteNotify(m);
 	}
 	
 	/*
@@ -281,5 +293,6 @@ public class WorkEntity {
 	private WorkEntitySelect m_entitySelect;
 	private WorkEntityCreate m_entityCreate;
 	private WorkEntityClear m_entityClear;
+	private WorkEntityReport m_entityReport;
 
 }

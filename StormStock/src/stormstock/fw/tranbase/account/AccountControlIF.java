@@ -5,6 +5,7 @@ import java.util.List;
 
 import stormstock.fw.base.BLog;
 import stormstock.fw.tranbase.account.AccountPublicDef.CommissionOrder;
+import stormstock.fw.tranbase.account.AccountPublicDef.DeliveryOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 
 public class AccountControlIF {
@@ -145,7 +146,7 @@ public class AccountControlIF {
 	}
 	
 	
-	// 获得买入列表
+	// 获得持股
 	public List<HoldStock> getStockHoldList()
 	{
 		return m_account.getHoldStockList();
@@ -161,6 +162,12 @@ public class AccountControlIF {
 			}
 		}
 		return null;
+	}
+	
+	// 获得交割单列表
+	public List<DeliveryOrder> getDeliveryOrderList()
+	{
+		return m_account.getDeliveryOrderList();
 	}
 	
 	/**

@@ -21,7 +21,7 @@ import stormstock.fw.tranbase.stockdata.StockDay;
 import stormstock.fw.tranbase.stockdata.StockInfo;
 import stormstock.fw.tranbase.stockdata.StockTime;
 
-public class ClearWorkRequest  extends BQThreadRequest {
+public class ClearWorkRequest extends BQThreadRequest {
 	/*
 	 * ClearResultWrapper¿‡
 	 */

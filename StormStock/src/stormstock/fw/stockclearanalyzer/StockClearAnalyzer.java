@@ -51,9 +51,9 @@ public class StockClearAnalyzer  extends BModuleBase {
 	
 	// callback
 	public void onStockClearAnalysisRequest(com.google.protobuf.GeneratedMessage m) {
-		StockClearAnalysis.StockClearAnalysisRequest stockClearNotify = (StockClearAnalysis.StockClearAnalysisRequest)m;
-
 		BLog.output("CLEAR", "ModuleClear onStockClearNotify\n");
+		StockClearAnalysis.StockClearAnalysisRequest stockClearNotify = (StockClearAnalysis.StockClearAnalysisRequest)m;
+		
 		String dateStr = stockClearNotify.getDate();
 		String timeStr = stockClearNotify.getTime();
 		List<String> stockIDList = stockClearNotify.getStockIDList();

@@ -17,7 +17,8 @@ public class Application {
 		//BLog.config_setTag("SELECT", true);
 		//BLog.config_setTag("CREATE", true);
 		//BLog.config_setTag("CLEAR", true);
-		BLog.config_setTag("ACCOUNT", true);
+		//BLog.config_setTag("ACCOUNT", true);
+		BLog.config_setTag("REPORT", true);
 		
 		TranEngine cTranEngine = new TranEngine();
 		

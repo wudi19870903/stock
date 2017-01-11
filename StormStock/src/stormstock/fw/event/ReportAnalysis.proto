@@ -1,0 +1,12 @@
+package stormstock.fw.event; 
+
+// 交易信息收集请求
+message TranInfoCollectRequest { 
+    required string date = 1;
+    required string time = 2;
+}
+// 交易信息收集完毕通知
+message TranInfoCollectCompleteNotify {
+    required string date = 1;
+   required string time = 2;
+}
