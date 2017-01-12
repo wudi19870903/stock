@@ -26,7 +26,7 @@ public class ReportModule extends BModuleBase {
 	public void initialize() {
 		// TODO Auto-generated method stub
 		m_qThread = new BQThread();
-		m_eventRecever = new EventReceiver("ReportReceiver");
+		m_eventRecever = new EventReceiver(this.moduleName()+"Receiver");
 		m_eventRecever.Subscribe("BEV_TRAN_TRANINFOCOLLECTREQUEST", this, "onTranInfoCollectRequest");
 	}
 
@@ -48,12 +48,6 @@ public class ReportModule extends BModuleBase {
 	public void unInitialize() {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public BModuleInterface getIF() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	public void onTranInfoCollectRequest(com.google.protobuf.GeneratedMessage m) {

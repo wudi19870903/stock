@@ -13,6 +13,7 @@ import stormstock.fw.event.Transaction.ControllerStartNotify;
 import stormstock.fw.tranbase.account.AccountControlIF;
 import stormstock.fw.tranbase.com.GlobalUserObj;
 import stormstock.fw.tranbase.com.ITranStockSetFilter;
+import stormstock.fw.tranbase.datetime.TranDateTimeContorlerIF;
 import stormstock.fw.tranbase.stockdata.Stock;
 import stormstock.fw.tranbase.stockdata.StockDataIF;
 import stormstock.fw.tranbase.stockdata.StockDay;
@@ -44,7 +45,7 @@ public class WorkEntity {
 				m_hisTranDate.add(curDateStr);
 	        }
 		}
-		
+
 		m_entitySelect = new WorkEntitySelect();
 		m_entityCreate = new WorkEntityCreate();
 		m_entityClear = new WorkEntityClear();
@@ -71,7 +72,7 @@ public class WorkEntity {
 				
 				// 01:00 账户新交易日初始化
 				timestr = "01:00:00";
-				if(waitForDateTime(dateStr, timestr))
+				if(TranDateTimeContorlerIF.waitDateTime(dateStr, timestr))
 				{
 					AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
 					BLog.output("CTRL", "[%s %s] account newDayInit \n", dateStr, timestr);
@@ -85,7 +86,7 @@ public class WorkEntity {
 				timestr = timestr_begin;
 				while(true)
 				{
-					if(waitForDateTime(dateStr, timestr))
+					if(TranDateTimeContorlerIF.waitDateTime(dateStr, timestr))
 					{
 						BLog.output("CTRL", "[%s %s] stockClearAnalysis & stockCreateAnalysis \n", dateStr, timestr);
 						m_entityClear.stockClear(dateStr, timestr);
@@ -100,7 +101,7 @@ public class WorkEntity {
 				timestr = timestr_begin;
 				while(true)
 				{
-					if(waitForDateTime(dateStr, timestr))
+					if(TranDateTimeContorlerIF.waitDateTime(dateStr, timestr))
 					{
 						BLog.output("CTRL", "[%s %s] stockClearAnalysis & stockCreateAnalysis \n", dateStr, timestr);
 						m_entityClear.stockClear(dateStr, timestr);
@@ -112,7 +113,7 @@ public class WorkEntity {
 				
 				// 20:00 更新历史数据通知 等待更新完毕通知
 				timestr = "20:00:00";
-				if(waitForDateTime(dateStr, timestr))
+				if(TranDateTimeContorlerIF.waitDateTime(dateStr, timestr))
 				{
 					BLog.output("CTRL", "[%s %s] updateStockData \n", dateStr, timestr);
 					StockDataIF.updateAllLocalStocks(dateStr);
@@ -120,7 +121,7 @@ public class WorkEntity {
 				
 				// 21:30 收集交易信息
 				timestr = "21:30:00";
-				if(waitForDateTime(dateStr, timestr))
+				if(TranDateTimeContorlerIF.waitDateTime(dateStr, timestr))
 				{
 					BLog.output("CTRL", "[%s %s] transaction info collection \n", dateStr, timestr);
 					m_entityReport.tranInfoCollect(dateStr, timestr);
@@ -128,7 +129,7 @@ public class WorkEntity {
 				
 				// 22:00 选股 等待选股完毕
 				timestr = "22:00:00";
-				if(waitForDateTime(dateStr, timestr))
+				if(TranDateTimeContorlerIF.waitDateTime(dateStr, timestr))
 				{
 					BLog.output("CTRL", "[%s %s] StockSelectAnalysis \n", dateStr, timestr);
 					m_entitySelect.selectStock(dateStr, timestr);
@@ -232,28 +233,6 @@ public class WorkEntity {
 		else
 		{
 			return m_curDate;
-		}
-	}
-	
-	/*
-	 * realtime模式
-	 * 	等待日期时间成功，返回true
-	 * 	等待失败，返回false，比如等待的时间已经过期
-	 * historymock模式
-	 * 	直接返回true
-	 */
-	private boolean waitForDateTime(String date, String time)
-	{
-		if(m_bHistoryTest)
-		{
-			return true;
-		}
-		else
-		{
-			BLog.output("CTRL", "realtime waitting DateTime (%s %s)... \n", date, time);
-			boolean bWait = BUtilsDateTime.waitDateTime(date, time);
-			BLog.output("CTRL", "realtime waitting DateTime (%s %s) complete! result(%b)\n", date, time, bWait);
-			return bWait;
 		}
 	}
 	

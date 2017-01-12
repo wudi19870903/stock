@@ -13,6 +13,7 @@ public class Application {
 		//BLog.config_setTag("BASE", true);
 		//BLog.config_setTag("EVENT", true);
 		BLog.config_setTag("CTRL", true);
+		BLog.config_setTag("DATETIME", true);
 		//BLog.config_setTag("STOCKDATA", true);
 		//BLog.config_setTag("SELECT", true);
 		//BLog.config_setTag("CREATE", true);

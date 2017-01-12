@@ -46,12 +46,6 @@ public class FlowController extends BModuleBase {
 		
 	}
 	
-	@Override
-	public BModuleInterface getIF() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	// callback
 	public void onTranStartNotify(com.google.protobuf.GeneratedMessage m) {
 		Transaction.ControllerStartNotify startNotify = (Transaction.ControllerStartNotify)m;

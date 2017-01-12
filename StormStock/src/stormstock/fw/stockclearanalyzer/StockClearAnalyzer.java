@@ -20,7 +20,7 @@ public class StockClearAnalyzer  extends BModuleBase {
 	@Override
 	public void initialize() {
 		m_qThread = new BQThread();
-		m_eventRecever = new EventReceiver("ClearReceiver");
+		m_eventRecever = new EventReceiver(this.moduleName()+"Receiver");
 		m_eventRecever.Subscribe("BEV_TRAN_STOCKCLEARANALYSISREQUEST", this, "onStockClearAnalysisRequest");
 	}
 
@@ -41,12 +41,6 @@ public class StockClearAnalyzer  extends BModuleBase {
 	public void unInitialize() {
 		// TODO Auto-generated method stub
 		
-	}
-	
-	@Override
-	public BModuleInterface getIF() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	// callback

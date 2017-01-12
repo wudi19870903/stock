@@ -20,7 +20,7 @@ public class StockCreateAnalyzer extends BModuleBase {
 	@Override
 	public void initialize() {
 		m_qThread = new BQThread();
-		m_eventRecever = new EventReceiver("CreateReceiver");
+		m_eventRecever = new EventReceiver(this.moduleName()+"Receiver");
 		m_eventRecever.Subscribe("BEV_TRAN_STOCKCREATEANALYSISREQUEST", this, "onStockCreateAnalysisRequest");
 	}
 
@@ -41,12 +41,6 @@ public class StockCreateAnalyzer extends BModuleBase {
 	public void unInitialize() {
 		// TODO Auto-generated method stub
 		
-	}
-	
-	@Override
-	public BModuleInterface getIF() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	// callback
