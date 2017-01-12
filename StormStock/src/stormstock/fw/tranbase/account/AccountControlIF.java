@@ -42,6 +42,10 @@ public class AccountControlIF {
 		m_account = new AccountEntity(cIAccountOpe);
 	}
 	
+	/*
+	 * 账户新日期初始化
+	 * 持股均可卖出
+	 */
 	public boolean newDayInit()
 	{
 		BLog.output("ACCOUNT", "new day reset...\n");
@@ -50,9 +54,10 @@ public class AccountControlIF {
 		return true;
 	}
 	
-	public float getTotalAssets()
+	// 获取账户总资产（根据日期时间来确定股价）
+	public float getTotalAssets(String date, String time)
 	{
-		return m_account.getTotalAssets();
+		return m_account.getTotalAssets(date, time);
 	}
 	
 	public float getAvailableMoney()
@@ -60,14 +65,22 @@ public class AccountControlIF {
 		return m_account.getAvailableMoney();
 	}
 
-	public int pushBuyOrder(String stockID, float price, int amount)
+	/*
+	 * 下买单委托
+	 * 时间用于生成交割单
+	 */
+	public int pushBuyOrder(String date, String time, String stockID, float price, int amount)
 	{
-		return m_account.pushBuyOrder(stockID, price, amount);
+		return m_account.pushBuyOrder(date, time, stockID, price, amount);
 	}
 
-	public int pushSellOrder(String stockID, float price, int amount)
+	/*
+	 * 下卖单委托
+	 * 时间用于生成交割单
+	 */
+	public int pushSellOrder(String date, String time, String stockID, float price, int amount)
 	{
-		return m_account.pushSellOrder(stockID, price, amount);
+		return m_account.pushSellOrder(date, time, stockID, price, amount);
 	}
 	
 	
@@ -84,7 +97,7 @@ public class AccountControlIF {
 		}
 		
 		// 选股中排除已经持有的
-		List<HoldStock> cStockHoldList =  getStockHoldList();
+		List<HoldStock> cStockHoldList =  getStockHoldList(null,null);
 		for(int i=0;i<cStockHoldList.size();i++)
 		{
 			m_stockSelectList.remove(cStockHoldList.get(i).stockID);
@@ -117,7 +130,7 @@ public class AccountControlIF {
 			}
 		}
 		
-		List<HoldStock> cHoldStockList = m_account.getHoldStockList();
+		List<HoldStock> cHoldStockList = m_account.getHoldStockList(null,null);
 		for(int i=0;i<cHoldStockList.size();i++)
 		{
 			if(cHoldStockList.get(i).stockID.equals(stockID))
@@ -146,14 +159,18 @@ public class AccountControlIF {
 	}
 	
 	
-	// 获得持股
-	public List<HoldStock> getStockHoldList()
+	/*
+	 * 获得持股列表
+	 * 时间用户更新现价
+	 * 如果传入null，则不更新现价
+	 */
+	public List<HoldStock> getStockHoldList(String date, String time)
 	{
-		return m_account.getHoldStockList();
+		return m_account.getHoldStockList(date, time);
 	}
-	public HoldStock getStockHold(String stockID)
+	public HoldStock getStockHold(String date, String time, String stockID)
 	{
-		List<HoldStock> cStockHoldList = getStockHoldList();
+		List<HoldStock> cStockHoldList = getStockHoldList(date, time);
 		for(int i=0;i<cStockHoldList.size();i++)
 		{
 			if(cStockHoldList.get(i).stockID.equals(stockID))

@@ -45,7 +45,7 @@ public class MockAccountOpe extends IAccountOpe {
 	}
 
 	@Override
-	public int pushBuyOrder(String stockID, float price, int amount) {
+	public int pushBuyOrder(String date, String time, String stockID, float price, int amount) {
 		
 		// 买入量标准化
 		int maxBuyAmount = (int)(m_money/price);
@@ -67,6 +67,7 @@ public class MockAccountOpe extends IAccountOpe {
 		{
 			HoldStock cNewHoldStock = new HoldStock();
 			cNewHoldStock.stockID = stockID;
+			cNewHoldStock.curPrice = price;
 			m_holdStockList.add(cNewHoldStock);
 			cHoldStock = cNewHoldStock;
 		}
@@ -77,11 +78,15 @@ public class MockAccountOpe extends IAccountOpe {
 		float oriHoldAvePrice = cHoldStock.holdAvePrice;
 		cHoldStock.totalAmount = cHoldStock.totalAmount + realBuyAmount;
 		cHoldStock.holdAvePrice = (oriHoldAvePrice*oriTotalAmount + price*realBuyAmount)/cHoldStock.totalAmount;
+		cHoldStock.curPrice = price;
+
 		cHoldStock.transactionCosts = cHoldStock.transactionCosts + transactionCosts;
 		m_money = m_money - realBuyAmount*price;
 		
 		// 生成交割单
 		DeliveryOrder cDeliveryOrder = new DeliveryOrder();
+		cDeliveryOrder.date = date;
+		cDeliveryOrder.time = time;
 		cDeliveryOrder.tranOpe = TRANACT.BUY;
 		cDeliveryOrder.stockID = stockID;
 		cDeliveryOrder.holdAvePrice = oriHoldAvePrice;
@@ -94,7 +99,7 @@ public class MockAccountOpe extends IAccountOpe {
 	}
 
 	@Override
-	public int pushSellOrder(String stockID, float price, int amount) {
+	public int pushSellOrder(String date, String time, String stockID, float price, int amount) {
 		
 		// 获取持有对象
 		HoldStock cHoldStock = null;
@@ -126,6 +131,7 @@ public class MockAccountOpe extends IAccountOpe {
 			{
 				cHoldStock.holdAvePrice = (oriHoldAvePrice*oriTotalAmount - price*realSellAmount)/cHoldStock.totalAmount;
 			}
+			cHoldStock.curPrice = price;
 			m_money = m_money + price*realSellAmount;
 			
 			// 清仓计算
@@ -139,6 +145,8 @@ public class MockAccountOpe extends IAccountOpe {
 			
 			// 生成交割单
 			DeliveryOrder cDeliveryOrder = new DeliveryOrder();
+			cDeliveryOrder.date = date;
+			cDeliveryOrder.time = time;
 			cDeliveryOrder.tranOpe = TRANACT.SELL;
 			cDeliveryOrder.stockID = stockID;
 			cDeliveryOrder.holdAvePrice = oriHoldAvePrice;
@@ -164,7 +172,18 @@ public class MockAccountOpe extends IAccountOpe {
 	}
 	
 	@Override
-	public List<HoldStock> getHoldStockList() {
+	public List<HoldStock> getHoldStockList(String date, String time) {
+		// 当有日期时间参数时，更新持股现价
+		if(null != date && null != time)
+		{
+			for(int i = 0; i< m_holdStockList.size(); i++)
+			{
+				HoldStock cHoldStock = m_holdStockList.get(i);
+				StockTime out_cStockTime = new StockTime();
+				boolean bRet = StockDataIF.getStockTime(cHoldStock.stockID, date, time, out_cStockTime);
+				if(bRet) cHoldStock.curPrice = out_cStockTime.price;
+			}
+		}
 		return m_holdStockList;
 	}
 	
@@ -178,7 +197,7 @@ public class MockAccountOpe extends IAccountOpe {
 	 */
 	private float m_money;
 	private float m_transactionCostsRatio;
-	private List<CommissionOrder> m_commissionOrderList; // 模拟账户中  下单直接成交, 次list一直未空
+	private List<CommissionOrder> m_commissionOrderList; // 模拟账户中  下单直接成交, 委托单一直未空
 	private List<HoldStock> m_holdStockList;
 	private List<DeliveryOrder> m_deliveryOrderList;
 }

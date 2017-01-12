@@ -15,13 +15,13 @@ public class RealAccountOpe extends IAccountOpe {
 	}
 
 	@Override
-	public int pushBuyOrder(String id, float price, int amount) {
+	public int pushBuyOrder(String date, String time, String id, float price, int amount) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int pushSellOrder(String id, float price, int amount) {
+	public int pushSellOrder(String date, String time, String id, float price, int amount) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -39,7 +39,7 @@ public class RealAccountOpe extends IAccountOpe {
 	}
 
 	@Override
-	public List<HoldStock> getHoldStockList() {
+	public List<HoldStock> getHoldStockList(String date, String time) {
 		// TODO Auto-generated method stub
 		return null;
 	}

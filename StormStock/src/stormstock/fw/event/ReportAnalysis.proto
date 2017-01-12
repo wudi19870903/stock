@@ -10,3 +10,14 @@ message TranInfoCollectCompleteNotify {
     required string date = 1;
    required string time = 2;
 }
+
+// 生成报告请求
+message GenerateReportRequest {
+    required string date = 1;
+    required string time = 2;
+}
+// 生成报告完毕通知
+message GenerateReportCompleteNotify {
+    required string date = 1;
+   required string time = 2;
+}

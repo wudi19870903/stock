@@ -214,22 +214,37 @@ public class StockDataIF {
 		}
 		else
 		{
-			List<StockDay> cStockDayList = getHistoryData(id, date, date);
-			if(cStockDayList.size() > 0)
+			if(time.compareTo("09:30:00") >= 0)
 			{
-				StockDay cStockDay = cStockDayList.get(0);
-				float open = cStockDay.open;
-				float close = cStockDay.close;
-				out_cStockTime.time = time;
-				if(time.compareTo("09:30:00") >= 0 && time.compareTo("11:30:00") <= 0)
+				List<StockDay> cStockDayList = getHistoryData(id, date, date);
+				if(cStockDayList.size() > 0)
 				{
-					out_cStockTime.price = open;
+					StockDay cStockDay = cStockDayList.get(0);
+					float open = cStockDay.open;
+					float close = cStockDay.close;
+					out_cStockTime.time = time;
+					if(time.compareTo("09:30:00") >= 0 && time.compareTo("13:00:00") <= 0)
+					{
+						out_cStockTime.price = open;
+					}
+					else if(time.compareTo("13:00:00") >= 0 && time.compareTo("24:00:00") <= 0)
+					{
+						out_cStockTime.price = close;
+					}
+					return true;
 				}
-				else if(time.compareTo("13:00:00") >= 0 && time.compareTo("15:00:00") <= 0)
+			}
+			else
+			{
+				String beforeDate = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(date, -1);
+				List<StockDay> cStockDayList = getHistoryData(id, beforeDate, beforeDate);
+				if(cStockDayList.size() > 0)
 				{
-					out_cStockTime.price = close;
+					StockDay cStockDay = cStockDayList.get(0);
+					out_cStockTime.time = time;
+					out_cStockTime.price = cStockDay.close;
+					return true;
 				}
-				return true;
 			}
 		}
 		return false;

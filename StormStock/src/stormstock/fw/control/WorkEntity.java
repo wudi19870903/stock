@@ -140,6 +140,9 @@ public class WorkEntity {
 			if(null == dateStr) break;
 		}
 		
+		// 交易完毕后，最后一天的 "21:30:00" 生成报告
+		m_entityReport.generateReport(m_endDate, "21:30:00");
+		
 		BEventSys.EventSender cSender = new BEventSys.EventSender();
 		cSender.Send("BEV_TRAN_ENGINEEXIT", Transaction.TranEngineExitNotify.newBuilder().build());
 	}
@@ -157,6 +160,9 @@ public class WorkEntity {
 	}
 	public void onTranInfoCollectCompleteNotify(com.google.protobuf.GeneratedMessage m) {
 		m_entityReport.onTranInfoCollectCompleteNotify(m);
+	}
+	public void onGenerateReportCompleteNotify(com.google.protobuf.GeneratedMessage m) {
+		m_entityReport.onGenerateReportCompleteNotify(m);
 	}
 	
 	/*

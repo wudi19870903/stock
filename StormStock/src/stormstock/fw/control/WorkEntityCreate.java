@@ -61,7 +61,7 @@ public class WorkEntityCreate {
 				
 				
 				AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
-				int succCnt = accIF.pushBuyOrder(stockID, price, amount); // 调用账户模块买入股票
+				int succCnt = accIF.pushBuyOrder(createdDate, createdTime, stockID, price, amount); // 调用账户模块买入股票
 				if(succCnt > 0)
 				{
 					BLog.output("CTRL", "        -buyStock(%s) price(%.2f) amount(%d)\n", stockID, price,succCnt);

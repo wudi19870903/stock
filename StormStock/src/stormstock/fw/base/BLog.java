@@ -49,6 +49,9 @@ public class BLog {
 				return;
 		}
 		
+		// dir check
+		if(null == s_strLogDirName) s_strLogDirName = BPath.getOutputDir();
+		
 		String logstr = String.format(format, args);
 		outputConsole("[%s] %s", target, logstr);
 		
@@ -77,7 +80,7 @@ public class BLog {
 	}
 	static private Formatter s_fmt = new Formatter(System.out);
 	static private String s_strLogName = "default.log";
-	static private String s_strLogDirName = BPath.getOutputDir();
+	static private String s_strLogDirName = null;
 	static private Map<String, Boolean> s_tagMap = new HashMap<String, Boolean>() {
 		{
 			put("TEST", true);

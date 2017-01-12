@@ -99,7 +99,7 @@ public class CreateWorkRequest extends BQThreadRequest {
 			
 		int create_max_count = cIStrategyCreate.strategy_create_max_count();
 		AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
-		int alreadyCount = accIF.getStockHoldList().size() + accIF.getBuyCommissionOrderList().size();
+		int alreadyCount = accIF.getStockHoldList(null, null).size() + accIF.getBuyCommissionOrderList().size();
 		int buyStockCount = create_max_count - alreadyCount;
 		buyStockCount = Math.min(buyStockCount,cCreateResultWrapperList.size());
 		
@@ -114,7 +114,7 @@ public class CreateWorkRequest extends BQThreadRequest {
 			cItemBuild.setPrice(cCreateResultWrapper.fPrice);
 			
 			// 买入量
-			float totalAssets = accIF.getTotalAssets();
+			float totalAssets = accIF.getTotalAssets(m_date, m_time);
 			float fMaxPositionRatio = cCreateResultWrapper.createRes.fMaxPositionRatio; 
 			float fMaxPositionMoney = totalAssets*fMaxPositionRatio; // 最大买入仓位钱
 			float fMaxMoney = cCreateResultWrapper.createRes.fMaxMoney; // 最大买入钱

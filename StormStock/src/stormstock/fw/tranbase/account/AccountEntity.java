@@ -7,6 +7,8 @@ import stormstock.fw.tranbase.account.AccountPublicDef.CommissionOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.DeliveryOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 import stormstock.fw.tranbase.account.AccountPublicDef.TRANACT;
+import stormstock.fw.tranbase.stockdata.StockDataIF;
+import stormstock.fw.tranbase.stockdata.StockTime;
 
 public class AccountEntity {
 	
@@ -26,15 +28,15 @@ public class AccountEntity {
 	}
 	
 	// 推送买单委托，返回实际下单量
-	public int pushBuyOrder(String id, float price, int amount)
+	public int pushBuyOrder(String date, String time, String id, float price, int amount)
 	{
-		return m_cIAccountOpe.pushBuyOrder(id,price,amount);
+		return m_cIAccountOpe.pushBuyOrder(date, time, id, price, amount);
 	}
 	
 	// 推送卖单委托，返回实际下单量
-	public int pushSellOrder(String id, float price, int amount)
+	public int pushSellOrder(String date, String time, String id, float price, int amount)
 	{
-		return m_cIAccountOpe.pushSellOrder(id,price,amount);
+		return m_cIAccountOpe.pushSellOrder(date, time, id, price, amount);
 	}
 	
 	// 获得账户可用资金（现金）
@@ -50,9 +52,9 @@ public class AccountEntity {
 	}
 	
 	// 获得持股列表（包含已经持有的，与当天下单成交的）
-	public List<HoldStock> getHoldStockList()
+	public List<HoldStock> getHoldStockList(String date, String time)
 	{
-		return m_cIAccountOpe.getHoldStockList();
+		return m_cIAccountOpe.getHoldStockList(date, time);
 	}
 	
 	// 获得当日交割单列表（已成交的，包含买入和卖出的）
@@ -138,14 +140,14 @@ public class AccountEntity {
 	}
 	
 	// 获得账户总资产
-	public float getTotalAssets() {
+	public float getTotalAssets(String date, String time) {
 		
 		float all_marketval = 0.0f;
-		List<HoldStock> cHoldStockList = getHoldStockList();
+		List<HoldStock> cHoldStockList = getHoldStockList(date, time);
 		for(int i=0;i<cHoldStockList.size();i++)
 		{
 			HoldStock cHoldStock = cHoldStockList.get(i);
-			all_marketval = all_marketval + cHoldStock.holdAvePrice*cHoldStock.totalAmount;
+			all_marketval = all_marketval + cHoldStock.curPrice*cHoldStock.totalAmount;
 		}
 		float all_asset = all_marketval + getAvailableMoney();
 		return all_asset;

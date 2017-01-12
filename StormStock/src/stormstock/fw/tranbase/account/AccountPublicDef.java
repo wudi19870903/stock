@@ -16,6 +16,8 @@ public class AccountPublicDef {
 	 */
 	public static class CommissionOrder 
 	{
+		public String date;
+		public String time;
 		public TRANACT tranOpe; // 交易动作
 		public String stockID;
 		public int amount; 
@@ -35,6 +37,8 @@ public class AccountPublicDef {
 	 */
 	public static class DeliveryOrder 
 	{
+		public String date;
+		public String time;
 		public TRANACT tranOpe;       // 交易动作
 		public String stockID;        // 股票ID
 		public int amount;            // 交易量
@@ -64,12 +68,14 @@ public class AccountPublicDef {
 			totalAmount = 0;
 			totalCanSell = 0;
 			holdAvePrice = 0.0f;
+			curPrice = 0.0f;
 			transactionCosts = 0.0f;
 		}
 		public String stockID; // 股票ID
 		public int totalAmount; // 持有总量（股）
 		public int totalCanSell; // 可卖数量
 		public float holdAvePrice; // 持有均价 
+		public float curPrice;   // 当前价格
 		public float transactionCosts; // 交易费用
 	}
 	

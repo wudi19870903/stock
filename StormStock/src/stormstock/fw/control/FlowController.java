@@ -28,7 +28,7 @@ public class FlowController extends BModuleBase {
 		m_eventRecever.Subscribe("BEV_TRAN_STOCKCREATEANALYSISCOMPLETENOTIFY", this, "onStockCreateAnalysisCompleteNotify");
 		m_eventRecever.Subscribe("BEV_TRAN_STOCKCLEARANALYSISCOMPLETENOTIFY", this, "onStockClearAnalysisCompleteNotify");
 		m_eventRecever.Subscribe("BEV_TRAN_TRANINFOCOLLECTCOMPLETENOTIFY", this, "onTranInfoCollectCompleteNotify");
-	
+		m_eventRecever.Subscribe("BEV_TRAN_GENERATEREPORTCOMPLETENOTIFY", this, "onGenerateReportCompleteNotify");
 	}
 
 	@Override
@@ -87,6 +87,13 @@ public class FlowController extends BModuleBase {
 		if(null != m_cWorkThread)
 		{
 			m_cWorkThread.onTranInfoCollectCompleteNotify(m);
+		}
+	}
+	public void onGenerateReportCompleteNotify(com.google.protobuf.GeneratedMessage m) {
+		// BLog.output("CTRL", "    Controller onGenerateReportCompleteNotify\n");
+		if(null != m_cWorkThread)
+		{
+			m_cWorkThread.onGenerateReportCompleteNotify(m);
 		}
 	}
 

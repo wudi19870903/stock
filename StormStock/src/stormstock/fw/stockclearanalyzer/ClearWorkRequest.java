@@ -109,7 +109,7 @@ public class ClearWorkRequest extends BQThreadRequest {
 			cItemBuild.setStockID(cClearResultWrapper.stockId);
 			cItemBuild.setPrice(cClearResultWrapper.fPrice);
 			// 调用账户获取持有量
-			HoldStock cHoldStock = accIF.getStockHold(cClearResultWrapper.stockId);
+			HoldStock cHoldStock = accIF.getStockHold(null, null, cClearResultWrapper.stockId);
 			cItemBuild.setAmount(cHoldStock.totalCanSell);
 		}
 		StockClearAnalysis.StockClearAnalysisCompleteNotify msg = msg_builder.build();

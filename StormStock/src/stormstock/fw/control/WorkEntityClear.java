@@ -29,7 +29,7 @@ public class WorkEntityClear {
 		
 		// 从账户拉取已持股
 		AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
-		List<HoldStock> cStockHoldList = accIF.getStockHoldList();
+		List<HoldStock> cStockHoldList = accIF.getStockHoldList(null,null);
 		for(int i=0;i<cStockHoldList.size();i++)
 		{
 			HoldStock cHoldStock = cStockHoldList.get(i);
@@ -65,7 +65,7 @@ public class WorkEntityClear {
 				int amount = cClearItemList.get(i).getAmount();	
 				
 				AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
-				int succCnt = accIF.pushSellOrder(stockID, price, amount); // 调用账户模块卖出股票
+				int succCnt = accIF.pushSellOrder(clearedDate, clearedTime, stockID, price, amount); // 调用账户模块卖出股票
 				if(succCnt >= 0)
 				{
 					BLog.output("CTRL", "        -sellStock(%s) price(%.2f) amount(%d)\n", stockID, price,succCnt);

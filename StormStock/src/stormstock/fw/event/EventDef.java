@@ -31,6 +31,7 @@ public class EventDef {
 		// ±¨¸æ
 		put("BEV_TRAN_TRANINFOCOLLECTREQUEST", "stormstock.fw.event.ReportAnalysis$TranInfoCollectRequest");
 		put("BEV_TRAN_TRANINFOCOLLECTCOMPLETENOTIFY", "stormstock.fw.event.ReportAnalysis$TranInfoCollectCompleteNotify");
-    
+		put("BEV_TRAN_GENERATEREPORTREQUEST", "stormstock.fw.event.ReportAnalysis$GenerateReportRequest");
+		put("BEV_TRAN_GENERATEREPORTCOMPLETENOTIFY", "stormstock.fw.event.ReportAnalysis$GenerateReportCompleteNotify");
 	}};
 }

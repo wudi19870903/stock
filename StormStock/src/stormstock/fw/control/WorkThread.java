@@ -63,6 +63,12 @@ public class WorkThread extends BThread {
 			m_cWorkEntity.onTranInfoCollectCompleteNotify(m);
 		}
 	}
+	public void onGenerateReportCompleteNotify(com.google.protobuf.GeneratedMessage m) {
+		if(null != m_cWorkEntity)
+		{
+			m_cWorkEntity.onGenerateReportCompleteNotify(m);
+		}
+	}
 
 	private WorkEntity m_cWorkEntity;
 	private Transaction.ControllerStartNotify m_cControllerStartNotify;

@@ -978,6 +978,976 @@ public final class ReportAnalysis {
     // @@protoc_insertion_point(class_scope:stormstock.fw.event.TranInfoCollectCompleteNotify)
   }
   
+  public interface GenerateReportRequestOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // required string date = 1;
+    boolean hasDate();
+    String getDate();
+    
+    // required string time = 2;
+    boolean hasTime();
+    String getTime();
+  }
+  public static final class GenerateReportRequest extends
+      com.google.protobuf.GeneratedMessage
+      implements GenerateReportRequestOrBuilder {
+    // Use GenerateReportRequest.newBuilder() to construct.
+    private GenerateReportRequest(Builder builder) {
+      super(builder);
+    }
+    private GenerateReportRequest(boolean noInit) {}
+    
+    private static final GenerateReportRequest defaultInstance;
+    public static GenerateReportRequest getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public GenerateReportRequest getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return stormstock.fw.event.ReportAnalysis.internal_static_stormstock_fw_event_GenerateReportRequest_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return stormstock.fw.event.ReportAnalysis.internal_static_stormstock_fw_event_GenerateReportRequest_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // required string date = 1;
+    public static final int DATE_FIELD_NUMBER = 1;
+    private java.lang.Object date_;
+    public boolean hasDate() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getDate() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          date_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getDateBytes() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        date_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // required string time = 2;
+    public static final int TIME_FIELD_NUMBER = 2;
+    private java.lang.Object time_;
+    public boolean hasTime() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public String getTime() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          time_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getTimeBytes() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        time_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    private void initFields() {
+      date_ = "";
+      time_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      if (!hasDate()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasTime()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getTimeBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getTimeBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportRequest parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportRequest parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportRequest parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportRequest parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportRequest parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportRequest parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportRequest parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportRequest parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportRequest parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportRequest parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(stormstock.fw.event.ReportAnalysis.GenerateReportRequest prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements stormstock.fw.event.ReportAnalysis.GenerateReportRequestOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return stormstock.fw.event.ReportAnalysis.internal_static_stormstock_fw_event_GenerateReportRequest_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return stormstock.fw.event.ReportAnalysis.internal_static_stormstock_fw_event_GenerateReportRequest_fieldAccessorTable;
+      }
+      
+      // Construct using stormstock.fw.event.ReportAnalysis.GenerateReportRequest.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        date_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        time_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return stormstock.fw.event.ReportAnalysis.GenerateReportRequest.getDescriptor();
+      }
+      
+      public stormstock.fw.event.ReportAnalysis.GenerateReportRequest getDefaultInstanceForType() {
+        return stormstock.fw.event.ReportAnalysis.GenerateReportRequest.getDefaultInstance();
+      }
+      
+      public stormstock.fw.event.ReportAnalysis.GenerateReportRequest build() {
+        stormstock.fw.event.ReportAnalysis.GenerateReportRequest result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private stormstock.fw.event.ReportAnalysis.GenerateReportRequest buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        stormstock.fw.event.ReportAnalysis.GenerateReportRequest result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public stormstock.fw.event.ReportAnalysis.GenerateReportRequest buildPartial() {
+        stormstock.fw.event.ReportAnalysis.GenerateReportRequest result = new stormstock.fw.event.ReportAnalysis.GenerateReportRequest(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.date_ = date_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.time_ = time_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof stormstock.fw.event.ReportAnalysis.GenerateReportRequest) {
+          return mergeFrom((stormstock.fw.event.ReportAnalysis.GenerateReportRequest)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(stormstock.fw.event.ReportAnalysis.GenerateReportRequest other) {
+        if (other == stormstock.fw.event.ReportAnalysis.GenerateReportRequest.getDefaultInstance()) return this;
+        if (other.hasDate()) {
+          setDate(other.getDate());
+        }
+        if (other.hasTime()) {
+          setTime(other.getTime());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        if (!hasDate()) {
+          
+          return false;
+        }
+        if (!hasTime()) {
+          
+          return false;
+        }
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              date_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              time_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // required string date = 1;
+      private java.lang.Object date_ = "";
+      public boolean hasDate() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public String getDate() {
+        java.lang.Object ref = date_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          date_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setDate(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearDate() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        date_ = getDefaultInstance().getDate();
+        onChanged();
+        return this;
+      }
+      void setDate(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+      }
+      
+      // required string time = 2;
+      private java.lang.Object time_ = "";
+      public boolean hasTime() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public String getTime() {
+        java.lang.Object ref = time_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          time_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setTime(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearTime() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        time_ = getDefaultInstance().getTime();
+        onChanged();
+        return this;
+      }
+      void setTime(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+      }
+      
+      // @@protoc_insertion_point(builder_scope:stormstock.fw.event.GenerateReportRequest)
+    }
+    
+    static {
+      defaultInstance = new GenerateReportRequest(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:stormstock.fw.event.GenerateReportRequest)
+  }
+  
+  public interface GenerateReportCompleteNotifyOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // required string date = 1;
+    boolean hasDate();
+    String getDate();
+    
+    // required string time = 2;
+    boolean hasTime();
+    String getTime();
+  }
+  public static final class GenerateReportCompleteNotify extends
+      com.google.protobuf.GeneratedMessage
+      implements GenerateReportCompleteNotifyOrBuilder {
+    // Use GenerateReportCompleteNotify.newBuilder() to construct.
+    private GenerateReportCompleteNotify(Builder builder) {
+      super(builder);
+    }
+    private GenerateReportCompleteNotify(boolean noInit) {}
+    
+    private static final GenerateReportCompleteNotify defaultInstance;
+    public static GenerateReportCompleteNotify getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public GenerateReportCompleteNotify getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return stormstock.fw.event.ReportAnalysis.internal_static_stormstock_fw_event_GenerateReportCompleteNotify_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return stormstock.fw.event.ReportAnalysis.internal_static_stormstock_fw_event_GenerateReportCompleteNotify_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // required string date = 1;
+    public static final int DATE_FIELD_NUMBER = 1;
+    private java.lang.Object date_;
+    public boolean hasDate() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getDate() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          date_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getDateBytes() {
+      java.lang.Object ref = date_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        date_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // required string time = 2;
+    public static final int TIME_FIELD_NUMBER = 2;
+    private java.lang.Object time_;
+    public boolean hasTime() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public String getTime() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          time_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getTimeBytes() {
+      java.lang.Object ref = time_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        time_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    private void initFields() {
+      date_ = "";
+      time_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      if (!hasDate()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasTime()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getTimeBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getDateBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getTimeBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotifyOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return stormstock.fw.event.ReportAnalysis.internal_static_stormstock_fw_event_GenerateReportCompleteNotify_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return stormstock.fw.event.ReportAnalysis.internal_static_stormstock_fw_event_GenerateReportCompleteNotify_fieldAccessorTable;
+      }
+      
+      // Construct using stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        date_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        time_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify.getDescriptor();
+      }
+      
+      public stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify getDefaultInstanceForType() {
+        return stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify.getDefaultInstance();
+      }
+      
+      public stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify build() {
+        stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify buildPartial() {
+        stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify result = new stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.date_ = date_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.time_ = time_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify) {
+          return mergeFrom((stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify other) {
+        if (other == stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify.getDefaultInstance()) return this;
+        if (other.hasDate()) {
+          setDate(other.getDate());
+        }
+        if (other.hasTime()) {
+          setTime(other.getTime());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        if (!hasDate()) {
+          
+          return false;
+        }
+        if (!hasTime()) {
+          
+          return false;
+        }
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              date_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              time_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // required string date = 1;
+      private java.lang.Object date_ = "";
+      public boolean hasDate() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public String getDate() {
+        java.lang.Object ref = date_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          date_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setDate(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearDate() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        date_ = getDefaultInstance().getDate();
+        onChanged();
+        return this;
+      }
+      void setDate(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000001;
+        date_ = value;
+        onChanged();
+      }
+      
+      // required string time = 2;
+      private java.lang.Object time_ = "";
+      public boolean hasTime() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public String getTime() {
+        java.lang.Object ref = time_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          time_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setTime(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearTime() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        time_ = getDefaultInstance().getTime();
+        onChanged();
+        return this;
+      }
+      void setTime(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+      }
+      
+      // @@protoc_insertion_point(builder_scope:stormstock.fw.event.GenerateReportCompleteNotify)
+    }
+    
+    static {
+      defaultInstance = new GenerateReportCompleteNotify(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:stormstock.fw.event.GenerateReportCompleteNotify)
+  }
+  
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_stormstock_fw_event_TranInfoCollectRequest_descriptor;
   private static
@@ -988,6 +1958,16 @@ public final class ReportAnalysis {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_stormstock_fw_event_TranInfoCollectCompleteNotify_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_stormstock_fw_event_GenerateReportRequest_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_stormstock_fw_event_GenerateReportRequest_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_stormstock_fw_event_GenerateReportCompleteNotify_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_stormstock_fw_event_GenerateReportCompleteNotify_fieldAccessorTable;
   
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1001,7 +1981,10 @@ public final class ReportAnalysis {
       ".proto\022\023stormstock.fw.event\"4\n\026TranInfoC" +
       "ollectRequest\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(" +
       "\t\";\n\035TranInfoCollectCompleteNotify\022\014\n\004da" +
-      "te\030\001 \002(\t\022\014\n\004time\030\002 \002(\t"
+      "te\030\001 \002(\t\022\014\n\004time\030\002 \002(\t\"3\n\025GenerateReport" +
+      "Request\022\014\n\004date\030\001 \002(\t\022\014\n\004time\030\002 \002(\t\":\n\034G" +
+      "enerateReportCompleteNotify\022\014\n\004date\030\001 \002(" +
+      "\t\022\014\n\004time\030\002 \002(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1024,6 +2007,22 @@ public final class ReportAnalysis {
               new java.lang.String[] { "Date", "Time", },
               stormstock.fw.event.ReportAnalysis.TranInfoCollectCompleteNotify.class,
               stormstock.fw.event.ReportAnalysis.TranInfoCollectCompleteNotify.Builder.class);
+          internal_static_stormstock_fw_event_GenerateReportRequest_descriptor =
+            getDescriptor().getMessageTypes().get(2);
+          internal_static_stormstock_fw_event_GenerateReportRequest_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_stormstock_fw_event_GenerateReportRequest_descriptor,
+              new java.lang.String[] { "Date", "Time", },
+              stormstock.fw.event.ReportAnalysis.GenerateReportRequest.class,
+              stormstock.fw.event.ReportAnalysis.GenerateReportRequest.Builder.class);
+          internal_static_stormstock_fw_event_GenerateReportCompleteNotify_descriptor =
+            getDescriptor().getMessageTypes().get(3);
+          internal_static_stormstock_fw_event_GenerateReportCompleteNotify_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_stormstock_fw_event_GenerateReportCompleteNotify_descriptor,
+              new java.lang.String[] { "Date", "Time", },
+              stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify.class,
+              stormstock.fw.event.ReportAnalysis.GenerateReportCompleteNotify.Builder.class);
           return null;
         }
       };
