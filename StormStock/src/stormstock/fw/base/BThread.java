@@ -6,13 +6,6 @@ abstract public class BThread {
 		m_thread = new InThread(this);
 	}
 	
-	// 析构时 先停止线程
-	@Override
-	public void finalize()
-	{
-		this.stopThread();
-	}
-	
 	abstract public void run();
 		
 	public boolean checkQuit()
@@ -97,15 +90,12 @@ abstract public class BThread {
 		}
 		boolean stopThread()
 		{
-			if(!m_bQuit)
-			{
-				m_bQuit = true;
-				m_cBWaitObj.Notify();
-				try {
-					super.join();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+			m_bQuit = true;
+			m_cBWaitObj.Notify();
+			try {
+				super.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 			return true;
 		}

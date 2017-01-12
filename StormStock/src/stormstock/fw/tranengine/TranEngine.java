@@ -23,8 +23,6 @@ import stormstock.fw.tranbase.com.IStrategyClear;
 import stormstock.fw.tranbase.com.IStrategyCreate;
 import stormstock.fw.tranbase.com.IStrategySelect;
 import stormstock.fw.tranbase.com.ITranStockSetFilter;
-import stormstock.fw.tranbase.datetime.TranDateTimeContorlerIF;
-import stormstock.fw.tranbase.datetime.TranDateTimeContorlerPublicDef.DATETIMEMODE;
 
 public class TranEngine {
 	
@@ -195,44 +193,22 @@ public class TranEngine {
 		GlobalUserObj.setCurrentStrategyClear(m_cStrategyClear); // 当前清仓策略
 		GlobalUserObj.setCurrentStockEigenMap(m_cEigenMap); // 当前特征表
 		
-		// 初始全局交易时间接口
-		if (TRANTIMEMODE.REALTIME == m_eTranMode)
-		{
-			TranDateTimeContorlerIF.initialize(DATETIMEMODE.REAL);
-		}
-		else
-		{
-			TranDateTimeContorlerIF.initialize(DATETIMEMODE.MOCK);
-		}
-		
-		// 初始化账户
 		AccountControlIF cAccountControlIF = new AccountControlIF();
-		if(m_eAccType == TRANACCOUNTTYPE.REAL)
-		{
-			cAccountControlIF.setAccountType(ACCOUNTTYPE.REAL);
-		}
-		else
+		if(m_eAccType == TRANACCOUNTTYPE.MOCK)
 		{
 			cAccountControlIF.setAccountType(ACCOUNTTYPE.MOCK);
 		}
+		else
+		{
+			cAccountControlIF.setAccountType(ACCOUNTTYPE.REAL);
+		}
 		GlobalUserObj.setCurrentAccountControlIF(cAccountControlIF);
-		
 		
 		// 发送开始交易命令到控制器
 		BLog.output("TRAN", "Start Trasection\n");
 		BEventSys.EventSender cSender = new BEventSys.EventSender();
 		Transaction.ControllerStartNotify.Builder msg_builder = Transaction.ControllerStartNotify.newBuilder();
-		if (TRANTIMEMODE.REALTIME == m_eTranMode)
-		{
-			if(null != m_beginDate || null != m_endDate)
-			{
-				BLog.error("TRAN", "REALTIME need NOT to set beginDate or endDate!\n");
-				exitCommand();
-				return;
-			}
-			msg_builder.setETranMode(ControllerStartNotify.TRANMODE.REALTIME);
-		}
-		else if (TRANTIMEMODE.HISTORYMOCK == m_eTranMode)
+		if (TRANTIMEMODE.HISTORYMOCK == m_eTranMode)
 		{
 			if(null == m_beginDate || null == m_endDate)
 			{
@@ -243,6 +219,16 @@ public class TranEngine {
 			msg_builder.setETranMode(ControllerStartNotify.TRANMODE.HISTORYMOCK);
 			msg_builder.setBeginDate(m_beginDate);
 			msg_builder.setEndDate(m_endDate);
+		}
+		else if (TRANTIMEMODE.REALTIME == m_eTranMode)
+		{
+			if(null != m_beginDate || null != m_endDate)
+			{
+				BLog.error("TRAN", "REALTIME need NOT to set beginDate or endDate!\n");
+				exitCommand();
+				return;
+			}
+			msg_builder.setETranMode(ControllerStartNotify.TRANMODE.REALTIME);
 		}
 		Transaction.ControllerStartNotify msg = msg_builder.build();
 		cSender.Send("BEV_TRAN_CONTROLLERSTARTNOTIFY", msg);

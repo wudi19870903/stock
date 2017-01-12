@@ -20,7 +20,7 @@ public class StockSelectAnalyzer extends BModuleBase {
 	@Override
 	public void initialize() {
 		m_qThread = new BQThread();
-		m_eventRecever = new EventReceiver(this.moduleName()+"Receiver");
+		m_eventRecever = new EventReceiver("SelectorReceiver");
 		m_eventRecever.Subscribe("BEV_TRAN_STOCKSELECTANALYSISREQUEST", this, "onStockSelectAnalysisRequest");
 	}
 
@@ -39,6 +39,12 @@ public class StockSelectAnalyzer extends BModuleBase {
 	@Override
 	public void unInitialize() {
 
+	}
+	
+	@Override
+	public BModuleInterface getIF() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	// callback
