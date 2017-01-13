@@ -15,7 +15,7 @@ public class StockUtils {
 		for(int k = 0; k<dayklist.size(); k++ )
 		{
 			StockDay cDayKDataTmp = dayklist.get(k);
-			if(cDayKDataTmp.date.compareTo(dateStr) >= 0)
+			if(cDayKDataTmp.date().compareTo(dateStr) >= 0)
 			{
 				index = k;
 				break;
@@ -31,7 +31,7 @@ public class StockUtils {
 		for(int k = dayklist.size()-1; k >= 0; k-- )
 		{
 			StockDay cDayKDataTmp = dayklist.get(k);
-			if(cDayKDataTmp.date.compareTo(dateStr) <= 0)
+			if(cDayKDataTmp.date().compareTo(dateStr) <= 0)
 			{
 				index = k;
 				break;
@@ -48,9 +48,9 @@ public class StockUtils {
 		for(int k = i; k<=j; k++ )
 		{
 			StockDay cDayKDataTmp = dayklist.get(k);
-			if(cDayKDataTmp.high > high) 
+			if(cDayKDataTmp.high() > high) 
 			{
-				high = cDayKDataTmp.high;
+				high = cDayKDataTmp.high();
 				index = k;
 			}
 		}
@@ -65,9 +65,9 @@ public class StockUtils {
 		for(int k = i; k<=j; k++ )
 		{
 			StockDay cDayKDataTmp = dayklist.get(k);
-			if(cDayKDataTmp.low < low) 
+			if(cDayKDataTmp.low() < low) 
 			{
-				low = cDayKDataTmp.low;
+				low = cDayKDataTmp.low();
 				index = k;
 			}
 		}
@@ -80,8 +80,8 @@ public class StockUtils {
 		for(int i = 0; i <oriList.size(); i++)  
         {  
 			StockDay cStockDay = oriList.get(i);  
-			if(cStockDay.date.compareTo(fromDate) >= 0 &&
-					cStockDay.date.compareTo(endDate) <= 0)
+			if(cStockDay.date().compareTo(fromDate) >= 0 &&
+					cStockDay.date().compareTo(endDate) <= 0)
 			{
 				StockDay cNewStockDay = new StockDay();
 				cNewStockDay.CopyFrom(cStockDay);

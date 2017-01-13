@@ -57,7 +57,7 @@ public class TestStockDataIF {
 		{
 			StockDay cStockDay = cStockDayShangZhengList.get(i);
 			BLog.output("TEST", "cStockDay %s open %.3f close %.3f\n", 
-					cStockDay.date, cStockDay.open, cStockDay.close);
+					cStockDay.date(), cStockDay.open(), cStockDay.close());
 		}
 	}
 	

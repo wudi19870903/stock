@@ -9,13 +9,13 @@ public class StrategySelect extends IStrategySelect {
 
 	@Override
 	public void strategy_select(StockContext ctx, SelectResult out_sr) {
-		Stock curStock = ctx.getCurStock();
+		Stock curStock = ctx.stock();
 		// 特征：价值位置250日周期
-		float EigenPriceLocLong = (float)ctx.getCurStockEigen("EigenSamplePriceLoc", 250);
+		float EigenPriceLocLong = (float)ctx.getStockEigen("EigenSamplePriceLoc", 250);
 		// 离60日均线偏离百分比
-		float MADeviation60 = (float)ctx.getCurStockEigen("EigenSampleMADeviation", 60);
+		float MADeviation60 = (float)ctx.getStockEigen("EigenSampleMADeviation", 60);
 		// 离250日均线偏离百分比
-		float MADeviation250 = (float)ctx.getCurStockEigen("EigenSampleMADeviation", 250);
+		float MADeviation250 = (float)ctx.getStockEigen("EigenSampleMADeviation", 250);
 		if(MADeviation60 < -0.1 && MADeviation250 < -0.06 
 				&& EigenPriceLocLong < 0.4 && EigenPriceLocLong > 0.1) {
 			out_sr.bSelect = true;

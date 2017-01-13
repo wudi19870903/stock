@@ -12,29 +12,51 @@ public class Stock {
 	{
 		m_LatestStockInfo = new StockInfo();
 		m_stockDayList = new ArrayList<StockDay>();
-		m_stockTimeMap = new HashMap<String, List<StockTime>>();
 	}	 
 	
-	// 获得最后一天的昨日收盘价
-	public float GetLastYesterdayClosePrice()
+	// 获得最新价格
+	public float getLatestPrice()
 	{
-		if(m_stockDayList.size() > 1) // 2天以上
-			return m_stockDayList.get(m_stockDayList.size()-2).close;
-		else if(m_stockDayList.size() > 0) // 只有一天情况，昨收就是今开
-			return m_stockDayList.get(m_stockDayList.size()-1).open;
+		if(m_stockDayList.size() > 0)
+			return m_stockDayList.get(m_stockDayList.size()-1).close();
 		else
 			return 0.0f;
 	}
+	// 获得最新股票分时数据
+	public List<StockTime> getLatestStockTimeList()
+	{
+		if(m_stockDayList.size() > 0)
+		{
+			if(!m_stockDayList.get(m_stockDayList.size()-1).isEndTran())
+				return m_stockDayList.get(m_stockDayList.size()-1).getStockTimeList();
+		}
+		return null;
+	}
 	
+	// 获得最后一天的日期
+	public String GetLastDate()
+	{
+		if(m_stockDayList.size() > 0)
+			return m_stockDayList.get(m_stockDayList.size()-1).date();
+		else
+			return "0000-00-00";
+	}
 	// 获得最后一天的开盘价
 	public float GetLastOpenPrice()
 	{
 		if(m_stockDayList.size() > 0)
-			return m_stockDayList.get(m_stockDayList.size()-1).open;
+			return m_stockDayList.get(m_stockDayList.size()-1).open();
 		else
 			return 0.0f;
 	}
-
+	// 获得最后价
+	public float GetLastClosePrice()
+	{
+		if(m_stockDayList.size() > 0)
+			return m_stockDayList.get(m_stockDayList.size()-1).close();
+		else
+			return 0.0f;
+	}
 	// 获得最后一天的开盘时的百分比
 	public float GetLastOpenRatio()
 	{
@@ -49,11 +71,13 @@ public class Stock {
 			return 0.0f;
 	}
 	
-	// 获得最后一天的收盘价
-	public float GetLastClosePrice()
+	// 获得上一交易日收盘价格
+	public float GetLastYesterdayClosePrice()
 	{
-		if(m_stockDayList.size() > 0)
-			return m_stockDayList.get(m_stockDayList.size()-1).close;
+		if(m_stockDayList.size() > 1) // 2天以上
+			return m_stockDayList.get(m_stockDayList.size()-2).close();
+		else if(m_stockDayList.size() > 0) // 只有一天情况，昨收就是今开
+			return m_stockDayList.get(m_stockDayList.size()-1).open();
 		else
 			return 0.0f;
 	}
@@ -62,20 +86,11 @@ public class Stock {
 	public String GetFirstDate()
 	{
 		if(m_stockDayList.size() > 0)
-			return m_stockDayList.get(0).date;
+			return m_stockDayList.get(0).date();
 		else
 			return "0000-00-00";
 	}
-	
-	// 获得最后一天的日期
-	public String GetLastDate()
-	{
-		if(m_stockDayList.size() > 0)
-			return m_stockDayList.get(m_stockDayList.size()-1).date;
-		else
-			return "0000-00-00";
-	}
-	
+
 	// 均线计算，计算date日期前count天均线价格
 	public float GetMA(int count, String date)
 	{
@@ -89,7 +104,7 @@ public class Stock {
 		for(int i = iB; i <= iE; i++)  
         {  
 			StockDay cDayKData = m_stockDayList.get(i);  
-			sum = sum + cDayKData.close;
+			sum = sum + cDayKData.close();
 			sumcnt++;
 			//Log.outputConsole("%s %.2f\n", cDayKData.date, cDayKData.close);
         }
@@ -108,9 +123,9 @@ public class Stock {
 		for(int i = iB; i <= iE; i++)  
         {  
 			StockDay cDayKData = m_stockDayList.get(i);  
-			if(cDayKData.high >= value)
+			if(cDayKData.high() >= value)
 			{
-				value = cDayKData.high;
+				value = cDayKData.high();
 			}
 			//Log.outputConsole("%s %.2f\n", cDayKData.date, cDayKData.close);
         }
@@ -128,15 +143,16 @@ public class Stock {
 		for(int i = iB; i <= iE; i++)  
         {  
 			StockDay cDayKData = m_stockDayList.get(i);  
-			if(cDayKData.low <= value)
+			if(cDayKData.low() <= value)
 			{
-				value = cDayKData.low;
+				value = cDayKData.low();
 			}
 			//Log.outputConsole("%s %.2f\n", cDayKData.date, cDayKData.close);
         }
 		return value;
 	}
 	
+	// 获得某天的日数据
 	public StockDay GetDayK(String date)
 	{
 		int i = StockUtils.indexDayKAfterDate(m_stockDayList, date);
@@ -154,45 +170,15 @@ public class Stock {
 	 * ******************************************************************************************
 	 */
 	
-	public String getDate() { return m_date; }
-	public void setDate(String date) { m_date = date; }
-	
-	public String getTime() { return m_time; }
-	public void setTime(String time) { m_time = time; }
-	
 	public StockInfo getCurLatestStockInfo() { return m_LatestStockInfo; }
 	public void setCurLatestStockInfo(StockInfo stockInfo) { m_LatestStockInfo = stockInfo; }
 	
 	public List<StockDay> getCurStockDayData() { return m_stockDayList; }
 	public void setCurStockDayData(List<StockDay> stockDayData) { m_stockDayList = stockDayData; }
 	
-	public List<StockTime> getCurStockTimeData(String date) 
-	{ 
-		if(m_stockTimeMap.containsKey(date))
-		{
-			return m_stockTimeMap.get(date);
-		}
-		else
-		{
-			return null; 
-		}
-	}
-	public void setCurStockTimeData(String date, List<StockTime> stockTimeData) 
-	{ 
-		if(m_stockTimeMap.containsKey(date))
-		{
-			m_stockTimeMap.replace(date, stockTimeData);
-		}
-		else
-		{
-			m_stockTimeMap.put(date, stockTimeData);
-		}
-	}
-	
-	private String m_date;
-	private String m_time;
-	
+	/**
+	 * 成员 **********************************************************************
+	 */
 	private StockInfo m_LatestStockInfo;
 	private List<StockDay> m_stockDayList;
-	private Map<String, List<StockTime>> m_stockTimeMap;
 }

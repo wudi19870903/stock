@@ -12,23 +12,20 @@ public class StrategyCreate extends IStrategyCreate {
 	@Override
 	public void strategy_create(StockContext ctx, CreateResult out_sr) {
 		// TODO Auto-generated method stub
-		BLog.output("TEST", "StrategyCreate %s\n", ctx.getCurStock().getCurLatestStockInfo().name);
-//		BLog.output("TEST", " %s\n", ctx.getCurStock().GetLastDate());
-//		
+		BLog.output("TEST", "StrategyCreate %s %s\n", ctx.date(), ctx.time());
 		
-		List<StockTime> cStockTimeList = ctx.getCurStock().getCurStockTimeData();
-		
-		//BLog.output("TEST", "strategy_create ID %s\n", ctx.getCurStock().getCurLatestStockInfo().ID);
-		
-		for(int i=0; i<cStockTimeList.size();i++ )
-		{
-			StockTime cStockTime = cStockTimeList.get(i);
-			//BLog.output("TEST", "    %s %.2f\n", cStockTime.time, cStockTime.price);
-		}
-		
+//		BLog.output("TEST", "%s LatestPrice %.2f\n", 
+//				ctx.stock().getCurLatestStockInfo().ID,
+//				ctx.stock().getLatestPrice());
+//	
+//		List<StockTime> stockTimeList = ctx.stock().getLatestStockTimeList();
+//		for(int i=0; i<stockTimeList.size(); i++)
+//		{
+//			StockTime cStockTime = stockTimeList.get(i);
+//			BLog.output("TEST", "cStockTime %s %.2f\n", cStockTime.time,cStockTime.price);
+//		}
 		
 		out_sr.bCreate = true;
-		
 	}
 
 	@Override

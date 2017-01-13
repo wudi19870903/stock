@@ -71,18 +71,21 @@ public class CreateWorkRequest extends BQThreadRequest {
 				StockTimeDataCache.addStockTime(stockID, m_date, cStockTime);
 			}
 			List<StockTime> cStockTimeList = StockTimeDataCache.getStockTimeList(stockID, m_date);
+			StockDay curStockDay = new StockDay();
+			curStockDay.set(m_date, cStockTimeList);
+			
+			cStockDayList.add(curStockDay);
 			
 			BLog.output("CREATE", "        -Stock:%s cStockTimeList size(%d)\n", stockID, cStockTimeList.size());
 			
 			Stock cStock = new Stock();
-			cStock.setDate(m_date);
-			cStock.setTime(m_time);
 			cStock.setCurLatestStockInfo(cStockInfo);
 			cStock.setCurStockDayData(cStockDayList);
-			cStock.setCurStockTimeData(m_date, cStockTimeList);
 			
 			StockContext ctx = new StockContext();
-			ctx.setCurStock(cStock);
+			ctx.setDate(m_date);
+			ctx.setTime(m_time);
+			ctx.setStock(cStock);
 			
 			if(bGetStockTime) // 只有获取当前价格成功时才回调给用户
 			{

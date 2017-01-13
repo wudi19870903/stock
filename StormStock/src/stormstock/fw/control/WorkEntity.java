@@ -40,7 +40,7 @@ public class WorkEntity {
 			for(int i = iB; i <= iE; i++)  
 	        {  
 				StockDay cStockDayShangZheng = cStockShangZheng.getCurStockDayData().get(i);  
-				String curDateStr = cStockDayShangZheng.date;
+				String curDateStr = cStockDayShangZheng.date();
 				m_hisTranDate.add(curDateStr);
 	        }
 		}
@@ -188,7 +188,7 @@ public class WorkEntity {
 			for(int i = 0; i < cStockDayShangZhengList.size(); i++)  
 	        {  
 				StockDay cStockDayShangZheng = cStockDayShangZhengList.get(i);  
-				String checkDateStr = cStockDayShangZheng.date;
+				String checkDateStr = cStockDayShangZheng.date();
 				if(checkDateStr.equals(date))
 				{
 					return true;

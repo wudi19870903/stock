@@ -9,6 +9,7 @@ import stormstock.fw.base.BUtilsDateTime;
 import stormstock.fw.base.BQThread.BQThreadRequest;
 import stormstock.fw.event.StockClearAnalysis;
 import stormstock.fw.event.Transaction;
+import stormstock.fw.stockcreateanalyzer.StockTimeDataCache;
 import stormstock.fw.tranbase.account.AccountControlIF;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 import stormstock.fw.tranbase.com.GlobalUserObj;
@@ -71,18 +72,21 @@ public class ClearWorkRequest extends BQThreadRequest {
 				StockTimeDataCache.addStockTime(stockID, m_date, cStockTime);
 			}
 			List<StockTime> cStockTimeList = StockTimeDataCache.getStockTimeList(stockID, m_date);
+			StockDay curStockDay = new StockDay();
+			curStockDay.set(m_date, cStockTimeList);
+			
+			cStockDayList.add(curStockDay);
 			
 			BLog.output("CLEAR", "        -Stock:%s cStockTimeList size(%d)\n", stockID, cStockTimeList.size());
 			
 			Stock cStock = new Stock();
-			cStock.setDate(m_date);
-			cStock.setTime(m_time);
 			cStock.setCurLatestStockInfo(cStockInfo);
 			cStock.setCurStockDayData(cStockDayList);
-			cStock.setCurStockTimeData(m_date, cStockTimeList);
 			
 			StockContext ctx = new StockContext();
-			ctx.setCurStock(cStock);
+			ctx.setDate(m_date);
+			ctx.setTime(m_time);
+			ctx.setStock(cStock);
 			
 			if(bGetStockTime) // 只有获取当前价格成功时才回调给用户
 			{

@@ -4,24 +4,45 @@ import stormstock.fw.tranbase.stockdata.Stock;
 
 public class StockContext {
 	
-	public Stock getCurStock() 
+	public String date() 
 	{ 
-		return m_curStock; 
+		return m_date; 
+	}
+	public String time() 
+	{ 
+		return m_time; 
 	}
 	
-	public void setCurStock(Stock cStock) 
+	public Stock stock() 
 	{ 
-		m_curStock = cStock; 
+		return m_stock; 
 	}
 	
-	public Object getCurStockEigen(String eigenName, Object... args)
+	public Object getStockEigen(String eigenName, Object... args)
 	{
 		IEigenStock cIEigenStock = GlobalUserObj.getStockEigen(eigenName);
 		if(null == cIEigenStock) 
 			return null;
-		Object engenObj = cIEigenStock.calc(m_curStock, args);
+		Object engenObj = cIEigenStock.calc(m_stock, args);
 		return engenObj;
 	}
 	
-	private Stock m_curStock;
+	// *********************************************************************************
+	
+	public void setDate(String date) 
+	{ 
+		m_date = date; 
+	}
+	public void setTime(String time) 
+	{ 
+		m_time = time; 
+	}
+	public void setStock(Stock cStock) 
+	{ 
+		m_stock = cStock; 
+	}
+	
+	private String m_date;
+	private String m_time;
+	private Stock m_stock;
 }

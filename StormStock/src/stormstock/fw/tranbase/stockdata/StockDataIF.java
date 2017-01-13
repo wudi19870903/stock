@@ -146,12 +146,8 @@ public class StockDataIF {
 						&& cDayKData.date.compareTo(endDate) <= 0)
 				{
 					StockDay cStockDay = new StockDay();
-					cStockDay.date = cDayKData.date;
-					cStockDay.open = cDayKData.open;
-					cStockDay.close = cDayKData.close;
-					cStockDay.low = cDayKData.low;
-					cStockDay.high = cDayKData.high;
-					cStockDay.volume = cDayKData.volume;
+					cStockDay.set(cDayKData.date, 
+							cDayKData.open, cDayKData.close, cDayKData.low, cDayKData.high, cDayKData.volume);
 					//System.out.println("historyData.add " + cDayKData.date + "," + cDayKData.open + "," + cDayKData.close); 
 					historyData.add(cStockDay);
 				}
@@ -220,8 +216,8 @@ public class StockDataIF {
 				if(cStockDayList.size() > 0)
 				{
 					StockDay cStockDay = cStockDayList.get(0);
-					float open = cStockDay.open;
-					float close = cStockDay.close;
+					float open = cStockDay.open();
+					float close = cStockDay.close();
 					out_cStockTime.time = time;
 					if(time.compareTo("09:30:00") >= 0 && time.compareTo("13:00:00") <= 0)
 					{
@@ -242,7 +238,7 @@ public class StockDataIF {
 				{
 					StockDay cStockDay = cStockDayList.get(0);
 					out_cStockTime.time = time;
-					out_cStockTime.price = cStockDay.close;
+					out_cStockTime.price = cStockDay.close();
 					return true;
 				}
 			}
@@ -270,7 +266,7 @@ public class StockDataIF {
 				if(0 == ret && retList.size() != 0)
 				{
 					// 由于可能是复权价位，需要重新计算相对价格
-					float baseOpenPrice = cStockDay.open;
+					float baseOpenPrice = cStockDay.open();
 					float actruaFirstPrice = retList.get(0).open;
 					for(int i = 0; i < retList.size(); i++)  
 			        {  
@@ -389,12 +385,8 @@ public class StockDataIF {
 					&& cDayKData.date.compareTo(endDate) <= 0)
 			{
 				StockDay cStockDay = new StockDay();
-				cStockDay.date = cDayKData.date;
-				cStockDay.open = cDayKData.open;
-				cStockDay.close = cDayKData.close;
-				cStockDay.low = cDayKData.low;
-				cStockDay.high = cDayKData.high;
-				cStockDay.volume = cDayKData.volume;
+				cStockDay.set(cDayKData.date, 
+						cDayKData.open, cDayKData.close, cDayKData.low, cDayKData.high, cDayKData.volume);
 //		            System.out.println(cDayKData.date + "," 
 //		            		+ cDayKData.open + "," + cDayKData.close); 
 				cStock.getCurStockDayData().add(cStockDay);

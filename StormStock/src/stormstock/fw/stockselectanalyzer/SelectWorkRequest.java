@@ -84,12 +84,13 @@ public class SelectWorkRequest extends BQThreadRequest {
 				Stock cStock = new Stock();
 				List<StockDay> cStockDayList = StockDataIF.getHistoryData(stockID, m_date);
 				StockInfo cStockInfo = StockDataIF.getLatestStockInfo(stockID);
-				StockContext ctx = new StockContext();
-				cStock.setDate(m_date);
-				cStock.setTime(m_time);
 				cStock.setCurStockDayData(cStockDayList);
 				cStock.setCurLatestStockInfo(cStockInfo);
-				ctx.setCurStock(cStock);
+				
+				StockContext ctx = new StockContext();
+				ctx.setDate(m_date);
+				ctx.setTime(m_time);
+				ctx.setStock(cStock);
 				
 				// 进行用户选股
 				cIStrategySelect.strategy_select(ctx, cSRW.selectRes);
