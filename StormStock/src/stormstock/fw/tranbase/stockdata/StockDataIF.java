@@ -98,7 +98,7 @@ public class StockDataIF {
 		if(0 == DataEngine.getStockBaseData(id, cStockBaseInfo))
 		{
 			cStockInfo.name = cStockBaseInfo.name;
-			cStockInfo.price = cStockBaseInfo.price; 
+			//cStockInfo.price = cStockBaseInfo.price; 
 			cStockInfo.allMarketValue = cStockBaseInfo.allMarketValue; 
 			cStockInfo.circulatedMarketValue = cStockBaseInfo.circulatedMarketValue; 
 			cStockInfo.peRatio = cStockBaseInfo.peRatio;

@@ -12,7 +12,7 @@ public class StrategyCreate extends IStrategyCreate {
 	@Override
 	public void strategy_create(StockContext ctx, CreateResult out_sr) {
 		// TODO Auto-generated method stub
-//		BLog.output("TEST", "StrategyCreate %s\n", ctx.getCurStock().getCurLatestStockInfo().name);
+		BLog.output("TEST", "StrategyCreate %s\n", ctx.getCurStock().getCurLatestStockInfo().name);
 //		BLog.output("TEST", " %s\n", ctx.getCurStock().GetLastDate());
 //		
 		

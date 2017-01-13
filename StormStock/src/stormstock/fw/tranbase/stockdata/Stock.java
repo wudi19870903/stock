@@ -1,7 +1,9 @@
 package stormstock.fw.tranbase.stockdata;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class Stock {
@@ -10,7 +12,7 @@ public class Stock {
 	{
 		m_LatestStockInfo = new StockInfo();
 		m_stockDayList = new ArrayList<StockDay>();
-		m_stockTimeList = new ArrayList<StockTime>();
+		m_stockTimeMap = new HashMap<String, List<StockTime>>();
 	}	 
 	
 	// 获得最后一天的昨日收盘价
@@ -164,13 +166,33 @@ public class Stock {
 	public List<StockDay> getCurStockDayData() { return m_stockDayList; }
 	public void setCurStockDayData(List<StockDay> stockDayData) { m_stockDayList = stockDayData; }
 	
-	public List<StockTime> getCurStockTimeData() { return m_stockTimeList; }
-	public void setCurStockTimeData(List<StockTime> stockTimeData) { m_stockTimeList = stockTimeData; }
+	public List<StockTime> getCurStockTimeData(String date) 
+	{ 
+		if(m_stockTimeMap.containsKey(date))
+		{
+			return m_stockTimeMap.get(date);
+		}
+		else
+		{
+			return null; 
+		}
+	}
+	public void setCurStockTimeData(String date, List<StockTime> stockTimeData) 
+	{ 
+		if(m_stockTimeMap.containsKey(date))
+		{
+			m_stockTimeMap.replace(date, stockTimeData);
+		}
+		else
+		{
+			m_stockTimeMap.put(date, stockTimeData);
+		}
+	}
 	
 	private String m_date;
 	private String m_time;
 	
 	private StockInfo m_LatestStockInfo;
 	private List<StockDay> m_stockDayList;
-	private List<StockTime> m_stockTimeList;
+	private Map<String, List<StockTime>> m_stockTimeMap;
 }

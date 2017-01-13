@@ -79,7 +79,7 @@ public class ClearWorkRequest extends BQThreadRequest {
 			cStock.setTime(m_time);
 			cStock.setCurLatestStockInfo(cStockInfo);
 			cStock.setCurStockDayData(cStockDayList);
-			cStock.setCurStockTimeData(cStockTimeList);
+			cStock.setCurStockTimeData(m_date, cStockTimeList);
 			
 			StockContext ctx = new StockContext();
 			ctx.setCurStock(cStock);
