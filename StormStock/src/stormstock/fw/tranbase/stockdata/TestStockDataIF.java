@@ -8,7 +8,9 @@ public class TestStockDataIF {
 	
 	public static void test_getAllStocks()
 	{
-		List<String> stockIDList = StockDataIF.getAllStockID();
+		StockDataIF cStockDataIF = new StockDataIF();
+		
+		List<String> stockIDList = cStockDataIF.getAllStockID();
 		BLog.output("TEST", "stock count: %d\n", stockIDList.size());
 		for(int i=0; i<stockIDList.size(); i++)
 		{
@@ -23,10 +25,11 @@ public class TestStockDataIF {
 	
 	public static void test_getLatestStockInfo()
 	{
+		StockDataIF cStockDataIF = new StockDataIF();
 		for(int i=2; i<9; i++)
 		{
 			String stockID = String.format("00000%d", i);
-			StockInfo cStockInfo = StockDataIF.getLatestStockInfo(stockID);
+			StockInfo cStockInfo = cStockDataIF.getLatestStockInfo(stockID);
 			if(null!=cStockInfo)
 			{
 				BLog.output("TEST", "cStockInfo [%s][%s]\n",
@@ -42,6 +45,8 @@ public class TestStockDataIF {
 	
 	public static void test_getHistoryData()
 	{
+		StockDataIF cStockDataIF = new StockDataIF();
+		
 //		List<StockDay> historyData = StockDataIF.getHistoryData("000001", "2016-01-01",  "2016-12-31");
 //		for(int i=0; i< historyData.size(); i++)
 //		{
@@ -50,7 +55,7 @@ public class TestStockDataIF {
 //					cStockDay.date, cStockDay.open, cStockDay.close);
 //		}
 		
-		List<StockDay> cStockDayShangZhengList = StockDataIF.getHistoryData("999999");
+		List<StockDay> cStockDayShangZhengList = cStockDataIF.getHistoryData("999999");
 		BLog.output("TEST", "cStockDayShangZhengList(%d)\n", 
 				cStockDayShangZhengList.size());
 		for(int i=cStockDayShangZhengList.size()-1; i > cStockDayShangZhengList.size()-10 ; i--)
@@ -63,7 +68,8 @@ public class TestStockDataIF {
 	
 	public static void test_getDayDetail()
 	{ 
-		List<StockTime> detailData = StockDataIF.getDayDetail("000001", "2016-01-04", "14:30:00");
+		StockDataIF cStockDataIF = new StockDataIF();
+		List<StockTime> detailData = cStockDataIF.getDayDetail("000001", "2016-01-04", "14:30:00");
 		if(null != detailData)
 		{
 			for(int i=0; i< detailData.size(); i++)

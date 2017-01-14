@@ -1,12 +1,12 @@
 package stormstock.fw.tranengine;
 
 import stormstock.fw.tranbase.com.IStrategySelect;
-import stormstock.fw.tranbase.com.StockContext;
+import stormstock.fw.tranbase.com.TranContext;
 
 public class DefaultStrategySelect extends IStrategySelect {
 
 	@Override
-	public void strategy_select(StockContext ctx, SelectResult out_sr) {
+	public void strategy_select(TranContext ctx, SelectResult out_sr) {
 		// TODO Auto-generated method stub
 		
 	}

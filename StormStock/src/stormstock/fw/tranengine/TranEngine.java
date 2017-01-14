@@ -24,6 +24,7 @@ import stormstock.fw.tranbase.com.IStrategyClear;
 import stormstock.fw.tranbase.com.IStrategyCreate;
 import stormstock.fw.tranbase.com.IStrategySelect;
 import stormstock.fw.tranbase.com.ITranStockSetFilter;
+import stormstock.fw.tranbase.stockdata.StockDataIF;
 
 public class TranEngine {
 	
@@ -194,6 +195,7 @@ public class TranEngine {
 		GlobalUserObj.setCurrentStrategyClear(m_cStrategyClear); // 当前清仓策略
 		GlobalUserObj.setCurrentStockEigenMap(m_cEigenMap); // 当前特征表
 		
+		// 账户控制器接口全局设置
 		AccountControlIF cAccountControlIF = new AccountControlIF();
 		if(m_eAccType == TRANACCOUNTTYPE.MOCK)
 		{
@@ -204,6 +206,10 @@ public class TranEngine {
 			cAccountControlIF.setAccountType(ACCOUNTTYPE.REAL);
 		}
 		GlobalUserObj.setCurrentAccountControlIF(cAccountControlIF);
+		
+		// 股票数据接口全局设置
+		StockDataIF cStockDataIF = new StockDataIF();
+		GlobalUserObj.setCurrentStockDataIF(cStockDataIF);
 		
 		// 发送开始交易命令到控制器
 		BLog.output("TRAN", "Start Trasection\n");

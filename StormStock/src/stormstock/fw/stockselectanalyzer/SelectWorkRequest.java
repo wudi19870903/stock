@@ -10,11 +10,14 @@ import stormstock.fw.base.BLog;
 import stormstock.fw.base.BQThread.BQThreadRequest;
 import stormstock.fw.event.StockSelectAnalysis;
 import stormstock.fw.event.Transaction;
+import stormstock.fw.tranbase.account.AccountAccessor;
 import stormstock.fw.tranbase.com.GlobalUserObj;
 import stormstock.fw.tranbase.com.IStrategySelect;
 import stormstock.fw.tranbase.com.IStrategySelect.SelectResult;
-import stormstock.fw.tranbase.com.StockContext;
+import stormstock.fw.tranbase.com.TranContext.Target;
+import stormstock.fw.tranbase.com.TranContext;
 import stormstock.fw.tranbase.stockdata.Stock;
+import stormstock.fw.tranbase.stockdata.StockDataAccessor;
 import stormstock.fw.tranbase.stockdata.StockDataIF;
 import stormstock.fw.tranbase.stockdata.StockDay;
 import stormstock.fw.tranbase.stockdata.StockInfo;
@@ -58,6 +61,8 @@ public class SelectWorkRequest extends BQThreadRequest {
 	{
 		BLog.output("SELECT", "SelectWorkRequest.doAction [%s %s]\n", m_date, m_time);
 		
+		StockDataIF stockDataIF = GlobalUserObj.getCurStockDataIF();
+		
 		IStrategySelect cIStrategySelect = GlobalUserObj.getCurrentStrategySelect();
 		List<String> cTranStockIDSet = m_stockIDList;
 		
@@ -74,23 +79,25 @@ public class SelectWorkRequest extends BQThreadRequest {
 				cSRW.stockId = stockID;
 				
 				// 缓存交易股票的所有历史数据
-				if(!StockDataIF.isCachedStockDayData(stockID))
+				if(!stockDataIF.isCachedStockDayData(stockID))
 				{
-					List<StockDay> cStockDayList = StockDataIF.getHistoryData(stockID);
-					StockDataIF.cacheHistoryData(stockID, cStockDayList);
+					List<StockDay> cStockDayList = stockDataIF.getHistoryData(stockID);
+					stockDataIF.cacheHistoryData(stockID, cStockDayList);
 				}
 				
 				// 构造当时股票数据
 				Stock cStock = new Stock();
-				List<StockDay> cStockDayList = StockDataIF.getHistoryData(stockID, m_date);
-				StockInfo cStockInfo = StockDataIF.getLatestStockInfo(stockID);
+				List<StockDay> cStockDayList = stockDataIF.getHistoryData(stockID, m_date);
+				StockInfo cStockInfo = stockDataIF.getLatestStockInfo(stockID);
 				cStock.setCurStockDayData(cStockDayList);
 				cStock.setCurLatestStockInfo(cStockInfo);
 				
-				StockContext ctx = new StockContext();
-				ctx.setDate(m_date);
-				ctx.setTime(m_time);
-				ctx.setStock(cStock);
+				StockDataAccessor cStockDataAccessor = stockDataIF.getStockDataAccessor(m_date, m_time);
+				Target cTarget = new Target(cStock, null);
+				TranContext ctx = new TranContext(m_date, m_time, 
+						cTarget,  // 目标不包含 持股信息
+						null,  // 不带账户访问器
+						cStockDataAccessor); // 带当天的数据访问器
 				
 				// 进行用户选股
 				cIStrategySelect.strategy_select(ctx, cSRW.selectRes);

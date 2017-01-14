@@ -7,6 +7,7 @@ import java.util.Map;
 
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BUtilsDateTime;
+import stormstock.fw.tranbase.account.AccountAccessor;
 import stormstock.ori.stockdata.DataEngine;
 import stormstock.ori.stockdata.DataEngineBase;
 import stormstock.ori.stockdata.DataWebStockRealTimeInfo;
@@ -22,7 +23,17 @@ import stormstock.ori.stockdata.DataWebStockRealTimeInfo.RealTimeInfo;
 
 public class StockDataIF {
 	
-	public static boolean updateAllLocalStocks(String dateStr)
+	/*
+	 * 获得某日期时间的账户访问器
+	 * 可以获取账户信息
+	 */
+	public StockDataAccessor getStockDataAccessor(String date, String time)
+	{
+		return new StockDataAccessor(date, time, this);
+	}
+	
+	
+	public boolean updateAllLocalStocks(String dateStr)
 	{
 		String updatedDate = DataEngine.getUpdatedStocksDate();
 		if(updatedDate.compareTo(dateStr) >= 0)
@@ -39,7 +50,7 @@ public class StockDataIF {
 		return true;
 	}
 	
-	public static boolean updateLocalStocks(String stockID, String dateStr)
+	public boolean updateLocalStocks(String stockID, String dateStr)
 	{
 		String updatedDate = DataEngine.getUpdatedStocksDate();
 		if(updatedDate.compareTo(dateStr) >= 0)
@@ -59,7 +70,7 @@ public class StockDataIF {
 	/*
 	 * 获取所有股票Id列表
 	 */
-	public static List<String> getAllStockID()
+	public List<String> getAllStockID()
 	{
 		List<String> retList = new ArrayList<String>();
 		
@@ -73,11 +84,11 @@ public class StockDataIF {
 		
 		return retList;
 	}
-	public static void cacheAllStockID(List<String> allStockID)
+	public void cacheAllStockID(List<String> allStockID)
 	{
 		s_cache_allStockID = allStockID;
 	}
-	public static boolean isCachedAllStockID() 
+	public boolean isCachedAllStockID() 
 	{
 		return (s_cache_allStockID!=null)?true:false;
 	}
@@ -85,7 +96,7 @@ public class StockDataIF {
 	/*
 	 * 获取某只股票基本信息
 	 */
-	public static StockInfo getLatestStockInfo(String id)
+	public StockInfo getLatestStockInfo(String id)
 	{
 		if(null != s_cache_latestStockInfo && s_cache_latestStockInfo.containsKey(id))
 		{
@@ -106,7 +117,7 @@ public class StockDataIF {
 		
 		return cStockInfo;
 	}
-	public static void cacheLatestStockInfo(StockInfo cStockInfo)
+	public void cacheLatestStockInfo(StockInfo cStockInfo)
 	{
 		if(null == s_cache_latestStockInfo)
 		{
@@ -114,7 +125,7 @@ public class StockDataIF {
 		}
 		s_cache_latestStockInfo.put(cStockInfo.ID, cStockInfo);
 	}
-	public static boolean isLatestStockInfo(String stockID) 
+	public boolean isLatestStockInfo(String stockID) 
 	{
 		if(null == s_cache_latestStockInfo) return false;
 		if(!s_cache_latestStockInfo.containsKey(stockID)) return false;
@@ -124,7 +135,7 @@ public class StockDataIF {
 	/*
 	 * 获取某只股票的历史日K数据
 	 */
-	public static List<StockDay> getHistoryData(String stockID, String fromDate, String endDate)
+	public List<StockDay> getHistoryData(String stockID, String fromDate, String endDate)
 	{
 		if(null != s_cache_stockDayData && s_cache_stockDayData.containsKey(stockID))
 		{
@@ -157,15 +168,15 @@ public class StockDataIF {
 //		BLog.output("TEST", "getHistoryData return! historyData(%d)\n", historyData.size());
 		return historyData;
 	}
-	public static List<StockDay> getHistoryData(String id, String endDate)
+	public List<StockDay> getHistoryData(String id, String endDate)
 	{
 		return getHistoryData(id, "2000-01-01", endDate);
 	}
-	public static List<StockDay> getHistoryData(String id)
+	public List<StockDay> getHistoryData(String id)
 	{
 		return getHistoryData(id, "2000-01-01", "2100-01-01");
 	}
-	public static void cacheHistoryData(String id, List<StockDay> cStockDayList)
+	public void cacheHistoryData(String id, List<StockDay> cStockDayList)
 	{
 		if(null == s_cache_stockDayData)
 		{
@@ -173,7 +184,7 @@ public class StockDataIF {
 		}
 		s_cache_stockDayData.put(id, cStockDayList);
 	}
-	public static boolean isCachedStockDayData(String stockID) 
+	public boolean isCachedStockDayData(String stockID) 
 	{
 		if(null == s_cache_stockDayData) return false;
 		if(!s_cache_stockDayData.containsKey(stockID)) return false;
@@ -183,7 +194,7 @@ public class StockDataIF {
 	/*
 	 * 获取某只股票某天某时间的价格
 	 */
-	public static boolean getStockTime(String id, String date, String time, StockTime out_cStockTime)
+	public boolean getStockTime(String id, String date, String time, StockTime out_cStockTime)
 	{
 		boolean bRealTime = false;
 		String curDate = BUtilsDateTime.GetCurDateStr();
@@ -249,7 +260,7 @@ public class StockDataIF {
 	/*
 	 * 获取某只股票某天某时间的细节数据
 	 */
-	public static List<StockTime> getDayDetail(String id, String date, String endTime)
+	public List<StockTime> getDayDetail(String id, String date, String endTime)
 	{
 		List<StockTime> detailDataList = new ArrayList<StockTime>();
 		
@@ -294,7 +305,7 @@ public class StockDataIF {
 		
 		return detailDataList;
 	}
-	public static List<StockTime> getDayDetail(String id, String date)
+	public List<StockTime> getDayDetail(String id, String date)
 	{
 		return getDayDetail(id, date, "15:00:00");
 	}
@@ -318,18 +329,18 @@ public class StockDataIF {
 	// ******************************************************************************************
 	
 	
-	public static Stock getStock(String id, String endDate)
+	public Stock getStock(String id, String endDate)
 	{
 		return getStock(id, "2000-01-01", endDate);
 	}
 	
 	// 新数据加载
-	public static Stock getStock(String id)
+	public Stock getStock(String id)
 	{
 		return getStock(id, "2100-01-01");
 	}
 	
-	public static Stock getStock(String id, String fromDate, String endDate)
+	public Stock getStock(String id, String fromDate, String endDate)
 	{
 		boolean bEnableCache = false;
 		

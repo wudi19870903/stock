@@ -33,7 +33,8 @@ public class WorkEntity {
 		if(m_bHistoryTest)
 		{
 			m_hisTranDate = new ArrayList<String>();
-			Stock cStockShangZheng = StockDataIF.getStock("999999");
+			StockDataIF stockDataIF = GlobalUserObj.getCurStockDataIF();
+			Stock cStockShangZheng = stockDataIF.getStock("999999");
 			int iB = StockUtils.indexDayKAfterDate(cStockShangZheng.getCurStockDayData(), m_beginDate);
 			int iE = StockUtils.indexDayKBeforeDate(cStockShangZheng.getCurStockDayData(), m_endDate);
 			
@@ -115,7 +116,8 @@ public class WorkEntity {
 				if(waitForDateTime(dateStr, timestr))
 				{
 					BLog.output("CTRL", "[%s %s] updateStockData \n", dateStr, timestr);
-					StockDataIF.updateAllLocalStocks(dateStr);
+					StockDataIF stockDataIF = GlobalUserObj.getCurStockDataIF();
+					stockDataIF.updateAllLocalStocks(dateStr);
 				}
 				
 				// 21:30 收集交易信息
@@ -182,9 +184,10 @@ public class WorkEntity {
 			BUtilsDateTime.waitDateTime(date, "09:25:00"); //等到时间
 			
 			// 确认今天是否是交易日
+			StockDataIF stockDataIF = GlobalUserObj.getCurStockDataIF();
 			String yesterdayDate = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(m_curDate, -1);
-			StockDataIF.updateLocalStocks("999999", yesterdayDate);
-			List<StockDay> cStockDayShangZhengList = StockDataIF.getHistoryData("999999");
+			stockDataIF.updateLocalStocks("999999", yesterdayDate);
+			List<StockDay> cStockDayShangZhengList = stockDataIF.getHistoryData("999999");
 			for(int i = 0; i < cStockDayShangZhengList.size(); i++)  
 	        {  
 				StockDay cStockDayShangZheng = cStockDayShangZhengList.get(i);  
@@ -195,7 +198,7 @@ public class WorkEntity {
 				}
 	        }
 			StockTime out_cStockTime = new StockTime();
-			boolean bRet = StockDataIF.getStockTime("999999", date, BUtilsDateTime.GetCurTimeStr(), out_cStockTime);
+			boolean bRet = stockDataIF.getStockTime("999999", date, BUtilsDateTime.GetCurTimeStr(), out_cStockTime);
 			if(bRet)
 			{
 				return true;
@@ -265,15 +268,17 @@ public class WorkEntity {
 	
 	private int LoadStockIDSet()
 	{
+		StockDataIF stockDataIF = GlobalUserObj.getCurStockDataIF();
+		
 		ITranStockSetFilter cTranStockSetFilter = GlobalUserObj.getCurrentTranStockSetFilter();
 		
 		List<String> cStockIDSet = new ArrayList<String>();
 		
-		List<String> cStockAllList = StockDataIF.getAllStockID();
+		List<String> cStockAllList = stockDataIF.getAllStockID();
 		for(int i=0; i<cStockAllList.size();i++)
 		{
 			String stockID = cStockAllList.get(i);
-			StockInfo cStockInfo = StockDataIF.getLatestStockInfo(stockID);
+			StockInfo cStockInfo = stockDataIF.getLatestStockInfo(stockID);
 
 			if(null != cStockInfo && cTranStockSetFilter.tran_stockset_byLatestStockInfo(cStockInfo))
 			{

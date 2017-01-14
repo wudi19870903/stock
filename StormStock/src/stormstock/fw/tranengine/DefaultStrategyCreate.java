@@ -1,12 +1,12 @@
 package stormstock.fw.tranengine;
 
 import stormstock.fw.tranbase.com.IStrategyCreate;
-import stormstock.fw.tranbase.com.StockContext;
+import stormstock.fw.tranbase.com.TranContext;
 
 public class DefaultStrategyCreate extends IStrategyCreate {
 
 	@Override
-	public void strategy_create(StockContext ctx, CreateResult out_sr) {
+	public void strategy_create(TranContext ctx, CreateResult out_sr) {
 		// TODO Auto-generated method stub
 		
 	}

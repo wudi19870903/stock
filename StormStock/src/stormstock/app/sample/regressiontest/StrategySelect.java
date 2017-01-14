@@ -2,20 +2,20 @@ package stormstock.app.sample.regressiontest;
 import java.util.List;
 
 import stormstock.fw.tranbase.com.IStrategySelect;
-import stormstock.fw.tranbase.com.StockContext;
+import stormstock.fw.tranbase.com.TranContext;
 import stormstock.fw.tranbase.stockdata.Stock;
 
 public class StrategySelect extends IStrategySelect {
 
 	@Override
-	public void strategy_select(StockContext ctx, SelectResult out_sr) {
-		Stock curStock = ctx.stock();
+	public void strategy_select(TranContext ctx, SelectResult out_sr) {
+		Stock curStock = ctx.target().stock();
 		// 特征：价值位置250日周期
-		float EigenPriceLocLong = (float)ctx.getStockEigen("EigenSamplePriceLoc", 250);
+		float EigenPriceLocLong = (float)ctx.target().getStockEigen("EigenSamplePriceLoc", 250);
 		// 离60日均线偏离百分比
-		float MADeviation60 = (float)ctx.getStockEigen("EigenSampleMADeviation", 60);
+		float MADeviation60 = (float)ctx.target().getStockEigen("EigenSampleMADeviation", 60);
 		// 离250日均线偏离百分比
-		float MADeviation250 = (float)ctx.getStockEigen("EigenSampleMADeviation", 250);
+		float MADeviation250 = (float)ctx.target().getStockEigen("EigenSampleMADeviation", 250);
 		if(MADeviation60 < -0.1 && MADeviation250 < -0.06 
 				&& EigenPriceLocLong < 0.4 && EigenPriceLocLong > 0.1) {
 			out_sr.bSelect = true;

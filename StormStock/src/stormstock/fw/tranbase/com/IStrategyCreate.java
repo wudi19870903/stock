@@ -13,6 +13,6 @@ abstract public class IStrategyCreate {
 		public float fMaxMoney; // 建仓最大金额（最大值限制）
 	}
 	
-	abstract public void strategy_create(StockContext ctx, CreateResult out_sr);
+	abstract public void strategy_create(TranContext ctx, CreateResult out_sr);
 	abstract public int strategy_create_max_count();
 }

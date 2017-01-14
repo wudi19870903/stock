@@ -8,5 +8,5 @@ abstract public class IStrategyClear {
 		}
 		public boolean bClear; // «Â≤÷±Í÷æ
 	}
-	abstract public void strategy_clear(StockContext ctx, ClearResult out_sr);
+	abstract public void strategy_clear(TranContext ctx, ClearResult out_sr);
 }

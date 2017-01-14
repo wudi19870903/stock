@@ -3,8 +3,23 @@ package stormstock.fw.tranbase.com;
 import java.util.Map;
 
 import stormstock.fw.tranbase.account.AccountControlIF;
+import stormstock.fw.tranbase.stockdata.StockDataIF;
 
 public class GlobalUserObj {
+	
+	/*
+	 * CurrentStockDataIF
+	 */
+	public static StockDataIF getCurStockDataIF()
+	{
+		return s_stockDataIF;
+	}
+	public static void setCurrentStockDataIF(StockDataIF cStockDataIF)
+	{
+		s_stockDataIF = cStockDataIF;
+	}
+	private static StockDataIF s_stockDataIF = null;
+	
 	
 	/*
 	 * CurrentAccountControlIF

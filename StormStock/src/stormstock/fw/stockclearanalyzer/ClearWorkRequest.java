@@ -10,13 +10,16 @@ import stormstock.fw.base.BQThread.BQThreadRequest;
 import stormstock.fw.event.StockClearAnalysis;
 import stormstock.fw.event.Transaction;
 import stormstock.fw.stockcreateanalyzer.StockTimeDataCache;
+import stormstock.fw.tranbase.account.AccountAccessor;
 import stormstock.fw.tranbase.account.AccountControlIF;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 import stormstock.fw.tranbase.com.GlobalUserObj;
 import stormstock.fw.tranbase.com.IStrategyClear;
 import stormstock.fw.tranbase.com.IStrategyClear.ClearResult;
-import stormstock.fw.tranbase.com.StockContext;
+import stormstock.fw.tranbase.com.TranContext.Target;
+import stormstock.fw.tranbase.com.TranContext;
 import stormstock.fw.tranbase.stockdata.Stock;
+import stormstock.fw.tranbase.stockdata.StockDataAccessor;
 import stormstock.fw.tranbase.stockdata.StockDataIF;
 import stormstock.fw.tranbase.stockdata.StockDay;
 import stormstock.fw.tranbase.stockdata.StockInfo;
@@ -47,7 +50,9 @@ public class ClearWorkRequest extends BQThreadRequest {
 		
 		BLog.output("CLEAR", "ClearWorkRequest.doAction [%s %s]\n", m_date, m_time);
 		
+		StockDataIF stockDataIF = GlobalUserObj.getCurStockDataIF();
 		AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
+		
 		
 		IStrategyClear cIStrategyClear = GlobalUserObj.getCurrentStrategyClear();
 		List<String> stockIDCreateList = m_stockIDList;
@@ -62,13 +67,13 @@ public class ClearWorkRequest extends BQThreadRequest {
 			
 			// 构造当时股票数据(昨日日K，今日当前分时)
 			
-			StockInfo cStockInfo = StockDataIF.getLatestStockInfo(stockID);
+			StockInfo cStockInfo = stockDataIF.getLatestStockInfo(stockID);
 			
 			String yesterday_date = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(m_date, -1);
-			List<StockDay> cStockDayList = StockDataIF.getHistoryData(stockID, yesterday_date);
+			List<StockDay> cStockDayList = stockDataIF.getHistoryData(stockID, yesterday_date);
 			
 			StockTime cStockTime = new StockTime();
-			boolean bGetStockTime = StockDataIF.getStockTime(stockID, m_date, m_time, cStockTime);
+			boolean bGetStockTime = stockDataIF.getStockTime(stockID, m_date, m_time, cStockTime);
 			if(bGetStockTime)
 			{
 				StockTimeDataCache.addStockTime(stockID, m_date, cStockTime);
@@ -85,11 +90,14 @@ public class ClearWorkRequest extends BQThreadRequest {
 			cStock.setCurLatestStockInfo(cStockInfo);
 			cStock.setCurStockDayData(cStockDayList);
 			
-			StockContext ctx = new StockContext();
-			ctx.setDate(m_date);
-			ctx.setTime(m_time);
-			ctx.setStock(cStock);
-			ctx.setAccountAccessor(accIF.getAccountAccessor(m_date, m_time));
+			AccountAccessor cAccountAccessor = accIF.getAccountAccessor(m_date, m_time);
+			String dateBefore = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(m_date, -1);
+			StockDataAccessor cStockDataAccessor = stockDataIF.getStockDataAccessor(dateBefore, m_time);
+			Target cTarget = new Target(cStock, cAccountAccessor.getStockHold(stockID));
+			TranContext ctx = new TranContext(m_date, m_time, 
+					cTarget,  // 目标对象带有 股票数据与持股信息
+					cAccountAccessor, // ctx带有账户访问器
+					cStockDataAccessor);// ctx带有昨日数据访问器（用户不能查看今天得其他k线）
 			
 			if(bGetStockTime) // 只有获取当前价格成功时才回调给用户
 			{

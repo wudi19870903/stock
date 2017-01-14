@@ -11,7 +11,7 @@ abstract public class IStrategySelect {
 		public float fPriority;
 	}
 	
-	abstract public void strategy_select(StockContext ctx, SelectResult out_sr);
+	abstract public void strategy_select(TranContext ctx, SelectResult out_sr);
 	
 	abstract public int strategy_select_max_count();
 }
