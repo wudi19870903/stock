@@ -1,5 +1,6 @@
 package stormstock.fw.tranbase.com;
 
+import stormstock.fw.tranbase.account.AccountAccessor;
 import stormstock.fw.tranbase.stockdata.Stock;
 
 public class StockContext {
@@ -16,6 +17,11 @@ public class StockContext {
 	public Stock stock() 
 	{ 
 		return m_stock; 
+	}
+	
+	public AccountAccessor account() 
+	{ 
+		return m_account; 
 	}
 	
 	public Object getStockEigen(String eigenName, Object... args)
@@ -41,8 +47,13 @@ public class StockContext {
 	{ 
 		m_stock = cStock; 
 	}
+	public void setAccountAccessor(AccountAccessor cAccount)
+	{
+		m_account = cAccount;
+	}
 	
 	private String m_date;
 	private String m_time;
 	private Stock m_stock;
+	private AccountAccessor m_account;
 }

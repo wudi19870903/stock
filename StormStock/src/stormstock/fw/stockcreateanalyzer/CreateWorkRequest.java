@@ -46,6 +46,8 @@ public class CreateWorkRequest extends BQThreadRequest {
 	public void doAction() {
 		BLog.output("CREATE", "CreateWorkRequest.doAction [%s %s]\n", m_date, m_time);
 		
+		AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
+		
 		IStrategyCreate cIStrategyCreate = GlobalUserObj.getCurrentStrategyCreate();
 		List<String> stockIDSelectList = m_stockIDList;
 		
@@ -86,6 +88,7 @@ public class CreateWorkRequest extends BQThreadRequest {
 			ctx.setDate(m_date);
 			ctx.setTime(m_time);
 			ctx.setStock(cStock);
+			ctx.setAccountAccessor(accIF.getAccountAccessor(m_date, m_time));
 			
 			if(bGetStockTime) // 只有获取当前价格成功时才回调给用户
 			{
@@ -101,7 +104,6 @@ public class CreateWorkRequest extends BQThreadRequest {
 		}
 			
 		int create_max_count = cIStrategyCreate.strategy_create_max_count();
-		AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
 		int alreadyCount = accIF.getStockHoldList(null, null).size() + accIF.getBuyCommissionOrderList().size();
 		int buyStockCount = create_max_count - alreadyCount;
 		buyStockCount = Math.min(buyStockCount,cCreateResultWrapperList.size());

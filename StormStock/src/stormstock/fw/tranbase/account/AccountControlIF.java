@@ -8,6 +8,11 @@ import stormstock.fw.tranbase.account.AccountPublicDef.CommissionOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.DeliveryOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 
+/*
+ * 账户控制器
+ * 可以获取账户信息
+ * 可以操作账户动作
+ */
 public class AccountControlIF {
 	
 	public enum ACCOUNTTYPE 
@@ -22,6 +27,14 @@ public class AccountControlIF {
 		m_stockSelectList = new ArrayList<String>();
 	}
 	
+	/*
+	 * 获得某日期时间的账户访问器
+	 * 可以获取账户信息
+	 */
+	public AccountAccessor getAccountAccessor(String date, String time)
+	{
+		return new AccountAccessor(date, time, this);
+	}
 	
 	public void setAccountType(ACCOUNTTYPE eAccIFType)
 	{
@@ -147,6 +160,11 @@ public class AccountControlIF {
 		return true;
 	}
 	
+	// 获得委托列表（未成交）
+	public List<CommissionOrder> getCommissionOrderList()
+	{
+		return m_account.getCommissionOrderList();
+	}
 	// 获得买单委托列表（未成交）
 	public List<CommissionOrder> getBuyCommissionOrderList()
 	{

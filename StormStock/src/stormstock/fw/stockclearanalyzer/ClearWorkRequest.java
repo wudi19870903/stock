@@ -47,6 +47,8 @@ public class ClearWorkRequest extends BQThreadRequest {
 		
 		BLog.output("CLEAR", "ClearWorkRequest.doAction [%s %s]\n", m_date, m_time);
 		
+		AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
+		
 		IStrategyClear cIStrategyClear = GlobalUserObj.getCurrentStrategyClear();
 		List<String> stockIDCreateList = m_stockIDList;
 		
@@ -87,6 +89,7 @@ public class ClearWorkRequest extends BQThreadRequest {
 			ctx.setDate(m_date);
 			ctx.setTime(m_time);
 			ctx.setStock(cStock);
+			ctx.setAccountAccessor(accIF.getAccountAccessor(m_date, m_time));
 			
 			if(bGetStockTime) // 只有获取当前价格成功时才回调给用户
 			{
@@ -100,8 +103,6 @@ public class ClearWorkRequest extends BQThreadRequest {
 				}
 			}
 		}
-		
-		AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
 		
 		StockClearAnalysis.StockClearAnalysisCompleteNotify.Builder msg_builder = StockClearAnalysis.StockClearAnalysisCompleteNotify.newBuilder();
 		msg_builder.setDate(m_date);
