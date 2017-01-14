@@ -31,12 +31,13 @@ public class MockAccountOpe extends IAccountOpe {
 		// 新一天时，未成交委托单清空
 		m_commissionOrderList.clear();
 		
-		// 新一天时，所有持股均可卖
+		// 新一天时，所有持股均可卖，持仓天数+1
 		HoldStock cHoldStock = null;
 		for(int i = 0; i< m_holdStockList.size(); i++)
 		{
 			cHoldStock = m_holdStockList.get(i);
 			cHoldStock.totalCanSell = cHoldStock.totalAmount;
+			cHoldStock.holdDayCnt = cHoldStock.holdDayCnt + 1;
 		}
 		
 		// 新一天时，交割单清空
@@ -68,6 +69,8 @@ public class MockAccountOpe extends IAccountOpe {
 		{
 			HoldStock cNewHoldStock = new HoldStock();
 			cNewHoldStock.stockID = stockID;
+			cNewHoldStock.createDate = date;
+			cNewHoldStock.createTime = time;
 			cNewHoldStock.curPrice = price;
 			m_holdStockList.add(cNewHoldStock);
 			cHoldStock = cNewHoldStock;
@@ -83,6 +86,9 @@ public class MockAccountOpe extends IAccountOpe {
 
 		cHoldStock.transactionCosts = cHoldStock.transactionCosts + transactionCosts;
 		m_money = m_money - realBuyAmount*price;
+		
+		BLog.output("ACCOUNT", " @Buy [%s %.3f %d %.3f(%.3f) %.3f] \n", 
+				stockID, price, realBuyAmount, price*realBuyAmount, transactionCosts, m_money);
 		
 		// 生成交割单
 		DeliveryOrder cDeliveryOrder = new DeliveryOrder();
@@ -143,6 +149,9 @@ public class MockAccountOpe extends IAccountOpe {
 				DeliveryOrder_transactionCost = cHoldStock.transactionCosts;
 				m_holdStockList.remove(cHoldStock);
 			}
+			
+			BLog.output("ACCOUNT", " @Sell [%s %.3f %d %.3f(%.3f) %.3f] \n", 
+					stockID, price, realSellAmount, price*realSellAmount, cHoldStock.transactionCosts, m_money);
 			
 			// 生成交割单
 			DeliveryOrder cDeliveryOrder = new DeliveryOrder();

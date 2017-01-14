@@ -44,15 +44,16 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 		cDailyReport.fTotalAssets = fTotalAssets;
 		cDailyReport.fAvailableMoney = fAvailableMoney;
 		
-		BLog.output("REPORT", "    -TotalAssets: %.2f\n", fTotalAssets);
-		BLog.output("REPORT", "    -AvailableMoney: %.2f\n", fAvailableMoney);
+		BLog.output("REPORT", "    -TotalAssets: %.3f\n", fTotalAssets);
+		BLog.output("REPORT", "    -AvailableMoney: %.3f\n", fAvailableMoney);
 		for(int i=0; i<cStockHoldList.size(); i++ )
 		{
 			HoldStock cHoldStock = cStockHoldList.get(i);
-			BLog.output("REPORT", "    -HoldStock: %s %.2f %.2f %d %.2f(%.2f)\n", 
-					cHoldStock.stockID, 
+			BLog.output("REPORT", "    -HoldStock: %s %s %s %.3f %.3f %d %.3f(%.3f) %d\n", 
+					cHoldStock.stockID, cHoldStock.createDate, cHoldStock.createTime,
 					cHoldStock.holdAvePrice, cHoldStock.curPrice, cHoldStock.totalAmount,
-					cHoldStock.curPrice*cHoldStock.totalAmount, cHoldStock.transactionCosts);
+					cHoldStock.curPrice*cHoldStock.totalAmount, cHoldStock.transactionCosts,
+					cHoldStock.holdDayCnt);
 		}
 		for(int i=0; i<cDeliveryOrderList.size(); i++ )
 		{
@@ -60,7 +61,7 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 			String tranOpe = "BUY"; 
 			if(cDeliveryOrder.tranOpe == TRANACT.SELL ) tranOpe = "SELL";
 				
-			BLog.output("REPORT", "    -DeliveryOrder: %s %s %s %s %.2f %.2f %d %.2f(%.2f)\n", 
+			BLog.output("REPORT", "    -DeliveryOrder: %s %s %s %s %.3f %.3f %d %.3f(%.3f)\n", 
 					cDeliveryOrder.date, cDeliveryOrder.time,
 					tranOpe, cDeliveryOrder.stockID, 
 					cDeliveryOrder.holdAvePrice, cDeliveryOrder.tranPrice, cDeliveryOrder.amount,

@@ -29,10 +29,18 @@ public class StrategyClear extends IStrategyClear {
 		
 		HoldStock cHoldStock = ctx.target().holdStock();
 		if(null != cHoldStock)
-			BLog.output("TEST", "HoldStock %s %.2f\n", stockID, cHoldStock.curPrice);
+			BLog.output("TEST", "HoldStock %s %.2f %d\n", stockID, cHoldStock.curPrice, cHoldStock.holdDayCnt);
 		
-		if(ctx.time().compareTo("14:00:00") >= 0)
+		
+		if(cHoldStock.holdDayCnt > 10) // 持股天数大于10 卖出
+		{
 			out_sr.bClear = true;
+		}
+			
+		if(cHoldStock.profitRatio() > 0.02 || cHoldStock.profitRatio() < -0.02)
+		{
+			out_sr.bClear = true;
+		}
 	}
 
 }

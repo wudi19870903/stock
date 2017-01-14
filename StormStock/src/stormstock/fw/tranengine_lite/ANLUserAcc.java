@@ -105,8 +105,8 @@ public class ANLUserAcc {
 			cANLUserAccStock.transactionCosts = cANLUserAccStock.transactionCosts + transactionCosts;
 		}
 		money = money - price*amount;
-		ANLLog.outputLog("    # UserAccOpe buyStock [%s %d %.3f %.3f(%.3f) %.3f] \n", 
-				id, amount, price, price*amount, transactionCosts, money);
+		ANLLog.outputLog("    # UserAccOpe buyStock [%s %.3f %d %.3f(%.3f) %.3f] \n", 
+				id, price, amount, price*amount, transactionCosts, money);
 		return true;
 	}
 	public boolean sellStock(String id, float price, int amount)
@@ -123,8 +123,8 @@ public class ANLUserAcc {
 				cANLUserAccStock.buyPrices = (oriPrice*oriAmount - price*amount)/cANLUserAccStock.totalAmount;
 				money = money + price*amount - cANLUserAccStock.transactionCosts;
 				transactionCosts = cANLUserAccStock.transactionCosts;
-				ANLLog.outputLog("    # UserAccOpe sellStock [%s %d %.3f %.3f(%.3f) %.3f]\n", 
-						id, amount, price, price*amount, transactionCosts, money);
+				ANLLog.outputLog("    # UserAccOpe sellStock [%s %.3f %d %.3f(%.3f) %.3f]\n", 
+						id, price, amount, price*amount, transactionCosts, money);
 				
 				if(cANLUserAccStock.totalAmount == 0)
 				{

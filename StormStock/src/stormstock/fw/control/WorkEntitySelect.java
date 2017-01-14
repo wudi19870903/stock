@@ -63,7 +63,7 @@ public class WorkEntitySelect {
 		
 		// 保存选股列表到账户模块
 		AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
-		accIF.addStockSelectList(cSelectedIDList);
+		accIF.setStockSelectList(cSelectedIDList);
 
 		if(selectedDateTime.compareTo(reqSelectDateTime) == 0)
 		{

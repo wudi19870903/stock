@@ -5,7 +5,7 @@ abstract public class IStrategyCreate {
 	public static class CreateResult {
 		public CreateResult() {
 			bCreate = false;
-			fMaxPositionRatio = 0.3f;
+			fMaxPositionRatio = 0.3333f;
 			fMaxMoney = 10000*100;
 		}
 		public boolean bCreate; // Ω®≤÷±Í÷æ

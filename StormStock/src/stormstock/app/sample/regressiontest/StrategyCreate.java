@@ -15,20 +15,22 @@ public class StrategyCreate extends IStrategyCreate {
 		
 		BLog.output("TEST", "StrategyCreate %s %s\n", ctx.date(), ctx.time());
 		
-		String stockID = ctx.target().stock().getCurLatestStockInfo().ID;
+		out_sr.bCreate = true;
 		
-		String stockTimeStr = "";
-		List<StockTime> stockTimeList = ctx.target().stock().getLatestStockTimeList();
-		for(int i=0; i<stockTimeList.size(); i++)
-		{
-			StockTime cStockTime = stockTimeList.get(i);
-			stockTimeStr = stockTimeStr + String.format("%.2f(%s) ", cStockTime.price, cStockTime.time);
-		}
-
-		BLog.output("TEST", "%s %s\n", stockID, stockTimeStr);
-		
-		if(ctx.time().compareTo("14:00:00") >= 0)
-			out_sr.bCreate = true;
+//		String stockID = ctx.target().stock().getCurLatestStockInfo().ID;
+//		
+//		String stockTimeStr = "";
+//		List<StockTime> stockTimeList = ctx.target().stock().getLatestStockTimeList();
+//		for(int i=0; i<stockTimeList.size(); i++)
+//		{
+//			StockTime cStockTime = stockTimeList.get(i);
+//			stockTimeStr = stockTimeStr + String.format("%.2f(%s) ", cStockTime.price, cStockTime.time);
+//		}
+//
+//		BLog.output("TEST", "%s %s\n", stockID, stockTimeStr);
+//		
+//		if(ctx.time().compareTo("14:00:00") >= 0)
+//			out_sr.bCreate = true;
 	}
 
 	@Override

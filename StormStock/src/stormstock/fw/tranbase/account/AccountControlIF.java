@@ -97,16 +97,14 @@ public class AccountControlIF {
 	}
 	
 	
-	// 选股列表添加合并
-	public void addStockSelectList(List<String> stockIDList)
+	// 选股列表设置
+	public void setStockSelectList(List<String> stockIDList)
 	{
+		m_stockSelectList.clear();
 		for(int i=0; i<stockIDList.size();i++)
 		{
 			String newstockID = stockIDList.get(i);
-			if(!m_stockSelectList.contains(newstockID))
-			{
-				m_stockSelectList.add(newstockID);
-			}
+			m_stockSelectList.add(newstockID);
 		}
 		
 		// 选股中排除已经持有的

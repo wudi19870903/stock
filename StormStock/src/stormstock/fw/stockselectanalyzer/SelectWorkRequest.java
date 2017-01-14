@@ -78,13 +78,6 @@ public class SelectWorkRequest extends BQThreadRequest {
 				SelectResultWrapper cSRW = new SelectResultWrapper();
 				cSRW.stockId = stockID;
 				
-				// 缓存交易股票的所有历史数据
-				if(!stockDataIF.isCachedStockDayData(stockID))
-				{
-					List<StockDay> cStockDayList = stockDataIF.getHistoryData(stockID);
-					stockDataIF.cacheHistoryData(stockID, cStockDayList);
-				}
-				
 				// 构造当时股票数据
 				Stock cStock = new Stock();
 				List<StockDay> cStockDayList = stockDataIF.getHistoryData(stockID, m_date);

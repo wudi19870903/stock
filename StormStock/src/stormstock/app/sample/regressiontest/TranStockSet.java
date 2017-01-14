@@ -8,7 +8,7 @@ public class TranStockSet extends ITranStockSetFilter {
 
 	@Override
 	public boolean tran_stockset_byLatestStockInfo(StockInfo cStockInfo) {
-		if(cStockInfo.ID.compareTo("000027") >= 0 && cStockInfo.ID.compareTo("000027") <= 0) {	
+		if(cStockInfo.ID.compareTo("0000001") >= 0 && cStockInfo.ID.compareTo("000200") <= 0) {	
 			return true;
 		}
 		return false;
