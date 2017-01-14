@@ -22,6 +22,8 @@ public class InfoCollector {
 		public float fTotalAssets; // 总资产
 		public float fAvailableMoney; // 可用资金
 		public List<DeliveryOrder> cClearDeliveryOrder; // 清仓交割单列表
+		
+		public float fSHComposite;
 	}
 	
 	public InfoCollector()

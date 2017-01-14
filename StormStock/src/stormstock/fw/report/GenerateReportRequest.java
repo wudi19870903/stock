@@ -26,17 +26,21 @@ public class GenerateReportRequest  extends BQThreadRequest {
 	public void doAction() {
 		// TODO Auto-generated method stub
 		
-		List<CurvePoint> cCurvePointList = new ArrayList<CurvePoint>();
+		List<CurvePoint> cCurvePointList_TotalAssets = new ArrayList<CurvePoint>();
+		List<CurvePoint> cCurvePointList_SHComposite = new ArrayList<CurvePoint>();
 		
 		List<DailyReport> cDailyReportList = m_cInfoCollector.getDailyReportList();
 		for(int i =0; i< cDailyReportList.size(); i++)
 		{
 			DailyReport cDailyReport = cDailyReportList.get(i);
 			
-			cCurvePointList.add(new CurvePoint(i, cDailyReport.fTotalAssets));
+			cCurvePointList_TotalAssets.add(new CurvePoint(i, cDailyReport.fTotalAssets));
+			
+			cCurvePointList_SHComposite.add(new CurvePoint(i, cDailyReport.fSHComposite));
 		}
 		
-		m_imgReport.addLogicCurveSameRatio(cCurvePointList, 1);
+		m_imgReport.addLogicCurveSameRatio(cCurvePointList_SHComposite, 1);
+		m_imgReport.addLogicCurveSameRatio(cCurvePointList_TotalAssets, 2);
 		m_imgReport.GenerateImage();
 		
 		
