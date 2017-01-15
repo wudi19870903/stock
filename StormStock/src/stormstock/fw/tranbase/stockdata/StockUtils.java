@@ -90,4 +90,21 @@ public class StockUtils {
         }
 		return newStockDayData;
 	}
+	
+	public static List<StockTime> subStockTimeData(List<StockTime> oriList, String fromTime, String endTime)
+	{
+		List<StockTime> newStockTimeData = new ArrayList<StockTime>();
+		for(int i = 0; i <oriList.size(); i++)  
+        {  
+			StockTime cStockTime = oriList.get(i);  
+			if(cStockTime.time.compareTo(fromTime) >= 0 &&
+					cStockTime.time.compareTo(endTime) <= 0)
+			{
+				StockTime cNewStockTime = new StockTime();
+				cNewStockTime.CopyFrom(cStockTime);
+				newStockTimeData.add(cNewStockTime);
+			}
+        }
+		return newStockTimeData;
+	}
 }

@@ -96,28 +96,65 @@ public class TestStockDataIF {
 	
 	public static void test_getDayDetail()
 	{ 
-//		StockDataIF cStockDataIF = new StockDataIF();
-//		List<StockTime> detailData = cStockDataIF.getDayDetail("000001", "2016-01-04", "14:30:00");
-//		if(null != detailData)
-//		{
-//			for(int i=0; i< detailData.size(); i++)
-//			{
-//				StockTime cStockDayDetail = detailData.get(i);
-//				BLog.output("TEST", "cStockDayDetail %s price %.3f \n", 
-//						cStockDayDetail.time, cStockDayDetail.price);
-//			}
-//		}
+		StockDataIF cStockDataIF = new StockDataIF();
+		String curTime = "09:30:00";
+		while(true)
+		{
+			List<StockTime> detailData = cStockDataIF.getDayDetail("000001", "2016-07-27", "09:30:00", curTime);
+			
+			String teststr ="";
+			if(null != detailData)
+			{
+				for(int i=0; i< detailData.size(); i++)
+				{
+					StockTime cStockDayDetail = detailData.get(i);
+					teststr = teststr + String.format("%.2f(%s) ", cStockDayDetail.price,cStockDayDetail.time);
+				}
+			}
+			
+			BLog.output("TEST", "[->%s] %s \n", 
+					curTime, teststr);
+			
+			
+			if(curTime.compareTo("11:30:00") >= 0)
+			{
+				break;
+			}
+			curTime = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(curTime, 1);
+		}
 	}
+	
+	public static void test_getStockTime()
+	{
+		StockDataIF cStockDataIF = new StockDataIF();
+		String curTime = "09:00:00";
+		while(true)
+		{
+			StockTime cStockTime = new StockTime();
+			if(cStockDataIF.getStockTime("000001", "2016-07-27", curTime, cStockTime))
+			{
+				BLog.output("TEST", "[%s] %.2f\n", cStockTime.time, cStockTime.price);
+			}
+			
+			if(curTime.compareTo("15:00:00") >= 0)
+			{
+				break;
+			}
+			curTime = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(curTime, 5);
+		}
+	}
+	
 	
 	public static void main(String[] args) {
 		BLog.output("TEST", "TestStockDataProvider Begin\n");
 		BLog.config_setTag("STOCKDATA", true);
 		
 		//test_updateAllLocalStocks();
-		test_getAllStocks();
+		// test_getAllStocks();
 		//test_getLatestStockInfo();
 		// test_getHistoryData();
 		//test_getDayDetail();
+		test_getStockTime();
 		
 		BLog.output("TEST", "TestStockDataProvider End\n");
 	}

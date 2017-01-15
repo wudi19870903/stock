@@ -41,6 +41,10 @@ public class DataEngine extends DataEngineBase
 		{
 			return datetime.split(" ")[1];
 		}
+		public String getDate()
+		{
+			return datetime.split(" ")[0];
+		}
 	}
 
 	public static List<ExKData> getStock(String id) {

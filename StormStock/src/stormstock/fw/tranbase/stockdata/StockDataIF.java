@@ -90,6 +90,7 @@ public class StockDataIF {
 	/*
 	 * 获取所有股票Id列表
 	 * 基于当前本地数据获取，不保证是最新（依赖于数据更新）
+	 * 此接口带有数据缓存机制
 	 */
 	public List<String> getAllStockID()
 	{
@@ -115,6 +116,7 @@ public class StockDataIF {
 	/*
 	 * 获取某只股票基本信息
 	 * 不保证是最新（依赖于数据更新）
+	 * 此接口带有数据缓存机制
 	 */
 	public StockInfo getLatestStockInfo(String id)
 	{
@@ -154,6 +156,7 @@ public class StockDataIF {
 	/*
 	 * 获取某只股票的历史日K数据
 	 * 不保证是最新（依赖于数据更新）
+	 * 此接口带有数据缓存机制
 	 */
 	public List<StockDay> getHistoryData(String stockID, String fromDate, String endDate)
 	{
@@ -212,7 +215,89 @@ public class StockDataIF {
 	}
 
 	/*
+	 * 获取某只股票某天某时间的细节数据
+	 * 不保证是最新（依赖于数据更新）
+	 * 此接口带有数据缓存机制
+	 */
+	public List<StockTime> getDayDetail(String id, String date, String beginTime, String endTime)
+	{
+		// 首次进行历史数据缓存
+		String findKey = id + "_" + date;
+		if(null == s_cache_stockTimeData || !s_cache_stockTimeData.containsKey(findKey))
+		{
+			if(null == s_cache_stockTimeData)
+			{
+				s_cache_stockTimeData = new HashMap<String,List<StockTime>>();
+			}
+			
+			List<StockTime> detailDataList = new ArrayList<StockTime>();
+			
+			List<StockDay> historyData = getHistoryData(id, date, date);
+			if(historyData.size()==1)
+			{
+				StockDay cStockDay = historyData.get(0);
+				
+				if(null != cStockDay && date.length() == "0000-00-00".length())
+				{
+					// load new detail data
+					List<ExKData> retList = new ArrayList<ExKData>();
+					int ret = DataEngine.get1MinKDataOneDay(id, date, retList);
+					if(0 == ret && retList.size() != 0)
+					{
+						// 由于可能是复权价位，需要重新计算相对价格
+						float baseOpenPrice = cStockDay.open();
+						float actruaFirstPrice = retList.get(0).open;
+						for(int i = 0; i < retList.size(); i++)  
+				        {  
+							ExKData cExKData = retList.get(i);  
+//				            System.out.println(cExKData.datetime + "," 
+//				            		+ cExKData.open + "," + cExKData.close + "," 
+//				            		+ cExKData.low + "," + cExKData.high + "," 
+//				            		+ cExKData.volume);  
+							
+							float actrualprice = cExKData.close;
+							float changeper = (actrualprice - actruaFirstPrice)/actruaFirstPrice;
+							float changedprice = baseOpenPrice + baseOpenPrice * changeper;
+							
+							// 添加上下午开盘点
+							if(cExKData.getTime().compareTo("09:31:00") == 0
+									|| cExKData.getTime().compareTo("13:01:00") == 0)
+							{
+								StockTime cStockDayDetail = new StockTime();
+								cStockDayDetail.price = baseOpenPrice;
+								String openTime = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(cExKData.getTime(), -1);
+								cStockDayDetail.time = openTime;
+								detailDataList.add(cStockDayDetail);
+							}
+							
+
+							StockTime cStockDayDetail = new StockTime();
+							cStockDayDetail.price = changedprice;
+							cStockDayDetail.time = cExKData.getTime();
+							detailDataList.add(cStockDayDetail);
+				        } 
+					}
+				}
+			}
+			
+			s_cache_stockTimeData.put(findKey, detailDataList);
+		}
+		
+		// 从缓存中取数据
+		if(null != s_cache_stockTimeData && s_cache_stockTimeData.containsKey(findKey))
+		{
+			List<StockTime> cacheList = s_cache_stockTimeData.get(findKey);
+			return StockUtils.subStockTimeData(cacheList, beginTime, endTime);
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	/*
 	 * 获取某只股票某天某时间的价格
+	 * 数据缓存机制依赖于getDayDetail接口
 	 */
 	public boolean getStockTime(String id, String date, String time, StockTime out_cStockTime)
 	{
@@ -241,114 +326,74 @@ public class StockDataIF {
 		}
 		else
 		{
-			// 模拟
-			// 9点30（不含）之前，为前一天收盘价格
-			// 09:30:00 - 13:00:00（不含） ，为上午开盘价格
-			// 13:00:00 - 24:00:00 （含），为下午收盘价格
-			if(time.compareTo("09:30:00") >= 0)
+			boolean bDataFitting = false;
+			
+			if(bDataFitting)
 			{
-				List<StockDay> cStockDayList = getHistoryData(id, date, date);
-				if(cStockDayList.size() > 0)
+				// 基于日K线的拟合生成
+				// 9点30（不含）之前，为前一天收盘价格
+				// 09:30:00 - 13:00:00（不含） ，为上午开盘价格
+				// 13:00:00 - 24:00:00 （含），为下午收盘价格
+				if(time.compareTo("09:30:00") >= 0)
 				{
-					StockDay cStockDay = cStockDayList.get(0);
-					float open = cStockDay.open();
-					float close = cStockDay.close();
-					out_cStockTime.time = time;
-					if(time.compareTo("09:30:00") >= 0 && time.compareTo("13:00:00") < 0)
+					List<StockDay> cStockDayList = getHistoryData(id, date, date);
+					if(cStockDayList.size() > 0)
 					{
-						out_cStockTime.price = open;
+						StockDay cStockDay = cStockDayList.get(0);
+						float open = cStockDay.open();
+						float close = cStockDay.close();
+						out_cStockTime.time = time;
+						if(time.compareTo("09:30:00") >= 0 && time.compareTo("13:00:00") < 0)
+						{
+							out_cStockTime.price = open;
+						}
+						else if(time.compareTo("13:00:00") >= 0 && time.compareTo("24:00:00") <= 0)
+						{
+							out_cStockTime.price = close;
+						}
+						return true;
 					}
-					else if(time.compareTo("13:00:00") >= 0 && time.compareTo("24:00:00") <= 0)
+				}
+				else
+				{
+					String beforeDate = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(date, -1);
+					List<StockDay> cStockDayList = getHistoryData(id, beforeDate, beforeDate);
+					if(cStockDayList.size() > 0)
 					{
-						out_cStockTime.price = close;
+						StockDay cStockDay = cStockDayList.get(0);
+						out_cStockTime.time = time;
+						out_cStockTime.price = cStockDay.close();
+						return true;
 					}
-					return true;
 				}
 			}
 			else
 			{
-				String beforeDate = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(date, -1);
-				List<StockDay> cStockDayList = getHistoryData(id, beforeDate, beforeDate);
-				if(cStockDayList.size() > 0)
+				// 基于真实的历史数据
+				List<StockTime> cStockTimeList = getDayDetail(id, date, "09:30:00", time);
+				if(null!=cStockTimeList && cStockTimeList.size()>0)
 				{
-					StockDay cStockDay = cStockDayList.get(0);
-					out_cStockTime.time = time;
-					out_cStockTime.price = cStockDay.close();
-					return true;
+					StockTime cStockTime = cStockTimeList.get(cStockTimeList.size()-1);
+					long subTimeMin = BUtilsDateTime.subTime(time, cStockTime.time);
+					if(subTimeMin >=0 && subTimeMin<=120)
+					{
+						out_cStockTime.time = cStockTime.time;
+						out_cStockTime.price = cStockTime.price;
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				else
+				{
+					return false;
 				}
 			}
 		}
 		return false;
 	}
-	
-	/*
-	 * 获取某只股票某天某时间的细节数据
-	 */
-//	public List<StockTime> getDayDetail(String id, String date, String endTime)
-//	{
-//		List<StockTime> detailDataList = new ArrayList<StockTime>();
-//		
-//		List<StockDay> historyData = getHistoryData(id, date, date);
-//		if(historyData.size()==1)
-//		{
-//			StockDay cStockDay = historyData.get(0);
-//			
-//			if(null != cStockDay && date.length() == "0000-00-00".length())
-//			{
-//				// load new detail data
-//				List<ExKData> retList = new ArrayList<ExKData>();
-//				int ret = DataEngine.get1MinKDataOneDay(id, date, retList);
-//				if(0 == ret && retList.size() != 0)
-//				{
-//					// 由于可能是复权价位，需要重新计算相对价格
-//					float baseOpenPrice = cStockDay.open();
-//					float actruaFirstPrice = retList.get(0).open;
-//					for(int i = 0; i < retList.size(); i++)  
-//			        {  
-//						ExKData cExKData = retList.get(i);  
-////			            System.out.println(cExKData.datetime + "," 
-////			            		+ cExKData.open + "," + cExKData.close + "," 
-////			            		+ cExKData.low + "," + cExKData.high + "," 
-////			            		+ cExKData.volume);  
-//						
-//						float actrualprice = cExKData.close;
-//						float changeper = (actrualprice - actruaFirstPrice)/actruaFirstPrice;
-//						float changedprice = baseOpenPrice + baseOpenPrice * changeper;
-//						
-//						if(cExKData.getTime().compareTo(endTime) <= 0) //只添加小于时间参数的
-//						{
-//							StockTime cStockDayDetail = new StockTime();
-//							cStockDayDetail.price = changedprice;
-//							cStockDayDetail.time = cExKData.getTime();
-//							detailDataList.add(cStockDayDetail);
-//						}
-//			        } 
-//				}
-//			}
-//		}
-//		
-//		return detailDataList;
-//	}
-//	public List<StockTime> getDayDetail(String id, String date)
-//	{
-//		return getDayDetail(id, date, "15:00:00");
-//	}
-//	public void cacheDayDetail(String id, String date, List<StockTime> cStockTimeList)
-//	{
-//		if(null == s_cache_stockTimeData)
-//		{
-//			s_cache_stockTimeData = new HashMap<String, List<StockTime>>();
-//		}
-//		String key = id + "_" + date;
-//		s_cache_stockTimeData.put(key, cStockTimeList);
-//	}
-//	public boolean isCachedDayDetailData(String id, String date) 
-//	{
-//		if(null == s_cache_stockTimeData) return false;
-//		String key = id + "_" + date;
-//		if(!s_cache_stockTimeData.containsKey(key)) return false;
-//		return true;
-//	}
 	
 	// ******************************************************************************************
 	
@@ -432,7 +477,9 @@ public class StockDataIF {
 	{
 		m_localLatestDate = null;
 		m_cache_allStockID = null;
+		m_cache_latestStockInfo = null;
 		s_cache_stockDayData = null;
+		s_cache_stockTimeData = null;
 	}
 	
 	// 当前总数据最新更新日期缓存
@@ -441,5 +488,10 @@ public class StockDataIF {
 	private List<String> m_cache_allStockID = null;
 	// 本地股票最新基本信息缓存
 	private Map<String,StockInfo> m_cache_latestStockInfo = null;
+	// 日K历史数据缓存
+	// key:600001
 	private Map<String,List<StockDay>> s_cache_stockDayData = null;
+	// 日内分时缓存  
+	// key:600001_2016-01-01
+	private Map<String,List<StockTime>> s_cache_stockTimeData = null;
 }
