@@ -34,13 +34,13 @@ public class WorkEntity {
 		{
 			m_hisTranDate = new ArrayList<String>();
 			StockDataIF stockDataIF = GlobalUserObj.getCurStockDataIF();
-			Stock cStockShangZheng = stockDataIF.getStock("999999");
-			int iB = StockUtils.indexDayKAfterDate(cStockShangZheng.getCurStockDayData(), m_beginDate);
-			int iE = StockUtils.indexDayKBeforeDate(cStockShangZheng.getCurStockDayData(), m_endDate);
+			List<StockDay> cStocDayListShangZheng = stockDataIF.getHistoryData("999999");
+			int iB = StockUtils.indexDayKAfterDate(cStocDayListShangZheng, m_beginDate);
+			int iE = StockUtils.indexDayKBeforeDate(cStocDayListShangZheng, m_endDate);
 			
 			for(int i = iB; i <= iE; i++)  
 	        {  
-				StockDay cStockDayShangZheng = cStockShangZheng.getCurStockDayData().get(i);  
+				StockDay cStockDayShangZheng = cStocDayListShangZheng.get(i);  
 				String curDateStr = cStockDayShangZheng.date();
 				m_hisTranDate.add(curDateStr);
 	        }

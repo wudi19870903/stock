@@ -4,9 +4,8 @@ import java.util.Date;
 
 public class TestBUtilsDateTime {
 	
-	public static void main(String[] args) {
-		BLog.output("TEST", "TestBUtilsDateTime begin\n");
-		
+	public static void test_all()
+	{
 		String time1 = "12:22:23";
 		String time2 = "13:20:21";
 		long diffSec = BUtilsDateTime.subTime(time1,time2);
@@ -38,7 +37,18 @@ public class TestBUtilsDateTime {
 		BLog.output("TEST", "waitDateTime beforeTimeStr = %b\n", bwaitbefore);
 		boolean bwaitafter = BUtilsDateTime.waitDateTime(curDateStr, afterTimeStr);
 		BLog.output("TEST", "waitDateTime bwaitafter = %b\n", bwaitafter);
-
+	}
+	
+	public static void test_getDateStrForSpecifiedDateOffsetD()
+	{
+		String testdate = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD("2016-01-31", 2);
+		BLog.output("TEST", "testdate = %s\n", testdate);
+	}
+	public static void main(String[] args) {
+		BLog.output("TEST", "TestBUtilsDateTime begin\n");
+		
+		test_getDateStrForSpecifiedDateOffsetD();
+	
 		BLog.output("TEST", "TestBUtilsDateTime end\n");
 	}
 }

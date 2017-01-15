@@ -3,23 +3,51 @@ package stormstock.fw.tranbase.stockdata;
 import java.util.List;
 
 import stormstock.fw.base.BLog;
+import stormstock.fw.base.BUtilsDateTime;
 
 public class TestStockDataIF {
+	
+	public static void test_updateAllLocalStocks()
+	{
+		StockDataIF cStockDataIF = new StockDataIF();
+		String curDate = "2016-01-01";
+		while(true)
+		{
+			cStockDataIF.updateAllLocalStocks(curDate);
+			BLog.output("TEST", "cStockDataIF.updateAllLocalStocks %s\n", curDate);
+			
+			
+			if(curDate.compareTo("2016-06-01") >= 0)
+			{
+				break;
+			}
+			curDate = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(curDate, 1);
+		}
+	}
 	
 	public static void test_getAllStocks()
 	{
 		StockDataIF cStockDataIF = new StockDataIF();
-		
-		List<String> stockIDList = cStockDataIF.getAllStockID();
-		BLog.output("TEST", "stock count: %d\n", stockIDList.size());
-		for(int i=0; i<stockIDList.size(); i++)
+		String curDate = "2016-01-01";
+		while(true)
 		{
-			String stockID = stockIDList.get(i);
-			BLog.output("TEST", "stockID: %s\n", stockID);
-			if(i>10)
+			List<String> stockIDList = cStockDataIF.getAllStockID();
+			BLog.output("TEST", "stock count: %d\n", stockIDList.size());
+			for(int i=0; i<stockIDList.size(); i++)
+			{
+				String stockID = stockIDList.get(i);
+				BLog.output("TEST", "stockID: %s\n", stockID);
+				if(i>10)
+				{
+					break;
+				}
+			}
+			
+			if(curDate.compareTo("2016-06-01") >= 0)
 			{
 				break;
 			}
+			curDate = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(curDate, 1);
 		}
 	}
 	
@@ -68,25 +96,27 @@ public class TestStockDataIF {
 	
 	public static void test_getDayDetail()
 	{ 
-		StockDataIF cStockDataIF = new StockDataIF();
-		List<StockTime> detailData = cStockDataIF.getDayDetail("000001", "2016-01-04", "14:30:00");
-		if(null != detailData)
-		{
-			for(int i=0; i< detailData.size(); i++)
-			{
-				StockTime cStockDayDetail = detailData.get(i);
-				BLog.output("TEST", "cStockDayDetail %s price %.3f \n", 
-						cStockDayDetail.time, cStockDayDetail.price);
-			}
-		}
+//		StockDataIF cStockDataIF = new StockDataIF();
+//		List<StockTime> detailData = cStockDataIF.getDayDetail("000001", "2016-01-04", "14:30:00");
+//		if(null != detailData)
+//		{
+//			for(int i=0; i< detailData.size(); i++)
+//			{
+//				StockTime cStockDayDetail = detailData.get(i);
+//				BLog.output("TEST", "cStockDayDetail %s price %.3f \n", 
+//						cStockDayDetail.time, cStockDayDetail.price);
+//			}
+//		}
 	}
 	
 	public static void main(String[] args) {
 		BLog.output("TEST", "TestStockDataProvider Begin\n");
+		BLog.config_setTag("STOCKDATA", true);
 		
-		//test_getAllStocks();
+		//test_updateAllLocalStocks();
+		test_getAllStocks();
 		//test_getLatestStockInfo();
-		test_getHistoryData();
+		// test_getHistoryData();
 		//test_getDayDetail();
 		
 		BLog.output("TEST", "TestStockDataProvider End\n");

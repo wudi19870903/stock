@@ -83,7 +83,7 @@ public class RunBTStrategySample {
 		// 设置策略
 		cANLBTEngine.setStrategy(new StrategySample());
 		// 进行回测
-		cANLBTEngine.runBT("2010-01-01", "2016-06-01");
+		cANLBTEngine.runBT("2016-01-01", "2016-06-01");
 		//cANLBTEngine.runBTRealtimeMock("2016-11-01", "2016-11-20");
 	}
 }

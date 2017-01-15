@@ -3,6 +3,8 @@ package stormstock.fw.base;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +55,10 @@ public class BLog {
 		if(null == s_strLogDirName) s_strLogDirName = BPath.getOutputDir();
 		
 		String logstr = String.format(format, args);
-		outputConsole("[%s] %s", target, logstr);
+		
+		SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		String curDateTimeStr = sdf.format(new Date());
+		outputConsole("[%s][%10s] %s", curDateTimeStr, target, logstr);
 		
 		File cDir = new File(s_strLogDirName);  
 		if (!cDir.exists()  && !cDir.isDirectory())      
