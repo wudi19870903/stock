@@ -100,14 +100,21 @@ public class TestDataEngineBase {
 			System.out.println("updateStock OK:" + retupdateStock);	
 		}
 	}
+	private static void test_getUpdatedStocksDate()
+	{
+		String updatedDate = DataEngineBase.getUpdatedStocksDate();
+		System.out.println("updatedDate:" + updatedDate);	
+	}
 	
+
 	public static void main(String[] args) {
-		test_getDayKData();
+//		test_getDayKData();
 //		test_getDividendPayout();
 //		test_getDayDetail();
 //		test_downloadStockDayk();
 //		test_downloadStockDividendPayout();
 //		test_downloadStockDataDetail();
 //		test_updateStock();
+//		test_getUpdatedStocksDate();
 	}
 }

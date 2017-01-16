@@ -26,6 +26,31 @@ import stormstock.ori.stockdata.DataWebStockRealTimeInfo.RealTimeInfo;
 
 public class DataEngineBase {
 
+	public static class StockBaseInfo
+	{
+		public String name;
+		public float price; // 元
+		public float allMarketValue; // 亿
+		public float circulatedMarketValue; // 亿
+		public float peRatio;
+		public StockBaseInfo()
+		{
+			name = "";
+			price = 0.0f;
+			allMarketValue = 0.0f;
+			circulatedMarketValue = 0.0f;
+			peRatio = 0.0f;
+		}
+		public void CopyFrom(StockBaseInfo cCopyFromObj)
+		{
+			name = cCopyFromObj.name;
+			price = cCopyFromObj.price;
+			allMarketValue = cCopyFromObj.allMarketValue;
+			circulatedMarketValue = cCopyFromObj.circulatedMarketValue;
+			peRatio = cCopyFromObj.peRatio;
+		}
+	}
+	
 	public static int getDayKData(String id, List<DayKData> out_list)
 	{
 		String stockDayKFileName = s_DataDir + "/" + id + "/" + s_daykFile;
@@ -307,30 +332,6 @@ public class DataEngineBase {
 		}
 		return 0;
 	}
-	public static class StockBaseInfo
-	{
-		public String name;
-		public float price; // 元
-		public float allMarketValue; // 亿
-		public float circulatedMarketValue; // 亿
-		public float peRatio;
-		public StockBaseInfo()
-		{
-			name = "";
-			price = 0.0f;
-			allMarketValue = 0.0f;
-			circulatedMarketValue = 0.0f;
-			peRatio = 0.0f;
-		}
-		public void CopyFrom(StockBaseInfo cCopyFromObj)
-		{
-			name = cCopyFromObj.name;
-			price = cCopyFromObj.price;
-			allMarketValue = cCopyFromObj.allMarketValue;
-			circulatedMarketValue = cCopyFromObj.circulatedMarketValue;
-			peRatio = cCopyFromObj.peRatio;
-		}
-	}
 	public static int saveStockBaseData(String id, StockBaseInfo baseData) 
 	{
 		if(0 != mkStocDataDir(id)) return -10;
@@ -558,6 +559,10 @@ public class DataEngineBase {
 		//return -100;
 	}
 	
+	/*
+	 * 更新股票最后更新日期
+	 * 成功返回true
+	 */
 	public static boolean updateStocksFinish(String dateStr)
 	{
 		if(0 != mkStocDataDir()) return false;
@@ -578,9 +583,14 @@ public class DataEngineBase {
 		return true;
 	}
 	
+	/*
+	 * 获取当前数据最近更新日期
+	 * 返回null失败
+	 * 读取成功返回日期 e.g: 2016-01-01
+	 */
 	public static String getUpdatedStocksDate()
 	{
-		String dateStr = "0000-00-00";
+		String dateStr = null;
 		String updateFinishFile = s_DataDir + "/" + s_updateFinish;
 		File cfile =new File(updateFinishFile);
 		try
@@ -589,7 +599,11 @@ public class DataEngineBase {
 			InputStreamReader read = new InputStreamReader(new FileInputStream(cfile),encoding);//考虑到编码格式
             BufferedReader bufferedReader = new BufferedReader(read);
             String lineTxt = bufferedReader.readLine();
-            dateStr = lineTxt.trim().replace("\n", "");
+            lineTxt = lineTxt.trim().replace("\n", "");
+            if(lineTxt.length() == "0000-00-00".length())
+            {
+            	dateStr = lineTxt;
+            }
             read.close();
 		}
 		catch(Exception e)
@@ -599,6 +613,11 @@ public class DataEngineBase {
 		return dateStr;
 	}
 	
+	/*
+	 * 创建数据路径
+	 * 成功返回0
+	 * e.g: data
+	 */
 	private static int mkStocDataDir()
 	{
 		File dataDir =new File(s_DataDir);
@@ -616,6 +635,11 @@ public class DataEngineBase {
 		}
 	}
 	
+	/*
+	 * 创建股票数据路径
+	 * 成功返回0
+	 * e.g: data/600001
+	 */
 	private static int mkStocDataDir(String id)
 	{
 		File dataDir =new File(s_DataDir);
