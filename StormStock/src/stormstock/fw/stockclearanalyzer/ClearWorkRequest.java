@@ -24,6 +24,9 @@ import stormstock.fw.tranbase.stockdata.StockDataIF;
 import stormstock.fw.tranbase.stockdata.StockDay;
 import stormstock.fw.tranbase.stockdata.StockInfo;
 import stormstock.fw.tranbase.stockdata.StockTime;
+import stormstock.fw.tranbase.stockdata.StockDataIF.ResultHistoryData;
+import stormstock.fw.tranbase.stockdata.StockDataIF.ResultLatestStockInfo;
+import stormstock.fw.tranbase.stockdata.StockDataIF.ResultStockTime;
 
 public class ClearWorkRequest extends BQThreadRequest {
 	/*
@@ -67,16 +70,17 @@ public class ClearWorkRequest extends BQThreadRequest {
 			
 			// 构造当时股票数据(昨日日K，今日当前分时)
 			
-			StockInfo cStockInfo = stockDataIF.getLatestStockInfo(stockID);
+			ResultLatestStockInfo cResultLatestStockInfo = stockDataIF.getLatestStockInfo(stockID);
+			StockInfo cStockInfo = cResultLatestStockInfo.stockInfo;
 			
 			String yesterday_date = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(m_date, -1);
-			List<StockDay> cStockDayList = stockDataIF.getHistoryData(stockID, yesterday_date);
+			ResultHistoryData cResultHistoryData = stockDataIF.getHistoryData(stockID, yesterday_date);
+			List<StockDay> cStockDayList = cResultHistoryData.resultList;
 			
-			StockTime cStockTime = new StockTime();
-			boolean bGetStockTime = stockDataIF.getStockTime(stockID, m_date, m_time, cStockTime);
-			if(bGetStockTime)
+			ResultStockTime cResultStockTime = stockDataIF.getStockTime(stockID, m_date, m_time);
+			if(0 == cResultStockTime.error)
 			{
-				StockTimeDataCache.addStockTime(stockID, m_date, cStockTime);
+				StockTimeDataCache.addStockTime(stockID, m_date, cResultStockTime.stockTime);
 			}
 			List<StockTime> cStockTimeList = StockTimeDataCache.getStockTimeList(stockID, m_date);
 			StockDay curStockDay = new StockDay();
@@ -99,11 +103,11 @@ public class ClearWorkRequest extends BQThreadRequest {
 					cAccountAccessor, // ctx带有账户访问器
 					cStockDataAccessor);// ctx带有昨日数据访问器（用户不能查看今天得其他k线）
 			
-			if(bGetStockTime) // 只有获取当前价格成功时才回调给用户
+			if(0 == cResultStockTime.error) // 只有获取当前价格成功时才回调给用户
 			{
 				ClearResultWrapper cClearResultWrapper = new ClearResultWrapper();
 				cClearResultWrapper.stockId = stockID;
-				cClearResultWrapper.fPrice = cStockTime.price;
+				cClearResultWrapper.fPrice = cResultStockTime.stockTime.price;
 				cIStrategyClear.strategy_clear(ctx, cClearResultWrapper.clearRes);
 				if(cClearResultWrapper.clearRes.bClear)
 				{

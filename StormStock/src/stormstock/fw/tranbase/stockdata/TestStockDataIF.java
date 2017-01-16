@@ -4,6 +4,11 @@ import java.util.List;
 
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BUtilsDateTime;
+import stormstock.fw.tranbase.stockdata.StockDataIF.ResultAllStockID;
+import stormstock.fw.tranbase.stockdata.StockDataIF.ResultDayDetail;
+import stormstock.fw.tranbase.stockdata.StockDataIF.ResultHistoryData;
+import stormstock.fw.tranbase.stockdata.StockDataIF.ResultLatestStockInfo;
+import stormstock.fw.tranbase.stockdata.StockDataIF.ResultStockTime;
 
 public class TestStockDataIF {
 	
@@ -31,7 +36,8 @@ public class TestStockDataIF {
 		String curDate = "2016-01-01";
 		while(true)
 		{
-			List<String> stockIDList = cStockDataIF.getAllStockID();
+			ResultAllStockID cResultAllStockID = cStockDataIF.getAllStockID();
+			List<String> stockIDList = cResultAllStockID.resultList;
 			BLog.output("TEST", "stock count: %d\n", stockIDList.size());
 			for(int i=0; i<stockIDList.size(); i++)
 			{
@@ -57,11 +63,11 @@ public class TestStockDataIF {
 		for(int i=2; i<9; i++)
 		{
 			String stockID = String.format("00000%d", i);
-			StockInfo cStockInfo = cStockDataIF.getLatestStockInfo(stockID);
-			if(null!=cStockInfo)
+			ResultLatestStockInfo cResultLatestStockInfo = cStockDataIF.getLatestStockInfo(stockID);
+			if(0 == cResultLatestStockInfo.error)
 			{
 				BLog.output("TEST", "cStockInfo [%s][%s]\n",
-						stockID, cStockInfo.name);
+						stockID, cResultLatestStockInfo.stockInfo.name);
 			}
 			else
 			{
@@ -83,7 +89,8 @@ public class TestStockDataIF {
 //					cStockDay.date, cStockDay.open, cStockDay.close);
 //		}
 		
-		List<StockDay> cStockDayShangZhengList = cStockDataIF.getHistoryData("999999");
+		ResultHistoryData cResultHistoryData = cStockDataIF.getHistoryData("999999");
+		List<StockDay> cStockDayShangZhengList = cResultHistoryData.resultList;
 		BLog.output("TEST", "cStockDayShangZhengList(%d)\n", 
 				cStockDayShangZhengList.size());
 		for(int i=cStockDayShangZhengList.size()-1; i > cStockDayShangZhengList.size()-10 ; i--)
@@ -100,7 +107,8 @@ public class TestStockDataIF {
 		String curTime = "09:30:00";
 		while(true)
 		{
-			List<StockTime> detailData = cStockDataIF.getDayDetail("000001", "2016-07-27", "09:30:00", curTime);
+			ResultDayDetail cResultDayDetail = cStockDataIF.getDayDetail("000001", "2016-07-27", "09:30:00", curTime);
+			List<StockTime> detailData = cResultDayDetail.resultList;
 			
 			String teststr ="";
 			if(null != detailData)
@@ -130,10 +138,12 @@ public class TestStockDataIF {
 		String curTime = "09:00:00";
 		while(true)
 		{
-			StockTime cStockTime = new StockTime();
-			if(cStockDataIF.getStockTime("000001", "2016-07-27", curTime, cStockTime))
+
+			ResultStockTime cResultStockTime = cStockDataIF.getStockTime("000001", "2016-07-27", curTime);
+			
+			if(0 == cResultStockTime.error)
 			{
-				BLog.output("TEST", "[%s] %.2f\n", cStockTime.time, cStockTime.price);
+				BLog.output("TEST", "[%s] %.2f\n", cResultStockTime.stockTime.time, cResultStockTime.stockTime.price);
 			}
 			
 			if(curTime.compareTo("15:00:00") >= 0)
@@ -154,7 +164,7 @@ public class TestStockDataIF {
 		//test_getLatestStockInfo();
 		// test_getHistoryData();
 		//test_getDayDetail();
-		test_getStockTime();
+		//test_getStockTime();
 		
 		BLog.output("TEST", "TestStockDataProvider End\n");
 	}

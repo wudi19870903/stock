@@ -10,6 +10,7 @@ import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 import stormstock.fw.tranbase.account.AccountPublicDef.TRANACT;
 import stormstock.fw.tranbase.com.GlobalUserObj;
 import stormstock.fw.tranbase.stockdata.StockDataIF;
+import stormstock.fw.tranbase.stockdata.StockDataIF.ResultStockTime;
 import stormstock.fw.tranbase.stockdata.StockDay;
 import stormstock.fw.tranbase.stockdata.StockTime;
 
@@ -190,8 +191,12 @@ public class MockAccountOpe extends IAccountOpe {
 			{
 				HoldStock cHoldStock = m_holdStockList.get(i);
 				StockTime out_cStockTime = new StockTime();
-				boolean bRet = GlobalUserObj.getCurStockDataIF().getStockTime(cHoldStock.stockID, date, time, out_cStockTime);
-				if(bRet) cHoldStock.curPrice = out_cStockTime.price;
+				
+				ResultStockTime cResultStockTime = GlobalUserObj.getCurStockDataIF().getStockTime(cHoldStock.stockID, date, time);
+				if(0 == cResultStockTime.error)
+				{
+					cHoldStock.curPrice = out_cStockTime.price;
+				}
 			}
 		}
 		return m_holdStockList;

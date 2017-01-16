@@ -19,6 +19,8 @@ import stormstock.fw.tranbase.com.TranContext;
 import stormstock.fw.tranbase.stockdata.Stock;
 import stormstock.fw.tranbase.stockdata.StockDataAccessor;
 import stormstock.fw.tranbase.stockdata.StockDataIF;
+import stormstock.fw.tranbase.stockdata.StockDataIF.ResultHistoryData;
+import stormstock.fw.tranbase.stockdata.StockDataIF.ResultLatestStockInfo;
 import stormstock.fw.tranbase.stockdata.StockDay;
 import stormstock.fw.tranbase.stockdata.StockInfo;
 
@@ -80,8 +82,10 @@ public class SelectWorkRequest extends BQThreadRequest {
 				
 				// 构造当时股票数据
 				Stock cStock = new Stock();
-				List<StockDay> cStockDayList = stockDataIF.getHistoryData(stockID, m_date);
-				StockInfo cStockInfo = stockDataIF.getLatestStockInfo(stockID);
+				ResultHistoryData cResultHistoryData = stockDataIF.getHistoryData(stockID, m_date);
+				List<StockDay> cStockDayList = cResultHistoryData.resultList;
+				ResultLatestStockInfo cResultLatestStockInfo = stockDataIF.getLatestStockInfo(stockID);
+				StockInfo cStockInfo = cResultLatestStockInfo.stockInfo;
 				cStock.setCurStockDayData(cStockDayList);
 				cStock.setCurLatestStockInfo(cStockInfo);
 				

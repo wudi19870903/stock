@@ -2,6 +2,9 @@ package stormstock.fw.tranbase.stockdata;
 
 import java.util.List;
 
+import stormstock.fw.tranbase.stockdata.StockDataIF.ResultAllStockID;
+import stormstock.fw.tranbase.stockdata.StockDataIF.ResultHistoryData;
+
 /*
  * 股票数据的某日期时间的访问器
  * 可以访问所有股票信息
@@ -18,12 +21,12 @@ public class StockDataAccessor {
 	/*
 	 * 获取所有股票Id列表
 	 */
-	public List<String> getAllStockID()
+	public ResultAllStockID getAllStockID()
 	{
 		return m_stockDataIF.getAllStockID();
 	}
 	
-	public List<StockDay> getHistoryData(String stockID)
+	public ResultHistoryData getHistoryData(String stockID)
 	{
 		return m_stockDataIF.getHistoryData(stockID, m_date);
 	}

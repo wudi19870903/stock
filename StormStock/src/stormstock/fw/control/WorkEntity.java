@@ -15,6 +15,10 @@ import stormstock.fw.tranbase.com.GlobalUserObj;
 import stormstock.fw.tranbase.com.ITranStockSetFilter;
 import stormstock.fw.tranbase.stockdata.Stock;
 import stormstock.fw.tranbase.stockdata.StockDataIF;
+import stormstock.fw.tranbase.stockdata.StockDataIF.ResultAllStockID;
+import stormstock.fw.tranbase.stockdata.StockDataIF.ResultHistoryData;
+import stormstock.fw.tranbase.stockdata.StockDataIF.ResultLatestStockInfo;
+import stormstock.fw.tranbase.stockdata.StockDataIF.ResultStockTime;
 import stormstock.fw.tranbase.stockdata.StockDay;
 import stormstock.fw.tranbase.stockdata.StockInfo;
 import stormstock.fw.tranbase.stockdata.StockTime;
@@ -34,7 +38,8 @@ public class WorkEntity {
 		{
 			m_hisTranDate = new ArrayList<String>();
 			StockDataIF stockDataIF = GlobalUserObj.getCurStockDataIF();
-			List<StockDay> cStocDayListShangZheng = stockDataIF.getHistoryData("999999");
+			ResultHistoryData cResultHistoryData = stockDataIF.getHistoryData("999999");
+			List<StockDay> cStocDayListShangZheng = cResultHistoryData.resultList;
 			int iB = StockUtils.indexDayKAfterDate(cStocDayListShangZheng, m_beginDate);
 			int iE = StockUtils.indexDayKBeforeDate(cStocDayListShangZheng, m_endDate);
 			
@@ -187,7 +192,8 @@ public class WorkEntity {
 			StockDataIF stockDataIF = GlobalUserObj.getCurStockDataIF();
 			String yesterdayDate = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(m_curDate, -1);
 			stockDataIF.updateLocalStocks("999999", yesterdayDate);
-			List<StockDay> cStockDayShangZhengList = stockDataIF.getHistoryData("999999");
+			ResultHistoryData cResultHistoryData = stockDataIF.getHistoryData("999999");
+			List<StockDay> cStockDayShangZhengList = cResultHistoryData.resultList;
 			for(int i = 0; i < cStockDayShangZhengList.size(); i++)  
 	        {  
 				StockDay cStockDayShangZheng = cStockDayShangZhengList.get(i);  
@@ -197,9 +203,9 @@ public class WorkEntity {
 					return true;
 				}
 	        }
-			StockTime out_cStockTime = new StockTime();
-			boolean bRet = stockDataIF.getStockTime("999999", date, BUtilsDateTime.GetCurTimeStr(), out_cStockTime);
-			if(bRet)
+			
+			ResultStockTime cResultStockTime = stockDataIF.getStockTime("999999", date, BUtilsDateTime.GetCurTimeStr());
+			if(0 == cResultStockTime.error)
 			{
 				return true;
 			}
@@ -274,17 +280,26 @@ public class WorkEntity {
 		
 		List<String> cStockIDSet = new ArrayList<String>();
 		
-		List<String> cStockAllList = stockDataIF.getAllStockID();
-		for(int i=0; i<cStockAllList.size();i++)
+		ResultAllStockID cResultAllStockID = stockDataIF.getAllStockID();
+		if(0 == cResultAllStockID.error)
 		{
-			String stockID = cStockAllList.get(i);
-			StockInfo cStockInfo = stockDataIF.getLatestStockInfo(stockID);
-
-			if(null != cStockInfo && cTranStockSetFilter.tran_stockset_byLatestStockInfo(cStockInfo))
+			for(int i=0; i<cResultAllStockID.resultList.size();i++)
 			{
-				cStockIDSet.add(stockID);
+				String stockID = cResultAllStockID.resultList.get(i);
+				ResultLatestStockInfo cResultLatestStockInfo = stockDataIF.getLatestStockInfo(stockID);
+				StockInfo cStockInfo = cResultLatestStockInfo.stockInfo;
+
+				if(null != cStockInfo && cTranStockSetFilter.tran_stockset_byLatestStockInfo(cStockInfo))
+				{
+					cStockIDSet.add(stockID);
+				}
 			}
 		}
+		else
+		{
+			BLog.error("CTRL", "LoadStockIDSet, stockDataIF.getAllStockID error(%d)\n", cResultAllStockID.error);
+		}
+
 		// 股票交易集保存
 		StockObjFlow.setTranStockIDSet(cStockIDSet);
 		return cStockIDSet.size();

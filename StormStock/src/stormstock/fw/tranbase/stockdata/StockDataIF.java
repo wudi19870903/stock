@@ -31,8 +31,8 @@ public class StockDataIF {
 	}
 	
 	/*
-	 * 获得某日期时间的账户访问器
-	 * 可以获取账户信息
+	 * 获得某日期时间的股票数据访问器
+	 * 可以获取股票数据信息
 	 */
 	public StockDataAccessor getStockDataAccessor(String date, String time)
 	{
@@ -56,7 +56,7 @@ public class StockDataIF {
 			}
 			else
 			{
-				BLog.error("STOCKDATA", "DataEngine.getUpdatedStocksDate error(%d) \n", cResultUpdatedStocksDate.error);
+				//BLog.error("STOCKDATA", "DataEngine.getUpdatedStocksDate error(%d) \n", cResultUpdatedStocksDate.error);
 			}
 		}
 		
@@ -89,7 +89,7 @@ public class StockDataIF {
 			}
 			else
 			{
-				BLog.error("STOCKDATA", "DataEngine.getUpdatedStocksDate error(%d) \n", cResultUpdatedStocksDate.error);
+				//BLog.error("STOCKDATA", "DataEngine.getUpdatedStocksDate error(%d) \n", cResultUpdatedStocksDate.error);
 			}
 		}
 		
@@ -111,11 +111,23 @@ public class StockDataIF {
 	 * 基于当前本地数据获取，不保证是最新（依赖于数据更新）
 	 * 此接口带有数据缓存机制
 	 */
-	public List<String> getAllStockID()
+	public static class ResultAllStockID
 	{
+		public ResultAllStockID()
+		{
+			error = 0;
+			resultList = new ArrayList<String>();
+		}
+		public int error;
+		public List<String> resultList;
+	}
+	public ResultAllStockID getAllStockID()
+	{
+		ResultAllStockID cResultAllStockID = new ResultAllStockID();
+		
 		if(null != m_cache_allStockID)
 		{
-			return m_cache_allStockID;
+			cResultAllStockID.resultList = m_cache_allStockID;
 		}
 		else
 		{
@@ -129,14 +141,16 @@ public class StockDataIF {
 					String stockId = cResultAllStockList.resultList.get(i).id;
 					m_cache_allStockID.add(stockId);
 				}
+				cResultAllStockID.resultList = m_cache_allStockID;
 			}
 			else
 			{
 				BLog.error("STOCKDATA", "DataEngine.getLocalAllStock error(%d) \n", cResultAllStockList.error);
+				cResultAllStockID.error = -1;
 			}
-			
-			return m_cache_allStockID;
 		}
+		
+		return cResultAllStockID;
 	}
 
 	/*
@@ -144,8 +158,20 @@ public class StockDataIF {
 	 * 不保证是最新（依赖于数据更新）
 	 * 此接口带有数据缓存机制
 	 */
-	public StockInfo getLatestStockInfo(String id)
+	public static class ResultLatestStockInfo
 	{
+		public ResultLatestStockInfo()
+		{
+			error = 0;
+			stockInfo = new StockInfo();
+		}
+		public int error;
+		public StockInfo stockInfo;
+	}
+	public ResultLatestStockInfo getLatestStockInfo(String id)
+	{
+		ResultLatestStockInfo cResultLatestStockInfo = new ResultLatestStockInfo();
+		
 		// 首次进行缓存
 		if(null == m_cache_latestStockInfo || !m_cache_latestStockInfo.containsKey(id))
 		{
@@ -165,24 +191,26 @@ public class StockDataIF {
 				cStockInfo.allMarketValue = cResultStockBaseData.stockBaseInfo.allMarketValue; 
 				cStockInfo.circulatedMarketValue = cResultStockBaseData.stockBaseInfo.circulatedMarketValue; 
 				cStockInfo.peRatio = cResultStockBaseData.stockBaseInfo.peRatio;
+				
+				m_cache_latestStockInfo.put(id, cStockInfo);
 			}
 			else
 			{
-				BLog.error("STOCKDATA", "DataEngine.getBaseInfo error(%d) \n", cResultStockBaseData.error);
+				//BLog.error("STOCKDATA", "DataEngine.getBaseInfo error(%d) \n", cResultStockBaseData.error);
 			}
-			
-			m_cache_latestStockInfo.put(id, cStockInfo);
 		}
 			
 		// 从缓存中取数据
 		if(null != m_cache_latestStockInfo && m_cache_latestStockInfo.containsKey(id))
 		{
-			return m_cache_latestStockInfo.get(id);
+			cResultLatestStockInfo.stockInfo = m_cache_latestStockInfo.get(id);
 		}
 		else
 		{
-			return null;
+			cResultLatestStockInfo.error = -1;
 		}
+		
+		return cResultLatestStockInfo;
 	}
 	
 	/*
@@ -190,8 +218,19 @@ public class StockDataIF {
 	 * 不保证是最新（依赖于数据更新）
 	 * 此接口带有数据缓存机制
 	 */
-	public List<StockDay> getHistoryData(String stockID, String fromDate, String endDate)
+	public static class ResultHistoryData {
+		public ResultHistoryData()
+		{
+			error = 0;
+			resultList = new ArrayList<StockDay>();
+		}
+		public int error;
+		public List<StockDay> resultList;
+	}
+	public ResultHistoryData getHistoryData(String stockID, String fromDate, String endDate)
 	{
+		ResultHistoryData cResultHistoryData = new ResultHistoryData();
+		
 		// 首次进行历史数据缓存
 		if(null == s_cache_stockDayData || !s_cache_stockDayData.containsKey(stockID))
 		{
@@ -216,6 +255,7 @@ public class StockDataIF {
 					//System.out.println("historyData.add " + cDayKData.date + "," + cDayKData.open + "," + cDayKData.close); 
 					historyData.add(cStockDay);
 		        } 
+				s_cache_stockDayData.put(stockID, historyData);
 			}
 			else
 			{
@@ -224,27 +264,28 @@ public class StockDataIF {
 			
 //			BLog.output("TEST", "DataEngine getDayKDataQianFuQuan(%d)\n", retList.size());
 //			BLog.output("TEST", "getHistoryData return! historyData(%d)\n", historyData.size());
-			
-			s_cache_stockDayData.put(stockID, historyData);
+
 		}
 		
 		// 从缓存中取数据
 		if(null != s_cache_stockDayData && s_cache_stockDayData.containsKey(stockID))
 		{
 			List<StockDay> cacheList = s_cache_stockDayData.get(stockID);
-			return StockUtils.subStockDayData(cacheList, fromDate, endDate);
+			cResultHistoryData.resultList = StockUtils.subStockDayData(cacheList, fromDate, endDate);
 		}
 		else
 		{
-			return null;
+			cResultHistoryData.error = -1;
 		}
+		
+		return cResultHistoryData;
 	}
 	
-	public List<StockDay> getHistoryData(String id, String endDate)
+	public ResultHistoryData getHistoryData(String id, String endDate)
 	{
 		return getHistoryData(id, "2000-01-01", endDate);
 	}
-	public List<StockDay> getHistoryData(String id)
+	public ResultHistoryData getHistoryData(String id)
 	{
 		return getHistoryData(id, "2000-01-01", "2100-01-01");
 	}
@@ -254,8 +295,20 @@ public class StockDataIF {
 	 * 不保证是最新（依赖于数据更新）
 	 * 此接口带有数据缓存机制
 	 */
-	public List<StockTime> getDayDetail(String id, String date, String beginTime, String endTime)
+	public static class ResultDayDetail
 	{
+		public ResultDayDetail()
+		{
+			error = 0;
+			resultList = new ArrayList<StockTime>();
+		}
+		public int error;
+		public List<StockTime> resultList;
+	}
+	public ResultDayDetail getDayDetail(String id, String date, String beginTime, String endTime)
+	{
+		ResultDayDetail cResultDayDetail = new ResultDayDetail();
+		
 		// 首次进行历史数据缓存
 		String findKey = id + "_" + date;
 		if(null == s_cache_stockTimeData || !s_cache_stockTimeData.containsKey(findKey))
@@ -267,10 +320,10 @@ public class StockDataIF {
 			
 			List<StockTime> detailDataList = new ArrayList<StockTime>();
 			
-			List<StockDay> historyData = getHistoryData(id, date, date);
-			if(historyData.size()==1)
+			ResultHistoryData cResultHistoryData = getHistoryData(id, date, date);
+			if(0 == cResultHistoryData.error && cResultHistoryData.resultList.size()==1)
 			{
-				StockDay cStockDay = historyData.get(0);
+				StockDay cStockDay = cResultHistoryData.resultList.get(0);
 				
 				if(null != cStockDay && date.length() == "0000-00-00".length())
 				{
@@ -311,31 +364,45 @@ public class StockDataIF {
 							cStockDayDetail.time = cExKData.getTime();
 							detailDataList.add(cStockDayDetail);
 				        } 
+						
+						s_cache_stockTimeData.put(findKey, detailDataList);
 					}
 				}
 			}
-			
-			s_cache_stockTimeData.put(findKey, detailDataList);
 		}
 		
 		// 从缓存中取数据
 		if(null != s_cache_stockTimeData && s_cache_stockTimeData.containsKey(findKey))
 		{
 			List<StockTime> cacheList = s_cache_stockTimeData.get(findKey);
-			return StockUtils.subStockTimeData(cacheList, beginTime, endTime);
+			cResultDayDetail.resultList = StockUtils.subStockTimeData(cacheList, beginTime, endTime);
 		}
 		else
 		{
-			return null;
+			cResultDayDetail.error = -1;
 		}
+		
+		return cResultDayDetail;
 	}
 	
 	/*
 	 * 获取某只股票某天某时间的价格
 	 * 数据缓存机制依赖于getDayDetail接口
 	 */
-	public boolean getStockTime(String id, String date, String time, StockTime out_cStockTime)
+	public static class ResultStockTime
 	{
+		public ResultStockTime()
+		{
+			error = 0;
+			stockTime = new StockTime();
+		}
+		public int error;
+		public StockTime stockTime;
+	}
+	public ResultStockTime getStockTime(String id, String date, String time)
+	{
+		ResultStockTime cResultStockTime = new ResultStockTime();
+		
 		boolean bRealTime = false;
 		String curDate = BUtilsDateTime.GetCurDateStr();
 		String curTime = "";
@@ -354,9 +421,9 @@ public class StockDataIF {
 		
 			if(0 == cResultRealTimeInfo.error)
 			{
-				out_cStockTime.time = curTime;
-				out_cStockTime.price = cResultRealTimeInfo.realTimeInfo.curPrice;
-				return true;
+				cResultStockTime.stockTime.time = curTime;
+				cResultStockTime.stockTime.price = cResultRealTimeInfo.realTimeInfo.curPrice;
+				return cResultStockTime;
 			}
 		}
 		else
@@ -371,63 +438,69 @@ public class StockDataIF {
 				// 13:00:00 - 24:00:00 （含），为下午收盘价格
 				if(time.compareTo("09:30:00") >= 0)
 				{
-					List<StockDay> cStockDayList = getHistoryData(id, date, date);
+					ResultHistoryData cResultHistoryData = getHistoryData(id, date, date);
+					List<StockDay> cStockDayList = cResultHistoryData.resultList;
 					if(cStockDayList.size() > 0)
 					{
 						StockDay cStockDay = cStockDayList.get(0);
 						float open = cStockDay.open();
 						float close = cStockDay.close();
-						out_cStockTime.time = time;
+						cResultStockTime.stockTime.time = time;
 						if(time.compareTo("09:30:00") >= 0 && time.compareTo("13:00:00") < 0)
 						{
-							out_cStockTime.price = open;
+							cResultStockTime.stockTime.price = open;
 						}
 						else if(time.compareTo("13:00:00") >= 0 && time.compareTo("24:00:00") <= 0)
 						{
-							out_cStockTime.price = close;
+							cResultStockTime.stockTime.price = close;
 						}
-						return true;
+						return cResultStockTime;
 					}
 				}
 				else
 				{
 					String beforeDate = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(date, -1);
-					List<StockDay> cStockDayList = getHistoryData(id, beforeDate, beforeDate);
+					ResultHistoryData cResultHistoryData = getHistoryData(id, beforeDate, beforeDate);
+					List<StockDay> cStockDayList = cResultHistoryData.resultList;
 					if(cStockDayList.size() > 0)
 					{
 						StockDay cStockDay = cStockDayList.get(0);
-						out_cStockTime.time = time;
-						out_cStockTime.price = cStockDay.close();
-						return true;
+						cResultStockTime.stockTime.time = time;
+						cResultStockTime.stockTime.price = cStockDay.close();
+						return cResultStockTime;
 					}
 				}
 			}
 			else
 			{
 				// 基于真实的历史数据
-				List<StockTime> cStockTimeList = getDayDetail(id, date, "09:30:00", time);
+				ResultDayDetail cResultDayDetail = getDayDetail(id, date, "09:30:00", time);
+				List<StockTime> cStockTimeList = cResultDayDetail.resultList;
 				if(null!=cStockTimeList && cStockTimeList.size()>0)
 				{
 					StockTime cStockTime = cStockTimeList.get(cStockTimeList.size()-1);
 					long subTimeMin = BUtilsDateTime.subTime(time, cStockTime.time);
 					if(subTimeMin >=0 && subTimeMin<=120)
 					{
-						out_cStockTime.time = cStockTime.time;
-						out_cStockTime.price = cStockTime.price;
-						return true;
+						cResultStockTime.stockTime.time = cStockTime.time;
+						cResultStockTime.stockTime.price = cStockTime.price;
+						return cResultStockTime;
 					}
 					else
 					{
-						return false;
+						cResultStockTime.error = -1;
+						return cResultStockTime;
 					}
 				}
 				else
 				{
-					return false;
+					cResultStockTime.error = -2;
+					return cResultStockTime;
 				}
 			}
 		}
-		return false;
+		cResultStockTime.error = -3;
+		return cResultStockTime;
 	}
 	
 	// ******************************************************************************************

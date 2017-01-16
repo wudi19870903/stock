@@ -14,6 +14,7 @@ import stormstock.fw.tranbase.account.AccountPublicDef.TRANACT;
 import stormstock.fw.tranbase.com.GlobalUserObj;
 import stormstock.fw.tranbase.stockdata.StockDataIF;
 import stormstock.fw.tranbase.stockdata.StockDay;
+import stormstock.fw.tranbase.stockdata.StockDataIF.ResultHistoryData;
 import stormstock.fw.report.ImageReport.CurvePoint;
 import stormstock.fw.report.InfoCollector.DailyReport;
 
@@ -47,7 +48,8 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 		cDailyReport.fTotalAssets = fTotalAssets;
 		cDailyReport.fAvailableMoney = fAvailableMoney;
 		
-		List<StockDay> cSHCompositeList = cStockDataIF.getHistoryData("999999", m_date, m_date);
+		ResultHistoryData cResultHistoryData = cStockDataIF.getHistoryData("999999", m_date, m_date);
+		List<StockDay> cSHCompositeList = cResultHistoryData.resultList;
 		cDailyReport.fSHComposite = cSHCompositeList.get(0).close();
 		
 		BLog.output("REPORT", "    -TotalAssets: %.3f\n", fTotalAssets);
