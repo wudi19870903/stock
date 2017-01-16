@@ -3,24 +3,25 @@ package stormstock.ori.stockdata;
 import java.util.ArrayList;
 import java.util.List;
 
-import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
+import stormstock.ori.stockdata.DataWebStockAllList.ResultAllStockList;
+import stormstock.ori.stockdata.DataWebStockAllList.ResultAllStockList.StockItem;
 
 public class TestDataWebStockAllList {
 	public static void main(String[] args) {
-		List<StockItem> retList = new ArrayList<StockItem>();
-		int ret = DataWebStockAllList.getAllStockList(retList);
-		if(0 == ret)
+
+		ResultAllStockList cResultAllStockList = DataWebStockAllList.getAllStockList();
+		if(0 == cResultAllStockList.error)
 		{
-			for(int i = 0; i < retList.size(); i++)  
+			for(int i = 0; i < cResultAllStockList.resultList.size(); i++)  
 	        {  
-				StockItem cStockItem = retList.get(i);  
+				StockItem cStockItem = cResultAllStockList.resultList.get(i);  
 	            System.out.println(cStockItem.name + "," + cStockItem.id);  
 	        } 
-			System.out.println("count:" + retList.size()); 
+			System.out.println("count:" + cResultAllStockList.resultList.size()); 
 		}
 		else
 		{
-			System.out.println("ERROR:" + ret);
+			System.out.println("ERROR:" + cResultAllStockList.error);
 		}
 	}
 }

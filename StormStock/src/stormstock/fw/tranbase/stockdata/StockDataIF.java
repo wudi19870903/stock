@@ -13,9 +13,6 @@ import stormstock.ori.stockdata.DataEngineBase;
 import stormstock.ori.stockdata.DataWebStockRealTimeInfo;
 import stormstock.ori.stockdata.DataEngine.ExKData;
 import stormstock.ori.stockdata.DataEngineBase.StockBaseInfo;
-import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
-import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
-import stormstock.ori.stockdata.DataWebStockRealTimeInfo.RealTimeInfo;
 
 /*
  * 注意：取得的数据均为前复权价格

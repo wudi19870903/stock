@@ -25,33 +25,48 @@ import org.htmlparser.util.NodeIterator;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.visitors.HtmlPage;
 
-import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
+import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout.DividendPayout;
 
 public class DataWebStockDividendPayout {
-	public static class DividendPayout implements Comparable
-	{
-		public String date;
-		public float songGu;
-		public float zhuanGu;
-		public float paiXi;
-		@Override
-		public int compareTo(Object o) {
-			// TODO Auto-generated method stub
-			DividendPayout sdto = (DividendPayout)o;
-		    return this.date.compareTo(sdto.date);
-		}
-	}
 	/*
 	 * 从网络中获得某只股票的分红派息因子
 	 * 返回0为成功，其他值为失败
 	 */
-	public static int getDividendPayout(String id, List<DividendPayout> out_list)
+	public static class ResultDividendPayout
 	{
+		public static class DividendPayout implements Comparable
+		{
+			public String date;
+			public float songGu;
+			public float zhuanGu;
+			public float paiXi;
+			@Override
+			public int compareTo(Object o) {
+				// TODO Auto-generated method stub
+				DividendPayout sdto = (DividendPayout)o;
+			    return this.date.compareTo(sdto.date);
+			}
+		}
+		public ResultDividendPayout()
+		{
+			error = 0;
+			resultList = new ArrayList<DividendPayout>();
+		}
+		public int error;
+		public List<DividendPayout> resultList;
+	}
+	public static ResultDividendPayout getDividendPayout(String id)
+	{
+		ResultDividendPayout cResultDividendPayout = new ResultDividendPayout();
+		
 		// e.g http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/300163.phtml
 		String urlStr = "http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/";
 		
-		if(out_list.size() > 0) return -20;
-		if(id.contains("999999")) return 0; // 上证指数
+		if(id.contains("999999")) 
+		{
+			cResultDividendPayout.error = -30;
+			return cResultDividendPayout; // 上证指数
+		}
 		
 		try{  
 			urlStr = urlStr + id + ".phtml";
@@ -141,7 +156,7 @@ public class DataWebStockDividendPayout {
                     {
                     	continue;
                     }
-                    out_list.add(cDividendPayout);
+                    cResultDividendPayout.resultList.add(cDividendPayout);
                     //System.out.println("--------------------------------");
                 }
             }
@@ -172,17 +187,23 @@ public class DataWebStockDividendPayout {
                 }
             }
               
-            if(out_list.size() <= 0) return -30;
+            if(cResultDividendPayout.resultList.size() <= 0) 
+            {
+            	cResultDividendPayout.error = -30;
+            	return cResultDividendPayout;
+            }
             
         }catch (Exception e) {  
         	System.out.println("Exception[WebStockDividendPayout]:" + e.getMessage()); 
             // TODO: handle exception  
-        	return -1;
+        	cResultDividendPayout.error = -1;
+        	return cResultDividendPayout;
         }  
 		
-		Collections.sort(out_list);
-		return 0;
+		Collections.sort(cResultDividendPayout.resultList);
+		return cResultDividendPayout;
 	}
+	
     public static  byte[] readInputStream(InputStream inputStream) throws IOException {    
         byte[] buffer = new byte[1024];    
         int len = 0;    

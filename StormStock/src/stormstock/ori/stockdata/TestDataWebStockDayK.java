@@ -3,25 +3,27 @@ package stormstock.ori.stockdata;
 import java.util.ArrayList;
 import java.util.List;
 
-import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
+import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData;
+import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData.DayKData;
 
 public class TestDataWebStockDayK {
 
 	public static void main(String[] args){
-		List<DayKData> retList = new ArrayList<DayKData>();
-		int ret = DataWebStockDayK.getDayKData("600030", "20150901", "20151001", retList);
-		if(0 == ret)
+		
+		ResultDayKData cResultDayKData = DataWebStockDayK.getDayKData("600030", "20150901", "20151001");
+		
+		if(0 == cResultDayKData.error)
 		{
-			for(int i = 0; i < retList.size(); i++)  
+			for(int i = 0; i < cResultDayKData.resultList.size(); i++)  
 	        {  
-				DayKData cDayKData = retList.get(i);  
+				DayKData cDayKData = cResultDayKData.resultList.get(i);  
 	            System.out.println(cDayKData.date + "," 
 	            		+ cDayKData.open + "," + cDayKData.close);  
 	        } 
 		}
 		else
 		{
-			System.out.println("ERROR:" + ret);
+			System.out.println("ERROR:" + cResultDayKData.error);
 		}
 	}
 

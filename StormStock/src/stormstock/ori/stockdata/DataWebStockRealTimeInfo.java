@@ -13,25 +13,21 @@ import org.htmlparser.Parser;
 import org.htmlparser.filters.TagNameFilter;
 import org.htmlparser.util.NodeList;
 
-import stormstock.ori.stockdata.DataWebStockDividendPayout.DividendPayout;
 
 public class DataWebStockRealTimeInfo {
-	public static class RealTimeInfo implements Comparable
+	public static class ResultRealTimeInfo implements Comparable
 	{
-		// base
+		public int error;
+		
 		public String name;
 		public String date;
 		public String time;
 		public float curPrice;
-		// more
-		public float allMarketValue; //总市值
-		public float circulatedMarketValue; // 流通市值
-		public float peRatio; //市盈率
 		
 		@Override
 		public int compareTo(Object o) {
 			// TODO Auto-generated method stub
-			RealTimeInfo sdto = (RealTimeInfo)o;
+			ResultRealTimeInfo sdto = (ResultRealTimeInfo)o;
 			int iCheck1 = this.date.compareTo(sdto.date);
 			if(0 == iCheck1)
 			{
@@ -44,12 +40,21 @@ public class DataWebStockRealTimeInfo {
 			}
 		}
 	}
+	
+	public static class ResultRealTimeInfoMore extends ResultRealTimeInfo
+	{
+		public float allMarketValue; //总市值
+		public float circulatedMarketValue; // 流通市值
+		public float peRatio; //市盈率
+	}
+	
 	/*
 	 * 从网络获取某只股票当前信息（基本：名字 日期 时间 价格）
 	 * 返回0为成功，其他值为失败
 	 */
-	public static int getRealTimeInfo(String id, RealTimeInfo out_obj)
+	public static ResultRealTimeInfo getRealTimeInfo(String id)
 	{
+		ResultRealTimeInfo cResultRealTimeInfo = new ResultRealTimeInfo();
 		// e.g http://hq.sinajs.cn/list=sz300163
 		String urlStr = "http://hq.sinajs.cn/list=";
 		String tmpId = "";
@@ -67,7 +72,8 @@ public class DataWebStockRealTimeInfo {
 		}
 		else
 		{
-			return -10;
+			cResultRealTimeInfo.error = -10;
+			return cResultRealTimeInfo;
 		}
 		urlStr = urlStr + tmpId;
 		
@@ -88,32 +94,46 @@ public class DataWebStockRealTimeInfo {
 			String validdata = cells[lenCells - 2];
 			//System.out.println(validdata);     
 			String[] cols = validdata.split(",");
-			out_obj.name = cols[0];
-			out_obj.curPrice = Float.parseFloat(cols[3]);
-			out_obj.date = cols[30];
-			out_obj.time = cols[31];
-			if(out_obj.date.length() < 2 || out_obj.name.length() < 2)
+			cResultRealTimeInfo.name = cols[0];
+			cResultRealTimeInfo.curPrice = Float.parseFloat(cols[3]);
+			cResultRealTimeInfo.date = cols[30];
+			cResultRealTimeInfo.time = cols[31];
+			if(cResultRealTimeInfo.date.length() < 2 || cResultRealTimeInfo.name.length() < 2)
 			{
 				System.out.println("Exception[DataWebStockRealTimeInfo]: invalid data"); 
-				return -2;
+				cResultRealTimeInfo.error = -2;
+				return cResultRealTimeInfo;
 			}
 			
         }catch (Exception e) {  
         	System.out.println("Exception[DataWebStockRealTimeInfo]:" + e.getMessage()); 
             // TODO: handle exception  
-        	return -1;
+        	cResultRealTimeInfo.error = -1;
+			return cResultRealTimeInfo;
         }  
-		return 0;
+		return cResultRealTimeInfo;
 	}
 	/*
 	 * 从网络获取某只股票更多当前信息（基本信息，总市值，流通市值，市盈率）
 	 * 返回0为成功，其他值为失败
 	 */
-	public static int getRealTimeInfoMore(String id, RealTimeInfo out_obj)
+	public static ResultRealTimeInfoMore getRealTimeInfoMore(String id)
 	{
+		ResultRealTimeInfoMore cResultRealTimeInfoMore = new ResultRealTimeInfoMore();
+		
 		// get base info
-		int retBase = getRealTimeInfo(id, out_obj);
-		if(0 != retBase) return retBase;
+		ResultRealTimeInfo cResultRealTimeInfoBase = getRealTimeInfo(id);
+		if(0 != cResultRealTimeInfoBase.error) 
+		{
+			cResultRealTimeInfoMore.error = -2;
+			return cResultRealTimeInfoMore;
+		}
+		
+		cResultRealTimeInfoMore.name = cResultRealTimeInfoBase.name;
+		cResultRealTimeInfoMore.date = cResultRealTimeInfoBase.date;
+		cResultRealTimeInfoMore.time = cResultRealTimeInfoBase.time;
+		cResultRealTimeInfoMore.curPrice = cResultRealTimeInfoBase.curPrice;
+		
 		
 		// e.g http://qt.gtimg.cn/q=sz000858
 		String urlStr = "http://qt.gtimg.cn/q=";
@@ -129,11 +149,13 @@ public class DataWebStockRealTimeInfo {
 		else if(id.startsWith("99")) // 上证指数
 		{
 			tmpId = "sh" + "000001"; // 上证指数没有更多基本信息
-			return 0;
+			cResultRealTimeInfoMore.error = -3;
+			return cResultRealTimeInfoMore;
 		}
 		else
 		{
-			return -10;
+			cResultRealTimeInfoMore.error = -10;
+			return cResultRealTimeInfoMore;
 		}
 		urlStr = urlStr + tmpId;
 		
@@ -154,20 +176,22 @@ public class DataWebStockRealTimeInfo {
 //			{
 //				System.out.println(cells[i]);
 //			}
-			out_obj.allMarketValue = Float.parseFloat(cells[45]); //总市值
-			out_obj.circulatedMarketValue = Float.parseFloat(cells[44]); // 流通市值
+			cResultRealTimeInfoMore.allMarketValue = Float.parseFloat(cells[45]); //总市值
+			cResultRealTimeInfoMore.circulatedMarketValue = Float.parseFloat(cells[44]); // 流通市值
 			if(cells[39].length() != 0)
-				out_obj.peRatio = Float.parseFloat(cells[39]); //市盈率
+				cResultRealTimeInfoMore.peRatio = Float.parseFloat(cells[39]); //市盈率
 			else
-				out_obj.peRatio = 0.0f;
+				cResultRealTimeInfoMore.peRatio = 0.0f;
 			
         }catch (Exception e) {  
         	System.out.println("Exception[getRealTimeInfoMore]:" + e.getMessage()); 
             // TODO: handle exception  
-        	return -1;
+			cResultRealTimeInfoMore.error = -1;
+        	return cResultRealTimeInfoMore;
         }  
-		return 0;
+		return cResultRealTimeInfoMore;
 	}
+	
     public static  byte[] readInputStream(InputStream inputStream) throws IOException {    
         byte[] buffer = new byte[1024];    
         int len = 0;    

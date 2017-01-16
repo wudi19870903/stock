@@ -3,38 +3,41 @@ package stormstock.ori.stockdata;
 import java.util.ArrayList;
 import java.util.List;
 
-import stormstock.ori.stockdata.DataWebStockDayDetail.DayDetailItem;
-import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
-import stormstock.ori.stockdata.DataWebStockDividendPayout.DividendPayout;
+import stormstock.ori.stockdata.DataEngineBase.ResultUpdatedStocksDate;
+import stormstock.ori.stockdata.DataWebStockDayDetail.ResultDayDetail;
+import stormstock.ori.stockdata.DataWebStockDayDetail.ResultDayDetail.DayDetailItem;
+import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData;
+import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData.DayKData;
+import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout;
+import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout.DividendPayout;
+
 
 public class TestDataEngineBase {
 	private static void test_getDayKData()
 	{
-		List<DayKData> retList = new ArrayList<DayKData>();
-		int ret = DataEngineBase.getDayKData("999999", retList);
-		if(0 == ret)
+		ResultDayKData cResultDayKData = DataEngineBase.getDayKData("999999");
+		if(0 == cResultDayKData.error)
 		{
-			for(int i = 0; i < retList.size(); i++)  
+			for(int i = 0; i < cResultDayKData.resultList.size(); i++)  
 	        {  
-				DayKData cDayKData = retList.get(i);  
+				DayKData cDayKData = cResultDayKData.resultList.get(i);  
 	            System.out.println(cDayKData.date + "," 
 	            		+ cDayKData.open + "," + cDayKData.close);  
 	        } 
 		}
 		else
 		{
-			System.out.println("ERROR:" + ret);
+			System.out.println("ERROR:" + cResultDayKData.error);
 		}
 	}
 	private static void test_getDividendPayout()
 	{
-		List<DividendPayout> retList = new ArrayList<DividendPayout>();
-		int ret = DataEngineBase.getDividendPayout("300163", retList);
-		if(0 == ret)
+		ResultDividendPayout cResultDividendPayout = DataEngineBase.getDividendPayout("300163");
+		if(0 == cResultDividendPayout.error)
 		{
-			for(int i = 0; i < retList.size(); i++)  
+			for(int i = 0; i < cResultDividendPayout.resultList.size(); i++)  
 	        {  
-				DividendPayout cDividendPayout = retList.get(i);  
+				DividendPayout cDividendPayout = cResultDividendPayout.resultList.get(i);  
 	            System.out.println(cDividendPayout.date 
 	            		+ "," + cDividendPayout.songGu
 	            		+ "," + cDividendPayout.zhuanGu
@@ -43,25 +46,24 @@ public class TestDataEngineBase {
 		}
 		else
 		{
-			System.out.println("getDividendPayout ERROR:" + ret);
+			System.out.println("getDividendPayout ERROR:" + cResultDividendPayout.error);
 		}
 	}
 	private static void test_getDayDetail()
 	{
-		List<DayDetailItem> retList = new ArrayList<DayDetailItem>();
-		int ret = DataEngineBase.getDayDetail("300163", "2015-02-16", retList);
-		if(0 == ret)
+		ResultDayDetail cResultDayDetail = DataEngineBase.getDayDetail("300163", "2015-02-16");
+		if(0 == cResultDayDetail.error)
 		{
-			for(int i = 0; i < retList.size(); i++)  
+			for(int i = 0; i < cResultDayDetail.resultList.size(); i++)  
 	        {  
-				DayDetailItem cDayDetailItem = retList.get(i);  
+				DayDetailItem cDayDetailItem = cResultDayDetail.resultList.get(i);  
 	            System.out.println(cDayDetailItem.time + "," 
 	            		+ cDayDetailItem.price + "," + cDayDetailItem.volume);  
 	        } 
 		}
 		else
 		{
-			System.out.println("getDayDetail ERROR:" + ret);
+			System.out.println("getDayDetail ERROR:" + cResultDayDetail.error);
 		}
 	}
 	private static void test_downloadStockDayk()
@@ -71,6 +73,10 @@ public class TestDataEngineBase {
 		{
 			System.out.println("downloadStockDayk ERROR:" + retdownloadStockDayk);
 		}
+		else
+		{
+			System.out.println("downloadStockDayk OK");
+		}
 	}
 	private static void test_downloadStockDividendPayout()
 	{
@@ -79,6 +85,10 @@ public class TestDataEngineBase {
 		{
 			System.out.println("downloadStockDividendPayout ERROR:" + retdownloadStockDividendPayout);
 		}
+		else
+		{
+			System.out.println("downloadStockDividendPayout OK");
+		}
 	}
 	private static void test_downloadStockDataDetail()
 	{
@@ -86,6 +96,10 @@ public class TestDataEngineBase {
 		if(0 != retdownloadStockDataDetail)
 		{
 			System.out.println("downloadStockDataDetail ERROR:" + retdownloadStockDataDetail);	
+		}
+		else
+		{
+			System.out.println("downloadStockDataDetail OK");
 		}
 	}
 	private static void test_updateStock()
@@ -100,13 +114,13 @@ public class TestDataEngineBase {
 			System.out.println("updateStock OK:" + retupdateStock);	
 		}
 	}
+	
 	private static void test_getUpdatedStocksDate()
 	{
-		String updatedDate = DataEngineBase.getUpdatedStocksDate();
-		System.out.println("updatedDate:" + updatedDate);	
+		ResultUpdatedStocksDate cResultUpdatedStocksDate = DataEngineBase.getUpdatedStocksDate();
+		System.out.println("updatedDate:" + cResultUpdatedStocksDate.date);	
 	}
 	
-
 	public static void main(String[] args) {
 //		test_getDayKData();
 //		test_getDividendPayout();
@@ -115,6 +129,6 @@ public class TestDataEngineBase {
 //		test_downloadStockDividendPayout();
 //		test_downloadStockDataDetail();
 //		test_updateStock();
-//		test_getUpdatedStocksDate();
+		test_getUpdatedStocksDate();
 	}
 }

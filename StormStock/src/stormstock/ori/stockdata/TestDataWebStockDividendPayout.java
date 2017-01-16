@@ -3,18 +3,18 @@ package stormstock.ori.stockdata;
 import java.util.ArrayList;
 import java.util.List;
 
-import stormstock.ori.stockdata.DataWebStockDividendPayout.DividendPayout;
+import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout;
+import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout.DividendPayout;
 
 public class TestDataWebStockDividendPayout {
 
 	public static void main(String[] args){
-		List<DividendPayout> retList = new ArrayList<DividendPayout>();
-		int ret = DataWebStockDividendPayout.getDividendPayout("600060", retList);
-		if(0 == ret)
+		ResultDividendPayout cResultDividendPayout = DataWebStockDividendPayout.getDividendPayout("600060");
+		if(0 == cResultDividendPayout.error)
 		{
-			for(int i = 0; i < retList.size(); i++)  
+			for(int i = 0; i < cResultDividendPayout.resultList.size(); i++)  
 	        {  
-				DividendPayout cDividendPayout = retList.get(i);  
+				DividendPayout cDividendPayout = cResultDividendPayout.resultList.get(i);  
 	            System.out.println(cDividendPayout.date 
 	            		+ "," + cDividendPayout.songGu
 	            		+ "," + cDividendPayout.zhuanGu
@@ -23,7 +23,7 @@ public class TestDataWebStockDividendPayout {
 		}
 		else
 		{
-			System.out.println("ERROR:" + ret);
+			System.out.println("ERROR:" + cResultDividendPayout.error);
 		}
 	}
 }

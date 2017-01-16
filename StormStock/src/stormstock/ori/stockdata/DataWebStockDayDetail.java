@@ -19,27 +19,39 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
+import stormstock.ori.stockdata.DataWebStockDayDetail.ResultDayDetail.DayDetailItem;
 
 public class DataWebStockDayDetail {
-	public static class DayDetailItem implements Comparable
-	{
-		public String time;
-		public float price;
-		public float volume; // 单位 手
-		@Override
-		public int compareTo(Object o) {
-			// TODO Auto-generated method stub
-			DayDetailItem sdto = (DayDetailItem)o;
-		    return this.time.compareTo(sdto.time);
-		}
-	}
 	/*
 	 * 从网络获取某只股票某日内的交易细节数据
 	 * 返回0为成功，其他值为失败
 	 */
-	public static int getDayDetail(String id, String date, List<DayDetailItem> out_list)
+	public static class ResultDayDetail
 	{
+		public static class DayDetailItem implements Comparable
+		{
+			public String time;
+			public float price;
+			public float volume; // 单位 手
+			@Override
+			public int compareTo(Object o) {
+				// TODO Auto-generated method stub
+				DayDetailItem sdto = (DayDetailItem)o;
+			    return this.time.compareTo(sdto.time);
+			}
+		}
+		public ResultDayDetail()
+		{
+			error = 0;
+			resultList = new ArrayList<DayDetailItem>();
+		}
+		public int error;
+		public List<DayDetailItem> resultList;
+	}
+	public static ResultDayDetail getDayDetail(String id, String date)
+	{
+		ResultDayDetail cResultDayDetail = new ResultDayDetail();
+		
 		// e.g "http://market.finance.sina.com.cn/downxls.php?date=2015-02-16&symbol=sz300163"
 		String urlStr = "http://market.finance.sina.com.cn/downxls.php?";
 		String tmpId = "";
@@ -53,10 +65,9 @@ public class DataWebStockDayDetail {
 		}
 		else
 		{
-			return -10;
+			cResultDayDetail.error = -10;
+			return cResultDayDetail;
 		}
-		
-		if(out_list.size() > 0) return -20;
 		
 		try
 		{
@@ -85,20 +96,26 @@ public class DataWebStockDayDetail {
 	        	cDayDetailItem.price = Float.parseFloat(cols[1]);
 	        	cDayDetailItem.volume = Float.parseFloat(cols[3]);
 	        	
-	        	out_list.add(cDayDetailItem);
+	        	cResultDayDetail.resultList.add(cDayDetailItem);
 	        }
 	        
-	        if(out_list.size() <= 0) return -30;
+	        if(cResultDayDetail.resultList.size() <= 0) 
+        	{
+	        	cResultDayDetail.error = -30;
+	        	return cResultDayDetail;
+        	}
 		}
 		catch(Exception e)
 		{
 			System.out.println("Exception[WebStockDayDetail]:" + e.getMessage()); 
-			return -1;
+        	cResultDayDetail.error = -1;
+        	return cResultDayDetail;
 		}
 	
-		Collections.sort(out_list);
-		return 0;
+		Collections.sort(cResultDayDetail.resultList);
+		return cResultDayDetail;
 	}
+	
     public static  byte[] readInputStream(InputStream inputStream) throws IOException {    
         byte[] buffer = new byte[1024];    
         int len = 0;    

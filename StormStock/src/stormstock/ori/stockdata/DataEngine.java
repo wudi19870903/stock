@@ -19,33 +19,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
-import stormstock.ori.stockdata.DataWebStockDayDetail.DayDetailItem;
-import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
-import stormstock.ori.stockdata.DataWebStockDividendPayout.DividendPayout;
+import stormstock.ori.stockdata.DataWebStockAllList.ResultAllStockList;
+import stormstock.ori.stockdata.DataWebStockAllList.ResultAllStockList.StockItem;
+import stormstock.ori.stockdata.DataWebStockDayDetail.ResultDayDetail;
+import stormstock.ori.stockdata.DataWebStockDayDetail.ResultDayDetail.DayDetailItem;
+import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData;
+import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData.DayKData;
+import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout;
+import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout.DividendPayout;
+
 
 public class DataEngine extends DataEngineBase
 {
 	public static Random random = new Random();
 	public static Formatter fmt = new Formatter(System.out);
-	
-	public static class ExKData {
-		// eg: "2008-01-02 09:35:00"
-		public String datetime;
-		public float open;
-		public float close;
-		public float low;
-		public float high;
-		public float volume;
-		public String getTime()
-		{
-			return datetime.split(" ")[1];
-		}
-		public String getDate()
-		{
-			return datetime.split(" ")[0];
-		}
-	}
 
 	public static List<ExKData> getStock(String id) {
 		Formatter fmt = new Formatter(System.out);
@@ -158,15 +145,20 @@ public class DataEngine extends DataEngineBase
 		return listStockKData;
 	}
 	
-	public static int getDayKDataQianFuQuan(String id, List<DayKData> out_list)
+	public static ResultDayKData getDayKDataQianFuQuan(String id)
 	{
-		int retgetDayKData = getDayKData(id, out_list);
-		List<DividendPayout> retDividendPayoutList = new ArrayList<DividendPayout>();
-		int retgetDividendPayout = getDividendPayout(id, retDividendPayoutList);
-		if(0 != retgetDayKData || 0 != retgetDividendPayout) return -10;
-		for(int i = retDividendPayoutList.size() -1; i >= 0 ; i--)  
+		ResultDayKData cResultDayKData = getDayKData(id);
+		ResultDividendPayout cResultDividendPayout = getDividendPayout(id);
+		if(0 != cResultDayKData.error || 0 != cResultDividendPayout.error) 
+		{
+			cResultDayKData.error = -10;
+			cResultDayKData.resultList.clear();
+			return cResultDayKData;
+		}
+		
+		for(int i = cResultDividendPayout.resultList.size() -1; i >= 0 ; i--)  
         {  
-			DividendPayout cDividendPayout = retDividendPayoutList.get(i);    
+			DividendPayout cDividendPayout = cResultDividendPayout.resultList.get(i);    
 //			System.out.println(cDividendPayout.date);
 //			System.out.println(cDividendPayout.songGu);
 //			System.out.println(cDividendPayout.zhuanGu);
@@ -176,9 +168,9 @@ public class DataEngine extends DataEngineBase
 			float moreGu = cDividendPayout.songGu + cDividendPayout.zhuanGu;
 			float paiXi = cDividendPayout.paiXi;
             
-    		for(int j = out_list.size()-1; j >=0; j--)  
+    		for(int j = cResultDayKData.resultList.size()-1; j >=0; j--)  
             {  
-    			DayKData cDayKData = out_list.get(j);  
+    			DayKData cDayKData = cResultDayKData.resultList.get(j);  
     			
     			if(!bChangeFlag)
     			{
@@ -213,10 +205,10 @@ public class DataEngine extends DataEngineBase
             }
         }
 		// checking
-		for(int i = 0; i < out_list.size()-1; i++)  
+		for(int i = 0; i < cResultDayKData.resultList.size()-1; i++)  
         {  
-			DayKData cDayKData = out_list.get(i);  
-			DayKData cDayKDataNext = out_list.get(i+1);  
+			DayKData cDayKData = cResultDayKData.resultList.get(i);  
+			DayKData cDayKDataNext = cResultDayKData.resultList.get(i+1);  
             float close = cDayKData.close;
             float opennext = cDayKDataNext.open;
             float changeper = Math.abs((opennext-close)/close);
@@ -227,16 +219,47 @@ public class DataEngine extends DataEngineBase
 //            	System.out.println("close:" + close);
 //            	System.out.println("opennext:" + opennext);
 //            	System.out.println("changeper:" + Math.abs(changeper));
-            	return 0;
+            	cResultDayKData.error = -30;
+            	cResultDayKData.resultList.clear();
+            	return cResultDayKData;
         	}
         } 
-		return 0;
+		return cResultDayKData;
 	}
-	public static int get5MinKDataOneDay(String id, String date, List<ExKData> out_list)
+
+	public static class ExKData {
+		// eg: "2008-01-02 09:35:00"
+		public String datetime;
+		public float open;
+		public float close;
+		public float low;
+		public float high;
+		public float volume;
+		public String getTime()
+		{
+			return datetime.split(" ")[1];
+		}
+		public String getDate()
+		{
+			return datetime.split(" ")[0];
+		}
+	}
+	public static class ResultMinKDataOneDay
 	{
-		List<DayDetailItem> retListDetail = new ArrayList<DayDetailItem>();
-		int ret = getDayDetail(id, date, retListDetail);
-		if(0 == ret && retListDetail.size() != 0)
+		public ResultMinKDataOneDay()
+		{
+			error = 0;
+			exKDataList = new ArrayList<ExKData>();
+		}
+		public int error;
+		public List<ExKData> exKDataList;
+	}
+	public static ResultMinKDataOneDay get5MinKDataOneDay(String id, String date)
+	{
+		ResultMinKDataOneDay cResultMinKDataOneDay = new ResultMinKDataOneDay();
+		
+		ResultDayDetail cResultDayDetail = getDayDetail(id, date);
+		if(0 == cResultDayDetail.error && cResultDayDetail.resultList.size() != 0)
 		{
 			int iSec093000 = 9*3600 + 30*60 + 0;
 			int iSec130000 = 13*3600 + 0*60 + 0;
@@ -267,9 +290,9 @@ public class DataEngine extends DataEngineBase
             	}
             	//System.out.println("iSecBegin:" + iSecBegin + " -- iSecEnd:" + iSecEnd );
     			List<DayDetailItem> tmpList = new ArrayList<DayDetailItem>();
-    			for(int j = 0; j < retListDetail.size(); j++)  
+    			for(int j = 0; j < cResultDayDetail.resultList.size(); j++)  
     	        {  
-    				DayDetailItem cDayDetailItem = retListDetail.get(j);  
+    				DayDetailItem cDayDetailItem = cResultDayDetail.resultList.get(j);  
 //    	            System.out.println(cDayDetailItem.time + "," 
 //    	            		+ cDayDetailItem.price + "," + cDayDetailItem.volume);  
     	            int iSec = Integer.parseInt(cDayDetailItem.time.split(":")[0])*3600
@@ -312,7 +335,7 @@ public class DataEngine extends DataEngineBase
     			cExKData.high = K5MinHigh;
     			cExKData.volume = K5MinVolume;
     			tmpList.clear();
-    			out_list.add(cExKData);
+    			cResultMinKDataOneDay.exKDataList.add(cExKData);
     			//System.out.println("cExKData.datetime:" + cExKData.datetime);
             }
             // add 下午
@@ -338,9 +361,9 @@ public class DataEngine extends DataEngineBase
             	}
             	//System.out.println("iSecBegin:" + iSecBegin + " -- iSecEnd:" + iSecEnd );
     			List<DayDetailItem> tmpList = new ArrayList<DayDetailItem>();
-    			for(int j = 0; j < retListDetail.size(); j++)  
+    			for(int j = 0; j < cResultDayDetail.resultList.size(); j++)  
     	        {  
-    				DayDetailItem cDayDetailItem = retListDetail.get(j);  
+    				DayDetailItem cDayDetailItem = cResultDayDetail.resultList.get(j);  
 //    	            System.out.println(cDayDetailItem.time + "," 
 //    	            		+ cDayDetailItem.price + "," + cDayDetailItem.volume);  
     	            int iSec = Integer.parseInt(cDayDetailItem.time.split(":")[0])*3600
@@ -383,23 +406,25 @@ public class DataEngine extends DataEngineBase
     			cExKData.high = K5MinHigh;
     			cExKData.volume = K5MinVolume;
     			tmpList.clear();
-    			out_list.add(cExKData);
+    			cResultMinKDataOneDay.exKDataList.add(cExKData);
     			//System.out.println("cExKData.datetime:" + cExKData.datetime);
             }
 		}
 		else
 		{
 			System.out.println("[ERROR] get5MinKDataOneDay: " + id + " # " + date);
-			return -10;
+			cResultMinKDataOneDay.error = -10;
+			return cResultMinKDataOneDay;
 		}
-		return 0;
+		return cResultMinKDataOneDay;
 	}
 	
-	public static int get1MinKDataOneDay(String id, String date, List<ExKData> out_list)
+	public static ResultMinKDataOneDay get1MinKDataOneDay(String id, String date)
 	{
-		List<DayDetailItem> retListDetail = new ArrayList<DayDetailItem>();
-		int ret = getDayDetail(id, date, retListDetail);
-		if(0 == ret && retListDetail.size() != 0)
+		ResultMinKDataOneDay cResultMinKDataOneDay = new ResultMinKDataOneDay();
+		
+		ResultDayDetail cResultDayDetail = getDayDetail(id, date);
+		if(0 == cResultDayDetail.error && cResultDayDetail.resultList.size() != 0)
 		{
 			int iSec093000 = 9*3600 + 30*60 + 0;
 			int iSec130000 = 13*3600 + 0*60 + 0;
@@ -431,9 +456,9 @@ public class DataEngine extends DataEngineBase
             	}
             	//System.out.println("iSecBegin:" + iSecBegin + " -- iSecEnd:" + iSecEnd );
     			List<DayDetailItem> tmpList = new ArrayList<DayDetailItem>();
-    			for(int j = 0; j < retListDetail.size(); j++)  
+    			for(int j = 0; j < cResultDayDetail.resultList.size(); j++)  
     	        {  
-    				DayDetailItem cDayDetailItem = retListDetail.get(j);  
+    				DayDetailItem cDayDetailItem = cResultDayDetail.resultList.get(j);  
 //    	            System.out.println(cDayDetailItem.time + "," 
 //    	            		+ cDayDetailItem.price + "," + cDayDetailItem.volume);  
     	            int iSec = Integer.parseInt(cDayDetailItem.time.split(":")[0])*3600
@@ -476,7 +501,7 @@ public class DataEngine extends DataEngineBase
     			cExKData.high = K1MinHigh;
     			cExKData.volume = K1MinVolume;
     			tmpList.clear();
-    			out_list.add(cExKData);
+    			cResultMinKDataOneDay.exKDataList.add(cExKData);
     			//System.out.println("cExKData.datetime:" + cExKData.datetime);
     			preClosePrice = cExKData.close;
             }
@@ -503,9 +528,9 @@ public class DataEngine extends DataEngineBase
             	}
             	//System.out.println("iSecBegin:" + iSecBegin + " -- iSecEnd:" + iSecEnd );
     			List<DayDetailItem> tmpList = new ArrayList<DayDetailItem>();
-    			for(int j = 0; j < retListDetail.size(); j++)  
+    			for(int j = 0; j < cResultDayDetail.resultList.size(); j++)  
     	        {  
-    				DayDetailItem cDayDetailItem = retListDetail.get(j);  
+    				DayDetailItem cDayDetailItem = cResultDayDetail.resultList.get(j);  
 //    	            System.out.println(cDayDetailItem.time + "," 
 //    	            		+ cDayDetailItem.price + "," + cDayDetailItem.volume);  
     	            int iSec = Integer.parseInt(cDayDetailItem.time.split(":")[0])*3600
@@ -548,7 +573,7 @@ public class DataEngine extends DataEngineBase
     			cExKData.high = K1MinHigh;
     			cExKData.volume = K1MinVolume;
     			tmpList.clear();
-    			out_list.add(cExKData);
+    			cResultMinKDataOneDay.exKDataList.add(cExKData);
     			//System.out.println("cExKData.datetime:" + cExKData.datetime);
     			preClosePrice = cExKData.close;
             }
@@ -556,14 +581,17 @@ public class DataEngine extends DataEngineBase
 		else
 		{
 			System.out.println("[ERROR] get1MinKDataOneDay: " + id + " # " + date);
-			return -10;
+			cResultMinKDataOneDay.error = -10;
+			return cResultMinKDataOneDay;
 		}
-		return 0;
+		return cResultMinKDataOneDay;
 	}
 	
-	public static List<StockItem> getLocalAllStock()
+	public static ResultAllStockList getLocalAllStock()
 	{
-		List<StockItem> retListAll = new ArrayList<StockItem>();
+		ResultAllStockList cResultAllStockList = new ResultAllStockList();
+		
+		List<StockItem> retListAll = cResultAllStockList.resultList;
 			
 		// emu local
 		File root = new File("data");
@@ -571,7 +599,8 @@ public class DataEngine extends DataEngineBase
 		if(fs == null)
 		{
 			fmt.format("[ERROR] not found dir:data\n");
-			return null;
+			cResultAllStockList.error = -10;
+			return cResultAllStockList;
 		}
 		for(int i=0; i<fs.length; i++){
 			if(fs[i].isDirectory()){
@@ -587,7 +616,7 @@ public class DataEngine extends DataEngineBase
 				
 			}
 		}
-		return retListAll;
+		return cResultAllStockList;
 	}
 	public static List<StockItem> getLocalRandomStock(int count)
 	{
@@ -636,11 +665,14 @@ public class DataEngine extends DataEngineBase
 	 */
 	public static int updateAllLocalStocks(String dateStr)
 	{
-		String updatedDate = DataEngineBase.getUpdatedStocksDate();
-		if(updatedDate.compareTo(dateStr) >= 0)
+		ResultUpdatedStocksDate cResultUpdatedStocksDate = DataEngineBase.getUpdatedStocksDate();
+		if(0 == cResultUpdatedStocksDate.error)
 		{
-			fmt.format("update success! (current is newest, local: %s)\n", updatedDate);
-			return 0;
+			if(cResultUpdatedStocksDate.date.compareTo(dateStr) >= 0)
+			{
+				fmt.format("update success! (current is newest, local: %s)\n", cResultUpdatedStocksDate.date);
+				return 0;
+			}
 		}
 		
 		int iRetupdateStock = 0;
@@ -649,11 +681,11 @@ public class DataEngine extends DataEngineBase
 		String ShangZhiName = "上证指数";
 		iRetupdateStock = DataEngineBase.updateStock(ShangZhiId);
 		String newestDate = "";
-		List<DayKData> retListDK = new ArrayList<DayKData>();
-		int iRetGetDK = DataEngine.getDayKDataQianFuQuan(ShangZhiId, retListDK);
-		if(0 == iRetGetDK && retListDK.size() > 0)
+		
+		ResultDayKData cResultDayKData = DataEngine.getDayKDataQianFuQuan(ShangZhiId);
+		if(0 == cResultDayKData.error && cResultDayKData.resultList.size() > 0)
 		{
-			newestDate = retListDK.get(retListDK.size()-1).date;
+			newestDate = cResultDayKData.resultList.get(cResultDayKData.resultList.size()-1).date;
 		}
 		if(iRetupdateStock >= 0)
 		{
@@ -666,17 +698,17 @@ public class DataEngine extends DataEngineBase
 		}
 		
 		// 更新所有k
-		List<StockItem> retList = new ArrayList<StockItem>();
-		iRetGetDK = DataWebStockAllList.getAllStockList(retList);
-		if(0 == iRetGetDK)
+		ResultAllStockList cResultAllStockList = DataWebStockAllList.getAllStockList();
+		if(0 == cResultAllStockList.error)
 		{
-			for(int i = 0; i < retList.size(); i++)  
+			for(int i = 0; i < cResultAllStockList.resultList.size(); i++)  
 	        {  
-				StockItem cStockItem = retList.get(i);  
+				StockItem cStockItem = cResultAllStockList.resultList.get(i);  
 	            iRetupdateStock = DataEngineBase.updateStock(cStockItem.id);
-	            retListDK = new ArrayList<DayKData>();
-	            iRetGetDK = DataEngine.getDayKDataQianFuQuan(ShangZhiId, retListDK);
-	    		if(0 == iRetGetDK && retListDK.size() > 0)
+	            
+	            ResultDayKData cResultDayKDataQFQ = DataEngine.getDayKDataQianFuQuan(ShangZhiId);
+	            
+	    		if(0 == cResultDayKDataQFQ.error && cResultDayKDataQFQ.resultList.size() > 0)
 	    		{
 	    			fmt.format("update success: %s (%s) item:%d date:%s\n", cStockItem.id, cStockItem.name, iRetupdateStock, newestDate);
 	    		}
@@ -686,11 +718,11 @@ public class DataEngine extends DataEngineBase
 	            }
 	            
 	        } 
-			System.out.println("update finish, count:" + retList.size()); 
+			System.out.println("update finish, count:" + cResultAllStockList.resultList.size()); 
 		}
 		else
 		{
-			System.out.println("ERROR:" + iRetGetDK);
+			System.out.println("ERROR:" + cResultAllStockList.error);
 		}
 		DataEngineBase.updateStocksFinish(dateStr);
 		return iRetupdateStock;

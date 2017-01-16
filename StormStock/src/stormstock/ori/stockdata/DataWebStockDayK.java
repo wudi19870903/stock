@@ -22,30 +22,43 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData.DayKData;
+
 public class DataWebStockDayK {
-	public static class DayKData implements Comparable
-	{
-		// 2015-09-18
-		public String date;
-		public float open;
-		public float close;
-		public float low;
-		public float high;
-		public float volume;
-		@Override
-		public int compareTo(Object arg0) {
-			// TODO Auto-generated method stub
-			DayKData sdto = (DayKData)arg0;
-		    return this.date.compareTo(sdto.date);
-		}
-	}
 	/*
 	 * 从网络获取某只股票的日K数据
 	 * 传入999999代表上证指数
 	 * 返回0为成功，其他值为失败
 	 */
-	public static int getDayKData(String id, String begin_date, String end_date, List<DayKData> out_list)
+	public static class ResultDayKData
 	{
+		public static class DayKData implements Comparable
+		{
+			// 2015-09-18
+			public String date;
+			public float open;
+			public float close;
+			public float low;
+			public float high;
+			public float volume;
+			@Override
+			public int compareTo(Object arg0) {
+				// TODO Auto-generated method stub
+				DayKData sdto = (DayKData)arg0;
+			    return this.date.compareTo(sdto.date);
+			}
+		}
+		public ResultDayKData()
+		{
+			error = 0;
+			resultList = new ArrayList<DayKData>();
+		}
+		public int error;
+		public List<DayKData> resultList;
+	}
+	public static ResultDayKData getDayKData(String id, String begin_date, String end_date)
+	{
+		ResultDayKData cResultDayKData = new ResultDayKData();
 		// e.g "http://biz.finance.sina.com.cn/stock/flash_hq/kline_data.php?symbol=sz000002&begin_date=20160101&end_date=21000101"
 		String urlStr = "http://biz.finance.sina.com.cn/stock/flash_hq/kline_data.php?";
 		String tmpId = "";
@@ -63,11 +76,10 @@ public class DataWebStockDayK {
 		}
 		else
 		{
-			return -10;
+			cResultDayKData.error = -10;
+			return cResultDayKData;
 		}
 		urlStr = urlStr + "symbol=" + tmpId + "&begin_date=" + begin_date + "&end_date=" + end_date;
-		
-		if(out_list.size() > 0) return -20;
 		
 		try
 		{
@@ -101,7 +113,11 @@ public class DataWebStockDayK {
 	        Document doc = builder.parse(is);
 	        Element rootElement = doc.getDocumentElement();
 	        // 检查返回数据有效性
-	        if(!rootElement.getTagName().contains("control")) return -30;
+	        if(!rootElement.getTagName().contains("control")) 
+	        {
+	        	cResultDayKData.error = -30;
+	        	return cResultDayKData;
+	        }
 
 	        NodeList contents = rootElement.getElementsByTagName("content");
 	        int lenList = contents.getLength();
@@ -120,18 +136,20 @@ public class DataWebStockDayK {
 	        	cDayKData.low = Float.parseFloat(low);
 	        	cDayKData.high = Float.parseFloat(high);
 	        	cDayKData.volume = Float.parseFloat(volume);
-	        	out_list.add(cDayKData);
+	        	
+	        	cResultDayKData.resultList.add(cDayKData);
 	        }
 		}
 		catch(Exception e)
 		{
 			System.out.println("Exception[WebStockDayK]:" + e.getMessage()); 
-			return -1;
+        	cResultDayKData.error = -1;
+        	return cResultDayKData;
 		}
 		
-		Collections.sort(out_list);
+		Collections.sort(cResultDayKData.resultList);
 		
-		return 0;
+		return cResultDayKData;
 	}
     public static  byte[] readInputStream(InputStream inputStream) throws IOException {    
         byte[] buffer = new byte[1024];    

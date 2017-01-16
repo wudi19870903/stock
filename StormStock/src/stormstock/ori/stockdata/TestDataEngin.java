@@ -4,38 +4,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 import stormstock.ori.stockdata.DataEngine.ExKData;
-import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
-import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
+import stormstock.ori.stockdata.DataEngine.ResultMinKDataOneDay;
+import stormstock.ori.stockdata.DataWebStockAllList.ResultAllStockList.StockItem;
+import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData;
+import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData.DayKData;
 
 public class TestDataEngin {
 	private static void test_getDayKDataQianFuQuan()
 	{
-		List<DayKData> retList = new ArrayList<DayKData>();
-		int ret = DataEngine.getDayKDataQianFuQuan("999999", retList);
-		if(0 == ret)
+		ResultDayKData cResultDayKData = DataEngine.getDayKDataQianFuQuan("999999");
+		if(0 == cResultDayKData.error)
 		{
-			for(int i = 0; i < retList.size(); i++)  
+			for(int i = 0; i < cResultDayKData.resultList.size(); i++)  
 	        {  
-				DayKData cDayKData = retList.get(i);  
+				DayKData cDayKData = cResultDayKData.resultList.get(i);  
 	            System.out.println(cDayKData.date + "," 
 	            		+ cDayKData.open + "," + cDayKData.close);  
 	        } 
 		}
 		else
 		{
-			System.out.println("ERROR:" + ret);
+			System.out.println("ERROR:" + cResultDayKData.error);
 		}
 	}
 	private static void test_get5MinKDataOneDay()
 	{
-		List<ExKData> retList = new ArrayList<ExKData>();
-		int ret = DataEngine.get5MinKDataOneDay("000920", "2016-08-25", retList);
+		ResultMinKDataOneDay cResultMinKDataOneDay = DataEngine.get5MinKDataOneDay("000920", "2016-08-25");
 		//int ret = get5MinKDataOneDay("600316", "2010-06-28", retList);
-		if(0 == ret)
+		if(0 == cResultMinKDataOneDay.error)
 		{
-			for(int i = 0; i < retList.size(); i++)  
+			for(int i = 0; i < cResultMinKDataOneDay.exKDataList.size(); i++)  
 	        {  
-				ExKData cExKData = retList.get(i);  
+				ExKData cExKData = cResultMinKDataOneDay.exKDataList.get(i);  
 	            System.out.println(cExKData.datetime + "," 
 	            		+ cExKData.open + "," + cExKData.close + "," 
 	            		+ cExKData.low + "," + cExKData.high + "," 
@@ -44,19 +44,18 @@ public class TestDataEngin {
 		}
 		else
 		{
-			System.out.println("ERROR:" + ret);
+			System.out.println("ERROR:" + cResultMinKDataOneDay.error);
 		}
 	}
 	private static void test_get1MinKDataOneDay()
 	{
-		List<ExKData> retList = new ArrayList<ExKData>();
-		int ret = DataEngine.get1MinKDataOneDay("000920", "2016-08-05", retList);
+		ResultMinKDataOneDay cResultMinKDataOneDay = DataEngine.get1MinKDataOneDay("000920", "2016-08-05");
 		//int ret = get5MinKDataOneDay("600316", "2010-06-28", retList);
-		if(0 == ret)
+		if(0 == cResultMinKDataOneDay.error)
 		{
-			for(int i = 0; i < retList.size(); i++)  
+			for(int i = 0; i < cResultMinKDataOneDay.exKDataList.size(); i++)  
 	        {  
-				ExKData cExKData = retList.get(i);  
+				ExKData cExKData = cResultMinKDataOneDay.exKDataList.get(i);  
 	            System.out.println(cExKData.datetime + "," 
 	            		+ cExKData.open + "," + cExKData.close + "," 
 	            		+ cExKData.low + "," + cExKData.high + "," 
@@ -65,7 +64,7 @@ public class TestDataEngin {
 		}
 		else
 		{
-			System.out.println("ERROR:" + ret);
+			System.out.println("ERROR:" + cResultMinKDataOneDay.error);
 		}
 	}
 	private static void test_getLocalRandomStock()
@@ -78,9 +77,9 @@ public class TestDataEngin {
         } 
 	}
 	public static void main(String[] args) {
-		test_getDayKDataQianFuQuan();
+		//test_getDayKDataQianFuQuan();
 		//test_get5MinKDataOneDay();
 		//test_get1MinKDataOneDay();
-		//test_getLocalRandomStock();
+		test_getLocalRandomStock();
 	}
 }

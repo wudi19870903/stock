@@ -18,11 +18,14 @@ import org.htmlparser.Parser;
 import org.htmlparser.filters.TagNameFilter;
 import org.htmlparser.util.NodeList;
 
-import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
-import stormstock.ori.stockdata.DataWebStockDayDetail.DayDetailItem;
-import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
-import stormstock.ori.stockdata.DataWebStockDividendPayout.DividendPayout;
-import stormstock.ori.stockdata.DataWebStockRealTimeInfo.RealTimeInfo;
+import stormstock.ori.stockdata.DataWebStockDayDetail.ResultDayDetail;
+import stormstock.ori.stockdata.DataWebStockDayDetail.ResultDayDetail.DayDetailItem;
+import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData;
+import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData.DayKData;
+import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout;
+import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout.DividendPayout;
+import stormstock.ori.stockdata.DataWebStockRealTimeInfo.ResultRealTimeInfo;
+import stormstock.ori.stockdata.DataWebStockRealTimeInfo.ResultRealTimeInfoMore;
 
 public class DataEngineBase {
 
@@ -51,16 +54,31 @@ public class DataEngineBase {
 		}
 	}
 	
-	public static int getDayKData(String id, List<DayKData> out_list)
+	/*
+	 * 获取某只股票的日K数据
+	 * 只从本地获取
+	 */
+	public static ResultDayKData getDayKData(String id)
 	{
+		ResultDayKData cResultDayKData = new ResultDayKData();
+		
 		String stockDayKFileName = s_DataDir + "/" + id + "/" + s_daykFile;
 		File cfile=new File(stockDayKFileName);
+//		if(!cfile.exists())
+//		{
+//			int iDownload = downloadStockDayk(id);
+//			if(0 != iDownload)
+//			{
+//				cResultDayKData.error = -21;
+//				return cResultDayKData;
+//			}
+//		}
 		if(!cfile.exists())
 		{
-			//downloadStockDayk(id);
-			return 0;
+			cResultDayKData.error = -10;
+			return cResultDayKData;
 		}
-		if(!cfile.exists()) return -10;
+		
 		try
 		{
 			BufferedReader reader = new BufferedReader(new FileReader(cfile));
@@ -83,7 +101,7 @@ public class DataEngineBase {
 	        	cDayKData.low = Float.parseFloat(cols[3]);
 	        	cDayKData.high = Float.parseFloat(cols[4]);
 	        	cDayKData.volume = Float.parseFloat(cols[5]);
-	        	out_list.add(cDayKData);
+	        	cResultDayKData.resultList.add(cDayKData);
 	        	
                 line++;
             }
@@ -92,11 +110,12 @@ public class DataEngineBase {
 		catch(Exception e)
 		{
 			System.out.println(e.getMessage()); 
-			return -1;
+			cResultDayKData.error = -1;
+			return cResultDayKData;
 		}
-		return 0;
+		return cResultDayKData;
 	}
-	public static int setDayKData(String id, List<DayKData> in_list)
+	public static int saveDayKData(String id, List<DayKData> in_list)
 	{
 		String stockDayKFileName = s_DataDir + "/" + id + "/" + s_daykFile;
 		File cfile=new File(stockDayKFileName);
@@ -124,16 +143,32 @@ public class DataEngineBase {
 		}
 		return 0;
 	}
-	public static int getDividendPayout(String id, List<DividendPayout> out_list)
+	
+	/*
+	 * 获取某只股票的分红派息数据
+	 * 只从本地获取
+	 */
+	public static ResultDividendPayout getDividendPayout(String id)
 	{
+		ResultDividendPayout cResultDividendPayout = new ResultDividendPayout();
+		
 		String stockDividendPayoutFileName = s_DataDir + "/" + id + "/" + s_DividendPayoutFile;
 		File cfile=new File(stockDividendPayoutFileName);
-		if(!cfile.exists())
+//		if(!cfile.exists())
+//		{
+//			int iDownLoad = downloadStockDividendPayout(id);
+//			if(0 != iDownLoad)
+//			{
+//				cResultDividendPayout.error = -21;
+//				return cResultDividendPayout;
+//			}
+//		}
+		if(!cfile.exists()) 
 		{
-			//downloadStockDividendPayout(id);
-			return 0;
+			cResultDividendPayout.error = -10;
+			return cResultDividendPayout;
 		}
-		if(!cfile.exists()) return -10;
+		
 		try
 		{
 			BufferedReader reader = new BufferedReader(new FileReader(cfile));
@@ -148,7 +183,7 @@ public class DataEngineBase {
                 cDividendPayout.songGu = Float.parseFloat(cols[1]);
                 cDividendPayout.zhuanGu = Float.parseFloat(cols[2]);
                 cDividendPayout.paiXi = Float.parseFloat(cols[3]);
-                out_list.add(cDividendPayout);
+                cResultDividendPayout.resultList.add(cDividendPayout);
                 
                 line++;
             }
@@ -157,19 +192,37 @@ public class DataEngineBase {
 		catch(Exception e)
 		{
 			System.out.println(e.getMessage()); 
-			return -1;
+			cResultDividendPayout.error = -1;
+			return cResultDividendPayout;
 		}
-		return 0;
+		return cResultDividendPayout;
 	}
-	public static int getDayDetail(String id, String date, List<DayDetailItem> out_list)
+	
+	/*
+	 * 获取某股票日内交易明细
+	 * 如果本地有数据从本地获取，否则从网络下载后再从本地获取
+	 */
+	public static ResultDayDetail getDayDetail(String id, String date)
 	{
+		ResultDayDetail cResultDayDetail = new ResultDayDetail();
+				
 		String stockDataDetailFileName = s_DataDir + "/" + id + "/" + date + ".txt";
 		File cfile=new File(stockDataDetailFileName);
 		if(!cfile.exists())
 		{
-			downloadStockDataDetail(id, date);
+			int iDownload = downloadStockDataDetail(id, date);
+			if(0 != iDownload)
+			{
+				cResultDayDetail.error = -21;
+				return cResultDayDetail;
+			}
 		}
-		if(!cfile.exists()) return -10;
+		if(!cfile.exists()) 
+		{
+			cResultDayDetail.error = -10;
+			return cResultDayDetail;
+		}
+		
 		try
 		{
 			BufferedReader reader = new BufferedReader(new FileReader(cfile));
@@ -185,7 +238,7 @@ public class DataEngineBase {
 	        	cDayDetailItem.price = Float.parseFloat(cols[1]);
 	        	cDayDetailItem.volume = Float.parseFloat(cols[2]);
 	        	
-	        	out_list.add(cDayDetailItem);
+	        	cResultDayDetail.resultList.add(cDayDetailItem);
 	        	
                 line++;
             }
@@ -194,34 +247,33 @@ public class DataEngineBase {
 		catch(Exception e)
 		{
 			System.out.println(e.getMessage()); 
-			return -1;
+			cResultDayDetail.error = -1;
+			return cResultDayDetail;
 		}
-		return 0;
+		return cResultDayDetail;
 	}
 	public static int downloadStockDayk(String id)
 	{
 		if(0 != mkStocDataDir(id)) return -10;
 		String stockDayKFileName = s_DataDir + "/" + id + "/" + s_daykFile;
 		
-		RealTimeInfo cRealTimeInfo = new RealTimeInfo();
-		int retGetDividendPayout = DataWebStockRealTimeInfo.getRealTimeInfo(id, cRealTimeInfo);
-		if(0 != retGetDividendPayout) return -20;
-		String curAvailidDate = cRealTimeInfo.date;
-		String curAvailidTime = cRealTimeInfo.time;
+		ResultRealTimeInfo cResultRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfo(id);
+		if(0 != cResultRealTimeInfo.error) return -20;
+		String curAvailidDate = cResultRealTimeInfo.date;
+		String curAvailidTime = cResultRealTimeInfo.time;
 		
 		File cfile =new File(stockDayKFileName);
 		//System.out.println("updateStocData_Dayk:" + id);
-		List<DayKData> retList = new ArrayList<DayKData>();
 		String paramToDate = curAvailidDate.replace("-", "");
-		int ret = DataWebStockDayK.getDayKData(id, "20080101", paramToDate, retList);
-		if(0 == ret)
+		ResultDayKData cResultDayKData = DataWebStockDayK.getDayKData(id, "20080101", paramToDate);
+		if(0 == cResultDayKData.error)
 		{
 			try
 			{
 				FileOutputStream cOutputStream = new FileOutputStream(cfile);
-				for(int i = 0; i < retList.size(); i++)  
+				for(int i = 0; i < cResultDayKData.resultList.size(); i++)  
 		        {  
-					DayKData cDayKData = retList.get(i);  
+					DayKData cDayKData = cResultDayKData.resultList.get(i);  
 //		            System.out.println(cDayKData.date + "," 
 //		            		+ cDayKData.open + "," + cDayKData.close);  
 		            cOutputStream.write((cDayKData.date + ",").getBytes());
@@ -241,7 +293,34 @@ public class DataEngineBase {
 		}
 		else
 		{
-			System.out.println("ERROR:" + ret);
+			System.out.println("ERROR:" + cResultDayKData.error);
+		}
+		return 0;
+	}
+	public static int downloadBaseInfo(String id)
+	{
+		if(0 != mkStocDataDir(id)) return -10;
+		String stockBaseInfoFileName = s_DataDir + "/" + id + "/" + s_BaseInfoFile;
+		File cfile =new File(stockBaseInfoFileName);
+		// System.out.println("saveStockBaseData:" + id);
+		try
+		{
+			ResultRealTimeInfoMore cResultRealTimeInfoMore = DataWebStockRealTimeInfo.getRealTimeInfoMore(id);
+			
+			FileOutputStream cOutputStream = new FileOutputStream(cfile);
+			String s = String.format("%s,%.3f,%.3f,%.3f,%.3f", 
+					cResultRealTimeInfoMore.name, 
+					cResultRealTimeInfoMore.curPrice, 
+					cResultRealTimeInfoMore.allMarketValue, 
+					cResultRealTimeInfoMore.circulatedMarketValue, 
+					cResultRealTimeInfoMore.peRatio);
+			cOutputStream.write(s.getBytes());
+			cOutputStream.close();
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.getMessage()); 
+			return -1;
 		}
 		return 0;
 	}
@@ -250,24 +329,22 @@ public class DataEngineBase {
 		if(0 != mkStocDataDir(id)) return -10;
 		String stockDividendPayoutFileName = s_DataDir + "/" + id + "/" + s_DividendPayoutFile;
 		
-		RealTimeInfo cRealTimeInfo = new RealTimeInfo();
-		int retGetDividendPayout = DataWebStockRealTimeInfo.getRealTimeInfo(id, cRealTimeInfo);
-		if(0 != retGetDividendPayout) return -20;
-		String curAvailidDate = cRealTimeInfo.date;
-		String curAvailidTime = cRealTimeInfo.time;
+		ResultRealTimeInfo cResultRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfo(id);
+		if(0 != cResultRealTimeInfo.error) return -20;
+		String curAvailidDate = cResultRealTimeInfo.date;
+		String curAvailidTime = cResultRealTimeInfo.time;
 		
 		File cfile =new File(stockDividendPayoutFileName);
 		// System.out.println("updateStocData_DividendPayout:" + id);
-		List<DividendPayout> retList = new ArrayList<DividendPayout>();
-		int ret = DataWebStockDividendPayout.getDividendPayout(id, retList);
-		if(0 == ret)
+		ResultDividendPayout cResultDividendPayout = DataWebStockDividendPayout.getDividendPayout(id);
+		if(0 == cResultDividendPayout.error)
 		{
 			try
 			{
 				FileOutputStream cOutputStream = new FileOutputStream(cfile);
-				for(int i = 0; i < retList.size(); i++)  
+				for(int i = 0; i < cResultDividendPayout.resultList.size(); i++)  
 		        {  
-					DividendPayout cDividendPayout = retList.get(i);
+					DividendPayout cDividendPayout = cResultDividendPayout.resultList.get(i);
 					// System.out.println(cDividendPayout.date); 
 					cOutputStream.write((cDividendPayout.date + ",").getBytes());
 					cOutputStream.write((cDividendPayout.songGu + ",").getBytes());
@@ -284,33 +361,36 @@ public class DataEngineBase {
 		}
 		else
 		{
-			System.out.println("ERROR:" + ret);
+			System.out.println("ERROR:" + cResultDividendPayout.error);
 			return -10;
 		}
 		return 0;
 	}
+	
+	/*
+	 * 下载某只股票日内交易数据到本地
+	 * 返回0为成功
+	 */
 	public static int downloadStockDataDetail(String id, String date) {
 		s_fmt.format("@downloadStockDataDetail stockID(%s) date(%s)\n",id,date);
 		if(0 != mkStocDataDir(id)) return -20;
 		String stockDataDetailFileName = s_DataDir + "/" + id + "/" + date + ".txt";
 		
-		RealTimeInfo cRealTimeInfo = new RealTimeInfo();
-		int retGetDividendPayout = DataWebStockRealTimeInfo.getRealTimeInfo(id, cRealTimeInfo);
-		if(0 != retGetDividendPayout) return -20;
-		String curAvailidDate = cRealTimeInfo.date;
-		String curAvailidTime = cRealTimeInfo.time;
+		ResultRealTimeInfo cResultRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfo(id);
+		if(0 != cResultRealTimeInfo.error) return -20;
+		String curAvailidDate = cResultRealTimeInfo.date;
+		String curAvailidTime = cResultRealTimeInfo.time;
 		
-		List<DayDetailItem> retList = new ArrayList<DayDetailItem>();
-		int ret = DataWebStockDayDetail.getDayDetail(id, date, retList);
-		if(0 == ret)
+		ResultDayDetail cResultDayDetail = DataWebStockDayDetail.getDayDetail(id, date);
+		if(0 == cResultDayDetail.error)
 		{
 			try
 			{
 				File cfile =new File(stockDataDetailFileName);
 				FileOutputStream cOutputStream = new FileOutputStream(cfile);
-				for(int i = 0; i < retList.size(); i++)  
+				for(int i = 0; i < cResultDayDetail.resultList.size(); i++)  
 		        {  
-					DayDetailItem cDayDetailItem = retList.get(i);  
+					DayDetailItem cDayDetailItem = cResultDayDetail.resultList.get(i);  
 //			            System.out.println(cDayDetailItem.time + "," 
 //			            		+ cDayDetailItem.price + "," + cDayDetailItem.volume);  
 					cOutputStream.write((cDayDetailItem.time + ",").getBytes());
@@ -327,7 +407,7 @@ public class DataEngineBase {
 		}
 		else
 		{
-			System.out.println("ERROR:" + ret);
+			System.out.println("ERROR:" + cResultDayDetail.error);
 			return -30;
 		}
 		return 0;
@@ -354,11 +434,33 @@ public class DataEngineBase {
 		}
 		return 0;
 	}
-	public static int getStockBaseData(String id, StockBaseInfo baseData) 
+	
+	/*
+	 * 获取某只股票的基本信息
+	 * 只从本地获取
+	 */
+	public static class ResultStockBaseData
 	{
+		public ResultStockBaseData()
+		{
+			error = 0;
+			stockBaseInfo = new StockBaseInfo();
+		}
+		public int error;
+		public StockBaseInfo stockBaseInfo;
+	}
+	public static ResultStockBaseData getStockBaseData(String id) 
+	{
+		ResultStockBaseData cResultStockBaseData = new ResultStockBaseData();
+		
 		String stockBaseInfoFileName = s_DataDir + "/" + id + "/" + s_BaseInfoFile;
 		File cfile=new File(stockBaseInfoFileName);
-		if(!cfile.exists()) return -10;
+		if(!cfile.exists()) 
+		{
+			cResultStockBaseData.error = -10;
+			return cResultStockBaseData;
+		}
+		
 		try
 		{
 			BufferedReader reader = new BufferedReader(new FileReader(cfile));
@@ -367,11 +469,11 @@ public class DataEngineBase {
                 //System.out.println("line " + line + ": " + tempString);
             	String[] cols = tempString.split(",");
             	
-            	baseData.name = cols[0];
-            	baseData.price = Float.parseFloat(cols[1]);
-            	baseData.allMarketValue = Float.parseFloat(cols[2]);
-            	baseData.circulatedMarketValue = Float.parseFloat(cols[3]);
-            	baseData.peRatio = Float.parseFloat(cols[4]);
+            	cResultStockBaseData.stockBaseInfo.name = cols[0];
+            	cResultStockBaseData.stockBaseInfo.price = Float.parseFloat(cols[1]);
+            	cResultStockBaseData.stockBaseInfo.allMarketValue = Float.parseFloat(cols[2]);
+            	cResultStockBaseData.stockBaseInfo.circulatedMarketValue = Float.parseFloat(cols[3]);
+            	cResultStockBaseData.stockBaseInfo.peRatio = Float.parseFloat(cols[4]);
 
                 break;
             }
@@ -380,12 +482,14 @@ public class DataEngineBase {
 		catch(Exception e)
 		{
 			System.out.println(e.getMessage()); 
-			return -1;
+			cResultStockBaseData.error = -1;
+			return cResultStockBaseData;
 		}
-		return 0;
+		return cResultStockBaseData;
 	}
 	public static int updateStock(String id)
 	{
+		// 获取当前有效日期，上一个交易日（非周六周日）
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
 		String CurrentDate = df.format(new Date());
 		int curyear = Integer.parseInt(CurrentDate.split("-")[0]);
@@ -401,49 +505,48 @@ public class DataEngineBase {
 		}
 		Date curValiddate = xcal.getTime();
 		String curValiddateStr = df.format(curValiddate);
-		// 当前有效日期，上一个交易日（非周六周日）
 		// System.out.println("CurrentValidDate:" + curValiddateStr);
 		
-		List<DayKData> retListLocal = new ArrayList<DayKData>();
-		int retgetDayKData = DataEngineBase.getDayKData(id, retListLocal);
-		List<DividendPayout> retListLocalDividend = new ArrayList<DividendPayout>();
-		int retgetDividendPayout = DataEngineBase.getDividendPayout(id, retListLocalDividend);
-		
-		if(0 == retgetDayKData 
-			&& 0 == retgetDividendPayout 
-			&& retListLocal.size() != 0 
+		// 获取本地日k数据与分红派息数据
+		ResultDayKData cResultDayKDataLocal = DataEngineBase.getDayKData(id);
+		ResultDividendPayout cResultDividendPayout = DataEngineBase.getDividendPayout(id);
+		if(0 == cResultDayKDataLocal.error 
+			&& 0 == cResultDividendPayout.error 
+			&& cResultDayKDataLocal.resultList.size() != 0 
 			/*&& retListLocalDividend.size() != 0 */)
+		// 本地有日K数据
 		{
-			// 本地有数据
-			DayKData cDayKDataLast = retListLocal.get(retListLocal.size()-1);
-			String localDataLastDate = cDayKDataLast.date; // 本地数据最后日期
+			// 获取本地数据最后日期
+			DayKData cDayKDataLast = cResultDayKDataLocal.resultList.get(cResultDayKDataLocal.resultList.size()-1);
+			String localDataLastDate = cDayKDataLast.date; 
 			//System.out.println("localDataLastDate:" + localDataLastDate);
 			
 			// 如果当前日期大于本地最后数据日期，需要继续检测
 			if(curValiddateStr.compareTo(localDataLastDate) > 0)
 			{
-				RealTimeInfo cRealTimeInfo = new RealTimeInfo();
-				int retgetRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfoMore(id, cRealTimeInfo);
-				if(0 == retgetRealTimeInfo)
+				// 获取当前更多实时信息
+				ResultRealTimeInfoMore cResultRealTimeInfoMore = DataWebStockRealTimeInfo.getRealTimeInfoMore(id);
+				if(0 == cResultRealTimeInfoMore.error)
 				{
-					// save basedata
+					// 保存股票基本信息
 					StockBaseInfo cStockBaseData = new StockBaseInfo();
-					cStockBaseData.name = cRealTimeInfo.name;
-					cStockBaseData.price = cRealTimeInfo.curPrice;
-					cStockBaseData.allMarketValue = cRealTimeInfo.allMarketValue;
-					cStockBaseData.circulatedMarketValue = cRealTimeInfo.circulatedMarketValue;
-					cStockBaseData.peRatio = cRealTimeInfo.peRatio;
+					cStockBaseData.name = cResultRealTimeInfoMore.name;
+					cStockBaseData.price = cResultRealTimeInfoMore.curPrice;
+					cStockBaseData.allMarketValue = cResultRealTimeInfoMore.allMarketValue;
+					cStockBaseData.circulatedMarketValue = cResultRealTimeInfoMore.circulatedMarketValue;
+					cStockBaseData.peRatio = cResultRealTimeInfoMore.peRatio;
 					saveStockBaseData(id, cStockBaseData);
 					
-					String webValidLastDate = cRealTimeInfo.date;
-					if(cRealTimeInfo.time.compareTo("15:00:00") < 0)
+					// 当前时间在收盘之前，网络数据有效日期为前一天（非周六周日）
+					String webValidLastDate = cResultRealTimeInfoMore.date;
+					if(cResultRealTimeInfoMore.time.compareTo("15:00:00") < 0)
 					{
-						int year = Integer.parseInt(cRealTimeInfo.date.split("-")[0]);
-						int month = Integer.parseInt(cRealTimeInfo.date.split("-")[1]);
-						int day = Integer.parseInt(cRealTimeInfo.date.split("-")[2]);
-						int hour = Integer.parseInt(cRealTimeInfo.time.split(":")[0]);
-						int min = Integer.parseInt(cRealTimeInfo.time.split(":")[1]);
-						int sec = Integer.parseInt(cRealTimeInfo.time.split(":")[2]);
+						int year = Integer.parseInt(cResultRealTimeInfoMore.date.split("-")[0]);
+						int month = Integer.parseInt(cResultRealTimeInfoMore.date.split("-")[1]);
+						int day = Integer.parseInt(cResultRealTimeInfoMore.date.split("-")[2]);
+						int hour = Integer.parseInt(cResultRealTimeInfoMore.time.split(":")[0]);
+						int min = Integer.parseInt(cResultRealTimeInfoMore.time.split(":")[1]);
+						int sec = Integer.parseInt(cResultRealTimeInfoMore.time.split(":")[2]);
 						Calendar cal0 = Calendar.getInstance();
 						cal0.set(year, month-1, day, hour, min, sec);
 						// 获取上一个非周末的日期
@@ -460,9 +563,10 @@ public class DataEngineBase {
 					}
 					// System.out.println("webValidLastDate:" + webValidLastDate);
 					
+					// 网络数据有效日期比本地数据新，需要追加更新
 					if(webValidLastDate.compareTo(cDayKDataLast.date) > 0)
 					{
-						// 需要追加更新
+						// 计算从网络需要获取哪一段时间数据
 						int year = Integer.parseInt(localDataLastDate.split("-")[0]);
 						int month = Integer.parseInt(localDataLastDate.split("-")[1]);
 						int day = Integer.parseInt(localDataLastDate.split("-")[2]);
@@ -475,22 +579,26 @@ public class DataEngineBase {
 						//System.out.println("fromDateStr:" + fromDateStr);
 						//System.out.println("toDateStr:" + toDateStr);
 						
-						List<DayKData> retListMore = new ArrayList<DayKData>();
-						int retgetDayKDataMore = DataWebStockDayK.getDayKData(id, fromDateStr, toDateStr, retListMore);
-						if(0 == retgetDayKDataMore)
+						// 获取网络日K数据
+						ResultDayKData cResultDayKDataMore = DataWebStockDayK.getDayKData(id, fromDateStr, toDateStr);
+						if(0 == cResultDayKDataMore.error)
+						// 新增日K数据获取成功
 						{
-							for(int i = 0; i < retListMore.size(); i++)  
+							// 向本地数据列表中追加新的更新数据
+							for(int i = 0; i < cResultDayKDataMore.resultList.size(); i++)  
 					        {  
-								DayKData cDayKData = retListMore.get(i);  
-								retListLocal.add(cDayKData);
+								DayKData cDayKData = cResultDayKDataMore.resultList.get(i);  
+								cResultDayKDataLocal.resultList.add(cDayKData);
 					        } 
-							int retsetDayKData = DataEngineBase.setDayKData(id, retListLocal);
+							// 追加后的本地列表日K数据保存至本地
+							int retsetDayKData = DataEngineBase.saveDayKData(id, cResultDayKDataLocal.resultList);
 							if(0 == retsetDayKData)
+							// 保存成功
 							{
 								// 更新复权因子数据
 								if(0 == DataEngineBase.downloadStockDividendPayout(id))
 									// 追加成功
-									return retListMore.size();
+									return cResultDayKDataMore.resultList.size();
 								else
 									// 更新复权因子失败
 									return -80;
@@ -527,36 +635,34 @@ public class DataEngineBase {
 			}
 		}
 		else
+		// 本地没有数据，需要试图重新下载
 		{
-			// 本地没有数据，需要试图重新下载
+			// 下载日K，分红派息，基本信息
 			int retdownloadStockDayk =  DataEngineBase.downloadStockDayk(id);
 			int retdownloadStockDividendPayout =  DataEngineBase.downloadStockDividendPayout(id);
-			RealTimeInfo cRealTimeInfo = new RealTimeInfo();
-			int retgetRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfoMore(id, cRealTimeInfo);
+			int retdownloadBaseInfo =  DataEngineBase.downloadBaseInfo(id);
 			if(0 == retdownloadStockDayk 
 					&& 0 == retdownloadStockDividendPayout 
-					&& 0 == retgetRealTimeInfo)
+					&& 0 == retdownloadBaseInfo)
+			// 下载日K，分红派息，基本信息 成功
 			{
-				StockBaseInfo cStockBaseData = new StockBaseInfo();
-				cStockBaseData.name = cRealTimeInfo.name;
-				cStockBaseData.price = cRealTimeInfo.curPrice;
-				cStockBaseData.allMarketValue = cRealTimeInfo.allMarketValue;
-				cStockBaseData.circulatedMarketValue = cRealTimeInfo.circulatedMarketValue;
-				cStockBaseData.peRatio = cRealTimeInfo.peRatio;
-				saveStockBaseData(id, cStockBaseData);
-				
-				retgetDayKData = DataEngineBase.getDayKData(id, retListLocal);
-				
-				//最新数据下载成功
-				return retListLocal.size();
+				ResultDayKData cResultDayKDataLocalNew = DataEngineBase.getDayKData(id);
+				if(cResultDayKDataLocalNew.error == 0)
+				{
+					//最新数据下载成功返回天数
+					return cResultDayKDataLocalNew.resultList.size();
+				}
+				else
+				{
+					return -23;
+				}
 			}
 			else
+			// 下载日K，分红派息，基本信息 失败
 			{
-				// 重新下载失败
 				return -10;
 			}
 		}
-		//return -100;
 	}
 	
 	/*
@@ -588,8 +694,20 @@ public class DataEngineBase {
 	 * 返回null失败
 	 * 读取成功返回日期 e.g: 2016-01-01
 	 */
-	public static String getUpdatedStocksDate()
+	public static class ResultUpdatedStocksDate
 	{
+		public ResultUpdatedStocksDate()
+		{
+			error = 0;
+			date = "0000-00-00";
+		}
+		public int error;
+		public String date;
+	}
+	public static ResultUpdatedStocksDate getUpdatedStocksDate()
+	{
+		ResultUpdatedStocksDate cResultUpdatedStocksDate = new ResultUpdatedStocksDate();
+		
 		String dateStr = null;
 		String updateFinishFile = s_DataDir + "/" + s_updateFinish;
 		File cfile =new File(updateFinishFile);
@@ -602,15 +720,16 @@ public class DataEngineBase {
             lineTxt = lineTxt.trim().replace("\n", "");
             if(lineTxt.length() == "0000-00-00".length())
             {
-            	dateStr = lineTxt;
+            	cResultUpdatedStocksDate.date = lineTxt;
             }
             read.close();
 		}
 		catch(Exception e)
 		{
 			System.out.println(e.getMessage()); 
+			cResultUpdatedStocksDate.error = -1;
 		}
-		return dateStr;
+		return cResultUpdatedStocksDate;
 	}
 	
 	/*

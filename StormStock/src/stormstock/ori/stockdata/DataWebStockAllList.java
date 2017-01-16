@@ -22,46 +22,49 @@ import org.htmlparser.filters.TagNameFilter;
 import org.htmlparser.util.NodeIterator;
 import org.htmlparser.util.NodeList; 
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import stormstock.ori.stockdata.DataWebStockAllList.ResultAllStockList.StockItem;
 
-import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
-import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
-import stormstock.ori.stockdata.DataWebStockDividendPayout.DividendPayout;
 
 public class DataWebStockAllList {
-	
-	public static Random random = new Random();
-	
-	public static class StockItem
-	{
-		public StockItem(){}
-		
-		public StockItem(String in_id)
-		{
-			id = in_id;
-		}
-		public StockItem(String in_id, String in_name)
-		{
-			id = in_id;
-			name = in_name;
-		}
-		public StockItem(StockItem cStockItem)
-		{
-			name = cStockItem.name;
-			id = cStockItem.id;
-		}
-		public String name;
-		public String id;
-	}
 	/*
 	 * 从网络中获得所有股票ID与名字
 	 * 返回0为成功，其他值为失败
 	 */
-	public static int getAllStockList(List<StockItem> out_list)
+	public static class ResultAllStockList
 	{
-		if(out_list.size() > 0) return -20;
+		public static class StockItem
+		{
+			public StockItem(){}
+			
+			public StockItem(String in_id)
+			{
+				id = in_id;
+			}
+			public StockItem(String in_id, String in_name)
+			{
+				id = in_id;
+				name = in_name;
+			}
+			public StockItem(StockItem cStockItem)
+			{
+				name = cStockItem.name;
+				id = cStockItem.id;
+			}
+			public String name;
+			public String id;
+		}
 		
+		public ResultAllStockList()
+		{
+			error = 0;
+			resultList = new ArrayList<StockItem>();
+		}
+		public int error;
+		public List<StockItem> resultList;
+	}
+	public static ResultAllStockList getAllStockList()
+	{
+		ResultAllStockList cResultAllStockList = new ResultAllStockList();
 		try{  
 			String allStockListUrl = "http://quote.eastmoney.com/stocklist.html";
 //            URL url = new URL(allStockListUrl);  
@@ -124,20 +127,23 @@ public class DataWebStockAllList {
                  		StockItem cStockItem = new StockItem();
                  		cStockItem.name = name;
                  		cStockItem.id = id;
-                 		out_list.add(cStockItem);
+                 		cResultAllStockList.resultList.add(cStockItem);
              		}
              	}
              }
              // System.out.println(allCount); 
              
-             if(out_list.size() <= 0) return -30;
+             if(cResultAllStockList.resultList.size() <= 0) 
+        	 {
+            	 cResultAllStockList.error = -30;
+        	 }
 
         }catch (Exception e) {  
         	System.out.println("Exception[WebStockAllList]:" + e.getMessage()); 
             // TODO: handle exception  
-        	return -1;
+        	cResultAllStockList.error = -1;
         }  
-		return 0;
+		return cResultAllStockList;
 	}
 
 	public static List<StockItem> getRandomStock(int count)
@@ -145,13 +151,12 @@ public class DataWebStockAllList {
 		List<StockItem> retList = new ArrayList<StockItem>();
 		if(0 != count)
 		{
-			List<StockItem> retListAll = new ArrayList<StockItem>();
-			int ret = DataWebStockAllList.getAllStockList(retListAll);
-			if(0 == ret)
+			ResultAllStockList cResultAllStockList = DataWebStockAllList.getAllStockList();
+			if(0 == cResultAllStockList.error)
 			{
 				for(int i = 0; i < count; i++)  
 		        {  
-					StockItem cStockItem = popRandomStock(retListAll);
+					StockItem cStockItem = popRandomStock(cResultAllStockList.resultList);
 					retList.add(cStockItem);
 		        } 
 			}
@@ -201,4 +206,5 @@ public class DataWebStockAllList {
 //        fw.close();
 //    }
 
+	public static Random random = new Random();
 }
