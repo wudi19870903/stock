@@ -10,9 +10,10 @@ import stormstock.fw.base.BUtilsDateTime;
 import stormstock.fw.tranbase.account.AccountAccessor;
 import stormstock.ori.stockdata.DataEngine;
 import stormstock.ori.stockdata.DataEngineBase;
+import stormstock.ori.stockdata.DataEngineBase.ResultUpdatedStocksDate;
 import stormstock.ori.stockdata.DataWebStockRealTimeInfo;
 import stormstock.ori.stockdata.DataEngine.ExKData;
-import stormstock.ori.stockdata.DataEngineBase.StockBaseInfo;
+import stormstock.ori.stockdata.CommonDef.*;
 
 /*
  * 注意：取得的数据均为前复权价格
@@ -43,7 +44,12 @@ public class StockDataIF {
 		if(null == m_localLatestDate)
 		{
 			BLog.output("STOCKDATA","DataEngine.getUpdatedStocksDate\n");
-			m_localLatestDate =  DataEngine.getUpdatedStocksDate();
+			ResultUpdatedStocksDate cResultUpdatedStocksDate = DataEngine.getUpdatedStocksDate();
+			if(0 == cResultUpdatedStocksDate.error)
+			{
+				m_localLatestDate = cResultUpdatedStocksDate.date;
+			}
+			
 		}
 		
 		if(m_localLatestDate.compareTo(dateStr) >= 0)

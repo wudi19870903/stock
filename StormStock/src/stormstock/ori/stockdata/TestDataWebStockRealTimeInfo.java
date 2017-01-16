@@ -11,10 +11,10 @@ public class TestDataWebStockRealTimeInfo {
 			ResultRealTimeInfo cResultRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfo("600030");
 			if(0 == cResultRealTimeInfo.error)
 			{ 
-				System.out.println(cResultRealTimeInfo.name);
-				System.out.println(cResultRealTimeInfo.curPrice);
-				System.out.println(cResultRealTimeInfo.date);
-		        System.out.println(cResultRealTimeInfo.time);
+				System.out.println(cResultRealTimeInfo.realTimeInfo.name);
+				System.out.println(cResultRealTimeInfo.realTimeInfo.curPrice);
+				System.out.println(cResultRealTimeInfo.realTimeInfo.date);
+		        System.out.println(cResultRealTimeInfo.realTimeInfo.time);
 			}
 			else
 			{
@@ -26,13 +26,13 @@ public class TestDataWebStockRealTimeInfo {
 			ResultRealTimeInfoMore cResultRealTimeInfoMore = DataWebStockRealTimeInfo.getRealTimeInfoMore("300028");
 			if(0 == cResultRealTimeInfoMore.error)
 			{ 
-				System.out.println(cResultRealTimeInfoMore.name);
-				System.out.println(cResultRealTimeInfoMore.curPrice);
-				System.out.println(cResultRealTimeInfoMore.allMarketValue);
-				System.out.println(cResultRealTimeInfoMore.circulatedMarketValue);
-				System.out.println(cResultRealTimeInfoMore.peRatio);
-				System.out.println(cResultRealTimeInfoMore.date);
-				System.out.println(cResultRealTimeInfoMore.time);
+				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.name);
+				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.curPrice);
+				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.allMarketValue);
+				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.circulatedMarketValue);
+				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.peRatio);
+				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.date);
+				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.time);
 			}
 			else
 			{

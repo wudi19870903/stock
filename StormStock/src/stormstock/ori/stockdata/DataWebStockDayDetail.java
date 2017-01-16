@@ -19,7 +19,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import stormstock.ori.stockdata.DataWebStockDayDetail.ResultDayDetail.DayDetailItem;
+import stormstock.ori.stockdata.CommonDef.DayDetailItem;
 
 public class DataWebStockDayDetail {
 	/*
@@ -28,18 +28,6 @@ public class DataWebStockDayDetail {
 	 */
 	public static class ResultDayDetail
 	{
-		public static class DayDetailItem implements Comparable
-		{
-			public String time;
-			public float price;
-			public float volume; // µ•Œª  ÷
-			@Override
-			public int compareTo(Object o) {
-				// TODO Auto-generated method stub
-				DayDetailItem sdto = (DayDetailItem)o;
-			    return this.time.compareTo(sdto.time);
-			}
-		}
 		public ResultDayDetail()
 		{
 			error = 0;

@@ -3,8 +3,8 @@ package stormstock.ori.stockdata;
 import java.util.ArrayList;
 import java.util.List;
 
+import stormstock.ori.stockdata.CommonDef.*;
 import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout;
-import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout.DividendPayout;
 
 public class TestDataWebStockDividendPayout {
 

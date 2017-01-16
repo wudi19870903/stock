@@ -3,7 +3,8 @@ package stormstock.ori.stockdata;
 import java.util.ArrayList;
 import java.util.List;
 
-import stormstock.ori.stockdata.DataWebStockDayDetail.ResultDayDetail.DayDetailItem;
+import stormstock.ori.stockdata.CommonDef.*;
+
 import stormstock.ori.stockdata.DataWebStockDayDetail.ResultDayDetail;
 
 public class TestDataWebStockDayDetail {

@@ -25,7 +25,8 @@ import org.htmlparser.util.NodeIterator;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.visitors.HtmlPage;
 
-import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout.DividendPayout;
+import stormstock.ori.stockdata.CommonDef.DividendPayout;
+
 
 public class DataWebStockDividendPayout {
 	/*
@@ -34,19 +35,6 @@ public class DataWebStockDividendPayout {
 	 */
 	public static class ResultDividendPayout
 	{
-		public static class DividendPayout implements Comparable
-		{
-			public String date;
-			public float songGu;
-			public float zhuanGu;
-			public float paiXi;
-			@Override
-			public int compareTo(Object o) {
-				// TODO Auto-generated method stub
-				DividendPayout sdto = (DividendPayout)o;
-			    return this.date.compareTo(sdto.date);
-			}
-		}
 		public ResultDividendPayout()
 		{
 			error = 0;

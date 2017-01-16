@@ -21,8 +21,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-
-import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData.DayKData;
+import stormstock.ori.stockdata.CommonDef.*;
 
 public class DataWebStockDayK {
 	/*
@@ -32,22 +31,6 @@ public class DataWebStockDayK {
 	 */
 	public static class ResultDayKData
 	{
-		public static class DayKData implements Comparable
-		{
-			// 2015-09-18
-			public String date;
-			public float open;
-			public float close;
-			public float low;
-			public float high;
-			public float volume;
-			@Override
-			public int compareTo(Object arg0) {
-				// TODO Auto-generated method stub
-				DayKData sdto = (DayKData)arg0;
-			    return this.date.compareTo(sdto.date);
-			}
-		}
 		public ResultDayKData()
 		{
 			error = 0;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData;
-import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData.DayKData;
+import stormstock.ori.stockdata.CommonDef.*;
 
 public class TestDataWebStockDayK {
 

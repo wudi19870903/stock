@@ -13,39 +13,31 @@ import org.htmlparser.Parser;
 import org.htmlparser.filters.TagNameFilter;
 import org.htmlparser.util.NodeList;
 
+import stormstock.ori.stockdata.CommonDef.*;
+
 
 public class DataWebStockRealTimeInfo {
-	public static class ResultRealTimeInfo implements Comparable
+	
+	public static class ResultRealTimeInfo
 	{
-		public int error;
-		
-		public String name;
-		public String date;
-		public String time;
-		public float curPrice;
-		
-		@Override
-		public int compareTo(Object o) {
-			// TODO Auto-generated method stub
-			ResultRealTimeInfo sdto = (ResultRealTimeInfo)o;
-			int iCheck1 = this.date.compareTo(sdto.date);
-			if(0 == iCheck1)
-			{
-				int iCheck2 = this.time.compareTo(sdto.time);
-				return iCheck2;
-			}
-			else
-			{
-				return iCheck1;
-			}
+		public ResultRealTimeInfo()
+		{
+			error = 0;
+			realTimeInfo = new RealTimeInfo();
 		}
+		public int error;
+		public RealTimeInfo realTimeInfo;
 	}
 	
-	public static class ResultRealTimeInfoMore extends ResultRealTimeInfo
+	public static class ResultRealTimeInfoMore
 	{
-		public float allMarketValue; //总市值
-		public float circulatedMarketValue; // 流通市值
-		public float peRatio; //市盈率
+		public ResultRealTimeInfoMore()
+		{
+			error = 0;
+			realTimeInfoMore = new RealTimeInfoMore();
+		}
+		public int error;
+		public RealTimeInfoMore realTimeInfoMore;
 	}
 	
 	/*
@@ -94,11 +86,11 @@ public class DataWebStockRealTimeInfo {
 			String validdata = cells[lenCells - 2];
 			//System.out.println(validdata);     
 			String[] cols = validdata.split(",");
-			cResultRealTimeInfo.name = cols[0];
-			cResultRealTimeInfo.curPrice = Float.parseFloat(cols[3]);
-			cResultRealTimeInfo.date = cols[30];
-			cResultRealTimeInfo.time = cols[31];
-			if(cResultRealTimeInfo.date.length() < 2 || cResultRealTimeInfo.name.length() < 2)
+			cResultRealTimeInfo.realTimeInfo.name = cols[0];
+			cResultRealTimeInfo.realTimeInfo.curPrice = Float.parseFloat(cols[3]);
+			cResultRealTimeInfo.realTimeInfo.date = cols[30];
+			cResultRealTimeInfo.realTimeInfo.time = cols[31];
+			if(cResultRealTimeInfo.realTimeInfo.date.length() < 2 || cResultRealTimeInfo.realTimeInfo.name.length() < 2)
 			{
 				System.out.println("Exception[DataWebStockRealTimeInfo]: invalid data"); 
 				cResultRealTimeInfo.error = -2;
@@ -129,10 +121,10 @@ public class DataWebStockRealTimeInfo {
 			return cResultRealTimeInfoMore;
 		}
 		
-		cResultRealTimeInfoMore.name = cResultRealTimeInfoBase.name;
-		cResultRealTimeInfoMore.date = cResultRealTimeInfoBase.date;
-		cResultRealTimeInfoMore.time = cResultRealTimeInfoBase.time;
-		cResultRealTimeInfoMore.curPrice = cResultRealTimeInfoBase.curPrice;
+		cResultRealTimeInfoMore.realTimeInfoMore.name = cResultRealTimeInfoBase.realTimeInfo.name;
+		cResultRealTimeInfoMore.realTimeInfoMore.date = cResultRealTimeInfoBase.realTimeInfo.date;
+		cResultRealTimeInfoMore.realTimeInfoMore.time = cResultRealTimeInfoBase.realTimeInfo.time;
+		cResultRealTimeInfoMore.realTimeInfoMore.curPrice = cResultRealTimeInfoBase.realTimeInfo.curPrice;
 		
 		
 		// e.g http://qt.gtimg.cn/q=sz000858
@@ -176,12 +168,12 @@ public class DataWebStockRealTimeInfo {
 //			{
 //				System.out.println(cells[i]);
 //			}
-			cResultRealTimeInfoMore.allMarketValue = Float.parseFloat(cells[45]); //总市值
-			cResultRealTimeInfoMore.circulatedMarketValue = Float.parseFloat(cells[44]); // 流通市值
+			cResultRealTimeInfoMore.realTimeInfoMore.allMarketValue = Float.parseFloat(cells[45]); //总市值
+			cResultRealTimeInfoMore.realTimeInfoMore.circulatedMarketValue = Float.parseFloat(cells[44]); // 流通市值
 			if(cells[39].length() != 0)
-				cResultRealTimeInfoMore.peRatio = Float.parseFloat(cells[39]); //市盈率
+				cResultRealTimeInfoMore.realTimeInfoMore.peRatio = Float.parseFloat(cells[39]); //市盈率
 			else
-				cResultRealTimeInfoMore.peRatio = 0.0f;
+				cResultRealTimeInfoMore.realTimeInfoMore.peRatio = 0.0f;
 			
         }catch (Exception e) {  
         	System.out.println("Exception[getRealTimeInfoMore]:" + e.getMessage()); 

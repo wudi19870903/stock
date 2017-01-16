@@ -19,40 +19,14 @@ import org.htmlparser.filters.TagNameFilter;
 import org.htmlparser.util.NodeList;
 
 import stormstock.ori.stockdata.DataWebStockDayDetail.ResultDayDetail;
-import stormstock.ori.stockdata.DataWebStockDayDetail.ResultDayDetail.DayDetailItem;
 import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData;
-import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData.DayKData;
 import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout;
-import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout.DividendPayout;
 import stormstock.ori.stockdata.DataWebStockRealTimeInfo.ResultRealTimeInfo;
 import stormstock.ori.stockdata.DataWebStockRealTimeInfo.ResultRealTimeInfoMore;
 
-public class DataEngineBase {
+import stormstock.ori.stockdata.CommonDef.*;
 
-	public static class StockBaseInfo
-	{
-		public String name;
-		public float price; // 元
-		public float allMarketValue; // 亿
-		public float circulatedMarketValue; // 亿
-		public float peRatio;
-		public StockBaseInfo()
-		{
-			name = "";
-			price = 0.0f;
-			allMarketValue = 0.0f;
-			circulatedMarketValue = 0.0f;
-			peRatio = 0.0f;
-		}
-		public void CopyFrom(StockBaseInfo cCopyFromObj)
-		{
-			name = cCopyFromObj.name;
-			price = cCopyFromObj.price;
-			allMarketValue = cCopyFromObj.allMarketValue;
-			circulatedMarketValue = cCopyFromObj.circulatedMarketValue;
-			peRatio = cCopyFromObj.peRatio;
-		}
-	}
+public class DataEngineBase {
 	
 	/*
 	 * 获取某只股票的日K数据
@@ -259,8 +233,8 @@ public class DataEngineBase {
 		
 		ResultRealTimeInfo cResultRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfo(id);
 		if(0 != cResultRealTimeInfo.error) return -20;
-		String curAvailidDate = cResultRealTimeInfo.date;
-		String curAvailidTime = cResultRealTimeInfo.time;
+		String curAvailidDate = cResultRealTimeInfo.realTimeInfo.date;
+		String curAvailidTime = cResultRealTimeInfo.realTimeInfo.time;
 		
 		File cfile =new File(stockDayKFileName);
 		//System.out.println("updateStocData_Dayk:" + id);
@@ -309,11 +283,11 @@ public class DataEngineBase {
 			
 			FileOutputStream cOutputStream = new FileOutputStream(cfile);
 			String s = String.format("%s,%.3f,%.3f,%.3f,%.3f", 
-					cResultRealTimeInfoMore.name, 
-					cResultRealTimeInfoMore.curPrice, 
-					cResultRealTimeInfoMore.allMarketValue, 
-					cResultRealTimeInfoMore.circulatedMarketValue, 
-					cResultRealTimeInfoMore.peRatio);
+					cResultRealTimeInfoMore.realTimeInfoMore.name, 
+					cResultRealTimeInfoMore.realTimeInfoMore.curPrice, 
+					cResultRealTimeInfoMore.realTimeInfoMore.allMarketValue, 
+					cResultRealTimeInfoMore.realTimeInfoMore.circulatedMarketValue, 
+					cResultRealTimeInfoMore.realTimeInfoMore.peRatio);
 			cOutputStream.write(s.getBytes());
 			cOutputStream.close();
 		}
@@ -331,8 +305,8 @@ public class DataEngineBase {
 		
 		ResultRealTimeInfo cResultRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfo(id);
 		if(0 != cResultRealTimeInfo.error) return -20;
-		String curAvailidDate = cResultRealTimeInfo.date;
-		String curAvailidTime = cResultRealTimeInfo.time;
+		String curAvailidDate = cResultRealTimeInfo.realTimeInfo.date;
+		String curAvailidTime = cResultRealTimeInfo.realTimeInfo.time;
 		
 		File cfile =new File(stockDividendPayoutFileName);
 		// System.out.println("updateStocData_DividendPayout:" + id);
@@ -378,8 +352,8 @@ public class DataEngineBase {
 		
 		ResultRealTimeInfo cResultRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfo(id);
 		if(0 != cResultRealTimeInfo.error) return -20;
-		String curAvailidDate = cResultRealTimeInfo.date;
-		String curAvailidTime = cResultRealTimeInfo.time;
+		String curAvailidDate = cResultRealTimeInfo.realTimeInfo.date;
+		String curAvailidTime = cResultRealTimeInfo.realTimeInfo.time;
 		
 		ResultDayDetail cResultDayDetail = DataWebStockDayDetail.getDayDetail(id, date);
 		if(0 == cResultDayDetail.error)
@@ -449,7 +423,7 @@ public class DataEngineBase {
 		public int error;
 		public StockBaseInfo stockBaseInfo;
 	}
-	public static ResultStockBaseData getStockBaseData(String id) 
+	public static ResultStockBaseData getBaseInfo(String id) 
 	{
 		ResultStockBaseData cResultStockBaseData = new ResultStockBaseData();
 		
@@ -530,23 +504,23 @@ public class DataEngineBase {
 				{
 					// 保存股票基本信息
 					StockBaseInfo cStockBaseData = new StockBaseInfo();
-					cStockBaseData.name = cResultRealTimeInfoMore.name;
-					cStockBaseData.price = cResultRealTimeInfoMore.curPrice;
-					cStockBaseData.allMarketValue = cResultRealTimeInfoMore.allMarketValue;
-					cStockBaseData.circulatedMarketValue = cResultRealTimeInfoMore.circulatedMarketValue;
-					cStockBaseData.peRatio = cResultRealTimeInfoMore.peRatio;
+					cStockBaseData.name = cResultRealTimeInfoMore.realTimeInfoMore.name;
+					cStockBaseData.price = cResultRealTimeInfoMore.realTimeInfoMore.curPrice;
+					cStockBaseData.allMarketValue = cResultRealTimeInfoMore.realTimeInfoMore.allMarketValue;
+					cStockBaseData.circulatedMarketValue = cResultRealTimeInfoMore.realTimeInfoMore.circulatedMarketValue;
+					cStockBaseData.peRatio = cResultRealTimeInfoMore.realTimeInfoMore.peRatio;
 					saveStockBaseData(id, cStockBaseData);
 					
 					// 当前时间在收盘之前，网络数据有效日期为前一天（非周六周日）
-					String webValidLastDate = cResultRealTimeInfoMore.date;
-					if(cResultRealTimeInfoMore.time.compareTo("15:00:00") < 0)
+					String webValidLastDate = cResultRealTimeInfoMore.realTimeInfoMore.date;
+					if(cResultRealTimeInfoMore.realTimeInfoMore.time.compareTo("15:00:00") < 0)
 					{
-						int year = Integer.parseInt(cResultRealTimeInfoMore.date.split("-")[0]);
-						int month = Integer.parseInt(cResultRealTimeInfoMore.date.split("-")[1]);
-						int day = Integer.parseInt(cResultRealTimeInfoMore.date.split("-")[2]);
-						int hour = Integer.parseInt(cResultRealTimeInfoMore.time.split(":")[0]);
-						int min = Integer.parseInt(cResultRealTimeInfoMore.time.split(":")[1]);
-						int sec = Integer.parseInt(cResultRealTimeInfoMore.time.split(":")[2]);
+						int year = Integer.parseInt(cResultRealTimeInfoMore.realTimeInfoMore.date.split("-")[0]);
+						int month = Integer.parseInt(cResultRealTimeInfoMore.realTimeInfoMore.date.split("-")[1]);
+						int day = Integer.parseInt(cResultRealTimeInfoMore.realTimeInfoMore.date.split("-")[2]);
+						int hour = Integer.parseInt(cResultRealTimeInfoMore.realTimeInfoMore.time.split(":")[0]);
+						int min = Integer.parseInt(cResultRealTimeInfoMore.realTimeInfoMore.time.split(":")[1]);
+						int sec = Integer.parseInt(cResultRealTimeInfoMore.realTimeInfoMore.time.split(":")[2]);
 						Calendar cal0 = Calendar.getInstance();
 						cal0.set(year, month-1, day, hour, min, sec);
 						// 获取上一个非周末的日期

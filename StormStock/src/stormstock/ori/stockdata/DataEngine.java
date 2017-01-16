@@ -19,14 +19,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import stormstock.ori.stockdata.CommonDef.StockSimpleItem;
 import stormstock.ori.stockdata.DataWebStockAllList.ResultAllStockList;
-import stormstock.ori.stockdata.DataWebStockAllList.ResultAllStockList.StockItem;
 import stormstock.ori.stockdata.DataWebStockDayDetail.ResultDayDetail;
-import stormstock.ori.stockdata.DataWebStockDayDetail.ResultDayDetail.DayDetailItem;
+import stormstock.ori.stockdata.CommonDef.*;
+
 import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData;
-import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData.DayKData;
 import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout;
-import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout.DividendPayout;
 
 
 public class DataEngine extends DataEngineBase
@@ -591,7 +590,7 @@ public class DataEngine extends DataEngineBase
 	{
 		ResultAllStockList cResultAllStockList = new ResultAllStockList();
 		
-		List<StockItem> retListAll = cResultAllStockList.resultList;
+		List<StockSimpleItem> retListAll = cResultAllStockList.resultList;
 			
 		// emu local
 		File root = new File("data");
@@ -609,21 +608,21 @@ public class DataEngine extends DataEngineBase
 					&& (dirName.startsWith("6") || dirName.startsWith("3") || dirName.startsWith("0"))
 						)
 				{
-					StockItem cStockItem = new StockItem();
-					cStockItem.id = dirName;
-					retListAll.add(cStockItem);
+					StockSimpleItem cStockSimpleItem = new StockSimpleItem();
+					cStockSimpleItem.id = dirName;
+					retListAll.add(cStockSimpleItem);
 				}
 				
 			}
 		}
 		return cResultAllStockList;
 	}
-	public static List<StockItem> getLocalRandomStock(int count)
+	public static List<StockSimpleItem> getLocalRandomStock(int count)
 	{
-		List<StockItem> retList = new ArrayList<StockItem>();
+		List<StockSimpleItem> retList = new ArrayList<StockSimpleItem>();
 		if(0 != count)
 		{
-			List<StockItem> retListAll = new ArrayList<StockItem>();
+			List<StockSimpleItem> retListAll = new ArrayList<StockSimpleItem>();
 			
 			// emu local
 			File root = new File("data");
@@ -640,9 +639,9 @@ public class DataEngine extends DataEngineBase
 						&& (dirName.startsWith("6") || dirName.startsWith("3") || dirName.startsWith("0"))
 							)
 					{
-						StockItem cStockItem = new StockItem();
-						cStockItem.id = dirName;
-						retListAll.add(cStockItem);
+						StockSimpleItem cStockSimpleItem = new StockSimpleItem();
+						cStockSimpleItem.id = dirName;
+						retListAll.add(cStockSimpleItem);
 					}
 					
 				}
@@ -652,8 +651,8 @@ public class DataEngine extends DataEngineBase
 			{
 				for(int i = 0; i < count; i++)  
 		        {  
-					StockItem cStockItem = popRandomStock(retListAll);
-					retList.add(cStockItem);
+					StockSimpleItem cStockSimpleItem = popRandomStock(retListAll);
+					retList.add(cStockSimpleItem);
 		        } 
 			}
 		}
@@ -703,18 +702,18 @@ public class DataEngine extends DataEngineBase
 		{
 			for(int i = 0; i < cResultAllStockList.resultList.size(); i++)  
 	        {  
-				StockItem cStockItem = cResultAllStockList.resultList.get(i);  
-	            iRetupdateStock = DataEngineBase.updateStock(cStockItem.id);
+				StockSimpleItem cStockSimpleItem = cResultAllStockList.resultList.get(i);  
+	            iRetupdateStock = DataEngineBase.updateStock(cStockSimpleItem.id);
 	            
 	            ResultDayKData cResultDayKDataQFQ = DataEngine.getDayKDataQianFuQuan(ShangZhiId);
 	            
 	    		if(0 == cResultDayKDataQFQ.error && cResultDayKDataQFQ.resultList.size() > 0)
 	    		{
-	    			fmt.format("update success: %s (%s) item:%d date:%s\n", cStockItem.id, cStockItem.name, iRetupdateStock, newestDate);
+	    			fmt.format("update success: %s (%s) item:%d date:%s\n", cStockSimpleItem.id, cStockSimpleItem.name, iRetupdateStock, newestDate);
 	    		}
 	            else
 	            {
-	            	fmt.format("update ERROR: %s (%s) item:%d date:%s\n", cStockItem.id, cStockItem.name, iRetupdateStock, newestDate);
+	            	fmt.format("update ERROR: %s (%s) item:%d date:%s\n", cStockSimpleItem.id, cStockSimpleItem.name, iRetupdateStock, newestDate);
 	            }
 	            
 	        } 
@@ -728,14 +727,14 @@ public class DataEngine extends DataEngineBase
 		return iRetupdateStock;
 	}
 	
-	private static StockItem popRandomStock(List<StockItem> in_list)
+	private static StockSimpleItem popRandomStock(List<StockSimpleItem> in_list)
 	{
 		if(in_list.size() == 0) return null;
 		
 		int randomInt = Math.abs(random.nextInt());
 		int randomIndex = randomInt % in_list.size();
-		StockItem cStockItem = new  StockItem(in_list.get(randomIndex));
+		StockSimpleItem cStockSimpleItem = new  StockSimpleItem(in_list.get(randomIndex));
 		in_list.remove(randomIndex);
-		return cStockItem;
+		return cStockSimpleItem;
 	}
 }

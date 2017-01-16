@@ -3,11 +3,11 @@ package stormstock.ori.stockdata;
 import java.util.ArrayList;
 import java.util.List;
 
+import stormstock.ori.stockdata.CommonDef.StockSimpleItem;
 import stormstock.ori.stockdata.DataEngine.ExKData;
 import stormstock.ori.stockdata.DataEngine.ResultMinKDataOneDay;
-import stormstock.ori.stockdata.DataWebStockAllList.ResultAllStockList.StockItem;
 import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData;
-import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData.DayKData;
+import stormstock.ori.stockdata.CommonDef.*;
 
 public class TestDataEngin {
 	private static void test_getDayKDataQianFuQuan()
@@ -69,11 +69,11 @@ public class TestDataEngin {
 	}
 	private static void test_getLocalRandomStock()
 	{
-		List<StockItem> retList = DataEngine.getLocalRandomStock(3);
+		List<StockSimpleItem> retList = DataEngine.getLocalRandomStock(3);
 		for(int i = 0; i < retList.size(); i++)  
         {  
-			StockItem cStockItem = retList.get(i);  
-            System.out.println("cStockItem: id:" + cStockItem.id);  
+			StockSimpleItem cStockSimpleItem = retList.get(i);  
+            System.out.println("cStockSimpleItem: id:" + cStockSimpleItem.id);  
         } 
 	}
 	public static void main(String[] args) {

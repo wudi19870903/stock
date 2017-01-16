@@ -5,11 +5,10 @@ import java.util.List;
 
 import stormstock.ori.stockdata.DataEngineBase.ResultUpdatedStocksDate;
 import stormstock.ori.stockdata.DataWebStockDayDetail.ResultDayDetail;
-import stormstock.ori.stockdata.DataWebStockDayDetail.ResultDayDetail.DayDetailItem;
+import stormstock.ori.stockdata.CommonDef.*;
+
 import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData;
-import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData.DayKData;
 import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout;
-import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout.DividendPayout;
 
 
 public class TestDataEngineBase {
