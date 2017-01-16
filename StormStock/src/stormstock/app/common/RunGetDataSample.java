@@ -12,9 +12,6 @@ import stormstock.fw.tranengine_lite.ANLStockDayKData;
 import stormstock.fw.tranengine_lite.ANLDataProvider;
 import stormstock.fw.tranengine_lite.ANLLog;
 import stormstock.ori.stockdata.DataEngine;
-import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
-import stormstock.ori.stockdata.DataWebStockDayDetail.DayDetailItem;
-import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
 
 /*
  * 简单取得股票信息数据的方式

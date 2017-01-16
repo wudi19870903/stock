@@ -10,9 +10,14 @@ import stormstock.fw.base.BUtilsDateTime;
 import stormstock.fw.tranbase.account.AccountAccessor;
 import stormstock.ori.stockdata.DataEngine;
 import stormstock.ori.stockdata.DataEngineBase;
+import stormstock.ori.stockdata.DataEngineBase.ResultStockBaseData;
 import stormstock.ori.stockdata.DataEngineBase.ResultUpdatedStocksDate;
+import stormstock.ori.stockdata.DataWebStockAllList.ResultAllStockList;
+import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData;
 import stormstock.ori.stockdata.DataWebStockRealTimeInfo;
+import stormstock.ori.stockdata.DataWebStockRealTimeInfo.ResultRealTimeInfo;
 import stormstock.ori.stockdata.DataEngine.ExKData;
+import stormstock.ori.stockdata.DataEngine.ResultMinKDataOneDay;
 import stormstock.ori.stockdata.CommonDef.*;
 
 /*
@@ -49,7 +54,10 @@ public class StockDataIF {
 			{
 				m_localLatestDate = cResultUpdatedStocksDate.date;
 			}
-			
+			else
+			{
+				BLog.error("STOCKDATA", "DataEngine.getUpdatedStocksDate error(%d) \n", cResultUpdatedStocksDate.error);
+			}
 		}
 		
 		if(m_localLatestDate.compareTo(dateStr) >= 0)
@@ -74,8 +82,17 @@ public class StockDataIF {
 		if(null == m_localLatestDate)
 		{
 			BLog.output("STOCKDATA","DataEngine.getUpdatedStocksDate\n");
-			m_localLatestDate =  DataEngine.getUpdatedStocksDate();
+			ResultUpdatedStocksDate cResultUpdatedStocksDate = DataEngine.getUpdatedStocksDate();
+			if(0 == cResultUpdatedStocksDate.error)
+			{
+				m_localLatestDate = cResultUpdatedStocksDate.date;
+			}
+			else
+			{
+				BLog.error("STOCKDATA", "DataEngine.getUpdatedStocksDate error(%d) \n", cResultUpdatedStocksDate.error);
+			}
 		}
+		
 		if(m_localLatestDate.compareTo(dateStr) >= 0)
 		{
 			BLog.output("STOCKDATA", "update %s success! (current is newest, local: %s)\n",stockID, m_localLatestDate);
@@ -84,8 +101,7 @@ public class StockDataIF {
 		{
 			// 更新单只股票数据 不影响s_localLatestDate
 			int iUpdateCnt = DataEngine.updateStock(stockID);
-			String updatedDate = DataEngine.getUpdatedStocksDate();
-			BLog.output("STOCKDATA", "update %s success to date: %s (count: %d)\n", stockID, updatedDate, iUpdateCnt);
+			BLog.output("STOCKDATA", "update %s success to date: %s (count: %d)\n", stockID, iUpdateCnt);
 		}
 		return true;
 	}
@@ -105,13 +121,20 @@ public class StockDataIF {
 		{
 			m_cache_allStockID = new ArrayList<String>();
 			
-			List<StockItem> cStockList = DataEngine.getLocalAllStock();
-			
-			for(int i=0; i<cStockList.size();i++)
+			ResultAllStockList cResultAllStockList = DataEngine.getLocalAllStock();
+			if(0 == cResultAllStockList.error)
 			{
-				String stockId = cStockList.get(i).id;
-				m_cache_allStockID.add(stockId);
+				for(int i=0; i<cResultAllStockList.resultList.size();i++)
+				{
+					String stockId = cResultAllStockList.resultList.get(i).id;
+					m_cache_allStockID.add(stockId);
+				}
 			}
+			else
+			{
+				BLog.error("STOCKDATA", "DataEngine.getLocalAllStock error(%d) \n", cResultAllStockList.error);
+			}
+			
 			return m_cache_allStockID;
 		}
 	}
@@ -134,14 +157,20 @@ public class StockDataIF {
 			StockInfo cStockInfo = new StockInfo();
 			cStockInfo.ID = id;
 			
-			StockBaseInfo cStockBaseInfo = new StockBaseInfo();
-			if(0 == DataEngine.getStockBaseData(id, cStockBaseInfo))
+			ResultStockBaseData cResultStockBaseData = DataEngine.getBaseInfo(id);
+			
+			if(0 == cResultStockBaseData.error)
 			{
-				cStockInfo.name = cStockBaseInfo.name;
-				cStockInfo.allMarketValue = cStockBaseInfo.allMarketValue; 
-				cStockInfo.circulatedMarketValue = cStockBaseInfo.circulatedMarketValue; 
-				cStockInfo.peRatio = cStockBaseInfo.peRatio;
+				cStockInfo.name = cResultStockBaseData.stockBaseInfo.name;
+				cStockInfo.allMarketValue = cResultStockBaseData.stockBaseInfo.allMarketValue; 
+				cStockInfo.circulatedMarketValue = cResultStockBaseData.stockBaseInfo.circulatedMarketValue; 
+				cStockInfo.peRatio = cResultStockBaseData.stockBaseInfo.peRatio;
 			}
+			else
+			{
+				BLog.error("STOCKDATA", "DataEngine.getBaseInfo error(%d) \n", cResultStockBaseData.error);
+			}
+			
 			m_cache_latestStockInfo.put(id, cStockInfo);
 		}
 			
@@ -173,14 +202,13 @@ public class StockDataIF {
 			
 			List<StockDay> historyData = new ArrayList<StockDay>();
 			
-			List<DayKData> retList = new ArrayList<DayKData>();
-			int ret = DataEngine.getDayKDataQianFuQuan(stockID, retList);
+			ResultDayKData cResultDayKData = DataEngine.getDayKDataQianFuQuan(stockID);
 			
-			if(0 == ret && retList.size() != 0)
+			if(0 == cResultDayKData.error && cResultDayKData.resultList.size() != 0)
 			{
-				for(int i = 0; i < retList.size(); i++)  
+				for(int i = 0; i < cResultDayKData.resultList.size(); i++)  
 		        {  
-					DayKData cDayKData = retList.get(i);  
+					DayKData cDayKData = cResultDayKData.resultList.get(i);  
 	
 					StockDay cStockDay = new StockDay();
 					cStockDay.set(cDayKData.date, 
@@ -188,6 +216,10 @@ public class StockDataIF {
 					//System.out.println("historyData.add " + cDayKData.date + "," + cDayKData.open + "," + cDayKData.close); 
 					historyData.add(cStockDay);
 		        } 
+			}
+			else
+			{
+				BLog.error("STOCKDATA", "DataEngine.getDayKDataQianFuQuan error(%d) \n", cResultDayKData.error);
 			}
 			
 //			BLog.output("TEST", "DataEngine getDayKDataQianFuQuan(%d)\n", retList.size());
@@ -243,16 +275,16 @@ public class StockDataIF {
 				if(null != cStockDay && date.length() == "0000-00-00".length())
 				{
 					// load new detail data
-					List<ExKData> retList = new ArrayList<ExKData>();
-					int ret = DataEngine.get1MinKDataOneDay(id, date, retList);
-					if(0 == ret && retList.size() != 0)
+					ResultMinKDataOneDay cResultMinKDataOneDay = DataEngine.get1MinKDataOneDay(id, date);
+					
+					if(0 == cResultMinKDataOneDay.error && cResultMinKDataOneDay.exKDataList.size() != 0)
 					{
 						// 由于可能是复权价位，需要重新计算相对价格
 						float baseOpenPrice = cStockDay.open();
-						float actruaFirstPrice = retList.get(0).open;
-						for(int i = 0; i < retList.size(); i++)  
+						float actruaFirstPrice = cResultMinKDataOneDay.exKDataList.get(0).open;
+						for(int i = 0; i < cResultMinKDataOneDay.exKDataList.size(); i++)  
 				        {  
-							ExKData cExKData = retList.get(i);  
+							ExKData cExKData = cResultMinKDataOneDay.exKDataList.get(i);  
 //				            System.out.println(cExKData.datetime + "," 
 //				            		+ cExKData.open + "," + cExKData.close + "," 
 //				            		+ cExKData.low + "," + cExKData.high + "," 
@@ -318,12 +350,12 @@ public class StockDataIF {
 		
 		if(bRealTime)
 		{
-			RealTimeInfo cRealTimeInfo = new RealTimeInfo();
-			int ret = DataWebStockRealTimeInfo.getRealTimeInfo(id, cRealTimeInfo);
-			if(0 == ret)
+			ResultRealTimeInfo cResultRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfo(id);
+		
+			if(0 == cResultRealTimeInfo.error)
 			{
 				out_cStockTime.time = curTime;
-				out_cStockTime.price = cRealTimeInfo.curPrice;
+				out_cStockTime.price = cResultRealTimeInfo.realTimeInfo.curPrice;
 				return true;
 			}
 		}

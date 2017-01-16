@@ -25,9 +25,8 @@ import org.xml.sax.InputSource;
 import stormstock.fw.tranengine_lite.ANLStockDayKData;
 import stormstock.ori.capi.CATHSAccount;
 import stormstock.ori.stockdata.DataWebStockRealTimeInfo;
-import stormstock.ori.stockdata.DataWebStockDayDetail.DayDetailItem;
-import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
-import stormstock.ori.stockdata.DataWebStockRealTimeInfo.RealTimeInfo;
+import stormstock.ori.stockdata.DataWebStockRealTimeInfo.ResultRealTimeInfo;
+import stormstock.ori.stockdata.CommonDef.*;
 
 public class RunAutoRealTimeTransection {
 	public static Random random = new Random();
@@ -92,18 +91,18 @@ public class RunAutoRealTimeTransection {
 		{
 			String logstr = "";
 			//获得实时信息
-			RealTimeInfo cRealTimeInfo = new RealTimeInfo();
-			int ret = DataWebStockRealTimeInfo.getRealTimeInfo(m_stockID, cRealTimeInfo);
-			if(0 == ret)
+			ResultRealTimeInfo cResultRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfo(m_stockID);
+			if(0 == cResultRealTimeInfo.error)
 			{
 				logstr = String.format("    RealTimeInfo %s(%s) %s %.3f\n", 
-						m_stockID, cRealTimeInfo.name, cRealTimeInfo.time, cRealTimeInfo.curPrice);
+						m_stockID, cResultRealTimeInfo.realTimeInfo.name, 
+						cResultRealTimeInfo.realTimeInfo.time, cResultRealTimeInfo.realTimeInfo.curPrice);
 				outputLog(logstr);
-				if((cRealTimeInfo.time.compareTo("09:30:00") > 0 
-						&& cRealTimeInfo.time.compareTo("11:30:00") < 0)
+				if((cResultRealTimeInfo.realTimeInfo.time.compareTo("09:30:00") > 0 
+						&& cResultRealTimeInfo.realTimeInfo.time.compareTo("11:30:00") < 0)
 						||
-						(cRealTimeInfo.time.compareTo("13:00:00") > 0 
-								&& cRealTimeInfo.time.compareTo("15:00:00") < 0)
+						(cResultRealTimeInfo.realTimeInfo.time.compareTo("13:00:00") > 0 
+								&& cResultRealTimeInfo.realTimeInfo.time.compareTo("15:00:00") < 0)
 						)
 				{
 					// 交易时间
@@ -122,8 +121,8 @@ public class RunAutoRealTimeTransection {
 					return -2;
 				}
 				
-				if(cRealTimeInfo.curPrice >= m_hSellPrice
-					|| cRealTimeInfo.curPrice <= m_lSellPrice
+				if(cResultRealTimeInfo.realTimeInfo.curPrice >= m_hSellPrice
+					|| cResultRealTimeInfo.realTimeInfo.curPrice <= m_lSellPrice
 					)
 				{
 					m_iTrySellTimes++;
@@ -134,7 +133,7 @@ public class RunAutoRealTimeTransection {
 						return -3;
 					}
 					//小于1分 当前价 卖出
-					int iSellFlag = sellStock(m_stockID, m_sellAmount, cRealTimeInfo.curPrice-0.01f);
+					int iSellFlag = sellStock(m_stockID, m_sellAmount, cResultRealTimeInfo.realTimeInfo.curPrice-0.01f);
 					if(iSellFlag == 0)
 					{
 						m_bSelledFlag = true;
@@ -249,12 +248,11 @@ public class RunAutoRealTimeTransection {
 	        {  
 				SellStockItem cSellStockItem = retList.get(i);  
 				
-				RealTimeInfo cRealTimeInfo = new RealTimeInfo();
-				int ret = DataWebStockRealTimeInfo.getRealTimeInfo(cSellStockItem.m_stockID, cRealTimeInfo);
-				if(0 == ret)
+				ResultRealTimeInfo cResultRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfo(cSellStockItem.m_stockID);
+				if(0 == cResultRealTimeInfo.error)
 				{
 					logstr = String.format("[SellContent] %s(%s) highSell:%.3f lowSell:%.3f amount:%d\n",
-		            		cSellStockItem.m_stockID, cRealTimeInfo.name, cSellStockItem.m_hSellPrice, cSellStockItem.m_lSellPrice, cSellStockItem.m_sellAmount);
+		            		cSellStockItem.m_stockID, cResultRealTimeInfo.realTimeInfo.name, cSellStockItem.m_hSellPrice, cSellStockItem.m_lSellPrice, cSellStockItem.m_sellAmount);
 					outputLog(logstr);
 				}
 				else

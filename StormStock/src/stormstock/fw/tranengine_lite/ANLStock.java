@@ -5,10 +5,9 @@ import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import stormstock.ori.stockdata.CommonDef.*;
 
 import stormstock.ori.stockdata.DataEngine;
-import stormstock.ori.stockdata.DataEngineBase.StockBaseInfo;
-import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
 
 public class ANLStock {
 	

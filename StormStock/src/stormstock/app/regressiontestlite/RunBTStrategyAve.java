@@ -10,8 +10,9 @@ import java.util.List;
 import stormstock.fw.tranengine_lite.ANLStock;
 import stormstock.fw.tranengine_lite.ANLStockDayKData;
 import stormstock.fw.tranengine_lite.ANLDataProvider;
+import stormstock.ori.stockdata.CommonDef.StockSimpleItem;
 import stormstock.ori.stockdata.DataEngine;
-import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
+import stormstock.ori.stockdata.DataWebStockAllList.ResultAllStockList;
 
 public class RunBTStrategyAve {
 	public static Formatter fmt = new Formatter(System.out);
@@ -390,11 +391,11 @@ public class RunBTStrategyAve {
 		outputLog("Main Begin\n\n");
 		
 		// ¹ÉÆ±ÁÐ±í
-		List<StockItem> cStockList = new ArrayList<StockItem>();
+		List<StockSimpleItem> cStockList = new ArrayList<StockSimpleItem>();
 		//cStockList.add(new StockItem("002054"));
 		if(cStockList.size() <= 0)
 		{
-			cStockList = DataEngine.getLocalAllStock();
+			ResultAllStockList cResultAllStockList = DataEngine.getLocalAllStock();
 		}
 		
 		List<BounceData> bounceList = new ArrayList<BounceData>();

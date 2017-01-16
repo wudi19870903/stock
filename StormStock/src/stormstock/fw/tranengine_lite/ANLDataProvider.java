@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import stormstock.ori.stockdata.DataEngine;
-import stormstock.ori.stockdata.DataEngineBase.StockBaseInfo;
-import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
-import stormstock.ori.stockdata.DataWebStockDayDetail.DayDetailItem;
-import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
-import stormstock.ori.stockdata.DataWebStockRealTimeInfo.RealTimeInfo;
+import stormstock.ori.stockdata.DataEngineBase.ResultStockBaseData;
+import stormstock.ori.stockdata.DataWebStockAllList.ResultAllStockList;
+import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData;
+import stormstock.ori.stockdata.CommonDef.*;
 
 public class ANLDataProvider {
 	// 获得所有股票id列表
@@ -16,11 +15,11 @@ public class ANLDataProvider {
 	{
 		List<String> retList = new ArrayList<String>();
 		
-		List<StockItem> cStockList = DataEngine.getLocalAllStock();
+		ResultAllStockList cResultAllStockList = DataEngine.getLocalAllStock();
 		
-		for(int i=0; i<cStockList.size();i++)
+		for(int i=0; i<cResultAllStockList.resultList.size();i++)
 		{
-			String stockId = cStockList.get(i).id;
+			String stockId = cResultAllStockList.resultList.get(i).id;
 			retList.add(stockId);
 		}
 		
@@ -29,9 +28,8 @@ public class ANLDataProvider {
 	
 	public static ANLStock getANLStock(String id, String fromDate, String endDate)
 	{
-		List<DayKData> retList = new ArrayList<DayKData>();
-		int ret = DataEngine.getDayKDataQianFuQuan(id, retList);
-		if(0 != ret || retList.size() == 0)
+		ResultDayKData cResultDayKData = DataEngine.getDayKDataQianFuQuan(id);
+		if(0 != cResultDayKData.error || cResultDayKData.resultList.size() == 0)
 		{
 			return null;
 		}
@@ -39,11 +37,11 @@ public class ANLDataProvider {
 		ANLStock cANLStock = new ANLStock();
 		cANLStock.id = id;
 		
-		DataEngine.getStockBaseData(id, cANLStock.curBaseInfo);
+		ResultStockBaseData cResultStockBaseData = DataEngine.getBaseInfo(id);
 		
-		for(int i = 0; i < retList.size(); i++)  
+		for(int i = 0; i < cResultDayKData.resultList.size(); i++)  
         {  
-			DayKData cDayKData = retList.get(i);  
+			DayKData cDayKData = cResultDayKData.resultList.get(i);  
 			if(cDayKData.date.compareTo(fromDate) >= 0
 					&& cDayKData.date.compareTo(endDate) <= 0)
 			{

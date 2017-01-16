@@ -4,7 +4,6 @@ import java.util.Formatter;
 import java.util.List;
 
 import stormstock.ori.stockdata.DataEngine;
-import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
 
 public class TestANLDataProvider {
 	public static Formatter fmt = new Formatter(System.out);

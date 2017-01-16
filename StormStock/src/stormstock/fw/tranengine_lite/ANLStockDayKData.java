@@ -5,7 +5,7 @@ import java.util.List;
 
 import stormstock.ori.stockdata.DataEngine;
 import stormstock.ori.stockdata.DataEngine.ExKData;
-import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
+import stormstock.ori.stockdata.DataEngine.ResultMinKDataOneDay;
  
 public class ANLStockDayKData {
 	public class DetailData
@@ -42,16 +42,15 @@ public class ANLStockDayKData {
 		if(date.length() < 6) return -20;
 		
 		// load new detail data
-		List<ExKData> retList = new ArrayList<ExKData>();
-		int ret = DataEngine.get1MinKDataOneDay(ref_ANLStock.id, date, retList);
-		if(0 == ret && retList.size() != 0)
+		ResultMinKDataOneDay cResultMinKDataOneDay = DataEngine.get1MinKDataOneDay(ref_ANLStock.id, date);
+		if(0 == cResultMinKDataOneDay.error && cResultMinKDataOneDay.exKDataList.size() != 0)
 		{
 			// 由于可能是复权价位，需要重新计算相对价格
 			float baseOpenPrice = open;
-			float actruaFirstPrice = retList.get(0).open;
-			for(int i = 0; i < retList.size(); i++)  
+			float actruaFirstPrice = cResultMinKDataOneDay.exKDataList.get(0).open;
+			for(int i = 0; i < cResultMinKDataOneDay.exKDataList.size(); i++)  
 	        {  
-				ExKData cExKData = retList.get(i);  
+				ExKData cExKData = cResultMinKDataOneDay.exKDataList.get(i);  
 //	            System.out.println(cExKData.datetime + "," 
 //	            		+ cExKData.open + "," + cExKData.close + "," 
 //	            		+ cExKData.low + "," + cExKData.high + "," 

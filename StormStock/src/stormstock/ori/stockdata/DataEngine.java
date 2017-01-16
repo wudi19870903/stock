@@ -218,8 +218,8 @@ public class DataEngine extends DataEngineBase
 //            	System.out.println("close:" + close);
 //            	System.out.println("opennext:" + opennext);
 //            	System.out.println("changeper:" + Math.abs(changeper));
-            	cResultDayKData.error = -30;
-            	cResultDayKData.resultList.clear();
+//            	cResultDayKData.error = -30;
+//            	cResultDayKData.resultList.clear();
             	return cResultDayKData;
         	}
         } 

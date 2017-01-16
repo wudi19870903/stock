@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
+import stormstock.ori.stockdata.CommonDef.StockSimpleItem;
 import stormstock.ori.stockdata.DataEngine;
-import stormstock.ori.stockdata.DataWebStockAllList.StockItem;
-import stormstock.ori.stockdata.DataWebStockDayK.DayKData;
+import stormstock.ori.stockdata.DataWebStockAllList.ResultAllStockList;
 import stormstock.fw.tranengine_lite.ANLLog;
 import stormstock.fw.tranengine_lite.ANLStock;
 import stormstock.fw.tranengine_lite.ANLStockDayKData;
@@ -381,17 +381,17 @@ public class RunBTStrategyCD {
 		RunBTStrategyCD objANLPolicy = new RunBTStrategyCD();
 		ANLLog.outputConsole("Main Begin\n\n");
 		// ¹ÉÆ±ÁÐ±í
-		List<StockItem> cStockList = new ArrayList<StockItem>();
-//			cStockList.add(new StockItem("300312"));
-//			cStockList.add(new StockItem("300132"));
-//			cStockList.add(new StockItem("002344"));
-//			cStockList.add(new StockItem("002695"));
-//			cStockList.add(new StockItem("300041"));
-//			cStockList.add(new StockItem("600030"));
+		List<StockSimpleItem> cStockList = new ArrayList<StockSimpleItem>();
+//			cStockList.add(new StockSimpleItem("300312"));
+//			cStockList.add(new StockSimpleItem("300132"));
+//			cStockList.add(new StockSimpleItem("002344"));
+//			cStockList.add(new StockSimpleItem("002695"));
+//			cStockList.add(new StockSimpleItem("300041"));
+//			cStockList.add(new StockSimpleItem("600030"));
 		if(cStockList.size() <= 0)
 		{
 			// cStockList =  DataEngine.getLocalRandomStock(30);
-			cStockList = DataEngine.getLocalAllStock();
+			ResultAllStockList cResultAllStockList = DataEngine.getLocalAllStock();
 		}
 		
 		for(int i=0; i<cStockList.size();i++)
