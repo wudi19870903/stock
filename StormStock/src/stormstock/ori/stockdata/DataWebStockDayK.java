@@ -39,7 +39,11 @@ public class DataWebStockDayK {
 		    return this.date.compareTo(sdto.date);
 		}
 	}
-	// 600001 20080101 20151010
+	/*
+	 * 从网络获取某只股票的日K数据
+	 * 传入999999代表上证指数
+	 * 返回0为成功，其他值为失败
+	 */
 	public static int getDayKData(String id, String begin_date, String end_date, List<DayKData> out_list)
 	{
 		// e.g "http://biz.finance.sina.com.cn/stock/flash_hq/kline_data.php?symbol=sz000002&begin_date=20160101&end_date=21000101"

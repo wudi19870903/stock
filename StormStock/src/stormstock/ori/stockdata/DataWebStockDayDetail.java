@@ -34,7 +34,10 @@ public class DataWebStockDayDetail {
 		    return this.time.compareTo(sdto.time);
 		}
 	}
-	// 300163 2015-02-16
+	/*
+	 * 从网络获取某只股票某日内的交易细节数据
+	 * 返回0为成功，其他值为失败
+	 */
 	public static int getDayDetail(String id, String date, List<DayDetailItem> out_list)
 	{
 		// e.g "http://market.finance.sina.com.cn/downxls.php?date=2015-02-16&symbol=sz300163"

@@ -41,6 +41,10 @@ public class DataWebStockDividendPayout {
 		    return this.date.compareTo(sdto.date);
 		}
 	}
+	/*
+	 * 从网络中获得某只股票的分红派息因子
+	 * 返回0为成功，其他值为失败
+	 */
 	public static int getDividendPayout(String id, List<DividendPayout> out_list)
 	{
 		// e.g http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/300163.phtml

@@ -44,6 +44,10 @@ public class DataWebStockRealTimeInfo {
 			}
 		}
 	}
+	/*
+	 * 从网络获取某只股票当前信息（基本：名字 日期 时间 价格）
+	 * 返回0为成功，其他值为失败
+	 */
 	public static int getRealTimeInfo(String id, RealTimeInfo out_obj)
 	{
 		// e.g http://hq.sinajs.cn/list=sz300163
@@ -101,6 +105,10 @@ public class DataWebStockRealTimeInfo {
         }  
 		return 0;
 	}
+	/*
+	 * 从网络获取某只股票更多当前信息（基本信息，总市值，流通市值，市盈率）
+	 * 返回0为成功，其他值为失败
+	 */
 	public static int getRealTimeInfoMore(String id, RealTimeInfo out_obj)
 	{
 		// get base info

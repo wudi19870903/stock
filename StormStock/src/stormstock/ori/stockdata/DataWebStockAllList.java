@@ -54,6 +54,10 @@ public class DataWebStockAllList {
 		public String name;
 		public String id;
 	}
+	/*
+	 * 从网络中获得所有股票ID与名字
+	 * 返回0为成功，其他值为失败
+	 */
 	public static int getAllStockList(List<StockItem> out_list)
 	{
 		if(out_list.size() > 0) return -20;
