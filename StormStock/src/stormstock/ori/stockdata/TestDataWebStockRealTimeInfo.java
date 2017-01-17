@@ -23,7 +23,7 @@ public class TestDataWebStockRealTimeInfo {
 		}
 		{
 			System.out.println("getRealTimeInfoMore -----------------------------------");
-			ResultRealTimeInfoMore cResultRealTimeInfoMore = DataWebStockRealTimeInfo.getRealTimeInfoMore("300028");
+			ResultRealTimeInfoMore cResultRealTimeInfoMore = DataWebStockRealTimeInfo.getRealTimeInfoMore("999999");
 			if(0 == cResultRealTimeInfoMore.error)
 			{ 
 				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.name);

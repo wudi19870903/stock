@@ -334,14 +334,18 @@ public class StockDataIF {
 					{
 						// 由于可能是复权价位，需要重新计算相对价格
 						float baseOpenPrice = cStockDay.open();
+			            System.out.println("baseOpenPrice:" + baseOpenPrice);  
+			            
 						float actruaFirstPrice = cResultMinKDataOneDay.exKDataList.get(0).open;
+						System.out.println("actruaFirstPrice:" + actruaFirstPrice); 
+						
 						for(int i = 0; i < cResultMinKDataOneDay.exKDataList.size(); i++)  
 				        {  
 							ExKData cExKData = cResultMinKDataOneDay.exKDataList.get(i);  
-//				            System.out.println(cExKData.datetime + "," 
-//				            		+ cExKData.open + "," + cExKData.close + "," 
-//				            		+ cExKData.low + "," + cExKData.high + "," 
-//				            		+ cExKData.volume);  
+				            System.out.println(cExKData.datetime + "," 
+				            		+ cExKData.open + "," + cExKData.close + "," 
+				            		+ cExKData.low + "," + cExKData.high + "," 
+				            		+ cExKData.volume);  
 							
 							float actrualprice = cExKData.close;
 							float changeper = (actrualprice - actruaFirstPrice)/actruaFirstPrice;
@@ -351,8 +355,12 @@ public class StockDataIF {
 							if(cExKData.getTime().compareTo("09:31:00") == 0
 									|| cExKData.getTime().compareTo("13:01:00") == 0)
 							{
+								float actrualprice_open = cExKData.open;
+								float changeper_open = (actrualprice_open - actruaFirstPrice)/actruaFirstPrice;
+								float changedprice_open = baseOpenPrice + baseOpenPrice * changeper_open;
+								
 								StockTime cStockDayDetail = new StockTime();
-								cStockDayDetail.price = baseOpenPrice;
+								cStockDayDetail.price = changedprice_open;
 								String openTime = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(cExKData.getTime(), -1);
 								cStockDayDetail.time = openTime;
 								detailDataList.add(cStockDayDetail);

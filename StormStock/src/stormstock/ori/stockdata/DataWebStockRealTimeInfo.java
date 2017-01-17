@@ -141,7 +141,7 @@ public class DataWebStockRealTimeInfo {
 		else if(id.startsWith("99")) // 上证指数
 		{
 			tmpId = "sh" + "000001"; // 上证指数没有更多基本信息
-			cResultRealTimeInfoMore.error = -3;
+			cResultRealTimeInfoMore.error = 0;
 			return cResultRealTimeInfoMore;
 		}
 		else

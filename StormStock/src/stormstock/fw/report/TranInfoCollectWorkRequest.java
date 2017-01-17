@@ -6,6 +6,7 @@ import java.util.List;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BQThread.BQThreadRequest;
+import stormstock.fw.base.BImageCurve;
 import stormstock.fw.event.ReportAnalysis;
 import stormstock.fw.tranbase.account.AccountControlIF;
 import stormstock.fw.tranbase.account.AccountPublicDef.DeliveryOrder;
@@ -15,7 +16,7 @@ import stormstock.fw.tranbase.com.GlobalUserObj;
 import stormstock.fw.tranbase.stockdata.StockDataIF;
 import stormstock.fw.tranbase.stockdata.StockDay;
 import stormstock.fw.tranbase.stockdata.StockDataIF.ResultHistoryData;
-import stormstock.fw.report.ImageReport.CurvePoint;
+import stormstock.fw.base.BImageCurve.CurvePoint;
 import stormstock.fw.report.InfoCollector.DailyReport;
 
 public class TranInfoCollectWorkRequest extends BQThreadRequest {
@@ -27,7 +28,7 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 		m_cInfoCollector = cInfoCollector;
 		if(m_bCreateReport){
 			String imgfilename = date + "-report.jpg";
-			m_imgReport = new ImageReport(1600,900,imgfilename);
+			m_imgReport = new BImageCurve(1600,900,imgfilename);
 		}
 	}
 
@@ -108,7 +109,7 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 	private String m_time;
 	
 	private boolean m_bCreateReport;
-	private ImageReport m_imgReport;
+	private BImageCurve m_imgReport;
 	
 	private InfoCollector m_cInfoCollector;
 }

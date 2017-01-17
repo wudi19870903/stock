@@ -14,7 +14,7 @@ import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout;
 public class TestDataEngineBase {
 	private static void test_getDayKData()
 	{
-		ResultDayKData cResultDayKData = DataEngineBase.getDayKData("999999");
+		ResultDayKData cResultDayKData = DataEngineBase.getDayKData("000004");
 		if(0 == cResultDayKData.error)
 		{
 			for(int i = 0; i < cResultDayKData.resultList.size(); i++)  
@@ -50,7 +50,7 @@ public class TestDataEngineBase {
 	}
 	private static void test_getDayDetail()
 	{
-		ResultDayDetail cResultDayDetail = DataEngineBase.getDayDetail("300163", "2015-02-16");
+		ResultDayDetail cResultDayDetail = DataEngineBase.getDayDetail("000004", "2016-03-23");
 		if(0 == cResultDayDetail.error)
 		{
 			for(int i = 0; i < cResultDayDetail.resultList.size(); i++)  
@@ -103,7 +103,7 @@ public class TestDataEngineBase {
 	}
 	private static void test_updateStock()
 	{
-		int retupdateStock = DataEngineBase.updateStock("000001");
+		int retupdateStock = DataEngineBase.updateStock("000004");
 		if(retupdateStock < 0)
 		{
 			System.out.println("updateStock ERROR:" + retupdateStock);	
@@ -128,6 +128,6 @@ public class TestDataEngineBase {
 //		test_downloadStockDividendPayout();
 //		test_downloadStockDataDetail();
 //		test_updateStock();
-		test_getUpdatedStocksDate();
+//		test_getUpdatedStocksDate();
 	}
 }

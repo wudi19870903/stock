@@ -425,6 +425,7 @@ public class DataEngine extends DataEngineBase
 		ResultDayDetail cResultDayDetail = getDayDetail(id, date);
 		if(0 == cResultDayDetail.error && cResultDayDetail.resultList.size() != 0)
 		{
+			int iSec092500 = 9*3600 + 25*60 + 0;
 			int iSec093000 = 9*3600 + 30*60 + 0;
 			int iSec130000 = 13*3600 + 0*60 + 0;
             int i1Min = 1*60;
@@ -437,7 +438,7 @@ public class DataEngine extends DataEngineBase
             {
             	if(0 == i)
             	{
-                    iSecBegin = iSec093000 + i1Min*i - i1Min*2;
+                    iSecBegin = iSec092500 + i1Min*i - i1Min*2;
                     iSecEnd = iSec093000 + i1Min*(i+1);
                     iStdSecEnd = iSecEnd;
             	}

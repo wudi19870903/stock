@@ -12,7 +12,7 @@ import stormstock.ori.stockdata.CommonDef.*;
 public class TestDataEngin {
 	private static void test_getDayKDataQianFuQuan()
 	{
-		ResultDayKData cResultDayKData = DataEngine.getDayKDataQianFuQuan("999999");
+		ResultDayKData cResultDayKData = DataEngine.getDayKDataQianFuQuan("000004");
 		if(0 == cResultDayKData.error)
 		{
 			for(int i = 0; i < cResultDayKData.resultList.size(); i++)  
@@ -49,7 +49,7 @@ public class TestDataEngin {
 	}
 	private static void test_get1MinKDataOneDay()
 	{
-		ResultMinKDataOneDay cResultMinKDataOneDay = DataEngine.get1MinKDataOneDay("000920", "2016-08-05");
+		ResultMinKDataOneDay cResultMinKDataOneDay = DataEngine.get1MinKDataOneDay("000004", "2016-10-12");
 		//int ret = get5MinKDataOneDay("600316", "2010-06-28", retList);
 		if(0 == cResultMinKDataOneDay.error)
 		{
@@ -79,7 +79,7 @@ public class TestDataEngin {
 	public static void main(String[] args) {
 		//test_getDayKDataQianFuQuan();
 		//test_get5MinKDataOneDay();
-		//test_get1MinKDataOneDay();
-		test_getLocalRandomStock();
+		test_get1MinKDataOneDay();
+		//test_getLocalRandomStock();
 	}
 }

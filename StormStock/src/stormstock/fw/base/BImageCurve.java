@@ -1,4 +1,4 @@
-package stormstock.fw.report;
+package stormstock.fw.base;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-public class ImageReport {
+public class BImageCurve {
 	public static class CurvePoint
 	{
 		public CurvePoint(){ m_x = 0.0f; m_y = 0.0f;m_name = "";}
@@ -64,6 +64,8 @@ public class ImageReport {
 		List<CurvePoint> poiCurList = new ArrayList<CurvePoint>();
 		int AutoWriteTextSpan = LogicPoiList.size()/5;
 		int iPreSpan = 0;
+		boolean bHighTextOut = false;
+		boolean bLowTextOut = false;
 		for(int i = 0; i < LogicPoiList.size(); i++)  
         {  
 			CurvePoint cPoi = LogicPoiList.get(i); 
@@ -90,12 +92,22 @@ public class ImageReport {
 						textstr = String.format("(%.2f, %.2f%%)", val, rate);
 						iPreSpan = i;
 					}
-					if(0 == Float.compare(max_logic_y, val) || 0 == Float.compare(min_logic_y, val)) // 最高最低带文字
+					if(0 == Float.compare(max_logic_y, val) && !bHighTextOut) // 最高最低带文字
 					{
 						if( iPreSpan+AutoWriteTextSpan-i >=  AutoWriteTextSpan/4 
 								&& LogicPoiList.size()-1-i >= AutoWriteTextSpan/4) // 避免与下一个文字过分重合
 						{
 							textstr = String.format("(%.2f, %.2f%%)", val, rate);
+							bHighTextOut = true;
+						}
+					}
+					if(0 == Float.compare(min_logic_y, val) && !bLowTextOut) // 最高最低带文字
+					{
+						if( iPreSpan+AutoWriteTextSpan-i >=  AutoWriteTextSpan/4 
+								&& LogicPoiList.size()-1-i >= AutoWriteTextSpan/4) // 避免与下一个文字过分重合
+						{
+							textstr = String.format("(%.2f, %.2f%%)", val, rate);
+							bLowTextOut = true;
 						}
 					}
 				}
@@ -246,7 +258,7 @@ public class ImageReport {
         }
 	}
 	
-	public ImageReport(int width, int high, String fileName)
+	public BImageCurve(int width, int high, String fileName)
 	{
 		m_cMultiUnitCurveMap = new HashMap<Integer, List<CurvePoint>>();
 		

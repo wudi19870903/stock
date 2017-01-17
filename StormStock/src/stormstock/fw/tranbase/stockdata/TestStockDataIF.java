@@ -1,9 +1,12 @@
 package stormstock.fw.tranbase.stockdata;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import stormstock.fw.base.BImageCurve;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BUtilsDateTime;
+import stormstock.fw.base.BImageCurve.CurvePoint;
 import stormstock.fw.tranbase.stockdata.StockDataIF.ResultAllStockID;
 import stormstock.fw.tranbase.stockdata.StockDataIF.ResultDayDetail;
 import stormstock.fw.tranbase.stockdata.StockDataIF.ResultHistoryData;
@@ -15,7 +18,7 @@ public class TestStockDataIF {
 	public static void test_updateAllLocalStocks()
 	{
 		StockDataIF cStockDataIF = new StockDataIF();
-		String curDate = "2016-01-01";
+		String curDate = "2016-12-01";
 		while(true)
 		{
 			cStockDataIF.updateAllLocalStocks(curDate);
@@ -89,7 +92,7 @@ public class TestStockDataIF {
 //					cStockDay.date, cStockDay.open, cStockDay.close);
 //		}
 		
-		ResultHistoryData cResultHistoryData = cStockDataIF.getHistoryData("999999");
+		ResultHistoryData cResultHistoryData = cStockDataIF.getHistoryData("000004");
 		List<StockDay> cStockDayShangZhengList = cResultHistoryData.resultList;
 		BLog.output("TEST", "cStockDayShangZhengList(%d)\n", 
 				cStockDayShangZhengList.size());
@@ -103,33 +106,23 @@ public class TestStockDataIF {
 	
 	public static void test_getDayDetail()
 	{ 
+		BImageCurve cBImageCurve = new BImageCurve(1600,900,"test_DayDetail.jpg");
+		List<CurvePoint> PoiList = new ArrayList<CurvePoint>();
+		
 		StockDataIF cStockDataIF = new StockDataIF();
-		String curTime = "09:30:00";
-		while(true)
+		ResultDayDetail cResultDayDetail = cStockDataIF.getDayDetail("000004", "2016-03-23", "09:30:00", "15:00:00");
+		if(0 == cResultDayDetail.error)
 		{
-			ResultDayDetail cResultDayDetail = cStockDataIF.getDayDetail("000001", "2016-07-27", "09:30:00", curTime);
-			List<StockTime> detailData = cResultDayDetail.resultList;
-			
-			String teststr ="";
-			if(null != detailData)
+			for(int i=0; i< cResultDayDetail.resultList.size(); i++)
 			{
-				for(int i=0; i< detailData.size(); i++)
-				{
-					StockTime cStockDayDetail = detailData.get(i);
-					teststr = teststr + String.format("%.2f(%s) ", cStockDayDetail.price,cStockDayDetail.time);
-				}
+				StockTime cStockDayDetail = cResultDayDetail.resultList.get(i);
+				PoiList.add(new CurvePoint(i,cStockDayDetail.price));
+				BLog.output("TEST", "%s %.2f\n", cStockDayDetail.time, cStockDayDetail.price);
 			}
-			
-			BLog.output("TEST", "[->%s] %s \n", 
-					curTime, teststr);
-			
-			
-			if(curTime.compareTo("11:30:00") >= 0)
-			{
-				break;
-			}
-			curTime = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(curTime, 1);
 		}
+		
+		cBImageCurve.addLogicCurveSameRatio(PoiList, 1);
+		cBImageCurve.GenerateImage();
 	}
 	
 	public static void test_getStockTime()
@@ -139,7 +132,7 @@ public class TestStockDataIF {
 		while(true)
 		{
 
-			ResultStockTime cResultStockTime = cStockDataIF.getStockTime("000001", "2016-07-27", curTime);
+			ResultStockTime cResultStockTime = cStockDataIF.getStockTime("000004", "2016-03-23", curTime);
 			
 			if(0 == cResultStockTime.error)
 			{
@@ -160,10 +153,10 @@ public class TestStockDataIF {
 		BLog.config_setTag("STOCKDATA", true);
 		
 		//test_updateAllLocalStocks();
-		// test_getAllStocks();
+		//test_getAllStocks();
 		//test_getLatestStockInfo();
-		// test_getHistoryData();
-		//test_getDayDetail();
+		//test_getHistoryData();
+		test_getDayDetail();
 		//test_getStockTime();
 		
 		BLog.output("TEST", "TestStockDataProvider End\n");

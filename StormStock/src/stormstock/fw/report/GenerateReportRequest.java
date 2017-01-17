@@ -6,8 +6,9 @@ import java.util.List;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BPath;
 import stormstock.fw.base.BQThread.BQThreadRequest;
+import stormstock.fw.base.BImageCurve;
 import stormstock.fw.event.ReportAnalysis;
-import stormstock.fw.report.ImageReport.CurvePoint;
+import stormstock.fw.base.BImageCurve.CurvePoint;
 import stormstock.fw.report.InfoCollector.DailyReport;
 
 public class GenerateReportRequest  extends BQThreadRequest {
@@ -19,7 +20,7 @@ public class GenerateReportRequest  extends BQThreadRequest {
 		m_cInfoCollector = cInfoCollector;
 		String outputDir = BPath.getOutputDir();
 		String imgfilename = outputDir + "\\report.jpg";
-		m_imgReport = new ImageReport(1600,900,imgfilename);
+		m_imgReport = new BImageCurve(1600,900,imgfilename);
 	}
 	
 	@Override
@@ -56,5 +57,5 @@ public class GenerateReportRequest  extends BQThreadRequest {
 	private String m_date;
 	private String m_time;
 	private InfoCollector m_cInfoCollector;
-	private ImageReport m_imgReport;
+	private BImageCurve m_imgReport;
 }
