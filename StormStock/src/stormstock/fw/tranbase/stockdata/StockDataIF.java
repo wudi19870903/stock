@@ -334,18 +334,18 @@ public class StockDataIF {
 					{
 						// 由于可能是复权价位，需要重新计算相对价格
 						float baseOpenPrice = cStockDay.open();
-			            System.out.println("baseOpenPrice:" + baseOpenPrice);  
+			            //System.out.println("baseOpenPrice:" + baseOpenPrice);  
 			            
 						float actruaFirstPrice = cResultMinKDataOneDay.exKDataList.get(0).open;
-						System.out.println("actruaFirstPrice:" + actruaFirstPrice); 
+						//System.out.println("actruaFirstPrice:" + actruaFirstPrice); 
 						
 						for(int i = 0; i < cResultMinKDataOneDay.exKDataList.size(); i++)  
 				        {  
 							ExKData cExKData = cResultMinKDataOneDay.exKDataList.get(i);  
-				            System.out.println(cExKData.datetime + "," 
-				            		+ cExKData.open + "," + cExKData.close + "," 
-				            		+ cExKData.low + "," + cExKData.high + "," 
-				            		+ cExKData.volume);  
+//				            System.out.println(cExKData.datetime + "," 
+//				            		+ cExKData.open + "," + cExKData.close + "," 
+//				            		+ cExKData.low + "," + cExKData.high + "," 
+//				            		+ cExKData.volume);  
 							
 							float actrualprice = cExKData.close;
 							float changeper = (actrualprice - actruaFirstPrice)/actruaFirstPrice;

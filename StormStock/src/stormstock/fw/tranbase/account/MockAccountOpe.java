@@ -190,12 +190,10 @@ public class MockAccountOpe extends IAccountOpe {
 			for(int i = 0; i< m_holdStockList.size(); i++)
 			{
 				HoldStock cHoldStock = m_holdStockList.get(i);
-				StockTime out_cStockTime = new StockTime();
-				
 				ResultStockTime cResultStockTime = GlobalUserObj.getCurStockDataIF().getStockTime(cHoldStock.stockID, date, time);
 				if(0 == cResultStockTime.error)
 				{
-					cHoldStock.curPrice = out_cStockTime.price;
+					cHoldStock.curPrice = cResultStockTime.stockTime.price;
 				}
 			}
 		}

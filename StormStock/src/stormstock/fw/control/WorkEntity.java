@@ -68,15 +68,26 @@ public class WorkEntity {
 		String dateStr = getStartDate();
 		while(true) 
 		{
-			if(isTranDate(dateStr))
+			BLog.output("CTRL", "[%s] ############################################################################## \n", 
+					dateStr);
+			
+			String timestr = "00:00:00";
+			
+			// 09:25确定是否是交易日
+			boolean bIsTranDate = false;
+			timestr = "09:25:00";
+			if(waitForDateTime(dateStr, timestr))
 			{
-				BLog.output("CTRL", "[%s] ############################################################################## \n", 
-						dateStr);
-				
-				String timestr = "00:00:00";
-				
-				// 01:00 账户新交易日初始化
-				timestr = "01:00:00";
+				if(isTranDate(dateStr))
+				{
+					bIsTranDate = true;
+				}
+			}
+			
+			if(bIsTranDate)
+			{
+				// 09:27 账户新交易日初始化
+				timestr = "09:27:00";
 				if(waitForDateTime(dateStr, timestr))
 				{
 					AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
@@ -141,6 +152,10 @@ public class WorkEntity {
 					m_entitySelect.selectStock(dateStr, timestr);
 				}
 			}
+			else
+			{
+				BLog.output("CTRL", "[%s %s] Not transaction date, continue! \n", dateStr, timestr);
+			}
 			
 			// 获取下一日期
 			dateStr = getNextDate();
@@ -186,8 +201,6 @@ public class WorkEntity {
 		}
 		else
 		{
-			BUtilsDateTime.waitDateTime(date, "09:25:00"); //等到时间
-			
 			// 确认今天是否是交易日
 			StockDataIF stockDataIF = GlobalUserObj.getCurStockDataIF();
 			String yesterdayDate = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(m_curDate, -1);
