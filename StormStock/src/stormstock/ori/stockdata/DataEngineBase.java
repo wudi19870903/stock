@@ -711,7 +711,7 @@ public class DataEngineBase {
 	 * 成功返回0
 	 * e.g: data
 	 */
-	private static int mkStocDataDir()
+	public static int mkStocDataDir()
 	{
 		File dataDir =new File(s_DataDir);
 		if  (!dataDir .exists() && !dataDir.isDirectory())      
@@ -733,7 +733,7 @@ public class DataEngineBase {
 	 * 成功返回0
 	 * e.g: data/600001
 	 */
-	private static int mkStocDataDir(String id)
+	public static int mkStocDataDir(String id)
 	{
 		File dataDir =new File(s_DataDir);
 		if  (!dataDir .exists() && !dataDir.isDirectory())      
@@ -760,14 +760,14 @@ public class DataEngineBase {
 	 * 成功返回0
 	 * e.g: data/600001
 	 */
-	private static int rmStockDataDir(String stockID)
+	public static int rmStockDataDir(String stockID)
 	{
 		File stockIdDir =new File(s_DataDir + "/" + stockID);
 		if(!stockIdDir.exists())      
 		{        
 			return 0;
 		}
-		if(stockIdDir.delete())
+		if(0 == help_deleteFile(stockIdDir))
 		{
 			return 0;
 		}
@@ -780,6 +780,33 @@ public class DataEngineBase {
 			return 0;
 		}
 	}
+	private static int help_deleteFile(File file) {  
+	    if (file.exists()) 
+	    {
+	    	
+			if (file.isFile()) 
+			{
+				//是文件  
+			    if(!file.delete()) //删除文件   
+			    {
+			    	return -1;
+			    }
+			} 
+			else if (file.isDirectory()) 
+			{
+				//是一个目录  
+			    File[] files = file.listFiles();//声明目录下所有的文件 files[];  
+			    for (int i = 0;i < files.length;i ++) {//遍历目录下所有的文件  
+			    	help_deleteFile(files[i]);//把每个文件用这个方法进行迭代  
+			    }  
+			    if(!file.delete()) //删除文件夹  
+			    {
+			    	return -1;
+			    }
+			 }  
+	    } 
+	    return 0;
+	}  
 	
 	
 	private static String s_DataDir = "data";

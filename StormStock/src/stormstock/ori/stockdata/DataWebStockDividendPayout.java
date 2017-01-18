@@ -140,6 +140,10 @@ public class DataWebStockDividendPayout {
                     	if(3 == j)
                     		cDividendPayout.paiXi = Float.parseFloat(tmpStr);
                     }
+                    if(tablelist3.size() < 5) // 数据没有
+                    {
+                    	continue;
+                    }
                     if(cDividendPayout.date.replace("-", "").trim().length()==0)
                     {
                     	continue;
@@ -174,13 +178,7 @@ public class DataWebStockDividendPayout {
                     //System.out.println("--------------------------------");
                 }
             }
-              
-            if(cResultDividendPayout.resultList.size() <= 0) 
-            {
-            	cResultDividendPayout.error = -30;
-            	return cResultDividendPayout;
-            }
-            
+
         }catch (Exception e) {  
         	System.out.println("Exception[WebStockDividendPayout]:" + e.getMessage()); 
             // TODO: handle exception  

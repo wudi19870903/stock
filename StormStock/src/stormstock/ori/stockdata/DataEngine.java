@@ -11,6 +11,7 @@ import java.io.RandomAccessFile;
 import java.io.Reader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Formatter;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Random;
 
 import stormstock.ori.stockdata.CommonDef.StockSimpleItem;
+import stormstock.ori.stockdata.DataEngineBase.ResultStockBaseData;
 import stormstock.ori.stockdata.DataWebStockAllList.ResultAllStockList;
 import stormstock.ori.stockdata.DataWebStockDayDetail.ResultDayDetail;
 import stormstock.ori.stockdata.CommonDef.*;
@@ -187,10 +189,14 @@ public class DataEngine extends DataEngineBase
     			if(cDayKData.date.compareTo(cDividendPayout.date) < 0)
     			{
     				// pre days need change
-    				// System.out.println("X  " + cDayKData.date);
+    				
+//    				if(cDayKData.date.compareTo("2015-08-10") > 0 && cDayKData.date.compareTo("2016-01-12") < 0)
+//    					System.out.println("X  " + cDayKData.date);
     				
     				cDayKData.open = ((cDayKData.open*10)-paiXi)/(10 + moreGu);
     				cDayKData.open = (int)(cDayKData.open*1000)/(float)1000.0;
+//    				if(cDayKData.date.compareTo("2015-08-10") > 0 && cDayKData.date.compareTo("2016-01-12") < 0)
+//    					System.out.println("open:" + cDayKData.open);
     				
     				cDayKData.close = ((cDayKData.close*10)-paiXi)/(10 + moreGu);
     				cDayKData.close = (int)(cDayKData.close*1000)/(float)1000.0;
@@ -203,26 +209,6 @@ public class DataEngine extends DataEngineBase
     			}
             }
         }
-		// checking
-		for(int i = 0; i < cResultDayKData.resultList.size()-1; i++)  
-        {  
-			DayKData cDayKData = cResultDayKData.resultList.get(i);  
-			DayKData cDayKDataNext = cResultDayKData.resultList.get(i+1);  
-            float close = cDayKData.close;
-            float opennext = cDayKDataNext.open;
-            float changeper = Math.abs((opennext-close)/close);
-            if(changeper > 0.15) 
-        	{
-//            	System.out.println("Warnning: Check getDayKDataQianFuQuan error! id:" + id
-//            			+ " date:" + cDayKData.date);
-//            	System.out.println("close:" + close);
-//            	System.out.println("opennext:" + opennext);
-//            	System.out.println("changeper:" + Math.abs(changeper));
-//            	cResultDayKData.error = -30;
-//            	cResultDayKData.resultList.clear();
-            	return cResultDayKData;
-        	}
-        } 
 		return cResultDayKData;
 	}
 
@@ -728,11 +714,6 @@ public class DataEngine extends DataEngineBase
 		return iRetupdateStock;
 	}
 	
-	private static boolean checkStockData(String stockID)
-	{
-		return true;
-	}
-	
 	private static StockSimpleItem popRandomStock(List<StockSimpleItem> in_list)
 	{
 		if(in_list.size() == 0) return null;
@@ -742,5 +723,85 @@ public class DataEngine extends DataEngineBase
 		StockSimpleItem cStockSimpleItem = new  StockSimpleItem(in_list.get(randomIndex));
 		in_list.remove(randomIndex);
 		return cStockSimpleItem;
+	}
+	
+	/*
+	 * 校验股票数据,检查股票数据错误
+	 * 成功返回0
+	 */
+	public static int checkStockData(String stockID)
+	{
+		// 检查基本信息
+		ResultStockBaseData cResultStockBaseData = getBaseInfo(stockID);
+		if(0 != cResultStockBaseData.error 
+				|| cResultStockBaseData.stockBaseInfo.name.length() <= 0)
+		{
+			return -1;
+		}
+		
+		// 检查前复权日K
+		ResultDayKData cResultDayKData = getDayKDataQianFuQuan(stockID);
+		if(0 != cResultDayKData.error 
+				|| cResultDayKData.resultList.size() <= 0)
+		{
+			return -2;
+		}
+		
+		// 检查前复权日K涨跌幅度, 近若干天没有问题就算没有问题
+		int iBeginCheck = cResultDayKData.resultList.size() - 2000;
+		if(iBeginCheck<=0) iBeginCheck = 0;
+		for(int i=iBeginCheck; i < cResultDayKData.resultList.size()-1; i++)  
+        {  
+			DayKData cDayKData = cResultDayKData.resultList.get(i);  
+			DayKData cDayKDataNext = cResultDayKData.resultList.get(i+1);  
+            float close = cDayKData.close;
+            float nextHigh = cDayKDataNext.high;
+            float nextLow = cDayKDataNext.low;
+            float fHighper = Math.abs((nextHigh-close)/close);
+            float fLowper = Math.abs((nextLow-close)/close);
+            if(fHighper > 0.11 || fLowper > 0.11) // 涨跌幅度异常
+        	{
+            	// 数据有中间丢失天的情况，排除这种错误
+            	// 获取当前有效日期，下一个交易日（非周六周日）
+            	String CurrentDate = cDayKData.date;
+            	Calendar c = Calendar.getInstance();  
+                Date date = null;  
+                try {  
+                    date = new SimpleDateFormat("yyyy-MM-dd").parse(CurrentDate);  
+                } catch (Exception e) {  
+                    e.printStackTrace();  
+                }  
+                c.setTime(date);  
+                c.add(Calendar.DATE, 1);
+                int cw = c.get(Calendar.DAY_OF_WEEK);
+        		while(cw == 1 || cw == 7)
+        		{
+        			c.add(Calendar.DATE, 1);
+        			cw = c.get(Calendar.DAY_OF_WEEK);
+        		}
+        		Date nextValiddate = c.getTime();
+        		String curValiddateStr = new SimpleDateFormat("yyyy-MM-dd").format(nextValiddate);
+        		
+        		if(cDayKDataNext.date.compareTo(curValiddateStr) > 0)
+        		{
+        			// 此种情况允许错误，中间缺失了几天数据
+//        			System.out.println("Warnning: Check getDayKDataQianFuQuan NG(miss data)! id:" + stockID
+//                			+ " date:" + cDayKData.date);
+        		}
+        		else
+        		{
+        			// 中间未缺失数据，但出现了偏差过大啊，属于错误
+                	System.out.println("Warnning: Check getDayKDataQianFuQuan error! id:" + stockID
+                			+ " date:" + cDayKData.date);
+                	System.out.println("close:" + close);
+                	System.out.println("nextHigh:" + nextHigh);
+                	System.out.println("fHighper:" + fHighper);
+                	System.out.println("nextLow:" + nextLow);
+                	System.out.println("fLowper:" + fLowper);
+                	return -3;
+        		}
+        	}
+        } 
+		return 0;
 	}
 }

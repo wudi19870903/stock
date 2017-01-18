@@ -31,7 +31,7 @@ public class TestDataEngineBase {
 	}
 	private static void test_getDividendPayout()
 	{
-		ResultDividendPayout cResultDividendPayout = DataEngineBase.getDividendPayout("300163");
+		ResultDividendPayout cResultDividendPayout = DataEngineBase.getDividendPayout("300556");
 		if(0 == cResultDividendPayout.error)
 		{
 			for(int i = 0; i < cResultDividendPayout.resultList.size(); i++)  
@@ -103,7 +103,7 @@ public class TestDataEngineBase {
 	}
 	private static void test_updateStock()
 	{
-		int retupdateStock = DataEngineBase.updateStock("000004");
+		int retupdateStock = DataEngineBase.updateStock("300222");
 		if(retupdateStock < 0)
 		{
 			System.out.println("updateStock ERROR:" + retupdateStock);	
@@ -120,11 +120,6 @@ public class TestDataEngineBase {
 		System.out.println("updatedDate:" + cResultUpdatedStocksDate.date);	
 	}
 	
-	private static void test_rmStockDataDir()
-	{
-
-	}
-	
 	public static void main(String[] args) {
 //		test_getDayKData();
 //		test_getDividendPayout();
@@ -134,6 +129,5 @@ public class TestDataEngineBase {
 //		test_downloadStockDataDetail();
 //		test_updateStock();
 //		test_getUpdatedStocksDate();
-		test_rmStockDataDir();
 	}
 }

@@ -8,7 +8,7 @@ public class TestDataWebStockRealTimeInfo {
 	public static void main(String[] args){
 		{
 			System.out.println("getRealTimeInfo -----------------------------------");
-			ResultRealTimeInfo cResultRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfo("600030");
+			ResultRealTimeInfo cResultRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfo("300222");
 			if(0 == cResultRealTimeInfo.error)
 			{ 
 				System.out.println(cResultRealTimeInfo.realTimeInfo.name);
@@ -23,7 +23,7 @@ public class TestDataWebStockRealTimeInfo {
 		}
 		{
 			System.out.println("getRealTimeInfoMore -----------------------------------");
-			ResultRealTimeInfoMore cResultRealTimeInfoMore = DataWebStockRealTimeInfo.getRealTimeInfoMore("999999");
+			ResultRealTimeInfoMore cResultRealTimeInfoMore = DataWebStockRealTimeInfo.getRealTimeInfoMore("300222");
 			if(0 == cResultRealTimeInfoMore.error)
 			{ 
 				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.name);
