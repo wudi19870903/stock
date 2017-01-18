@@ -755,6 +755,32 @@ public class DataEngineBase {
 		}
 	}
 	
+	/*
+	 * 删除股票数据路径
+	 * 成功返回0
+	 * e.g: data/600001
+	 */
+	private static int rmStockDataDir(String stockID)
+	{
+		File stockIdDir =new File(s_DataDir + "/" + stockID);
+		if(!stockIdDir.exists())      
+		{        
+			return 0;
+		}
+		if(stockIdDir.delete())
+		{
+			return 0;
+		}
+		if(stockIdDir.exists())
+		{
+			return -1;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	
 	
 	private static String s_DataDir = "data";
 	private static String s_updateFinish = "updateFinish.txt";

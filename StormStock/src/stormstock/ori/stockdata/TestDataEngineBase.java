@@ -120,6 +120,11 @@ public class TestDataEngineBase {
 		System.out.println("updatedDate:" + cResultUpdatedStocksDate.date);	
 	}
 	
+	private static void test_rmStockDataDir()
+	{
+
+	}
+	
 	public static void main(String[] args) {
 //		test_getDayKData();
 //		test_getDividendPayout();
@@ -129,5 +134,6 @@ public class TestDataEngineBase {
 //		test_downloadStockDataDetail();
 //		test_updateStock();
 //		test_getUpdatedStocksDate();
+		test_rmStockDataDir();
 	}
 }

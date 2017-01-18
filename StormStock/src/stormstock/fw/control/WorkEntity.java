@@ -60,9 +60,9 @@ public class WorkEntity {
 	void work()
 	{
 		// 加载测试集
-		BLog.output("CTRL", "LoadStockIDSet ...\n");
+		BLog.output("CTRL", "work call LoadStockIDSet ...\n");
 		int stockSetSize = LoadStockIDSet();
-		BLog.output("CTRL", "LoadStockIDSet OK stockCnt(%d) \n", stockSetSize);
+		BLog.output("CTRL", "work call LoadStockIDSet OK stockCnt(%d) \n", stockSetSize);
 		
 		// 每天进行循环
 		String dateStr = getStartDate();
@@ -291,30 +291,50 @@ public class WorkEntity {
 		
 		ITranStockSetFilter cTranStockSetFilter = GlobalUserObj.getCurrentTranStockSetFilter();
 		
+		if(null == cTranStockSetFilter)
+		{
+			// 没有股票交易集过滤器错误
+			BLog.error("CTRL", "LoadStockIDSet cTranStockSetFilter is null!\n");
+			return 0;
+		}
+		
 		List<String> cStockIDSet = new ArrayList<String>();
 		
 		ResultAllStockID cResultAllStockID = stockDataIF.getAllStockID();
 		if(0 == cResultAllStockID.error)
 		{
+			BLog.output("CTRL", "LoadStockIDSet AllStock count(%d) \n", cResultAllStockID.resultList.size());
 			for(int i=0; i<cResultAllStockID.resultList.size();i++)
 			{
 				String stockID = cResultAllStockID.resultList.get(i);
 				ResultLatestStockInfo cResultLatestStockInfo = stockDataIF.getLatestStockInfo(stockID);
-				StockInfo cStockInfo = cResultLatestStockInfo.stockInfo;
-
-				if(null != cStockInfo && cTranStockSetFilter.tran_stockset_byLatestStockInfo(cStockInfo))
+				
+				if(0 == cResultLatestStockInfo.error)
 				{
-					cStockIDSet.add(stockID);
+					StockInfo cStockInfo = cResultLatestStockInfo.stockInfo;
+					
+					if(null != cStockInfo && cTranStockSetFilter.tran_stockset_byLatestStockInfo(cStockInfo))
+					{
+						cStockIDSet.add(stockID);
+					}
+				}
+				else
+				{
+					BLog.warning("CTRL", "LoadStockIDSet stockDataIF.getLatestStockInfo stockID(%s)  error(%d)\n", 
+							stockID, cResultLatestStockInfo.error);
 				}
 			}
 		}
 		else
 		{
-			BLog.error("CTRL", "LoadStockIDSet, stockDataIF.getAllStockID error(%d)\n", cResultAllStockID.error);
+			// 调用数据接口获取所有股票ID错误
+			BLog.error("CTRL", "LoadStockIDSet stockDataIF.getAllStockID error(%d)\n", cResultAllStockID.error);
+			return 0;
 		}
 
 		// 股票交易集保存
 		StockObjFlow.setTranStockIDSet(cStockIDSet);
+		BLog.output("CTRL", "LoadStockIDSet TranStockIDSet count(%d) \n", cStockIDSet.size());
 		return cStockIDSet.size();
 	}
 	

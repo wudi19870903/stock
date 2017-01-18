@@ -39,6 +39,12 @@ public class BLog {
 		output("ERROR", "(%s) %s", target, logstr);
 	}
 	
+	public static void warning(String target, String format, Object... args)
+	{
+		String logstr = String.format(format, args);
+		output("WARNING", "(%s) %s", target, logstr);
+	}
+	
 	public static void output(String target, String format, Object... args)
 	{
 		if(null != target && "" != target && !s_tagMap.containsKey(target))
@@ -90,6 +96,7 @@ public class BLog {
 		{
 			put("TEST", true);
 			put("ERROR", true);
+			put("WARNING", true);
 		}
 	};
 }

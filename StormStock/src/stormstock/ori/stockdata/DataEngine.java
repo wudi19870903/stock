@@ -728,6 +728,11 @@ public class DataEngine extends DataEngineBase
 		return iRetupdateStock;
 	}
 	
+	private static boolean checkStockData(String stockID)
+	{
+		return true;
+	}
+	
 	private static StockSimpleItem popRandomStock(List<StockSimpleItem> in_list)
 	{
 		if(in_list.size() == 0) return null;
