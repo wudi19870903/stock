@@ -661,27 +661,27 @@ public class DataEngine extends DataEngineBase
 			}
 		}
 		
-		int iRetupdateStock = 0;
 		// 更新指数k
 		String ShangZhiId = "999999";
 		String ShangZhiName = "上证指数";
-		iRetupdateStock = DataEngineBase.updateStock(ShangZhiId);
-		String newestDate = "";
 		
-		ResultDayKData cResultDayKData = DataEngine.getDayKDataQianFuQuan(ShangZhiId);
-		if(0 == cResultDayKData.error && cResultDayKData.resultList.size() > 0)
+		ResultUpdateStock cResultUpdateStockShangZhi = DataEngineBase.updateStock(ShangZhiId);
+		String newestDate = "";
+		if(0 == cResultUpdateStockShangZhi.error)
 		{
-			newestDate = cResultDayKData.resultList.get(cResultDayKData.resultList.size()-1).date;
-		}
-		if(iRetupdateStock >= 0)
-		{
-
-			fmt.format("update success: %s (%s) item:%d date:%s\n", ShangZhiId, ShangZhiName, iRetupdateStock, newestDate);
+			ResultDayKData cResultDayKData = DataEngine.getDayKDataQianFuQuan(ShangZhiId);
+			if(0 == cResultDayKData.error && cResultDayKData.resultList.size() > 0)
+			{
+				newestDate = cResultDayKData.resultList.get(cResultDayKData.resultList.size()-1).date;
+			}
+			
+			fmt.format("update success: %s (%s) item:%d date:%s\n", ShangZhiId, ShangZhiName, cResultUpdateStockShangZhi.updateCnt, newestDate);
 		}
 		else
 		{
-			fmt.format("update ERROR: %s (%s) item:%d date:%s\n", ShangZhiId, ShangZhiName, iRetupdateStock, newestDate);
+			fmt.format("update ERROR: %s error(%d)\n", ShangZhiId, cResultUpdateStockShangZhi.error);
 		}
+ 
 		
 		// 更新所有k
 		ResultAllStockList cResultAllStockList = DataWebStockAllList.getAllStockList();
@@ -690,19 +690,25 @@ public class DataEngine extends DataEngineBase
 			for(int i = 0; i < cResultAllStockList.resultList.size(); i++)  
 	        {  
 				StockSimpleItem cStockSimpleItem = cResultAllStockList.resultList.get(i);  
-	            iRetupdateStock = DataEngineBase.updateStock(cStockSimpleItem.id);
-	            
-	            ResultDayKData cResultDayKDataQFQ = DataEngine.getDayKDataQianFuQuan(ShangZhiId);
-	            
-	    		if(0 == cResultDayKDataQFQ.error && cResultDayKDataQFQ.resultList.size() > 0)
-	    		{
-	    			fmt.format("update success: %s (%s) item:%d date:%s\n", cStockSimpleItem.id, cStockSimpleItem.name, iRetupdateStock, newestDate);
-	    		}
-	            else
-	            {
-	            	fmt.format("update ERROR: %s (%s) item:%d date:%s\n", cStockSimpleItem.id, cStockSimpleItem.name, iRetupdateStock, newestDate);
-	            }
-	            
+				
+				ResultUpdateStock cResultUpdateStock = DataEngineBase.updateStock(cStockSimpleItem.id);
+	           
+				if(0 == cResultUpdateStock.error)
+				{
+					ResultDayKData cResultDayKDataQFQ = DataEngine.getDayKDataQianFuQuan(ShangZhiId);
+		    		if(0 == cResultDayKDataQFQ.error && cResultDayKDataQFQ.resultList.size() > 0)
+		    		{
+		    			fmt.format("update success: %s (%s) item:%d date:%s\n", cStockSimpleItem.id, cStockSimpleItem.name, cResultUpdateStock.updateCnt, newestDate);
+		    		}
+		            else
+		            {
+		            	fmt.format("update ERROR: %s (%s) error(%d)\n", cStockSimpleItem.id, cStockSimpleItem.name, cResultUpdateStock.error);
+		            }
+				}
+				else
+				{
+					fmt.format("update ERROR: %s error(%d)\n", cStockSimpleItem.id, cResultUpdateStock.error);
+				}    
 	        } 
 			System.out.println("update finish, count:" + cResultAllStockList.resultList.size()); 
 		}
@@ -710,8 +716,16 @@ public class DataEngine extends DataEngineBase
 		{
 			System.out.println("ERROR:" + cResultAllStockList.error);
 		}
-		DataEngineBase.updateStocksFinish(dateStr);
-		return iRetupdateStock;
+		
+		if(newestDate.length() == "0000-00-00".length())
+		{
+			DataEngineBase.updateStocksFinish(newestDate);
+		}
+		else
+		{
+			System.out.println("ERROR:" + "updateStocksFinish failed!");
+		}
+		return 0;
 	}
 	
 	private static StockSimpleItem popRandomStock(List<StockSimpleItem> in_list)
@@ -739,69 +753,71 @@ public class DataEngine extends DataEngineBase
 			return -1;
 		}
 		
-		// 检查前复权日K
-		ResultDayKData cResultDayKData = getDayKDataQianFuQuan(stockID);
-		if(0 != cResultDayKData.error 
-				|| cResultDayKData.resultList.size() <= 0)
-		{
-			return -2;
-		}
-		
-		// 检查前复权日K涨跌幅度, 近若干天没有问题就算没有问题
-		int iBeginCheck = cResultDayKData.resultList.size() - 2000;
-		if(iBeginCheck<=0) iBeginCheck = 0;
-		for(int i=iBeginCheck; i < cResultDayKData.resultList.size()-1; i++)  
-        {  
-			DayKData cDayKData = cResultDayKData.resultList.get(i);  
-			DayKData cDayKDataNext = cResultDayKData.resultList.get(i+1);  
-            float close = cDayKData.close;
-            float nextHigh = cDayKDataNext.high;
-            float nextLow = cDayKDataNext.low;
-            float fHighper = Math.abs((nextHigh-close)/close);
-            float fLowper = Math.abs((nextLow-close)/close);
-            if(fHighper > 0.11 || fLowper > 0.11) // 涨跌幅度异常
-        	{
-            	// 数据有中间丢失天的情况，排除这种错误
-            	// 获取当前有效日期，下一个交易日（非周六周日）
-            	String CurrentDate = cDayKData.date;
-            	Calendar c = Calendar.getInstance();  
-                Date date = null;  
-                try {  
-                    date = new SimpleDateFormat("yyyy-MM-dd").parse(CurrentDate);  
-                } catch (Exception e) {  
-                    e.printStackTrace();  
-                }  
-                c.setTime(date);  
-                c.add(Calendar.DATE, 1);
-                int cw = c.get(Calendar.DAY_OF_WEEK);
-        		while(cw == 1 || cw == 7)
-        		{
-        			c.add(Calendar.DATE, 1);
-        			cw = c.get(Calendar.DAY_OF_WEEK);
-        		}
-        		Date nextValiddate = c.getTime();
-        		String curValiddateStr = new SimpleDateFormat("yyyy-MM-dd").format(nextValiddate);
-        		
-        		if(cDayKDataNext.date.compareTo(curValiddateStr) > 0)
-        		{
-        			// 此种情况允许错误，中间缺失了几天数据
-//        			System.out.println("Warnning: Check getDayKDataQianFuQuan NG(miss data)! id:" + stockID
-//                			+ " date:" + cDayKData.date);
-        		}
-        		else
-        		{
-        			// 中间未缺失数据，但出现了偏差过大啊，属于错误
-                	System.out.println("Warnning: Check getDayKDataQianFuQuan error! id:" + stockID
-                			+ " date:" + cDayKData.date);
-                	System.out.println("close:" + close);
-                	System.out.println("nextHigh:" + nextHigh);
-                	System.out.println("fHighper:" + fHighper);
-                	System.out.println("nextLow:" + nextLow);
-                	System.out.println("fLowper:" + fLowper);
-                	return -3;
-        		}
-        	}
-        } 
 		return 0;
+		
+//		// 检查前复权日K
+//		ResultDayKData cResultDayKData = getDayKDataQianFuQuan(stockID);
+//		if(0 != cResultDayKData.error 
+//				|| cResultDayKData.resultList.size() <= 0)
+//		{
+//			return -2;
+//		}
+//		
+//		// 检查前复权日K涨跌幅度, 近若干天没有问题就算没有问题
+//		int iBeginCheck = cResultDayKData.resultList.size() - 2000;
+//		if(iBeginCheck<=0) iBeginCheck = 0;
+//		for(int i=iBeginCheck; i < cResultDayKData.resultList.size()-1; i++)  
+//        {  
+//			DayKData cDayKData = cResultDayKData.resultList.get(i);  
+//			DayKData cDayKDataNext = cResultDayKData.resultList.get(i+1);  
+//            float close = cDayKData.close;
+//            float nextHigh = cDayKDataNext.high;
+//            float nextLow = cDayKDataNext.low;
+//            float fHighper = Math.abs((nextHigh-close)/close);
+//            float fLowper = Math.abs((nextLow-close)/close);
+//            if(fHighper > 0.11 || fLowper > 0.11) // 涨跌幅度异常
+//        	{
+//            	// 数据有中间丢失天的情况，排除这种错误
+//            	// 获取当前有效日期，下一个交易日（非周六周日）
+//            	String CurrentDate = cDayKData.date;
+//            	Calendar c = Calendar.getInstance();  
+//                Date date = null;  
+//                try {  
+//                    date = new SimpleDateFormat("yyyy-MM-dd").parse(CurrentDate);  
+//                } catch (Exception e) {  
+//                    e.printStackTrace();  
+//                }  
+//                c.setTime(date);  
+//                c.add(Calendar.DATE, 1);
+//                int cw = c.get(Calendar.DAY_OF_WEEK);
+//        		while(cw == 1 || cw == 7)
+//        		{
+//        			c.add(Calendar.DATE, 1);
+//        			cw = c.get(Calendar.DAY_OF_WEEK);
+//        		}
+//        		Date nextValiddate = c.getTime();
+//        		String curValiddateStr = new SimpleDateFormat("yyyy-MM-dd").format(nextValiddate);
+//        		
+//        		if(cDayKDataNext.date.compareTo(curValiddateStr) > 0)
+//        		{
+//        			// 此种情况允许错误，中间缺失了几天数据
+////        			System.out.println("Warnning: Check getDayKDataQianFuQuan NG(miss data)! id:" + stockID
+////                			+ " date:" + cDayKData.date);
+//        		}
+//        		else
+//        		{
+//        			// 中间未缺失数据，但出现了偏差过大啊，属于错误
+//                	System.out.println("Warnning: Check getDayKDataQianFuQuan error! id:" + stockID
+//                			+ " date:" + cDayKData.date);
+//                	System.out.println("close:" + close);
+//                	System.out.println("nextHigh:" + nextHigh);
+//                	System.out.println("fHighper:" + fHighper);
+//                	System.out.println("nextLow:" + nextLow);
+//                	System.out.println("fLowper:" + fLowper);
+//                	return -3;
+//        		}
+//        	}
+//        } 
+//		return 0;
 	}
 }

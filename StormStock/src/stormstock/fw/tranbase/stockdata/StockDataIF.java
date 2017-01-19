@@ -11,6 +11,7 @@ import stormstock.fw.tranbase.account.AccountAccessor;
 import stormstock.ori.stockdata.DataEngine;
 import stormstock.ori.stockdata.DataEngineBase;
 import stormstock.ori.stockdata.DataEngineBase.ResultStockBaseData;
+import stormstock.ori.stockdata.DataEngineBase.ResultUpdateStock;
 import stormstock.ori.stockdata.DataEngineBase.ResultUpdatedStocksDate;
 import stormstock.ori.stockdata.DataWebStockAllList.ResultAllStockList;
 import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData;
@@ -100,8 +101,17 @@ public class StockDataIF {
 		else
 		{
 			// 更新单只股票数据 不影响s_localLatestDate
-			int iUpdateCnt = DataEngine.updateStock(stockID);
-			BLog.output("STOCKDATA", "update %s success to date: %s (count: %d)\n", stockID, iUpdateCnt);
+			
+			ResultUpdateStock cResultUpdateStock = DataEngine.updateStock(stockID);
+			
+			if(0 == cResultUpdateStock.error)
+			{
+				BLog.output("STOCKDATA", "update %s success to date: %s (count: %d)\n", stockID, cResultUpdateStock.updateCnt);
+			}
+			else
+			{
+				BLog.error("STOCKDATA", "update %s failed \n", cResultUpdateStock.error);
+			}
 		}
 		return true;
 	}

@@ -3,6 +3,7 @@ package stormstock.ori.stockdata;
 import java.util.ArrayList;
 import java.util.List;
 
+import stormstock.ori.stockdata.DataEngineBase.ResultUpdateStock;
 import stormstock.ori.stockdata.DataEngineBase.ResultUpdatedStocksDate;
 import stormstock.ori.stockdata.DataWebStockDayDetail.ResultDayDetail;
 import stormstock.ori.stockdata.CommonDef.*;
@@ -103,14 +104,14 @@ public class TestDataEngineBase {
 	}
 	private static void test_updateStock()
 	{
-		int retupdateStock = DataEngineBase.updateStock("300222");
-		if(retupdateStock < 0)
+		ResultUpdateStock cResultUpdateStock = DataEngineBase.updateStock("300163"); 
+		if(cResultUpdateStock.error < 0)
 		{
-			System.out.println("updateStock ERROR:" + retupdateStock);	
+			System.out.println("updateStock ERROR:" + cResultUpdateStock.error);	
 		}
 		else
 		{
-			System.out.println("updateStock OK:" + retupdateStock);	
+			System.out.println("updateStock OK:" + cResultUpdateStock.updateCnt);	
 		}
 	}
 	
@@ -127,7 +128,7 @@ public class TestDataEngineBase {
 //		test_downloadStockDayk();
 //		test_downloadStockDividendPayout();
 //		test_downloadStockDataDetail();
-//		test_updateStock();
+		test_updateStock();
 //		test_getUpdatedStocksDate();
 	}
 }

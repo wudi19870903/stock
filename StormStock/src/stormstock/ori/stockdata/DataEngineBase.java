@@ -281,15 +281,22 @@ public class DataEngineBase {
 		{
 			ResultRealTimeInfoMore cResultRealTimeInfoMore = DataWebStockRealTimeInfo.getRealTimeInfoMore(id);
 			
-			FileOutputStream cOutputStream = new FileOutputStream(cfile);
-			String s = String.format("%s,%.3f,%.3f,%.3f,%.3f", 
-					cResultRealTimeInfoMore.realTimeInfoMore.name, 
-					cResultRealTimeInfoMore.realTimeInfoMore.curPrice, 
-					cResultRealTimeInfoMore.realTimeInfoMore.allMarketValue, 
-					cResultRealTimeInfoMore.realTimeInfoMore.circulatedMarketValue, 
-					cResultRealTimeInfoMore.realTimeInfoMore.peRatio);
-			cOutputStream.write(s.getBytes());
-			cOutputStream.close();
+			if(0 == cResultRealTimeInfoMore.error)
+			{
+				FileOutputStream cOutputStream = new FileOutputStream(cfile);
+				String s = String.format("%s,%.3f,%.3f,%.3f,%.3f", 
+						cResultRealTimeInfoMore.realTimeInfoMore.name, 
+						cResultRealTimeInfoMore.realTimeInfoMore.curPrice, 
+						cResultRealTimeInfoMore.realTimeInfoMore.allMarketValue, 
+						cResultRealTimeInfoMore.realTimeInfoMore.circulatedMarketValue, 
+						cResultRealTimeInfoMore.realTimeInfoMore.peRatio);
+				cOutputStream.write(s.getBytes());
+				cOutputStream.close();
+			}
+			else
+			{
+				return -20;
+			}
 		}
 		catch(Exception e)
 		{
@@ -461,9 +468,22 @@ public class DataEngineBase {
 		}
 		return cResultStockBaseData;
 	}
-	public static int updateStock(String id)
+	
+	public static class ResultUpdateStock
 	{
-		// 获取当前有效日期，上一个交易日（非周六周日）
+		public ResultUpdateStock()
+		{
+			error = 0;
+			updateCnt = 0;
+		}
+		public int error;
+		public int updateCnt;
+	}
+	public static ResultUpdateStock updateStock(String id)
+	{
+		ResultUpdateStock cResultUpdateStock = new ResultUpdateStock();
+		
+		// 获取当前有效日期，交易日（非周六周日）
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
 		String CurrentDate = df.format(new Date());
 		int curyear = Integer.parseInt(CurrentDate.split("-")[0]);
@@ -571,41 +591,53 @@ public class DataEngineBase {
 							{
 								// 更新复权因子数据
 								if(0 == DataEngineBase.downloadStockDividendPayout(id))
+								{
 									// 追加成功
-									return cResultDayKDataMore.resultList.size();
+									cResultUpdateStock.error = 0;
+									cResultUpdateStock.updateCnt = cResultDayKDataMore.resultList.size();
+									return cResultUpdateStock;
+								}
 								else
+								{
 									// 更新复权因子失败
-									return -80;
+									cResultUpdateStock.error = -80;
+									return cResultUpdateStock;
+								}
 							}
 							else
 							{
 								//保存本地数据失败
-								return -50;
+								cResultUpdateStock.error = -50;
+								return cResultUpdateStock;
 							}
 						}
 						else
 						{
 							// 网络获取追加数据失败
-							return -40;
+							cResultUpdateStock.error = -40;
+							return cResultUpdateStock;
 						}
 						
 					}
 					else
 					{
 						// 已经和网络最新有效日线一样
-						return 0;
+						cResultUpdateStock.error = 0;
+						return cResultUpdateStock;
 					}
 				}
 				else
 				{
 					// 获取网络最新有效交易日期失败
-					return -20;
+					cResultUpdateStock.error = -20;
+					return cResultUpdateStock;
 				}
 			}
 			else
 			{
 				// 本地数据已经是最新
-				return 0;
+				cResultUpdateStock.error = 0;
+				return cResultUpdateStock;
 			}
 		}
 		else
@@ -624,17 +656,21 @@ public class DataEngineBase {
 				if(cResultDayKDataLocalNew.error == 0)
 				{
 					//最新数据下载成功返回天数
-					return cResultDayKDataLocalNew.resultList.size();
+					cResultUpdateStock.error = 0;
+					cResultUpdateStock.updateCnt = cResultDayKDataLocalNew.resultList.size();
+					return cResultUpdateStock;
 				}
 				else
 				{
-					return -23;
+					cResultUpdateStock.error = -23;
+					return cResultUpdateStock;
 				}
 			}
 			else
 			// 下载日K，分红派息，基本信息 失败
 			{
-				return -10;
+				cResultUpdateStock.error = -10;
+				return cResultUpdateStock;
 			}
 		}
 	}

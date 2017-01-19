@@ -8,7 +8,7 @@ public class TestDataWebStockRealTimeInfo {
 	public static void main(String[] args){
 		{
 			System.out.println("getRealTimeInfo -----------------------------------");
-			ResultRealTimeInfo cResultRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfo("300222");
+			ResultRealTimeInfo cResultRealTimeInfo = DataWebStockRealTimeInfo.getRealTimeInfo("000013");
 			if(0 == cResultRealTimeInfo.error)
 			{ 
 				System.out.println(cResultRealTimeInfo.realTimeInfo.name);
@@ -21,24 +21,24 @@ public class TestDataWebStockRealTimeInfo {
 				System.out.println("ERROR:" + cResultRealTimeInfo.error);
 			}
 		}
-		{
-			System.out.println("getRealTimeInfoMore -----------------------------------");
-			ResultRealTimeInfoMore cResultRealTimeInfoMore = DataWebStockRealTimeInfo.getRealTimeInfoMore("300222");
-			if(0 == cResultRealTimeInfoMore.error)
-			{ 
-				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.name);
-				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.curPrice);
-				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.allMarketValue);
-				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.circulatedMarketValue);
-				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.peRatio);
-				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.date);
-				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.time);
-			}
-			else
-			{
-				System.out.println("ERROR:" + cResultRealTimeInfoMore.error);
-			}
-		}
+//		{
+//			System.out.println("getRealTimeInfoMore -----------------------------------");
+//			ResultRealTimeInfoMore cResultRealTimeInfoMore = DataWebStockRealTimeInfo.getRealTimeInfoMore("300222");
+//			if(0 == cResultRealTimeInfoMore.error)
+//			{ 
+//				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.name);
+//				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.curPrice);
+//				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.allMarketValue);
+//				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.circulatedMarketValue);
+//				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.peRatio);
+//				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.date);
+//				System.out.println(cResultRealTimeInfoMore.realTimeInfoMore.time);
+//			}
+//			else
+//			{
+//				System.out.println("ERROR:" + cResultRealTimeInfoMore.error);
+//			}
+//		}
 	}
 
 }

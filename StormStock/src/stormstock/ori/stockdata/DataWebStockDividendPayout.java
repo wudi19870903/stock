@@ -52,8 +52,8 @@ public class DataWebStockDividendPayout {
 		
 		if(id.contains("999999")) 
 		{
-			cResultDividendPayout.error = -30;
-			return cResultDividendPayout; // 上证指数
+			cResultDividendPayout.error = 0;
+			return cResultDividendPayout; // 上证指数没有分红派息
 		}
 		
 		try{  
@@ -61,8 +61,10 @@ public class DataWebStockDividendPayout {
 			
 			URL url = new URL(urlStr);    
 	        HttpURLConnection conn = (HttpURLConnection)url.openConnection();    
-	        //设置超时间为3秒  
-	        conn.setConnectTimeout(3*1000);  
+
+	        conn.setConnectTimeout(5*1000);  //设置连接超时间 
+	        conn.setReadTimeout(15*1000); //设置读取超时时间
+	        
 	        //防止屏蔽程序抓取而返回403错误  
 	        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");  
 			InputStream inputStream = conn.getInputStream(); 

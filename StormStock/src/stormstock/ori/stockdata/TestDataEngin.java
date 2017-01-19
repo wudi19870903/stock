@@ -82,42 +82,46 @@ public class TestDataEngin {
 	{
 		//----------------------
 		
-//		int ErrorCnt_1 = 0;
-//		int ErrorCnt_2 = 0;
-//		int ErrorCnt_3 = 0;
-//		ResultAllStockList cResultAllStockList = DataEngine.getLocalAllStock();
-//		if(0 == cResultAllStockList.error)
-//		{
-//			for(int i=0; i<cResultAllStockList.resultList.size();i++)
-//			{
-//				StockSimpleItem cStockSimpleItem = cResultAllStockList.resultList.get(i);
-//				int err = DataEngine.checkStockData(cStockSimpleItem.id);
-//				if(0 == err)
-//				{
-//					//System.out.println("stockID:" + cStockSimpleItem.id + " checkStockData OK\n");	
-//				}
-//				else
-//				{
-//					if(-1 == err)
-//						ErrorCnt_1++;
-//					if(-2 == err)
-//						ErrorCnt_2++;
-//					if(-3 == err)
-//					{
-//						ErrorCnt_3++;
-//						System.out.println("stockID:" + cStockSimpleItem.id + " checkStockData NG err(" + err + ")");	
-//					}
-//						
-//					
-//				}
-//			}
-//		}
-//		System.out.println("ErrorCnt_1:" + ErrorCnt_1 );	
-//		System.out.println("ErrorCnt_2:" + ErrorCnt_2 );	
-//		System.out.println("ErrorCnt_3:" + ErrorCnt_3 );	
+		int ErrorCnt_1 = 0;
+		int ErrorCnt_2 = 0;
+		int ErrorCnt_3 = 0;
+		ResultAllStockList cResultAllStockList = DataEngine.getLocalAllStock();
+		if(0 == cResultAllStockList.error)
+		{
+			for(int i=0; i<cResultAllStockList.resultList.size();i++)
+			{
+				StockSimpleItem cStockSimpleItem = cResultAllStockList.resultList.get(i);
+				int err = DataEngine.checkStockData(cStockSimpleItem.id);
+				if(0 == err)
+				{
+					//System.out.println("stockID:" + cStockSimpleItem.id + " checkStockData OK\n");	
+				}
+				else
+				{
+					if(-1 == err)
+					{
+						ErrorCnt_1++;
+						System.out.println("stockID:" + cStockSimpleItem.id + " checkStockData NG err(" + err + ")");	
+					}
+						
+					if(-2 == err)
+						ErrorCnt_2++;
+					if(-3 == err)
+					{
+						ErrorCnt_3++;
+						
+					}
+						
+					
+				}
+			}
+		}
+		System.out.println("ErrorCnt_1:" + ErrorCnt_1 );	
+		System.out.println("ErrorCnt_2:" + ErrorCnt_2 );	
+		System.out.println("ErrorCnt_3:" + ErrorCnt_3 );	
 		
 		//----------------------
-		String stockID = "600030";
+		String stockID = "000013";
 		if(0 == DataEngine.checkStockData(stockID))
 		{
 			System.out.println("stockID:" + stockID + " checkStockData OK\n");	
@@ -125,14 +129,14 @@ public class TestDataEngin {
 		else
 		{
 			System.out.println("stockID:" + stockID + " checkStockData NG\n");	
-//			if(0 == DataEngineBase.rmStockDataDir(stockID))
-//			{
-//				System.out.println("stockID:" + stockID + " rmStockDataDir OK\n");	
-//			}
-//			else
-//			{
-//				System.out.println("stockID:" + stockID + " rmStockDataDir NG\n");	
-//			}
+			if(0 == DataEngineBase.rmStockDataDir(stockID))
+			{
+				System.out.println("stockID:" + stockID + " rmStockDataDir OK\n");	
+			}
+			else
+			{
+				System.out.println("stockID:" + stockID + " rmStockDataDir NG\n");	
+			}
 		}
 	}
 	
