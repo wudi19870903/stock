@@ -10,7 +10,7 @@ public class TestDataWebStockDayK {
 
 	public static void main(String[] args){
 		
-		ResultDayKData cResultDayKData = DataWebStockDayK.getDayKData("999999", "20160901", "20171001");
+		ResultDayKData cResultDayKData = DataWebStockDayK.getDayKData("300428", "20150101", "20171001");
 		
 		if(0 == cResultDayKData.error)
 		{

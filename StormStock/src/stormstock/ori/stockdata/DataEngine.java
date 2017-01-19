@@ -157,61 +157,159 @@ public class DataEngine extends DataEngineBase
 			return cResultDayKData;
 		}
 		
-		for(int i = cResultDividendPayout.resultList.size() -1; i >= 0 ; i--)  
-        {  
+		for(int i = cResultDividendPayout.resultList.size() -1; i >=0  ; i--)  
+		{
 			DividendPayout cDividendPayout = cResultDividendPayout.resultList.get(i);    
-//			System.out.println(cDividendPayout.date);
-//			System.out.println(cDividendPayout.songGu);
-//			System.out.println(cDividendPayout.zhuanGu);
-//			System.out.println(cDividendPayout.paiXi);
-			
-			boolean bChangeFlag = false;
-			float moreGu = cDividendPayout.songGu + cDividendPayout.zhuanGu;
-			float paiXi = cDividendPayout.paiXi;
-            
-    		for(int j = cResultDayKData.resultList.size()-1; j >=0; j--)  
-            {  
-    			DayKData cDayKData = cResultDayKData.resultList.get(j);  
-    			
-    			if(!bChangeFlag)
-    			{
-        			if(cDayKData.date.compareTo(cDividendPayout.date) <= 0)
-        			{
-//        				System.out.println("----------------------- ");
-//        				System.out.println("date:" + cDividendPayout.date);
-//        				System.out.println("moreGu:  " + moreGu);
-//        				System.out.println("paiXi:  " + paiXi);
-        				bChangeFlag = true;
-        			}
-    			}
+			System.out.println(cDividendPayout.date);
+			System.out.println(cDividendPayout.songGu);
+			System.out.println(cDividendPayout.zhuanGu);
+			System.out.println(cDividendPayout.paiXi);
+		}
 
-    			
-    			if(cDayKData.date.compareTo(cDividendPayout.date) < 0)
-    			{
-    				// pre days need change
+		float totalMoreGu = 0.0f;
+		float totalPaiXi = 0.0f;
+		for(int j = cResultDayKData.resultList.size() -1; j>=0 ; j--)
+		{
+			DayKData cDayKData = cResultDayKData.resultList.get(j); 
+			
+			//计算总共分红派息
+			for(int i = 0; i < cResultDividendPayout.resultList.size() ; i++)  
+			{
+				DividendPayout cDividendPayout = cResultDividendPayout.resultList.get(i);  
+				if(cDayKData.date.compareTo(cDividendPayout.date) < 0) // 股票日期小于等于分红派息日期时，进行统计分红派息因子
+				{
+					totalMoreGu = totalMoreGu + cDividendPayout.songGu + cDividendPayout.zhuanGu;
+					totalPaiXi = totalPaiXi + cDividendPayout.paiXi;
+    				System.out.println("----------------------- ");
+    				System.out.println("date:" + cDividendPayout.date);
+    				System.out.println("songGu:  " + cDividendPayout.songGu);
+    				System.out.println("zhuanGu:  " + cDividendPayout.zhuanGu);
+    				System.out.println("paiXi:  " + cDividendPayout.paiXi);
+    				System.out.println("totalMoreGu:  " + totalMoreGu);
+    				System.out.println("totalPaiXi:  " + totalPaiXi);
     				
-//    				if(cDayKData.date.compareTo("2015-08-10") > 0 && cDayKData.date.compareTo("2016-01-12") < 0)
-//    					System.out.println("X  " + cDayKData.date);
-    				
-    				cDayKData.open = ((cDayKData.open*10)-paiXi)/(10 + moreGu);
-    				cDayKData.open = (int)(cDayKData.open*1000)/(float)1000.0;
-//    				if(cDayKData.date.compareTo("2015-08-10") > 0 && cDayKData.date.compareTo("2016-01-12") < 0)
-//    					System.out.println("open:" + cDayKData.open);
-    				
-    				cDayKData.close = ((cDayKData.close*10)-paiXi)/(10 + moreGu);
-    				cDayKData.close = (int)(cDayKData.close*1000)/(float)1000.0;
-    				
-    				cDayKData.low = ((cDayKData.low*10)-paiXi)/(10 + moreGu);
-    				cDayKData.low = (int)(cDayKData.low*1000)/(float)1000.0;
-    				
-    				cDayKData.high = ((cDayKData.high*10)-paiXi)/(10 + moreGu);
-    				cDayKData.high = (int)(cDayKData.high*1000)/(float)1000.0;
-    			}
-            }
-        }
+    				// 已经统计分红派息后的因子，从队列里删除
+    				cResultDividendPayout.resultList.remove(cDividendPayout);
+    				break;
+				}
+			}
+			
+			//分红派息后价格 y = (x-totalPaiXi/10)/(1+totalMoreGu/10)； 其中原价格为x
+			
+			cDayKData.open = (cDayKData.open - totalPaiXi/10)/(1+totalMoreGu/10);
+			cDayKData.open = (int)(cDayKData.open*1000)/(float)1000.0;
+			System.out.println("date:  " + cDayKData.date + " " + cDayKData.open);
+			
+			cDayKData.close = (cDayKData.close - totalPaiXi/10)/(1+totalMoreGu/10);
+			cDayKData.close = (int)(cDayKData.close*1000)/(float)1000.0;
+			
+			cDayKData.low = (cDayKData.low - totalPaiXi/10)/(1+totalMoreGu/10);
+			cDayKData.low = (int)(cDayKData.low*1000)/(float)1000.0;
+			
+			cDayKData.high = (cDayKData.high - totalPaiXi/10)/(1+totalMoreGu/10);
+			cDayKData.high = (int)(cDayKData.high*1000)/(float)1000.0;
+		}
+		
 		return cResultDayKData;
 	}
 
+	public static ResultDayKData getDayKDataHouFuQuan(String id)
+	{
+		ResultDayKData cResultDayKData = getDayKData(id);
+		ResultDividendPayout cResultDividendPayout = getDividendPayout(id);
+		if(0 != cResultDayKData.error || 0 != cResultDividendPayout.error) 
+		{
+			cResultDayKData.error = -10;
+			cResultDayKData.resultList.clear();
+			return cResultDayKData;
+		}
+		
+		for(int i = 0; i < cResultDividendPayout.resultList.size() ; i++)  
+		{
+			DividendPayout cDividendPayout = cResultDividendPayout.resultList.get(i);    
+			System.out.println(cDividendPayout.date);
+			System.out.println(cDividendPayout.songGu);
+			System.out.println(cDividendPayout.zhuanGu);
+			System.out.println(cDividendPayout.paiXi);
+		}
+
+		float totalMoreGuUnitRatio = 1.0f;
+		float paiXiUnit = 0.0f;
+		for(int j = 0; j< cResultDayKData.resultList.size(); j++)
+		{
+			DayKData cDayKData = cResultDayKData.resultList.get(j); 
+			
+			//计算总共分红派息
+			while(true)
+			{
+				if(cResultDividendPayout.resultList.size() > 0)
+				{
+					DividendPayout cDividendPayout = cResultDividendPayout.resultList.get(0);
+					if(cDayKData.date.compareTo(cDividendPayout.date) >= 0
+							&& j != cResultDayKData.resultList.size() -1)
+					{
+						float GuChangeRatio = (10 + (cDividendPayout.songGu + cDividendPayout.zhuanGu))/10;
+						totalMoreGuUnitRatio = totalMoreGuUnitRatio * GuChangeRatio;
+						paiXiUnit = paiXiUnit + cDividendPayout.paiXi;
+						cResultDividendPayout.resultList.remove(cDividendPayout);
+	    				System.out.println("----------------------- ");
+	    				System.out.println("date:" + cDividendPayout.date);
+	    				System.out.println("songGu:  " + cDividendPayout.songGu);
+	    				System.out.println("zhuanGu:  " + cDividendPayout.zhuanGu);
+	    				System.out.println("paiXi:  " + cDividendPayout.paiXi);
+	    				System.out.println("totalMoreGuUnitRatio:  " + totalMoreGuUnitRatio);
+	    				System.out.println("paiXiUnit:  " + paiXiUnit);
+	    				cResultDividendPayout.resultList.remove(cDividendPayout);
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+//			for(int i = 0; i < cResultDividendPayout.resultList.size() ; i++)  
+//			{
+//				DividendPayout cDividendPayout = cResultDividendPayout.resultList.get(i);  
+//				if(cDayKData.date.compareTo(cDividendPayout.date) >= 0) // 股票日期 大于等于分红派息日期时，进行统计分红派息因子
+//				{
+//					totalMoreGu = totalMoreGu + cDividendPayout.songGu + cDividendPayout.zhuanGu;
+//					totalPaiXi = totalPaiXi + cDividendPayout.paiXi;
+//    				System.out.println("----------------------- ");
+//    				System.out.println("date:" + cDividendPayout.date);
+//    				System.out.println("songGu:  " + cDividendPayout.songGu);
+//    				System.out.println("zhuanGu:  " + cDividendPayout.zhuanGu);
+//    				System.out.println("paiXi:  " + cDividendPayout.paiXi);
+//    				System.out.println("totalMoreGu:  " + totalMoreGu);
+//    				System.out.println("totalPaiXi:  " + totalPaiXi);
+//    				
+//    				// 已经统计分红派息后的因子，从队列里删除
+//    				cResultDividendPayout.resultList.remove(cDividendPayout);
+//    				break;
+//				}
+//			}
+			
+			//分红派息后价格 y = (x-totalPaiXi/10)/(1+totalMoreGu/10)； 其中原价格为x
+			
+			float oriOpen = cDayKData.open;
+			cDayKData.open = cDayKData.open * totalMoreGuUnitRatio + paiXiUnit;
+			//cDayKData.open = (int)(cDayKData.open*1000)/(float)1000.0;
+			System.out.println("date " + cDayKData.date + " " + cDayKData.open + " ori:" + oriOpen);
+			
+//			cDayKData.close = cDayKData.close*(1+totalMoreGu/10) + totalPaiXi/10;
+//			cDayKData.close = (int)(cDayKData.close*1000)/(float)1000.0;
+//			
+//			cDayKData.low = cDayKData.low*(1+totalMoreGu/10) + totalPaiXi/10;
+//			cDayKData.low = (int)(cDayKData.low*1000)/(float)1000.0;
+//			
+//			cDayKData.high = cDayKData.high*(1+totalMoreGu/10) + totalPaiXi/10;
+//			cDayKData.high = (int)(cDayKData.high*1000)/(float)1000.0;
+			
+			paiXiUnit = 0.0f;
+		}
+		
+		return cResultDayKData;
+	}
+	
 	public static class ExKData {
 		// eg: "2008-01-02 09:35:00"
 		public String datetime;
@@ -746,78 +844,76 @@ public class DataEngine extends DataEngineBase
 	public static int checkStockData(String stockID)
 	{
 		// 检查基本信息
-		ResultStockBaseData cResultStockBaseData = getBaseInfo(stockID);
-		if(0 != cResultStockBaseData.error 
-				|| cResultStockBaseData.stockBaseInfo.name.length() <= 0)
+//		ResultStockBaseData cResultStockBaseData = getBaseInfo(stockID);
+//		if(0 != cResultStockBaseData.error 
+//				|| cResultStockBaseData.stockBaseInfo.name.length() <= 0)
+//		{
+//			return -1;
+//		}
+		
+		// 检查前复权日K
+		ResultDayKData cResultDayKData = getDayKDataQianFuQuan(stockID);
+		if(0 != cResultDayKData.error 
+				|| cResultDayKData.resultList.size() <= 0)
 		{
-			return -1;
+			return -2;
 		}
 		
-		return 0;
-		
-//		// 检查前复权日K
-//		ResultDayKData cResultDayKData = getDayKDataQianFuQuan(stockID);
-//		if(0 != cResultDayKData.error 
-//				|| cResultDayKData.resultList.size() <= 0)
-//		{
-//			return -2;
-//		}
-//		
-//		// 检查前复权日K涨跌幅度, 近若干天没有问题就算没有问题
-//		int iBeginCheck = cResultDayKData.resultList.size() - 2000;
-//		if(iBeginCheck<=0) iBeginCheck = 0;
-//		for(int i=iBeginCheck; i < cResultDayKData.resultList.size()-1; i++)  
-//        {  
-//			DayKData cDayKData = cResultDayKData.resultList.get(i);  
-//			DayKData cDayKDataNext = cResultDayKData.resultList.get(i+1);  
-//            float close = cDayKData.close;
-//            float nextHigh = cDayKDataNext.high;
-//            float nextLow = cDayKDataNext.low;
-//            float fHighper = Math.abs((nextHigh-close)/close);
-//            float fLowper = Math.abs((nextLow-close)/close);
-//            if(fHighper > 0.11 || fLowper > 0.11) // 涨跌幅度异常
-//        	{
-//            	// 数据有中间丢失天的情况，排除这种错误
-//            	// 获取当前有效日期，下一个交易日（非周六周日）
-//            	String CurrentDate = cDayKData.date;
-//            	Calendar c = Calendar.getInstance();  
-//                Date date = null;  
-//                try {  
-//                    date = new SimpleDateFormat("yyyy-MM-dd").parse(CurrentDate);  
-//                } catch (Exception e) {  
-//                    e.printStackTrace();  
-//                }  
-//                c.setTime(date);  
-//                c.add(Calendar.DATE, 1);
-//                int cw = c.get(Calendar.DAY_OF_WEEK);
-//        		while(cw == 1 || cw == 7)
-//        		{
-//        			c.add(Calendar.DATE, 1);
-//        			cw = c.get(Calendar.DAY_OF_WEEK);
-//        		}
-//        		Date nextValiddate = c.getTime();
-//        		String curValiddateStr = new SimpleDateFormat("yyyy-MM-dd").format(nextValiddate);
-//        		
-//        		if(cDayKDataNext.date.compareTo(curValiddateStr) > 0)
-//        		{
-//        			// 此种情况允许错误，中间缺失了几天数据
-////        			System.out.println("Warnning: Check getDayKDataQianFuQuan NG(miss data)! id:" + stockID
-////                			+ " date:" + cDayKData.date);
-//        		}
-//        		else
-//        		{
-//        			// 中间未缺失数据，但出现了偏差过大啊，属于错误
-//                	System.out.println("Warnning: Check getDayKDataQianFuQuan error! id:" + stockID
+		// 检查前复权日K涨跌幅度, 近若干天没有问题就算没有问题
+		int iBeginCheck = cResultDayKData.resultList.size() - 200;
+		if(iBeginCheck<=0) iBeginCheck = 0;
+		for(int i=iBeginCheck; i < cResultDayKData.resultList.size()-1; i++)  
+        {  
+			DayKData cDayKData = cResultDayKData.resultList.get(i);  
+			DayKData cDayKDataNext = cResultDayKData.resultList.get(i+1);  
+            float close = cDayKData.close;
+            float nextHigh = cDayKDataNext.high;
+            float nextLow = cDayKDataNext.low;
+            float fHighper = Math.abs((nextHigh-close)/close);
+            float fLowper = Math.abs((nextLow-close)/close);
+            if(fHighper > 0.11 || fLowper > 0.11) // 涨跌幅度异常
+        	{
+            	// 数据有中间丢失天的情况，排除这种错误
+            	// 获取当前有效日期，下一个交易日（非周六周日）
+            	String CurrentDate = cDayKData.date;
+            	Calendar c = Calendar.getInstance();  
+                Date date = null;  
+                try {  
+                    date = new SimpleDateFormat("yyyy-MM-dd").parse(CurrentDate);  
+                } catch (Exception e) {  
+                    e.printStackTrace();  
+                }  
+                c.setTime(date);  
+                c.add(Calendar.DATE, 1);
+                int cw = c.get(Calendar.DAY_OF_WEEK);
+        		while(cw == 1 || cw == 7)
+        		{
+        			c.add(Calendar.DATE, 1);
+        			cw = c.get(Calendar.DAY_OF_WEEK);
+        		}
+        		Date nextValiddate = c.getTime();
+        		String curValiddateStr = new SimpleDateFormat("yyyy-MM-dd").format(nextValiddate);
+        		
+        		if(cDayKDataNext.date.compareTo(curValiddateStr) > 0)
+        		{
+        			// 此种情况允许错误，中间缺失了几天数据
+//        			System.out.println("Warnning: Check getDayKDataQianFuQuan NG(miss data)! id:" + stockID
 //                			+ " date:" + cDayKData.date);
-//                	System.out.println("close:" + close);
-//                	System.out.println("nextHigh:" + nextHigh);
-//                	System.out.println("fHighper:" + fHighper);
-//                	System.out.println("nextLow:" + nextLow);
-//                	System.out.println("fLowper:" + fLowper);
-//                	return -3;
-//        		}
-//        	}
-//        } 
-//		return 0;
+        		}
+        		else
+        		{
+        			// 中间未缺失数据，但出现了偏差过大啊，属于错误
+                	System.out.println("Warnning: Check getDayKDataQianFuQuan error! id:" + stockID
+                			+ " date:" + cDayKData.date);
+                	System.out.println("close:" + close);
+                	System.out.println("nextHigh:" + nextHigh);
+                	System.out.println("fHighper:" + fHighper);
+                	System.out.println("nextLow:" + nextLow);
+                	System.out.println("fLowper:" + fLowper);
+                	return -3;
+        		}
+        	}
+        } 
+		return 0;
 	}
 }

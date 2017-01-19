@@ -9,7 +9,9 @@ import stormstock.ori.stockdata.DataWebStockDividendPayout.ResultDividendPayout;
 public class TestDataWebStockDividendPayout {
 
 	public static void main(String[] args){
-		ResultDividendPayout cResultDividendPayout = DataWebStockDividendPayout.getDividendPayout("300222");
+		String StockID = "300428";
+		
+		ResultDividendPayout cResultDividendPayout = DataWebStockDividendPayout.getDividendPayout(StockID);
 		if(0 == cResultDividendPayout.error)
 		{
 			for(int i = 0; i < cResultDividendPayout.resultList.size(); i++)  
