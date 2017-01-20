@@ -76,12 +76,10 @@ public class WorkEntity {
 			// 09:25确定是否是交易日
 			boolean bIsTranDate = false;
 			timestr = "09:25:00";
-			if(waitForDateTime(dateStr, timestr))
+			waitForDateTime(dateStr, timestr);
+			if(isTranDate(dateStr))
 			{
-				if(isTranDate(dateStr))
-				{
-					bIsTranDate = true;
-				}
+				bIsTranDate = true;
 			}
 			
 			if(bIsTranDate)
