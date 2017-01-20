@@ -64,7 +64,9 @@ public class BLog {
 		
 		SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		String curDateTimeStr = sdf.format(new Date());
-		outputConsole("[%s][%10s] %s", curDateTimeStr, target, logstr);
+		
+		String fullLogStr = String.format("[%s][%10s] %s", curDateTimeStr, target, logstr);
+		outputConsole(fullLogStr);
 		
 		File cDir = new File(s_strLogDirName);  
 		if (!cDir.exists()  && !cDir.isDirectory())      
@@ -75,7 +77,7 @@ public class BLog {
 		try
 		{
 			FileOutputStream cOutputStream = new FileOutputStream(cfile, true);
-			cOutputStream.write(logstr.getBytes());
+			cOutputStream.write(fullLogStr.getBytes());
 			cOutputStream.close();
 		}
 		catch(Exception e)

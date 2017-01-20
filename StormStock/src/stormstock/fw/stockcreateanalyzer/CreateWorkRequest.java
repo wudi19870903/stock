@@ -70,51 +70,55 @@ public class CreateWorkRequest extends BQThreadRequest {
 			// 构造当时股票数据(昨日日K，今日当前分时)
 			
 			ResultLatestStockInfo cResultLatestStockInfo = stockDataIF.getLatestStockInfo(stockID);
-			StockInfo cStockInfo = cResultLatestStockInfo.stockInfo;
-			
 			String yesterday_date = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(m_date, -1);
 			ResultHistoryData cResultHistoryData = stockDataIF.getHistoryData(stockID, yesterday_date);
-			List<StockDay> cStockDayList = cResultHistoryData.resultList;
-			
 			ResultStockTime cResultStockTime = stockDataIF.getStockTime(stockID, m_date, m_time);
-			if(0 == cResultStockTime.error)
+			if(0 == cResultLatestStockInfo.error
+					&& 0 == cResultHistoryData.error
+					&& 0 == cResultStockTime.error)
 			{
+				// 做成当日股票数据
 				StockTimeDataCache.addStockTime(stockID, m_date, cResultStockTime.stockTime);
-			}
-			List<StockTime> cStockTimeList = StockTimeDataCache.getStockTimeList(stockID, m_date);
-			StockDay curStockDay = new StockDay();
-			curStockDay.set(m_date, cStockTimeList);
-			
-			cStockDayList.add(curStockDay);
-			
-			BLog.output("CREATE", "        -Stock:%s cStockTimeList size(%d)\n", stockID, cStockTimeList.size());
-			
-			Stock cStock = new Stock();
-			cStock.setCurLatestStockInfo(cStockInfo);
-			cStock.setCurStockDayData(cStockDayList);
-			
-			AccountAccessor cAccountAccessor = accIF.getAccountAccessor(m_date, m_time);
-			String dateBefore = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(m_date, -1);
-			StockDataAccessor cStockDataAccessor = stockDataIF.getStockDataAccessor(dateBefore, m_time);
-			Target cTarget = new Target(cStock, cAccountAccessor.getStockHold(stockID));
-			TranContext ctx = new TranContext(m_date, m_time, 
-					cTarget,  // 目标对象带有 股票数据与持股信息
-					cAccountAccessor, // ctx带有账户访问器
-					cStockDataAccessor);// ctx带有昨日数据访问器（用户不能查看今天得其他k线）
-			
-			if(0 == cResultStockTime.error) // 只有获取当前价格成功时才回调给用户
-			{
+				
+				List<StockTime> cStockTimeList = StockTimeDataCache.getStockTimeList(stockID, m_date);
+				StockDay curStockDay = new StockDay();
+				curStockDay.set(m_date, cStockTimeList);
+				cResultHistoryData.resultList.add(curStockDay);
+
+				Stock cStock = new Stock();
+				cStock.setCurLatestStockInfo(cResultLatestStockInfo.stockInfo);
+				cStock.setCurStockDayData(cResultHistoryData.resultList);
+				
+				BLog.output("CREATE", "        -Stock:%s cStockTimeList size(%d)\n", stockID, cStockTimeList.size());
+				
+				// 做成 ctx
+				AccountAccessor cAccountAccessor = accIF.getAccountAccessor(m_date, m_time);
+				StockDataAccessor cStockDataAccessor = stockDataIF.getStockDataAccessor(yesterday_date, m_time);
+				Target cTarget = new Target(cStock, cAccountAccessor.getStockHold(stockID));
+				TranContext ctx = new TranContext(m_date, m_time, 
+						cTarget,  // 目标对象带有 股票数据与持股信息
+						cAccountAccessor, // ctx带有账户访问器
+						cStockDataAccessor);// ctx带有昨日数据访问器（用户不能查看今天得其他k线）
+				
+				// 构造CreateResultWrapper
 				CreateResultWrapper cCreateResultWrapper = new CreateResultWrapper();
 				cCreateResultWrapper.stockId = stockID;
 				cCreateResultWrapper.fPrice = cResultStockTime.stockTime.price;
+				
+				// 回调给用户
 				cIStrategyCreate.strategy_create(ctx, cCreateResultWrapper.createRes);
 				if(cCreateResultWrapper.createRes.bCreate)
 				{
 					cCreateResultWrapperList.add(cCreateResultWrapper);
 				}
 			}
+			else
+			{
+				BLog.output("CREATE", "Cannot Generate %s %s stock %s, ignore!\n", m_date, m_time, stockID);
+			}
 		}
 			
+		// 根据建仓策略，做成买入项
 		int create_max_count = cIStrategyCreate.strategy_create_max_count();
 		int alreadyCount = accIF.getStockHoldList(null, null).size() + accIF.getBuyCommissionOrderList().size();
 		int buyStockCount = create_max_count - alreadyCount;
