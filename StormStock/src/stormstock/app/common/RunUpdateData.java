@@ -20,7 +20,7 @@ public class RunUpdateData {
 	public static Formatter fmt = new Formatter(System.out);
 	public static void main(String[] args) {
 		
-		DataEngine.updateAllLocalStocks("2016-12-18");
+		DataEngine.updateAllLocalStocks("2017-12-18");
 		
 	}
 }

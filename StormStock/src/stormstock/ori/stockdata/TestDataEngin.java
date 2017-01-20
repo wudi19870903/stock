@@ -1,6 +1,7 @@
 package stormstock.ori.stockdata;
 
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
 
 import stormstock.ori.stockdata.CommonDef.StockSimpleItem;
@@ -11,16 +12,17 @@ import stormstock.ori.stockdata.DataWebStockDayK.ResultDayKData;
 import stormstock.ori.stockdata.CommonDef.*;
 
 public class TestDataEngin {
+	public static Formatter fmt = new Formatter(System.out);
+	
 	private static void test_getDayKDataQianFuQuan()
 	{
-		ResultDayKData cResultDayKData = DataEngine.getDayKDataQianFuQuan("300163");
+		ResultDayKData cResultDayKData = DataEngine.getDayKDataQianFuQuan("600691");
 		if(0 == cResultDayKData.error)
 		{
 			for(int i = 0; i < cResultDayKData.resultList.size(); i++)  
 	        {  
 				DayKData cDayKData = cResultDayKData.resultList.get(i);  
-//	            System.out.println(cDayKData.date + "," 
-//	            		+ cDayKData.open + "," + cDayKData.close);  
+				 fmt.format("date %s open %.2f close %.2f\n", cDayKData.date, cDayKData.open, cDayKData.close);
 	        } 
 		}
 		else
@@ -36,8 +38,7 @@ public class TestDataEngin {
 			for(int i = 0; i < cResultDayKData.resultList.size(); i++)  
 	        {  
 				DayKData cDayKData = cResultDayKData.resultList.get(i);  
-//	            System.out.println(cDayKData.date + "," 
-//	            		+ cDayKData.open + "," + cDayKData.close);  
+	            fmt.format("date %s open %.2f close %.2f\n", cDayKData.date, cDayKData.open, cDayKData.close);
 	        } 
 		}
 		else
@@ -97,8 +98,8 @@ public class TestDataEngin {
 	
 	private static void test_checkStockData()
 	{
-		boolean bTestAll = false;
-		boolean bTestSingle = true;
+		boolean bTestAll = true;
+		boolean bTestSingle = false;
 				
 		//----------------------
 		if(bTestAll)
@@ -112,6 +113,7 @@ public class TestDataEngin {
 				for(int i=0; i<cResultAllStockList.resultList.size();i++)
 				{
 					StockSimpleItem cStockSimpleItem = cResultAllStockList.resultList.get(i);
+					//fmt.format("checkStockData %s\n", cStockSimpleItem.id);
 					int err = DataEngine.checkStockData(cStockSimpleItem.id);
 					if(0 == err)
 					{
@@ -122,13 +124,13 @@ public class TestDataEngin {
 						if(-1 == err)
 						{
 							ErrorCnt_1++;
-							//System.out.println("stockID:" + cStockSimpleItem.id + " checkStockData NG err(" + err + ")");	
+							System.out.println("stockID:" + cStockSimpleItem.id + " checkStockData NG err(" + err + ")");	
 						}
 							
 						if(-2 == err)
 						{
 							ErrorCnt_2++;
-							//System.out.println("stockID:" + cStockSimpleItem.id + " checkStockData NG err(" + err + ")");
+							System.out.println("stockID:" + cStockSimpleItem.id + " checkStockData NG err(" + err + ")");
 						}
 							
 						if(-3 == err)
@@ -150,7 +152,7 @@ public class TestDataEngin {
 		
 		if(bTestSingle)
 		{
-			String stockID = "300428";
+			String stockID = "000002";
 			if(0 == DataEngine.checkStockData(stockID))
 			{
 				System.out.println("stockID:" + stockID + " checkStockData OK\n");	
@@ -171,12 +173,18 @@ public class TestDataEngin {
 		}
 	}
 	
+	private static void test_updateAllLocalStocks()
+	{
+		DataEngine.updateAllLocalStocks("2017-12-18");
+	}
+	
 	public static void main(String[] args) {
 		//test_getDayKDataQianFuQuan();
-		test_getDayKDataHouFuQuan();
+		//test_getDayKDataHouFuQuan();
 		//test_get5MinKDataOneDay();
 		//test_get1MinKDataOneDay();
 		//test_getLocalRandomStock();
 		//test_checkStockData();
+		test_updateAllLocalStocks();
 	}
 }
