@@ -118,7 +118,7 @@ public class CreateWorkRequest extends BQThreadRequest {
 			}
 		}
 			
-		// 根据建仓策略，做成买入项
+		// 根据建仓策略，做成建仓项
 		int create_max_count = cIStrategyCreate.strategy_create_max_count();
 		int alreadyCount = accIF.getStockHoldList(null, null).size() + accIF.getBuyCommissionOrderList().size();
 		int buyStockCount = create_max_count - alreadyCount;

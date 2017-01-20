@@ -58,64 +58,68 @@ public class ClearWorkRequest extends BQThreadRequest {
 		
 		
 		IStrategyClear cIStrategyClear = GlobalUserObj.getCurrentStrategyClear();
-		List<String> stockIDCreateList = m_stockIDList;
+		List<String> stockIDHoldList = m_stockIDList;
 		
-		BLog.output("CLEAR", "    stockIDCreateList count(%s)\n", stockIDCreateList.size());
+		BLog.output("CLEAR", "    stockIDHoldList count(%s)\n", stockIDHoldList.size());
 		
 		List<ClearResultWrapper> cClearResultWrapperList = new ArrayList<ClearResultWrapper>();
 		
-		for(int i=0; i<stockIDCreateList.size(); i++)
+		for(int i=0; i<stockIDHoldList.size(); i++)
 		{
-			String stockID = stockIDCreateList.get(i);
+			String stockID = stockIDHoldList.get(i);
 			
 			// 构造当时股票数据(昨日日K，今日当前分时)
 			
 			ResultLatestStockInfo cResultLatestStockInfo = stockDataIF.getLatestStockInfo(stockID);
-			StockInfo cStockInfo = cResultLatestStockInfo.stockInfo;
-			
 			String yesterday_date = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(m_date, -1);
 			ResultHistoryData cResultHistoryData = stockDataIF.getHistoryData(stockID, yesterday_date);
-			List<StockDay> cStockDayList = cResultHistoryData.resultList;
-			
 			ResultStockTime cResultStockTime = stockDataIF.getStockTime(stockID, m_date, m_time);
-			if(0 == cResultStockTime.error)
+			if(0 == cResultLatestStockInfo.error
+					&& 0 == cResultHistoryData.error
+					&& 0 == cResultStockTime.error)
 			{
+				// 做成当日股票数据
 				StockTimeDataCache.addStockTime(stockID, m_date, cResultStockTime.stockTime);
-			}
-			List<StockTime> cStockTimeList = StockTimeDataCache.getStockTimeList(stockID, m_date);
-			StockDay curStockDay = new StockDay();
-			curStockDay.set(m_date, cStockTimeList);
-			
-			cStockDayList.add(curStockDay);
-			
-			BLog.output("CLEAR", "        -Stock:%s cStockTimeList size(%d)\n", stockID, cStockTimeList.size());
-			
-			Stock cStock = new Stock();
-			cStock.setCurLatestStockInfo(cStockInfo);
-			cStock.setCurStockDayData(cStockDayList);
-			
-			AccountAccessor cAccountAccessor = accIF.getAccountAccessor(m_date, m_time);
-			String dateBefore = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(m_date, -1);
-			StockDataAccessor cStockDataAccessor = stockDataIF.getStockDataAccessor(dateBefore, m_time);
-			Target cTarget = new Target(cStock, cAccountAccessor.getStockHold(stockID));
-			TranContext ctx = new TranContext(m_date, m_time, 
-					cTarget,  // 目标对象带有 股票数据与持股信息
-					cAccountAccessor, // ctx带有账户访问器
-					cStockDataAccessor);// ctx带有昨日数据访问器（用户不能查看今天得其他k线）
-			
-			if(0 == cResultStockTime.error) // 只有获取当前价格成功时才回调给用户
-			{
+
+				List<StockTime> cStockTimeList = StockTimeDataCache.getStockTimeList(stockID, m_date);
+				StockDay curStockDay = new StockDay();
+				curStockDay.set(m_date, cStockTimeList);
+				cResultHistoryData.resultList.add(curStockDay);
+				
+				Stock cStock = new Stock();
+				cStock.setCurLatestStockInfo(cResultLatestStockInfo.stockInfo);
+				cStock.setCurStockDayData(cResultHistoryData.resultList);
+				
+				BLog.output("CLEAR", "        -Stock:%s cStockTimeList size(%d)\n", stockID, cStockTimeList.size());
+				
+				// 做成 ctx
+				AccountAccessor cAccountAccessor = accIF.getAccountAccessor(m_date, m_time);
+				StockDataAccessor cStockDataAccessor = stockDataIF.getStockDataAccessor(yesterday_date, m_time);
+				Target cTarget = new Target(cStock, cAccountAccessor.getStockHold(stockID));
+				TranContext ctx = new TranContext(m_date, m_time, 
+						cTarget,  // 目标对象带有 股票数据与持股信息
+						cAccountAccessor, // ctx带有账户访问器
+						cStockDataAccessor);// ctx带有昨日数据访问器（用户不能查看今天得其他k线）
+				
+				// 构造ClearResultWrapper
 				ClearResultWrapper cClearResultWrapper = new ClearResultWrapper();
 				cClearResultWrapper.stockId = stockID;
 				cClearResultWrapper.fPrice = cResultStockTime.stockTime.price;
+				
+				// 回调给用户
 				cIStrategyClear.strategy_clear(ctx, cClearResultWrapper.clearRes);
 				if(cClearResultWrapper.clearRes.bClear)
 				{
 					cClearResultWrapperList.add(cClearResultWrapper);
 				}
 			}
+			else
+			{
+				BLog.output("CLEAR", "Cannot Generate %s %s stock %s, ignore!\n", m_date, m_time, stockID);
+			}
 		}
 		
+		// 根据清仓策略，做成清仓项
 		StockClearAnalysis.StockClearAnalysisCompleteNotify.Builder msg_builder = StockClearAnalysis.StockClearAnalysisCompleteNotify.newBuilder();
 		msg_builder.setDate(m_date);
 		msg_builder.setTime(m_time);
