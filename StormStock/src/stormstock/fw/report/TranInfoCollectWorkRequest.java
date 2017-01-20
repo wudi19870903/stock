@@ -26,33 +26,33 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 		m_date = date;
 		m_time = time;
 		m_cInfoCollector = cInfoCollector;
-		if(m_bCreateReport){
-			String imgfilename = date + "-report.jpg";
-			m_imgReport = new BImageCurve(1600,900,imgfilename);
-		}
 	}
 
 	@Override
 	public void doAction() {
 		BLog.output("REPORT", "TranInfoCollectWorkRequest.doAction [%s %s]\n", m_date, m_time);
 		
+		StockDataIF cStockDataIF = GlobalUserObj.getCurStockDataIF();
+		AccountControlIF cAccountControlIF = GlobalUserObj.getCurAccountControlIF();
+		
 		// 创建DailyReport
 		DailyReport cDailyReport = new DailyReport(m_date);
 		
-		StockDataIF cStockDataIF = GlobalUserObj.getCurStockDataIF();
-		AccountControlIF cAccountControlIF = GlobalUserObj.getCurAccountControlIF();
+		// 添加当天上证指数
+		ResultHistoryData cResultHistoryData = cStockDataIF.getHistoryData("999999", m_date, m_date);
+		List<StockDay> cSHCompositeList = cResultHistoryData.resultList;
+		cDailyReport.fSHComposite = cSHCompositeList.get(0).close();
+		
+		
 		float fTotalAssets = cAccountControlIF.getTotalAssets(m_date, m_time);
 		float fAvailableMoney = cAccountControlIF.getAvailableMoney();
 		List<HoldStock> cStockHoldList = cAccountControlIF.getStockHoldList(m_date, m_time);
 		List<DeliveryOrder> cDeliveryOrderList = cAccountControlIF.getDeliveryOrderList();
 		
+		// 添加当前总资产，可用钱
 		cDailyReport.fTotalAssets = fTotalAssets;
 		cDailyReport.fAvailableMoney = fAvailableMoney;
-		
-		ResultHistoryData cResultHistoryData = cStockDataIF.getHistoryData("999999", m_date, m_date);
-		List<StockDay> cSHCompositeList = cResultHistoryData.resultList;
-		cDailyReport.fSHComposite = cSHCompositeList.get(0).close();
-		
+
 		BLog.output("REPORT", "    -TotalAssets: %.3f\n", fTotalAssets);
 		BLog.output("REPORT", "    -AvailableMoney: %.3f\n", fAvailableMoney);
 		for(int i=0; i<cStockHoldList.size(); i++ )
@@ -89,6 +89,7 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 			}
 			if(bIsClearDeliveryOrder)
 			{
+				// 添加清仓交割单
 				cDailyReport.cClearDeliveryOrder.add(cDeliveryOrder);
 			}
 		}
@@ -107,9 +108,6 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 
 	private String m_date;
 	private String m_time;
-	
-	private boolean m_bCreateReport;
-	private BImageCurve m_imgReport;
 	
 	private InfoCollector m_cInfoCollector;
 }

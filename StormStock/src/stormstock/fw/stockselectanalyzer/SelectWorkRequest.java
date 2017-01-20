@@ -81,27 +81,34 @@ public class SelectWorkRequest extends BQThreadRequest {
 				cSRW.stockId = stockID;
 				
 				// 构造当时股票数据
-				Stock cStock = new Stock();
-				ResultHistoryData cResultHistoryData = stockDataIF.getHistoryData(stockID, m_date);
-				List<StockDay> cStockDayList = cResultHistoryData.resultList;
 				ResultLatestStockInfo cResultLatestStockInfo = stockDataIF.getLatestStockInfo(stockID);
-				StockInfo cStockInfo = cResultLatestStockInfo.stockInfo;
-				cStock.setCurStockDayData(cStockDayList);
-				cStock.setCurLatestStockInfo(cStockInfo);
-				
-				StockDataAccessor cStockDataAccessor = stockDataIF.getStockDataAccessor(m_date, m_time);
-				Target cTarget = new Target(cStock, null);
-				TranContext ctx = new TranContext(m_date, m_time, 
-						cTarget,  // 目标不包含 持股信息
-						null,  // 不带账户访问器
-						cStockDataAccessor); // 带当天的数据访问器
-				
-				// 进行用户选股
-				cIStrategySelect.strategy_select(ctx, cSRW.selectRes);
-				
-				// 如果选择后，把结果添加到cSelectResultWrapperList
-				if(cSRW.selectRes.bSelect){
-					cSelectResultWrapperList.add(cSRW);
+				ResultHistoryData cResultHistoryData = stockDataIF.getHistoryData(stockID, m_date);
+				if(0 == cResultLatestStockInfo.error 
+						&& 0 == cResultHistoryData.error
+						&& cResultHistoryData.resultList.size()>0
+						&& cResultHistoryData.resultList.get(cResultHistoryData.resultList.size()-1).date().compareTo(m_date) == 0)
+				{
+					Stock cStock = new Stock();
+					cStock.setCurLatestStockInfo(cResultLatestStockInfo.stockInfo);
+					cStock.setCurStockDayData(cResultHistoryData.resultList);
+					StockDataAccessor cStockDataAccessor = stockDataIF.getStockDataAccessor(m_date, m_time);
+					Target cTarget = new Target(cStock, null);
+					TranContext ctx = new TranContext(m_date, m_time, 
+							cTarget,  // 目标不包含 持股信息
+							null,  // 不带账户访问器
+							cStockDataAccessor); // 带当天的数据访问器
+					// 进行用户选股
+					cIStrategySelect.strategy_select(ctx, cSRW.selectRes);
+					
+					// 如果选择后，把结果添加到cSelectResultWrapperList
+					if(cSRW.selectRes.bSelect){
+						cSelectResultWrapperList.add(cSRW);
+					}
+				}
+				else
+				// 不能成功做成股票数据，忽略选股操作
+				{
+					BLog.output("SELECT", "Cannot Generate %s stock %s, ignore!\n", m_date, stockID);
 				}
 			}
 			Collections.sort(cSelectResultWrapperList, new SelectResultWrapper.SelectResultCompare());

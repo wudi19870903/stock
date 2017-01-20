@@ -57,7 +57,8 @@ public class StockDataIF {
 			}
 			else
 			{
-				//BLog.error("STOCKDATA", "DataEngine.getUpdatedStocksDate error(%d) \n", cResultUpdatedStocksDate.error);
+				m_localLatestDate = "0000-00-00";
+				BLog.output("STOCKDATA", "DataEngine.getUpdatedStocksDate failed, reset to %s \n", m_localLatestDate);
 			}
 		}
 		
@@ -90,7 +91,7 @@ public class StockDataIF {
 			}
 			else
 			{
-				//BLog.error("STOCKDATA", "DataEngine.getUpdatedStocksDate error(%d) \n", cResultUpdatedStocksDate.error);
+				BLog.output("STOCKDATA", "DataEngine.getUpdatedStocksDate failed! \n", m_localLatestDate);
 			}
 		}
 		

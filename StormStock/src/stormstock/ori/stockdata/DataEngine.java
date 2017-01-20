@@ -775,7 +775,8 @@ public class DataEngine extends DataEngineBase
 					ResultDayKData cResultDayKDataQFQ = DataEngine.getDayKDataQianFuQuan(stockID);
 		    		if(0 == cResultDayKDataQFQ.error && cResultDayKDataQFQ.resultList.size() > 0)
 		    		{
-		    			fmt.format("update success: %s (%s) item:%d date:%s\n", cStockSimpleItem.id, cStockSimpleItem.name, cResultUpdateStock.updateCnt, newestDate);
+		    			String stockNewestDate = cResultDayKDataQFQ.resultList.get(cResultDayKDataQFQ.resultList.size()-1).date;
+		    			fmt.format("update success: %s (%s) item:%d date:%s\n", cStockSimpleItem.id, cStockSimpleItem.name, cResultUpdateStock.updateCnt, stockNewestDate);
 		    		}
 		            else
 		            {
