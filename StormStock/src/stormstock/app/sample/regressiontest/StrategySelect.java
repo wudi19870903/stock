@@ -1,26 +1,43 @@
 package stormstock.app.sample.regressiontest;
 import java.util.List;
 
+import stormstock.fw.base.BLog;
 import stormstock.fw.tranbase.com.IStrategySelect;
 import stormstock.fw.tranbase.com.TranContext;
 import stormstock.fw.tranbase.stockdata.Stock;
+import stormstock.fw.tranbase.stockdata.StockDay;
 
 public class StrategySelect extends IStrategySelect {
 
 	@Override
 	public void strategy_select(TranContext ctx, SelectResult out_sr) {
+		
 		Stock curStock = ctx.target().stock();
-		// 特征：价值位置250日周期
-		float EigenPriceLocLong = (float)ctx.target().getStockEigen("EigenSamplePriceLoc", 250);
-		// 离60日均线偏离百分比
-		float MADeviation60 = (float)ctx.target().getStockEigen("EigenSampleMADeviation", 60);
-		// 离250日均线偏离百分比
-		float MADeviation250 = (float)ctx.target().getStockEigen("EigenSampleMADeviation", 250);
-		if(MADeviation60 < -0.1 && MADeviation250 < -0.06 
-				&& EigenPriceLocLong < 0.4 && EigenPriceLocLong > 0.1) {
-			out_sr.bSelect = true;
-			//out_sr.fPriority = (float) Math.random();
-			//ANLLog.outputLog("    stock %s %s %s %.2f EigenSample1(%.3f) EigenSample2(%.3f)\n", in_stock.id, in_stock.curBaseInfo.name, in_stock.GetLastDate(), in_stock.GetLastPrice(),EigenSample1,EigenSample2);
+		
+		
+		BLog.output("TEST", "[%s %s] strategy_select stockID:%s close:%.2f (%s)\n", 
+				ctx.date(), ctx.time(), 
+				curStock.getCurLatestStockInfo().ID, curStock.GetLastClosePrice(),curStock.GetLastDate());
+		
+		// 连续3天阴线
+		
+		List<StockDay> cStockDayList = curStock.getCurStockDayData();
+		int iSize = cStockDayList.size();
+		if(iSize > 4)
+		{
+			StockDay cStockDayCur = cStockDayList.get(iSize-1);
+			StockDay cStockDayBefore1 = cStockDayList.get(iSize-2);
+			StockDay cStockDayBefore2 = cStockDayList.get(iSize-3);
+			StockDay cStockDayBefore3 = cStockDayList.get(iSize-4);
+			
+			if(cStockDayCur.close() <= cStockDayBefore1.close()
+					&& cStockDayBefore1.close() <= cStockDayBefore2.close()
+					&& cStockDayBefore2.close() <= cStockDayBefore3.close()
+					)
+			{
+				out_sr.bSelect = true;
+				out_sr.fPriority = cStockDayBefore3.close() - cStockDayCur.close();
+			}
 		}
 	}
 

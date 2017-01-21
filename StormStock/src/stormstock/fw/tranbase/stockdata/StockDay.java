@@ -38,11 +38,32 @@ public class StockDay {
 		m_date = date;
 		m_bEndTran = false;
 		m_stockTimeList = stockTimeList;
+		
 		m_open = 0.0f;
 		m_close = 0.0f;
-		m_low = 0.0f;
-		m_high = 0.0f;
+		m_low = 100000.0f;
+		m_high = -100000.0f;
 		m_volume = 0.0f;
+		for(int i=0; i<m_stockTimeList.size();i++)
+		{
+			StockTime cStockTime = m_stockTimeList.get(i);
+			if(0 == i)
+			{
+				m_open = cStockTime.price;
+			}
+			if(m_stockTimeList.size()-1 == i)
+			{
+				m_close = cStockTime.price;
+			}
+			if(cStockTime.price < m_low)
+			{
+				m_low = cStockTime.price;
+			}
+			if(cStockTime.price > m_high)
+			{
+				m_high = cStockTime.price;
+			}
+		}
 	}
 	
 	public String date()
