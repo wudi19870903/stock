@@ -17,7 +17,7 @@ public class StrategySelect extends IStrategySelect {
 //				ctx.date(), ctx.time(), 
 //				curStock.getCurLatestStockInfo().ID ,curStock.GetLastDate() , curStock.GetLastClosePrice());
 		
-		// 连续3天阴线，选入，选入优先级是最大价格差
+		// 连续3阴线，选入，选入优先级是最大价格差
 		List<StockDay> cStockDayList = ctx.target().stock().getCurStockDayData();
 		int iSize = cStockDayList.size();
 		if(iSize > 4)
@@ -26,10 +26,10 @@ public class StrategySelect extends IStrategySelect {
 			StockDay cStockDayBefore1 = cStockDayList.get(iSize-2);
 			StockDay cStockDayBefore2 = cStockDayList.get(iSize-3);
 			StockDay cStockDayBefore3 = cStockDayList.get(iSize-4);
-			
-			if(cStockDayCur.close() <= cStockDayBefore1.close()
-					&& cStockDayBefore1.close() <= cStockDayBefore2.close()
-					&& cStockDayBefore2.close() <= cStockDayBefore3.close()
+
+			if(cStockDayCur.close() < cStockDayCur.open() && cStockDayCur.close() < cStockDayBefore1.close()
+					&& cStockDayBefore1.close() < cStockDayBefore1.open() && cStockDayBefore1.close() < cStockDayBefore2.close()
+					&& cStockDayBefore2.close() < cStockDayBefore2.open() && cStockDayBefore2.close() < cStockDayBefore3.close()
 					)
 			{
 				out_sr.bSelect = true;

@@ -94,7 +94,7 @@ public class WorkEntity {
 				}
 				
 				// 9:30-11:30 1:00-3:00 定期间隔发送交易信号，等待信号处理完毕通知
-				int interval_min = 10;
+				int interval_min = 1;
 				String timestr_begin = "09:30:00";
 				String timestr_end = "11:30:00";
 				timestr = timestr_begin;
