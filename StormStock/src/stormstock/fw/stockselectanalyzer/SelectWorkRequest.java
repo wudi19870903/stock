@@ -97,6 +97,15 @@ public class SelectWorkRequest extends BQThreadRequest {
 							cTarget,  // 目标不包含 持股信息
 							null,  // 不带账户访问器
 							cStockDataAccessor); // 带当天的数据访问器
+					
+					
+					// log
+					BLog.output("SELECT", "    [%s %s] strategy_select stockID:%s (%s) close:%.2f \n", 
+						ctx.date(), ctx.time(), 
+						ctx.target().stock().getCurLatestStockInfo().ID ,
+						ctx.target().stock().GetLastDate() ,
+						ctx.target().stock().GetLastClosePrice());
+					
 					// 进行用户选股
 					cIStrategySelect.strategy_select(ctx, cSRW.selectRes);
 					
@@ -108,7 +117,7 @@ public class SelectWorkRequest extends BQThreadRequest {
 				else
 				// 不能成功做成股票数据，忽略选股操作
 				{
-					BLog.output("SELECT", "Cannot Generate %s stock %s, ignore!\n", m_date, stockID);
+					BLog.output("SELECT", "    Cannot Generate %s stock %s, ignore!\n", m_date, stockID);
 				}
 			}
 			Collections.sort(cSelectResultWrapperList, new SelectResultWrapper.SelectResultCompare());

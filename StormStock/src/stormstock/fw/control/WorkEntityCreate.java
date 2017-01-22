@@ -35,10 +35,15 @@ public class WorkEntityCreate {
 		}
 		
 		StockCreateAnalysis.StockCreateAnalysisRequest msg = msg_builder.build();
-		BEventSys.EventSender cSender = new BEventSys.EventSender();
-		cSender.Send("BEV_TRAN_STOCKCREATEANALYSISREQUEST", msg);
-	
-		m_WaitObjForCreate.Wait();
+		// 存在已选股，进行建仓分析
+		if(msg.getStockIDList().size() > 0)
+		{
+			BEventSys.EventSender cSender = new BEventSys.EventSender();
+			cSender.Send("BEV_TRAN_STOCKCREATEANALYSISREQUEST", msg);
+		
+			m_WaitObjForCreate.Wait();
+		}
+
 	}
 	public void onStockCreateAnalysisCompleteNotify(com.google.protobuf.GeneratedMessage m)
 	{

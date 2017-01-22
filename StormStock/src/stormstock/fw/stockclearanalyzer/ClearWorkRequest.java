@@ -90,8 +90,6 @@ public class ClearWorkRequest extends BQThreadRequest {
 				cStock.setCurLatestStockInfo(cResultLatestStockInfo.stockInfo);
 				cStock.setCurStockDayData(cResultHistoryData.resultList);
 				
-				BLog.output("CLEAR", "        -Stock:%s cStockTimeList size(%d)\n", stockID, cStockTimeList.size());
-				
 				// 做成 ctx
 				AccountAccessor cAccountAccessor = accIF.getAccountAccessor(m_date, m_time);
 				StockDataAccessor cStockDataAccessor = stockDataIF.getStockDataAccessor(yesterday_date, m_time);
@@ -106,16 +104,34 @@ public class ClearWorkRequest extends BQThreadRequest {
 				cClearResultWrapper.stockId = stockID;
 				cClearResultWrapper.fPrice = cResultStockTime.stockTime.price;
 				
-				// 回调给用户
-				cIStrategyClear.strategy_clear(ctx, cClearResultWrapper.clearRes);
-				if(cClearResultWrapper.clearRes.bClear)
+				List<StockTime> stockTimeList = ctx.target().stock().getLatestStockTimeList();
+				if(stockTimeList.size()>0)
 				{
-					cClearResultWrapperList.add(cClearResultWrapper);
+					// log
+					int iBegin = 0;
+					int iEnd = stockTimeList.size()-1;
+					int cnt = stockTimeList.size();
+					
+					BLog.output("CLEAR", "    [%s %s] strategy_clear stockID:%s (%s) (%s %.2f)...(%s %.2f) cnt(%d)\n", 
+							ctx.date(), ctx.time(), 
+							ctx.target().stock().getCurLatestStockInfo().ID,ctx.target().stock().GetLastDate(),
+							stockTimeList.get(iBegin).time, stockTimeList.get(iBegin).price,
+							stockTimeList.get(iEnd).time, stockTimeList.get(iEnd).price, 
+							cnt);
+					
+					// 回调给用户
+					cIStrategyClear.strategy_clear(ctx, cClearResultWrapper.clearRes);
+					
+					if(cClearResultWrapper.clearRes.bClear)
+					{
+						cClearResultWrapperList.add(cClearResultWrapper);
+					}
 				}
+
 			}
 			else
 			{
-				BLog.output("CLEAR", "Cannot Generate %s %s stock %s, ignore!\n", m_date, m_time, stockID);
+				BLog.output("CLEAR", "    Cannot Generate %s %s stock %s, ignore!\n", m_date, m_time, stockID);
 			}
 		}
 		

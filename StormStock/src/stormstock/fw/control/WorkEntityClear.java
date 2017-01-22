@@ -40,10 +40,14 @@ public class WorkEntityClear {
 		}
 		
 		StockClearAnalysis.StockClearAnalysisRequest msg = msg_builder.build();
-		BEventSys.EventSender cSender = new BEventSys.EventSender();
-		cSender.Send("BEV_TRAN_STOCKCLEARANALYSISREQUEST", msg);
-		
-		m_WaitObjForClear.Wait();
+		// 存在可卖股的时候，进行清仓分析
+		if(msg.getStockIDList().size() > 0)
+		{
+			BEventSys.EventSender cSender = new BEventSys.EventSender();
+			cSender.Send("BEV_TRAN_STOCKCLEARANALYSISREQUEST", msg);
+			
+			m_WaitObjForClear.Wait();
+		}
 	}
 	public void onStockClearAnalysisCompleteNotify(com.google.protobuf.GeneratedMessage m)
 	{

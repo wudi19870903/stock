@@ -25,16 +25,22 @@ public class WorkEntitySelect {
 		StockSelectAnalysis.StockSelectAnalysisRequest.Builder msg_builder = StockSelectAnalysis.StockSelectAnalysisRequest.newBuilder();
 		msg_builder.setDate(dateStr);
 		msg_builder.setTime(timeStr);
+		
 		List<String> cTranStockIDSet = StockObjFlow.getTranStockIDSet();
 		for(int i=0;i<cTranStockIDSet.size();i++)
 		{
 			msg_builder.addStockID(cTranStockIDSet.get(i));
 		}
+		
 		StockSelectAnalysis.StockSelectAnalysisRequest msg = msg_builder.build();
-		BEventSys.EventSender cSender = new BEventSys.EventSender();
-		cSender.Send("BEV_TRAN_STOCKSELECTANALYSISREQUEST", msg);
+		// 存在交易集的时候。进行选股分析
+		if(msg.getStockIDList().size() > 0)
+		{
+			BEventSys.EventSender cSender = new BEventSys.EventSender();
+			cSender.Send("BEV_TRAN_STOCKSELECTANALYSISREQUEST", msg);
 
-		m_WaitObjForSelect.Wait();
+			m_WaitObjForSelect.Wait();
+		}
 	}
 	public void onStockSelectAnalysisCompleteNotify(com.google.protobuf.GeneratedMessage m)
 	{

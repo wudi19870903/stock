@@ -6,6 +6,7 @@ import stormstock.fw.base.BLog;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 import stormstock.fw.tranbase.com.IStrategyCreate;
 import stormstock.fw.tranbase.com.TranContext;
+import stormstock.fw.tranbase.stockdata.Stock;
 import stormstock.fw.tranbase.stockdata.StockTime;
 
 public class StrategyCreate extends IStrategyCreate {
@@ -13,24 +14,29 @@ public class StrategyCreate extends IStrategyCreate {
 	@Override
 	public void strategy_create(TranContext ctx, CreateResult out_sr) {
 		
-		BLog.output("TEST", "StrategyCreate %s %s\n", ctx.date(), ctx.time());
+		Stock curStock = ctx.target().stock();
 		
-		out_sr.bCreate = true;
+		String stockTimeStr = "";
+		List<StockTime> stockTimeList = ctx.target().stock().getLatestStockTimeList();
+		for(int i=0; i<stockTimeList.size(); i++)
+		{
+			StockTime cStockTime = stockTimeList.get(i);
+			stockTimeStr = stockTimeStr + String.format("%.2f(%s) ", cStockTime.price, cStockTime.time);
+		}
 		
-//		String stockID = ctx.target().stock().getCurLatestStockInfo().ID;
-//		
-//		String stockTimeStr = "";
-//		List<StockTime> stockTimeList = ctx.target().stock().getLatestStockTimeList();
-//		for(int i=0; i<stockTimeList.size(); i++)
-//		{
-//			StockTime cStockTime = stockTimeList.get(i);
-//			stockTimeStr = stockTimeStr + String.format("%.2f(%s) ", cStockTime.price, cStockTime.time);
-//		}
-//
-//		BLog.output("TEST", "%s %s\n", stockID, stockTimeStr);
-//		
-//		if(ctx.time().compareTo("14:00:00") >= 0)
-//			out_sr.bCreate = true;
+//		BLog.output("TEST", "        [%s %s] strategy_create stockID:%s (%s)  %s\n", 
+//				ctx.date(), ctx.time(), 
+//				curStock.getCurLatestStockInfo().ID, curStock.GetLastDate() , stockTimeStr);
+		
+		// 建仓为跌幅-0.02时买入
+		float fYesterdayClosePrice = curStock.GetLastYesterdayClosePrice();
+		float fNowPrice = curStock.getLatestPrice();
+		float fRatio = (fNowPrice - fYesterdayClosePrice)/fYesterdayClosePrice;
+		
+		if(fRatio < -0.02)
+		{
+			out_sr.bCreate = true;
+		}
 	}
 
 	@Override

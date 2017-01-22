@@ -89,8 +89,6 @@ public class CreateWorkRequest extends BQThreadRequest {
 				cStock.setCurLatestStockInfo(cResultLatestStockInfo.stockInfo);
 				cStock.setCurStockDayData(cResultHistoryData.resultList);
 				
-				BLog.output("CREATE", "        -Stock:%s cStockTimeList size(%d)\n", stockID, cStockTimeList.size());
-				
 				// 做成 ctx
 				AccountAccessor cAccountAccessor = accIF.getAccountAccessor(m_date, m_time);
 				StockDataAccessor cStockDataAccessor = stockDataIF.getStockDataAccessor(yesterday_date, m_time);
@@ -105,16 +103,33 @@ public class CreateWorkRequest extends BQThreadRequest {
 				cCreateResultWrapper.stockId = stockID;
 				cCreateResultWrapper.fPrice = cResultStockTime.stockTime.price;
 				
-				// 回调给用户
-				cIStrategyCreate.strategy_create(ctx, cCreateResultWrapper.createRes);
-				if(cCreateResultWrapper.createRes.bCreate)
+				List<StockTime> stockTimeList = ctx.target().stock().getLatestStockTimeList();
+				if(stockTimeList.size()>0)
 				{
-					cCreateResultWrapperList.add(cCreateResultWrapper);
+					// log
+					int iBegin = 0;
+					int iEnd = stockTimeList.size()-1;
+					int cnt = stockTimeList.size();
+					
+					BLog.output("CREATE", "    [%s %s] strategy_create stockID:%s (%s) (%s %.2f)...(%s %.2f) cnt(%d)\n", 
+							ctx.date(), ctx.time(), 
+							ctx.target().stock().getCurLatestStockInfo().ID,ctx.target().stock().GetLastDate(),
+							stockTimeList.get(iBegin).time, stockTimeList.get(iBegin).price,
+							stockTimeList.get(iEnd).time, stockTimeList.get(iEnd).price, 
+							cnt);
+					
+					// 回调给用户
+					cIStrategyCreate.strategy_create(ctx, cCreateResultWrapper.createRes);
+					
+					if(cCreateResultWrapper.createRes.bCreate)
+					{
+						cCreateResultWrapperList.add(cCreateResultWrapper);
+					}
 				}
 			}
 			else
 			{
-				BLog.output("CREATE", "Cannot Generate %s %s stock %s, ignore!\n", m_date, m_time, stockID);
+				BLog.output("CREATE", "    Cannot Generate %s %s stock %s, ignore!\n", m_date, m_time, stockID);
 			}
 		}
 			
