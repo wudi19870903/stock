@@ -14,23 +14,21 @@ public class StrategyCreate extends IStrategyCreate {
 	@Override
 	public void strategy_create(TranContext ctx, CreateResult out_sr) {
 		
-		Stock curStock = ctx.target().stock();
-		
-		String stockTimeStr = "";
-		List<StockTime> stockTimeList = ctx.target().stock().getLatestStockTimeList();
-		for(int i=0; i<stockTimeList.size(); i++)
-		{
-			StockTime cStockTime = stockTimeList.get(i);
-			stockTimeStr = stockTimeStr + String.format("%.2f(%s) ", cStockTime.price, cStockTime.time);
-		}
-		
+//		Stock curStock = ctx.target().stock();
+//		String stockTimeStr = "";
+//		List<StockTime> stockTimeList = ctx.target().stock().getLatestStockTimeList();
+//		for(int i=0; i<stockTimeList.size(); i++)
+//		{
+//			StockTime cStockTime = stockTimeList.get(i);
+//			stockTimeStr = stockTimeStr + String.format("%.2f(%s) ", cStockTime.price, cStockTime.time);
+//		}
 //		BLog.output("TEST", "        [%s %s] strategy_create stockID:%s (%s)  %s\n", 
 //				ctx.date(), ctx.time(), 
 //				curStock.getCurLatestStockInfo().ID, curStock.GetLastDate() , stockTimeStr);
 		
 		// 建仓为跌幅-0.02时买入
-		float fYesterdayClosePrice = curStock.GetLastYesterdayClosePrice();
-		float fNowPrice = curStock.getLatestPrice();
+		float fYesterdayClosePrice = ctx.target().stock().GetLastYesterdayClosePrice();
+		float fNowPrice = ctx.target().stock().getLatestPrice();
 		float fRatio = (fNowPrice - fYesterdayClosePrice)/fYesterdayClosePrice;
 		
 		if(fRatio < -0.02)

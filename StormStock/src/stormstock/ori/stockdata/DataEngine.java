@@ -327,6 +327,7 @@ public class DataEngine extends DataEngineBase
             int iSecBegin = 0;
             int iSecEnd = 0;
             int iStdSecEnd = 0;
+            float preClosePrice = cResultDayDetail.resultList.get(0).price;
             // add ионГ
             for(int i = 0; i < 24; i++)
             {
@@ -367,11 +368,11 @@ public class DataEngine extends DataEngineBase
     			//System.out.println("==================================================");
     			String StdEndTimeStr = String.format("%02d:%02d:%02d", 
     					iStdSecEnd/3600, (iStdSecEnd%3600)/60, (iStdSecEnd%3600)%60);
-    			float K5MinOpen = 0.0f;
-    			float K5MinClose = 0.0f;
-    			float K5MinLow = 0.0f;
-    			float K5MinHigh = 0.0f;
-    			float K5MinVolume = 0.0f;
+    			float K5MinOpen = preClosePrice;
+    			float K5MinClose = preClosePrice;
+    			float K5MinLow = preClosePrice;
+    			float K5MinHigh = preClosePrice;
+    			float K5MinVolume = preClosePrice;
     			for(int k = 0; k < tmpList.size(); k++) 
     			{
     				DayDetailItem cDayDetailItem = tmpList.get(k);  
@@ -397,6 +398,7 @@ public class DataEngine extends DataEngineBase
     			tmpList.clear();
     			cResultMinKDataOneDay.exKDataList.add(cExKData);
     			//System.out.println("cExKData.datetime:" + cExKData.datetime);
+    			preClosePrice = cExKData.close;
             }
             // add обнГ
             for(int i = 0; i < 24; i++)
@@ -438,11 +440,11 @@ public class DataEngine extends DataEngineBase
     			//System.out.println("==================================================");
     			String StdEndTimeStr = String.format("%02d:%02d:%02d", 
     					iStdSecEnd/3600, (iStdSecEnd%3600)/60, (iStdSecEnd%3600)%60);
-    			float K5MinOpen = 0.0f;
-    			float K5MinClose = 0.0f;
-    			float K5MinLow = 0.0f;
-    			float K5MinHigh = 0.0f;
-    			float K5MinVolume = 0.0f;
+    			float K5MinOpen = preClosePrice;
+    			float K5MinClose = preClosePrice;
+    			float K5MinLow = preClosePrice;
+    			float K5MinHigh = preClosePrice;
+    			float K5MinVolume = preClosePrice;
     			for(int k = 0; k < tmpList.size(); k++) 
     			{
     				DayDetailItem cDayDetailItem = tmpList.get(k);  
@@ -468,6 +470,7 @@ public class DataEngine extends DataEngineBase
     			tmpList.clear();
     			cResultMinKDataOneDay.exKDataList.add(cExKData);
     			//System.out.println("cExKData.datetime:" + cExKData.datetime);
+    			preClosePrice = cExKData.close;
             }
 		}
 		else
@@ -493,7 +496,7 @@ public class DataEngine extends DataEngineBase
             int iSecBegin = 0;
             int iSecEnd = 0;
             int iStdSecEnd = 0;
-            float preClosePrice = 0.0f;
+            float preClosePrice = cResultDayDetail.resultList.get(0).price;
             // add ионГ
             for(int i = 0; i < 120; i++)
             {

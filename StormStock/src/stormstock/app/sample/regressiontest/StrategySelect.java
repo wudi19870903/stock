@@ -12,14 +12,13 @@ public class StrategySelect extends IStrategySelect {
 	@Override
 	public void strategy_select(TranContext ctx, SelectResult out_sr) {
 		
-		Stock curStock = ctx.target().stock();
-		
+//		Stock curStock = ctx.target().stock();	
 //		BLog.output("TEST", "        [%s %s] strategy_select stockID:%s (%s) close:%.2f \n", 
 //				ctx.date(), ctx.time(), 
 //				curStock.getCurLatestStockInfo().ID ,curStock.GetLastDate() , curStock.GetLastClosePrice());
 		
 		// 连续3天阴线，选入，选入优先级是最大价格差
-		List<StockDay> cStockDayList = curStock.getCurStockDayData();
+		List<StockDay> cStockDayList = ctx.target().stock().getCurStockDayData();
 		int iSize = cStockDayList.size();
 		if(iSize > 4)
 		{

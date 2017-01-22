@@ -17,8 +17,8 @@ public class Application {
 		//BLog.config_setTag("SELECT", true);
 		BLog.config_setTag("CREATE", true);
 		BLog.config_setTag("CLEAR", true);
-		//BLog.config_setTag("ACCOUNT", true);
-		//BLog.config_setTag("REPORT", true);
+		BLog.config_setTag("ACCOUNT", true);
+		BLog.config_setTag("REPORT", true);
 		
 		TranEngine cTranEngine = new TranEngine();
 		
@@ -35,7 +35,7 @@ public class Application {
 		
 		//cTranEngine.setTranMode(TRANTIMEMODE.REALTIME);
 		cTranEngine.setTranMode(TRANTIMEMODE.HISTORYMOCK);
-		cTranEngine.setHistoryTimeSpan("2016-01-01", "2016-01-11");
+		cTranEngine.setHistoryTimeSpan("2016-01-01", "2016-06-01");
 		
 		cTranEngine.run();
 		

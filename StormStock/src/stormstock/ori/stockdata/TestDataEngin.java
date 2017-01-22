@@ -68,7 +68,7 @@ public class TestDataEngin {
 	}
 	private static void test_get1MinKDataOneDay()
 	{
-		ResultMinKDataOneDay cResultMinKDataOneDay = DataEngine.get1MinKDataOneDay("000004", "2016-10-12");
+		ResultMinKDataOneDay cResultMinKDataOneDay = DataEngine.get1MinKDataOneDay("000028", "2016-05-10");
 		//int ret = get5MinKDataOneDay("600316", "2010-06-28", retList);
 		if(0 == cResultMinKDataOneDay.error)
 		{
@@ -182,9 +182,9 @@ public class TestDataEngin {
 		//test_getDayKDataQianFuQuan();
 		//test_getDayKDataHouFuQuan();
 		//test_get5MinKDataOneDay();
-		//test_get1MinKDataOneDay();
+		test_get1MinKDataOneDay();
 		//test_getLocalRandomStock();
 		//test_checkStockData();
-		test_updateAllLocalStocks();
+		//test_updateAllLocalStocks();
 	}
 }

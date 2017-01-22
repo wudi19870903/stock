@@ -132,7 +132,7 @@ public class TestStockDataIF {
 		while(true)
 		{
 
-			ResultStockTime cResultStockTime = cStockDataIF.getStockTime("000004", "2016-03-23", curTime);
+			ResultStockTime cResultStockTime = cStockDataIF.getStockTime("000028", "2016-05-10", curTime);
 			
 			if(0 == cResultStockTime.error)
 			{
@@ -156,8 +156,8 @@ public class TestStockDataIF {
 		//test_getAllStocks();
 		//test_getLatestStockInfo();
 		//test_getHistoryData();
-		test_getDayDetail();
-		//test_getStockTime();
+		//test_getDayDetail();
+		test_getStockTime();
 		
 		BLog.output("TEST", "TestStockDataProvider End\n");
 	}
