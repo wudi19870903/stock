@@ -34,7 +34,7 @@ public class StrategyClear extends IStrategyClear {
 			out_sr.bClear = true;
 		}
 			
-		if(cHoldStock.profitRatio() > 0.03 || cHoldStock.profitRatio() < -0.03) // Ö¹Ó¯Ö¹Ëð5¸öµãÂô
+		if(cHoldStock.profitRatio() > 0.02 || cHoldStock.profitRatio() < -0.02) // Ö¹Ó¯Ö¹Ëð2¸öµãÂô
 		{
 			out_sr.bClear = true;
 		}
