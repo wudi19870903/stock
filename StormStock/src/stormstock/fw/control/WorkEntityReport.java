@@ -31,7 +31,7 @@ public class WorkEntityReport {
 		ReportAnalysis.TranInfoCollectRequest msg = msg_builder.build();
 		BEventSys.EventSender cSender = new BEventSys.EventSender();
 		cSender.Send("BEV_TRAN_TRANINFOCOLLECTREQUEST", msg);
-		m_WaitObjForTranInfoCollect.Wait();
+		m_WaitObjForTranInfoCollect.Wait(Long.MAX_VALUE);
 	}
 	public void onTranInfoCollectCompleteNotify(com.google.protobuf.GeneratedMessage m) {
 		ReportAnalysis.TranInfoCollectCompleteNotify msg = (ReportAnalysis.TranInfoCollectCompleteNotify)m;
@@ -61,7 +61,7 @@ public class WorkEntityReport {
 		ReportAnalysis.GenerateReportRequest msg = msg_builder.build();
 		BEventSys.EventSender cSender = new BEventSys.EventSender();
 		cSender.Send("BEV_TRAN_GENERATEREPORTREQUEST", msg);
-		m_WaitObjForGenerateReport.Wait();
+		m_WaitObjForGenerateReport.Wait(Long.MAX_VALUE);
 	}
 	public void onGenerateReportCompleteNotify(com.google.protobuf.GeneratedMessage m) {
 		ReportAnalysis.GenerateReportCompleteNotify msg = (ReportAnalysis.GenerateReportCompleteNotify)m;

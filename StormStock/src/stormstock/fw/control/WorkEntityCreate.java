@@ -41,7 +41,7 @@ public class WorkEntityCreate {
 			BEventSys.EventSender cSender = new BEventSys.EventSender();
 			cSender.Send("BEV_TRAN_STOCKCREATEANALYSISREQUEST", msg);
 		
-			m_WaitObjForCreate.Wait();
+			m_WaitObjForCreate.Wait(Long.MAX_VALUE);
 		}
 
 	}

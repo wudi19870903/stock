@@ -13,9 +13,9 @@ abstract public class BThread {
 		return m_thread.checkQuit();
 	}
 	
-	public boolean Wait()
+	public boolean Wait(long msec)
 	{
-		return m_thread.Wait();
+		return m_thread.Wait(msec);
 	}
 	
 	public boolean Notify()
@@ -72,9 +72,9 @@ abstract public class BThread {
 		{
 			return m_bRunning;
 		}
-		boolean Wait()
+		boolean Wait(long msec)
 		{
-			m_cBWaitObj.Wait();
+			m_cBWaitObj.Wait(msec);
 			return true;
 		}
 		boolean Notify()

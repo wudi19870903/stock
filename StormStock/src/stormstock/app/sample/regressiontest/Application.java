@@ -10,16 +10,6 @@ public class Application {
 	public static void main(String[] args) {
 		BLog.output("TEST", "--->>> MainBegin\n");
 		
-		//BLog.config_setTag("BASE", true);
-		//BLog.config_setTag("EVENT", true);
-		BLog.config_setTag("CTRL", true);
-		//BLog.config_setTag("STOCKDATA", true);
-		//BLog.config_setTag("SELECT", true);
-		//BLog.config_setTag("CREATE", true);
-		//BLog.config_setTag("CLEAR", true);
-		BLog.config_setTag("ACCOUNT", true);
-		BLog.config_setTag("REPORT", true);
-		
 		TranEngine cTranEngine = new TranEngine();
 		
 		cTranEngine.setStockSet(new TranStockSet());
@@ -35,7 +25,7 @@ public class Application {
 		
 		//cTranEngine.setTranMode(TRANTIMEMODE.REALTIME);
 		cTranEngine.setTranMode(TRANTIMEMODE.HISTORYMOCK);
-		cTranEngine.setHistoryTimeSpan("2016-03-01", "2016-03-10");
+		cTranEngine.setHistoryTimeSpan("2015-03-01", "2016-03-10");
 		
 		cTranEngine.run();
 		

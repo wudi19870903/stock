@@ -46,7 +46,7 @@ public class WorkEntityClear {
 			BEventSys.EventSender cSender = new BEventSys.EventSender();
 			cSender.Send("BEV_TRAN_STOCKCLEARANALYSISREQUEST", msg);
 			
-			m_WaitObjForClear.Wait();
+			m_WaitObjForClear.Wait(Long.MAX_VALUE);
 		}
 	}
 	public void onStockClearAnalysisCompleteNotify(com.google.protobuf.GeneratedMessage m)

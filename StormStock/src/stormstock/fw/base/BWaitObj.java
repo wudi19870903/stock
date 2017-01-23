@@ -11,14 +11,14 @@ public class BWaitObj {
 		m_bNotified = false;
 	}
 
-	public boolean Wait()
+	public boolean Wait(long msec)
 	{
 		try {
 			synchronized(m_waitObj)
 			{
 				if(!m_bNotified)
 				{
-					m_waitObj.wait();
+					m_waitObj.wait(msec);
 				}
 				m_bNotified = false;
 			}

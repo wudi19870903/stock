@@ -49,7 +49,7 @@ public class TestBWatiObj {
 			e.printStackTrace();
 		}
 		BLog.output("TEST", "BWaitObj.Wait ...1\n");
-		cBWaitObj.Wait();
+		cBWaitObj.Wait(Long.MAX_VALUE);
 		BLog.output("TEST", "BWaitObj.Wait ...1 Return\n");
 		
 		try {
@@ -59,7 +59,7 @@ public class TestBWatiObj {
 			e.printStackTrace();
 		}
 		BLog.output("TEST", "BWaitObj.Wait ...2\n");
-		cBWaitObj.Wait();
+		cBWaitObj.Wait(Long.MAX_VALUE);
 		BLog.output("TEST", "BWaitObj.Wait ...2 Return\n");
 	}
 }

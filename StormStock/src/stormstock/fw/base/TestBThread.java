@@ -10,7 +10,7 @@ public class TestBThread {
 			while(!checkQuit())
 			{
 				BLog.output("TEST", "TestThread Running...\n");
-				Wait();
+				Wait(Long.MAX_VALUE);
 			}
 		}
 		

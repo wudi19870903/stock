@@ -39,7 +39,7 @@ public class WorkEntitySelect {
 			BEventSys.EventSender cSender = new BEventSys.EventSender();
 			cSender.Send("BEV_TRAN_STOCKSELECTANALYSISREQUEST", msg);
 
-			m_WaitObjForSelect.Wait();
+			m_WaitObjForSelect.Wait(Long.MAX_VALUE);
 		}
 	}
 	public void onStockSelectAnalysisCompleteNotify(com.google.protobuf.GeneratedMessage m)

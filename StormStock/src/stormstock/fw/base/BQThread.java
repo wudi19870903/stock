@@ -53,7 +53,7 @@ public class BQThread {
 					if(null == cReq) break;
 					cReq.doAction();
 				}
-				super.Wait();
+				super.Wait(Long.MAX_VALUE);
 			}
 		}
 		public boolean postRequest(BQThreadRequest cReq)

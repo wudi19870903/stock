@@ -121,11 +121,14 @@ public class TestBEventSys {
 	}
 	
 	public static void main(String[] args) {
-		BLog.config_setLogDir("testlog");
+		BLog.start();
+		
 		BLog.config_setTag("TEST", true);
 		BLog.config_setTag("EVENT", true);
 		
 		//test_protobuf();
 		test_eventsys();
+		
+		BLog.stop();
 	}
 }
