@@ -52,7 +52,7 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 		// 添加当前总资产，可用钱
 		cDailyReport.fTotalAssets = fTotalAssets;
 		cDailyReport.fAvailableMoney = fAvailableMoney;
-
+		
 		BLog.output("REPORT", "    -TotalAssets: %.3f\n", fTotalAssets);
 		BLog.output("REPORT", "    -AvailableMoney: %.3f\n", fAvailableMoney);
 		for(int i=0; i<cStockHoldList.size(); i++ )

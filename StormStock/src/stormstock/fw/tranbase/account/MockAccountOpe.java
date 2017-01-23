@@ -88,7 +88,8 @@ public class MockAccountOpe extends IAccountOpe {
 		cHoldStock.transactionCosts = cHoldStock.transactionCosts + transactionCosts;
 		m_money = m_money - realBuyAmount*price;
 		
-		BLog.output("ACCOUNT", " @Buy [%s %.3f %d %.3f(%.3f) %.3f] \n", 
+		BLog.output("ACCOUNT", " @Buy [%s %s] [%s %.3f %d %.3f(%.3f) %.3f] \n", 
+				date, time,
 				stockID, price, realBuyAmount, price*realBuyAmount, transactionCosts, m_money);
 		
 		// 生成交割单
@@ -151,7 +152,8 @@ public class MockAccountOpe extends IAccountOpe {
 				m_holdStockList.remove(cHoldStock);
 			}
 			
-			BLog.output("ACCOUNT", " @Sell [%s %.3f %d %.3f(%.3f) %.3f] \n", 
+			BLog.output("ACCOUNT", " @Sell [%s %s] [%s %.3f %d %.3f(%.3f) %.3f] \n", 
+					date, time,
 					stockID, price, realSellAmount, price*realSellAmount, cHoldStock.transactionCosts, m_money);
 			
 			// 生成交割单

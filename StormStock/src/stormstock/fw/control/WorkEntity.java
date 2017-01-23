@@ -90,7 +90,7 @@ public class WorkEntity {
 				{
 					AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
 					BLog.output("CTRL", "[%s %s] account newDayInit \n", dateStr, timestr);
-					accIF.newDayInit();
+					accIF.newDayInit(dateStr, timestr);
 				}
 				
 				// 9:30-11:30 1:00-3:00 定期间隔发送交易信号，等待信号处理完毕通知

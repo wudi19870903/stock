@@ -59,9 +59,9 @@ public class AccountControlIF {
 	 * 账户新日期初始化
 	 * 持股均可卖出
 	 */
-	public boolean newDayInit()
+	public boolean newDayInit(String date, String time)
 	{
-		BLog.output("ACCOUNT", "new day reset...\n");
+		BLog.output("ACCOUNT", "[%s %s] account new day reset \n", date, time);
 		// 账户重新初始化
 		m_account.newDayInit();
 		return true;

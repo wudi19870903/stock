@@ -7,6 +7,7 @@ import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BPath;
 import stormstock.fw.base.BQThread.BQThreadRequest;
 import stormstock.fw.base.BImageCurve;
+import stormstock.fw.base.BLog;
 import stormstock.fw.event.ReportAnalysis;
 import stormstock.fw.base.BImageCurve.CurvePoint;
 import stormstock.fw.report.InfoCollector.DailyReport;
@@ -26,6 +27,7 @@ public class GenerateReportRequest  extends BQThreadRequest {
 	@Override
 	public void doAction() {
 		// TODO Auto-generated method stub
+		BLog.output("REPORT", "GenerateReportRequest.doAction [%s %s]\n", m_date, m_time);
 		
 		List<CurvePoint> cCurvePointList_TotalAssets = new ArrayList<CurvePoint>();
 		List<CurvePoint> cCurvePointList_SHComposite = new ArrayList<CurvePoint>();

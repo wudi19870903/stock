@@ -59,7 +59,7 @@ public class ReportModule extends BModuleBase {
 	}
 	
 	public void onTranInfoCollectRequest(com.google.protobuf.GeneratedMessage m) {
-		BLog.output("REPORT", "ReportModule onTranInfoCollectRequest\n");
+		// BLog.output("REPORT", "ReportModule onTranInfoCollectRequest\n");
 		ReportAnalysis.TranInfoCollectRequest tranInfoCollectRequest = (ReportAnalysis.TranInfoCollectRequest)m;
 		
 		String dateStr = tranInfoCollectRequest.getDate();
@@ -69,7 +69,7 @@ public class ReportModule extends BModuleBase {
 	}
 	
 	public void onGenerateReportRequest(com.google.protobuf.GeneratedMessage m) {
-		BLog.output("REPORT", "ReportModule onGenerateReportRequest\n");
+		// BLog.output("REPORT", "ReportModule onGenerateReportRequest\n");
 		ReportAnalysis.GenerateReportRequest generateReportRequest = (ReportAnalysis.GenerateReportRequest)m;
 		
 		String dateStr = generateReportRequest.getDate();
