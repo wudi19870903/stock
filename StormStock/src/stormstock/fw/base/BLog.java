@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.monitor.FileAlterationListener;
+import org.apache.commons.io.monitor.FileAlterationObserver;
+
 import stormstock.fw.base.BAutoSync.BSyncObj;
 import stormstock.fw.base.BQThread.BQThreadRequest;
 
@@ -139,6 +142,10 @@ public class BLog {
 		}
 	};
 	
+	/*
+	 * --------------------------------------------------------------------------------------
+	 * log request, thread
+	 */
 	private static class LogOutRequest extends BQThreadRequest 
 	{
 		public LogOutRequest(String logbuf)
@@ -153,4 +160,52 @@ public class BLog {
 		private String m_logbuf;
 	}
 	static private BQThread s_qThread = null;
+	
+	/*
+	 * --------------------------------------------------------------------------------------
+	 * log config monitor, thread
+	 */
+	public class LogConfigFileListener implements FileAlterationListener {  
+		  
+		LogConfigFileListener monitor = null;  
+		
+	    @Override  
+	    public void onStart(FileAlterationObserver observer) {  
+	        //System.out.println("onStart");  
+	    }  
+	    @Override  
+	    public void onDirectoryCreate(File directory) {  
+	        System.out.println("onDirectoryCreate:" +  directory.getName());  
+	    }  
+	  
+	    @Override  
+	    public void onDirectoryChange(File directory) {  
+	        System.out.println("onDirectoryChange:" + directory.getName());  
+	    }  
+	  
+	    @Override  
+	    public void onDirectoryDelete(File directory) {  
+	        System.out.println("onDirectoryDelete:" + directory.getName());  
+	    }  
+	  
+	    @Override  
+	    public void onFileCreate(File file) {  
+	        System.out.println("onFileCreate:" + file.getName());  
+	    }  
+	  
+	    @Override  
+	    public void onFileChange(File file) {  
+	        System.out.println("onFileCreate : " + file.getName());  
+	    }  
+	  
+	    @Override  
+	    public void onFileDelete(File file) {  
+	        System.out.println("onFileDelete :" + file.getName());  
+	    }  
+	  
+	    @Override  
+	    public void onStop(FileAlterationObserver observer) {  
+	        //System.out.println("onStop");  
+	    }  
+	}  
 }
