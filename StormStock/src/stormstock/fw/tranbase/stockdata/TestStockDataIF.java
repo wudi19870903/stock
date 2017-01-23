@@ -110,7 +110,7 @@ public class TestStockDataIF {
 		List<CurvePoint> PoiList = new ArrayList<CurvePoint>();
 		
 		StockDataIF cStockDataIF = new StockDataIF();
-		ResultDayDetail cResultDayDetail = cStockDataIF.getDayDetail("000004", "2016-03-23", "09:30:00", "15:00:00");
+		ResultDayDetail cResultDayDetail = cStockDataIF.getDayDetail("000985", "2016-03-09", "09:30:00", "15:00:00");
 		if(0 == cResultDayDetail.error)
 		{
 			for(int i=0; i< cResultDayDetail.resultList.size(); i++)
@@ -127,24 +127,49 @@ public class TestStockDataIF {
 	
 	public static void test_getStockTime()
 	{
+		boolean bTestSingle = true;
+		boolean bTest9to15 = false;
+		
 		StockDataIF cStockDataIF = new StockDataIF();
-		String curTime = "09:00:00";
-		while(true)
+		
+		if(bTestSingle)
 		{
-
-			ResultStockTime cResultStockTime = cStockDataIF.getStockTime("000028", "2016-05-10", curTime);
+			String testDate = "2016-03-09";
+			String testTime = "09:30:00";
 			
+			ResultStockTime cResultStockTime = cStockDataIF.getStockTime("000546", testDate, testTime);
+		
 			if(0 == cResultStockTime.error)
 			{
 				BLog.output("TEST", "[%s] %.2f\n", cResultStockTime.stockTime.time, cResultStockTime.stockTime.price);
 			}
-			
-			if(curTime.compareTo("15:00:00") >= 0)
+			else
 			{
-				break;
+				BLog.output("TEST", "[%s] error %d\n", cResultStockTime.stockTime.time, cResultStockTime.error);
 			}
-			curTime = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(curTime, 5);
 		}
+		
+		if(bTest9to15)
+		{
+			
+			String curTime = "09:00:00";
+			while(true)
+			{
+				ResultStockTime cResultStockTime = cStockDataIF.getStockTime("000985", "2016-03-09", curTime);
+				
+				if(0 == cResultStockTime.error)
+				{
+					BLog.output("TEST", "[%s] %.2f\n", cResultStockTime.stockTime.time, cResultStockTime.stockTime.price);
+				}
+				
+				if(curTime.compareTo("15:00:00") >= 0)
+				{
+					break;
+				}
+				curTime = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(curTime, 5);
+			}
+		}
+
 	}
 	
 	

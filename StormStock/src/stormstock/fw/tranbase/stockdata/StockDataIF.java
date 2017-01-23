@@ -493,28 +493,64 @@ public class StockDataIF {
 			else
 			{
 				// 基于真实的历史数据
-				ResultDayDetail cResultDayDetail = getDayDetail(id, date, "09:30:00", time);
-				List<StockTime> cStockTimeList = cResultDayDetail.resultList;
-				if(null!=cStockTimeList && cStockTimeList.size()>0)
+				// 9点30（不含）之前，为前一天收盘价格
+				// 09:30:00 - 15:00:00 为交易期间真实前复权价格
+				// 15:00:00之后，为当天收盘价格
+				if(time.compareTo("09:30:00") >= 0)
 				{
-					StockTime cStockTime = cStockTimeList.get(cStockTimeList.size()-1);
-					long subTimeMin = BUtilsDateTime.subTime(time, cStockTime.time);
-					if(subTimeMin >=0 && subTimeMin<=120)
+					if(time.compareTo("09:30:00") >= 0 && time.compareTo("15:00:00") <= 0)
 					{
-						cResultStockTime.stockTime.time = cStockTime.time;
-						cResultStockTime.stockTime.price = cStockTime.price;
-						return cResultStockTime;
+						// 交易时间
+						ResultDayDetail cResultDayDetail = getDayDetail(id, date, "09:25:00", time);
+						List<StockTime> cStockTimeList = cResultDayDetail.resultList;
+						
+						if(null!=cStockTimeList && cStockTimeList.size()>0)
+						{
+							StockTime cStockTime = cStockTimeList.get(cStockTimeList.size()-1);
+							long subTimeMin = BUtilsDateTime.subTime(time, cStockTime.time);
+							if(subTimeMin >=0 && subTimeMin<=120) // 在2分钟以内
+							{
+								cResultStockTime.stockTime.time = cStockTime.time;
+								cResultStockTime.stockTime.price = cStockTime.price;
+								return cResultStockTime;
+							}
+							else
+							{
+								cResultStockTime.error = -1;
+								return cResultStockTime;
+							}
+						}
+						else
+						{
+							cResultStockTime.error = -2;
+							return cResultStockTime;
+						}
 					}
 					else
 					{
-						cResultStockTime.error = -1;
-						return cResultStockTime;
+						ResultHistoryData cResultHistoryData = getHistoryData(id, date, date);
+						List<StockDay> cStockDayList = cResultHistoryData.resultList;
+						if(cStockDayList.size() > 0)
+						{
+							StockDay cStockDay = cStockDayList.get(0);
+							cResultStockTime.stockTime.time = time;
+							cResultStockTime.stockTime.price = cStockDay.close();
+							return cResultStockTime;
+						}
 					}
 				}
 				else
 				{
-					cResultStockTime.error = -2;
-					return cResultStockTime;
+					String beforeDate = BUtilsDateTime.getDateStrForSpecifiedDateOffsetD(date, -1);
+					ResultHistoryData cResultHistoryData = getHistoryData(id, beforeDate, beforeDate);
+					List<StockDay> cStockDayList = cResultHistoryData.resultList;
+					if(cStockDayList.size() > 0)
+					{
+						StockDay cStockDay = cStockDayList.get(0);
+						cResultStockTime.stockTime.time = time;
+						cResultStockTime.stockTime.price = cStockDay.close();
+						return cResultStockTime;
+					}
 				}
 			}
 		}
