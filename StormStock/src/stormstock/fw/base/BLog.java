@@ -11,8 +11,29 @@ import java.util.List;
 import java.util.Map;
 
 import stormstock.fw.base.BAutoSync.BSyncObj;
+import stormstock.fw.base.BQThread.BQThreadRequest;
 
 public class BLog {
+	
+	public static void start()
+	{
+		s_strLogDirName = BPath.getOutputDir();
+		s_strLogName = "default.log";
+		if(null == s_qThread)
+		{
+			s_qThread = new BQThread();
+			s_qThread.startThread();
+		}
+	}
+	
+	public static void stop()
+	{
+		if(null != s_qThread)
+		{
+			s_qThread.stopThread();
+			s_qThread = null;
+		}
+	}
 
 	public static void config_setLogDir(String dirName)
 	{
@@ -45,6 +66,7 @@ public class BLog {
 		output("WARNING", "(%s) %s", target, logstr);
 	}
 	
+	
 	public static void output(String target, String format, Object... args)
 	{
 		if(null != target && "" != target && !s_tagMap.containsKey(target))
@@ -57,8 +79,9 @@ public class BLog {
 				return;
 		}
 		
-		// dir check
+		// dir file name check
 		if(null == s_strLogDirName) s_strLogDirName = BPath.getOutputDir();
+		if(null == s_strLogName) s_strLogName = "default.log";
 		
 		String logstr = String.format(format, args);
 		
@@ -66,7 +89,21 @@ public class BLog {
 		String curDateTimeStr = sdf.format(new Date());
 		
 		String fullLogStr = String.format("[%s][%10s] %s", curDateTimeStr, target, logstr);
-		outputConsole(fullLogStr);
+		
+		if(null != s_qThread)
+		{
+			LogOutRequest cLogOutRequest = new LogOutRequest(fullLogStr);
+			s_qThread.postRequest(cLogOutRequest);
+		}
+		else
+		{
+			BLog.implLogOutput(fullLogStr); // 无log工作线程直接输出
+		}
+	}
+	
+	private static void implLogOutput(String logbuf)
+	{
+		outputConsole(logbuf);
 		
 		File cDir = new File(s_strLogDirName);  
 		if (!cDir.exists()  && !cDir.isDirectory())      
@@ -77,7 +114,7 @@ public class BLog {
 		try
 		{
 			FileOutputStream cOutputStream = new FileOutputStream(cfile, true);
-			cOutputStream.write(fullLogStr.getBytes());
+			cOutputStream.write(logbuf.getBytes());
 			cOutputStream.close();
 		}
 		catch(Exception e)
@@ -101,4 +138,19 @@ public class BLog {
 			put("WARNING", true);
 		}
 	};
+	
+	private static class LogOutRequest extends BQThreadRequest 
+	{
+		public LogOutRequest(String logbuf)
+		{
+			m_logbuf = logbuf;
+		}
+		@Override
+		public void doAction() {
+			// TODO Auto-generated method stub
+			BLog.implLogOutput(m_logbuf); // 无log工作线程直接输出
+		}
+		private String m_logbuf;
+	}
+	static private BQThread s_qThread = null;
 }

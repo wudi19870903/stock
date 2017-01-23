@@ -44,6 +44,9 @@ public class TranEngine {
 	{
 		m_waitObj = new Object();
 		m_exitFlag = false;
+		// log start 
+		BLog.start();
+		
 		// init eventsys
 		BLog.output( "BASE", "BModuleManager EventSys Start\n");
 		BEventSys.registerEventMap(EventDef.s_EventNameMap);
@@ -102,6 +105,8 @@ public class TranEngine {
 		// eventsys stop
 		BLog.output( "BASE", "BModuleManager EventSys Stop\n");
 		BEventSys.stop();
+		// log stop
+		BLog.stop();
 	}
 	
 	// send exit cmd 
