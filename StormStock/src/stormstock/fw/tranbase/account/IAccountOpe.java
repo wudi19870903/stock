@@ -20,6 +20,10 @@ abstract public class IAccountOpe {
 	// 获得账户可用资金（现金）
 	abstract public float getAvailableMoney();
 	
+	// 设定获取已选股列表
+	abstract public void setStockSelectList(List<String> stockIDList);
+	abstract public List<String> getStockSelectList();
+	
 	// 获得委托列表(未成交的，包含买入和卖出的)
 	abstract public List<CommissionOrder> getCommissionOrderList();
 	// 获得持股列表（包含已经持有的，与当天下单成交的）

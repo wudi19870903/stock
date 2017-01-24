@@ -17,7 +17,6 @@ public class AccountEntity {
 	// 构造账户实体时，需要传入操作接口（模拟，真实）
 	public AccountEntity(ACCOUNTTYPE eAccType, String accountName, String password)
 	{
-		m_stockSelectList = new ArrayList<String>();
 		IAccountOpe cIAccountOpe = null;
 		if(eAccType == ACCOUNTTYPE.MOCK)
 		{
@@ -81,64 +80,14 @@ public class AccountEntity {
 	// 选股列表设置
 	public void setStockSelectList(List<String> stockIDList)
 	{
-		m_stockSelectList.clear();
-		for(int i=0; i<stockIDList.size();i++)
-		{
-			String newstockID = stockIDList.get(i);
-			m_stockSelectList.add(newstockID);
-		}
-		
-		// 选股中排除已经持有的
-		List<HoldStock> cStockHoldList =  getHoldStockList(null,null);
-		for(int i=0;i<cStockHoldList.size();i++)
-		{
-			m_stockSelectList.remove(cStockHoldList.get(i).stockID);
-		}
+		m_cIAccountOpe.setStockSelectList(stockIDList);
 	}
 	// 选股列表获取
 	public List<String> getStockSelectList()
 	{
-		List<String> newList = new ArrayList<String>();
-		for(int i=0; i< m_stockSelectList.size();i++)
-		{
-			String stockID = m_stockSelectList.get(i);
-			if(!help_inAccount(stockID))  // 选股列表排除掉已经在买入列表的
-			{
-				newList.add(stockID);
-			}
-		}
-		return newList;
+		return m_cIAccountOpe.getStockSelectList();
 	}
-	// 帮助函数 判断股票是否存在于 买卖单委托列表，持有列表中
-	private boolean help_inAccount(String stockID)
-	{
-		List<CommissionOrder> cCommissionOrderList = m_cIAccountOpe.getCommissionOrderList();
-		for(int i=0;i<cCommissionOrderList.size();i++)
-		{
-			if(cCommissionOrderList.get(i).stockID.equals(stockID))
-			{
-				return true;
-			}
-		}
-		
-		List<HoldStock> cHoldStockList = m_cIAccountOpe.getHoldStockList(null,null);
-		for(int i=0;i<cHoldStockList.size();i++)
-		{
-			if(cHoldStockList.get(i).stockID.equals(stockID))
-			{
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	public boolean clearStockSelectList()
-	{
-		m_stockSelectList.clear();
-		return true;
-	}
-	
-	
+
 	// 获得买委托列表(未成交的)
 	public List<CommissionOrder> getBuyCommissionOrderList()
 	{
@@ -229,7 +178,4 @@ public class AccountEntity {
 	 * 账户操作接口，可以设置为模拟或真实
 	 */
 	private IAccountOpe m_cIAccountOpe;
-	
-	// 选股列表
-	private List<String> m_stockSelectList;
 }

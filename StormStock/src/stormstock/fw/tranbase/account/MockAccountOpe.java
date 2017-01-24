@@ -22,6 +22,7 @@ public class MockAccountOpe extends IAccountOpe {
 		
 		m_money = 100000.00f;
 		m_transactionCostsRatio = 0.0016f;
+		m_stockSelectList = new ArrayList<String>();
 		m_commissionOrderList = new ArrayList<CommissionOrder>();
 		m_holdStockList = new ArrayList<HoldStock>();
 		m_deliveryOrderList = new ArrayList<DeliveryOrder>();
@@ -184,6 +185,60 @@ public class MockAccountOpe extends IAccountOpe {
 	}
 
 	@Override
+	public void setStockSelectList(List<String> stockIDList) {
+		m_stockSelectList.clear();
+		for(int i=0; i<stockIDList.size();i++)
+		{
+			String newstockID = stockIDList.get(i);
+			m_stockSelectList.add(newstockID);
+		}
+		
+		// 选股中排除已经持有的
+		List<HoldStock> cStockHoldList =  getHoldStockList(null,null);
+		for(int i=0;i<cStockHoldList.size();i++)
+		{
+			m_stockSelectList.remove(cStockHoldList.get(i).stockID);
+		}
+	}
+
+	@Override
+	public List<String> getStockSelectList() {
+		List<String> newList = new ArrayList<String>();
+		for(int i=0; i< m_stockSelectList.size();i++)
+		{
+			String stockID = m_stockSelectList.get(i);
+			if(!help_inAccount(stockID))  // 选股列表排除掉已经在买入列表的
+			{
+				newList.add(stockID);
+			}
+		}
+		return newList;
+	}
+	// 帮助函数 判断股票是否存在于 买卖单委托列表，持有列表中
+	private boolean help_inAccount(String stockID)
+	{
+		List<CommissionOrder> cCommissionOrderList = this.getCommissionOrderList();
+		for(int i=0;i<cCommissionOrderList.size();i++)
+		{
+			if(cCommissionOrderList.get(i).stockID.equals(stockID))
+			{
+				return true;
+			}
+		}
+		
+		List<HoldStock> cHoldStockList = this.getHoldStockList(null,null);
+		for(int i=0;i<cHoldStockList.size();i++)
+		{
+			if(cHoldStockList.get(i).stockID.equals(stockID))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	@Override
 	public List<CommissionOrder> getCommissionOrderList() {
 		return m_commissionOrderList;
 	}
@@ -217,6 +272,9 @@ public class MockAccountOpe extends IAccountOpe {
 	
 	private float m_money;
 	private float m_transactionCostsRatio;
+	
+	private List<String> m_stockSelectList; // 选股列表
+	
 	private List<CommissionOrder> m_commissionOrderList; // 模拟账户中  下单直接成交, 委托单一直未空
 	private List<HoldStock> m_holdStockList;
 	private List<DeliveryOrder> m_deliveryOrderList;
