@@ -61,14 +61,14 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 			BLog.output("REPORT", "    -HoldStock: %s %s %s %.3f %.3f %d %.3f(%.3f) %d\n", 
 					cHoldStock.stockID, cHoldStock.createDate, cHoldStock.createTime,
 					cHoldStock.holdAvePrice, cHoldStock.curPrice, cHoldStock.totalAmount,
-					cHoldStock.curPrice*cHoldStock.totalAmount, cHoldStock.transactionCosts,
+					cHoldStock.curPrice*cHoldStock.totalAmount, cHoldStock.transactionCost,
 					cHoldStock.holdDayCnt);
 		}
 		for(int i=0; i<cDeliveryOrderList.size(); i++ )
 		{
 			DeliveryOrder cDeliveryOrder = cDeliveryOrderList.get(i);
 			String tranOpe = "BUY"; 
-			if(cDeliveryOrder.tranOpe == TRANACT.SELL ) tranOpe = "SELL";
+			if(cDeliveryOrder.tranAct == TRANACT.SELL ) tranOpe = "SELL";
 				
 			BLog.output("REPORT", "    -DeliveryOrder: %s %s %s %s %.3f %.3f %d %.3f(%.3f)\n", 
 					cDeliveryOrder.date, cDeliveryOrder.time,

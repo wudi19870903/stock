@@ -75,7 +75,7 @@ public class AccountEntity {
 		for(int i= 0;i<cCommissionOrderList.size();i++)
 		{
 			CommissionOrder cCommissionOrder = cCommissionOrderList.get(i);
-			if(cCommissionOrder.tranOpe == TRANACT.BUY)
+			if(cCommissionOrder.tranAct == TRANACT.BUY)
 			{
 				CommissionOrder cNewCommissionOrder = new CommissionOrder();
 				cNewCommissionOrder.CopyFrom(cCommissionOrder);
@@ -93,7 +93,7 @@ public class AccountEntity {
 		for(int i= 0;i<cCommissionOrderList.size();i++)
 		{
 			CommissionOrder cCommissionOrder = cCommissionOrderList.get(i);
-			if(cCommissionOrder.tranOpe == TRANACT.SELL)
+			if(cCommissionOrder.tranAct == TRANACT.SELL)
 			{
 				CommissionOrder cNewCommissionOrder = new CommissionOrder();
 				cNewCommissionOrder.CopyFrom(cCommissionOrder);
@@ -111,7 +111,7 @@ public class AccountEntity {
 		for(int i= 0;i<cDeliveryOrderList.size();i++)
 		{
 			DeliveryOrder cDeliveryOrder = cDeliveryOrderList.get(i);
-			if(cDeliveryOrder.tranOpe == TRANACT.BUY)
+			if(cDeliveryOrder.tranAct == TRANACT.BUY)
 			{
 				DeliveryOrder cNewDeliveryOrder = new DeliveryOrder();
 				cNewDeliveryOrder.CopyFrom(cDeliveryOrder);
@@ -129,7 +129,7 @@ public class AccountEntity {
 		for(int i= 0;i<cDeliveryOrderList.size();i++)
 		{
 			DeliveryOrder cDeliveryOrder = cDeliveryOrderList.get(i);
-			if(cDeliveryOrder.tranOpe == TRANACT.SELL)
+			if(cDeliveryOrder.tranAct == TRANACT.SELL)
 			{
 				DeliveryOrder cNewDeliveryOrder = new DeliveryOrder();
 				cNewDeliveryOrder.CopyFrom(cDeliveryOrder);

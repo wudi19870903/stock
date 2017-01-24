@@ -85,7 +85,7 @@ public class MockAccountOpe extends IAccountOpe {
 		cHoldStock.holdAvePrice = (oriHoldAvePrice*oriTotalAmount + price*realBuyAmount)/cHoldStock.totalAmount;
 		cHoldStock.curPrice = price;
 
-		cHoldStock.transactionCosts = cHoldStock.transactionCosts + transactionCosts;
+		cHoldStock.transactionCost = cHoldStock.transactionCost + transactionCosts;
 		m_money = m_money - realBuyAmount*price;
 		
 		BLog.output("ACCOUNT", " @Buy [%s %s] [%s %.3f %d %.3f(%.3f) %.3f] \n", 
@@ -96,7 +96,7 @@ public class MockAccountOpe extends IAccountOpe {
 		DeliveryOrder cDeliveryOrder = new DeliveryOrder();
 		cDeliveryOrder.date = date;
 		cDeliveryOrder.time = time;
-		cDeliveryOrder.tranOpe = TRANACT.BUY;
+		cDeliveryOrder.tranAct = TRANACT.BUY;
 		cDeliveryOrder.stockID = stockID;
 		cDeliveryOrder.holdAvePrice = oriHoldAvePrice;
 		cDeliveryOrder.tranPrice = price;
@@ -147,20 +147,20 @@ public class MockAccountOpe extends IAccountOpe {
 			float DeliveryOrder_transactionCost = 0.0f;
 			if(cHoldStock.totalAmount == 0)
 			{
-				m_money = m_money - cHoldStock.transactionCosts;
-				DeliveryOrder_transactionCost = cHoldStock.transactionCosts;
+				m_money = m_money - cHoldStock.transactionCost;
+				DeliveryOrder_transactionCost = cHoldStock.transactionCost;
 				m_holdStockList.remove(cHoldStock);
 			}
 			
 			BLog.output("ACCOUNT", " @Sell [%s %s] [%s %.3f %d %.3f(%.3f) %.3f] \n", 
 					date, time,
-					stockID, price, realSellAmount, price*realSellAmount, cHoldStock.transactionCosts, m_money);
+					stockID, price, realSellAmount, price*realSellAmount, cHoldStock.transactionCost, m_money);
 			
 			// 生成交割单
 			DeliveryOrder cDeliveryOrder = new DeliveryOrder();
 			cDeliveryOrder.date = date;
 			cDeliveryOrder.time = time;
-			cDeliveryOrder.tranOpe = TRANACT.SELL;
+			cDeliveryOrder.tranAct = TRANACT.SELL;
 			cDeliveryOrder.stockID = stockID;
 			cDeliveryOrder.holdAvePrice = oriHoldAvePrice;
 			cDeliveryOrder.tranPrice = price;

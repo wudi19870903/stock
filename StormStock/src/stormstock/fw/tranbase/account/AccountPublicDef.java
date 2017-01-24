@@ -18,14 +18,14 @@ public class AccountPublicDef {
 	{
 		public String date;
 		public String time;
-		public TRANACT tranOpe; // 交易动作
+		public TRANACT tranAct; // 交易动作
 		public String stockID;
 		public int amount; 
 		public float price;
 		
 		public void CopyFrom(CommissionOrder c)
 		{
-			tranOpe = c.tranOpe;
+			tranAct = c.tranAct;
 			stockID = c.stockID;
 			amount = c.amount;
 			price = c.price;
@@ -39,7 +39,7 @@ public class AccountPublicDef {
 	{
 		public String date;
 		public String time;
-		public TRANACT tranOpe;       // 交易动作
+		public TRANACT tranAct;       // 交易动作
 		public String stockID;        // 股票ID
 		public int amount;            // 交易量
 		public float holdAvePrice;    // 持有均价
@@ -48,7 +48,7 @@ public class AccountPublicDef {
 		
 		public void CopyFrom(DeliveryOrder c)
 		{
-			tranOpe = c.tranOpe;
+			tranAct = c.tranAct;
 			stockID = c.stockID;
 			amount = c.amount;
 			holdAvePrice = c.holdAvePrice;
@@ -72,7 +72,7 @@ public class AccountPublicDef {
 			totalCanSell = 0;
 			holdAvePrice = 0.0f;
 			curPrice = 0.0f;
-			transactionCosts = 0.0f;
+			transactionCost = 0.0f;
 		}
 		
 		public float profit() // 利润值（盈亏金额，不计算交易费用）
@@ -95,7 +95,7 @@ public class AccountPublicDef {
 		public int totalCanSell; // 可卖数量
 		public float holdAvePrice; // 持有均价 
 		public float curPrice;   // 当前价格
-		public float transactionCosts; // 交易费用
+		public float transactionCost; // 交易费用
 	}
 	
 }
