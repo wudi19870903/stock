@@ -15,16 +15,16 @@ import stormstock.fw.tranbase.stockdata.StockTime;
 public class AccountEntity {
 	
 	// 构造账户实体时，需要传入操作接口（模拟，真实）
-	public AccountEntity(ACCOUNTTYPE eAccType, String accountName, String password)
+	public AccountEntity(ACCOUNTTYPE eAccType, String accountID, String password)
 	{
 		IAccountOpe cIAccountOpe = null;
 		if(eAccType == ACCOUNTTYPE.MOCK)
 		{
-			cIAccountOpe = new MockAccountOpe(accountName, password);
+			cIAccountOpe = new MockAccountOpe(accountID, password);
 		} 
 		else if(eAccType == ACCOUNTTYPE.REAL)
 		{
-			cIAccountOpe = new RealAccountOpe(accountName, password);
+			cIAccountOpe = new RealAccountOpe(accountID, password);
 		}
 		m_cIAccountOpe = cIAccountOpe;
 	}

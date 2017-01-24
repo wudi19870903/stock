@@ -10,11 +10,11 @@ import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 
 public class RealAccountOpe extends IAccountOpe {
 
-	public RealAccountOpe(String accountName, String password)
+	public RealAccountOpe(String accountID, String password)
 	{
 		m_stockSelectList = new ArrayList<String>();
-		BLog.output("ACCOUNT", "Account REAL AccountName:%s Password:%s\n", 
-				accountName, password);
+		BLog.output("ACCOUNT", "Account REAL AccountID:%s Password:%s\n", 
+				accountID, password);
 	}
 	
 	@Override

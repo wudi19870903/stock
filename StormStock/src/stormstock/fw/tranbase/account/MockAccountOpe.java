@@ -1,7 +1,20 @@
 package stormstock.fw.tranbase.account;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import stormstock.fw.base.BLog;
 import stormstock.fw.tranbase.account.AccountPublicDef.CommissionOrder;
@@ -16,19 +29,27 @@ import stormstock.fw.tranbase.stockdata.StockTime;
 
 public class MockAccountOpe extends IAccountOpe {
 	
-	public MockAccountOpe(String accountName, String password)
+	public MockAccountOpe(String accountID, String password)
 	{
 		super();
 		
-		m_money = 100000.00f;
 		m_transactionCostsRatio = 0.0016f;
-		m_stockSelectList = new ArrayList<String>();
-		m_commissionOrderList = new ArrayList<CommissionOrder>();
-		m_holdStockList = new ArrayList<HoldStock>();
-		m_deliveryOrderList = new ArrayList<DeliveryOrder>();
 		
-		BLog.output("ACCOUNT", "Account MOCK AccountName:%s Password:%s money:%.2f transactionCostsRatio:%.4f\n", 
-				accountName, password, m_money, m_transactionCostsRatio);
+		m_accountID = accountID;
+		m_password = password;
+				
+		// 交易流数据
+		{
+			m_money = 100000.00f;
+			m_stockSelectList = new ArrayList<String>();
+			m_commissionOrderList = new ArrayList<CommissionOrder>();
+			m_holdStockList = new ArrayList<HoldStock>();
+			m_deliveryOrderList = new ArrayList<DeliveryOrder>();
+			syncAccountDataToMem();
+		}
+
+		BLog.output("ACCOUNT", "Account MOCK AccountID:%s Password:%s money:%.2f transactionCostsRatio:%.4f\n", 
+				m_accountID, password, m_money, m_transactionCostsRatio);
 	}
 	
 	@Override
@@ -266,15 +287,210 @@ public class MockAccountOpe extends IAccountOpe {
 		return m_deliveryOrderList;
 	}
 	
+	private void syncAccountDataToFile()
+	{
+		
+	}
+	
+	private void syncAccountDataToMem()
+	{
+		BLog.output("ACCOUNT", "syncAccountDataToMem \n");
+		
+		String accXMLFile = "account\\account_" + m_accountID + ".xml";
+		String xmlStr = "";
+		File cfile=new File(accXMLFile);
+		try
+		{
+			BufferedReader reader = new BufferedReader(new FileReader(cfile));
+	        int fileLen = (int)cfile.length();
+	        char[] chars = new char[fileLen];
+	        reader.read(chars);
+	        xmlStr = String.valueOf(chars);
+//			String tempString = "";
+//			while ((tempString = reader.readLine()) != null) {
+//				xmlStr = xmlStr + tempString + "\n";
+//	        }
+			reader.close();
+			//fmt.format("XML:\n" + xmlStr);
+			if(xmlStr.length()<=0)
+				return;
+			
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		    DocumentBuilder builder = factory.newDocumentBuilder();
+		    StringReader sr = new StringReader(xmlStr);
+		    InputSource is = new InputSource(sr);
+		    Document doc = builder.parse(is);
+		    Element rootElement = doc.getDocumentElement();
+		    
+		    // 检查返回数据有效性
+		    if(!rootElement.getTagName().contains("account")) 
+		    	return;
+		    
+		    // 账户属性判断并加载
+		    String accountID = rootElement.getAttribute("ID");
+		    String password = rootElement.getAttribute("password");
+		    if(!accountID.equals(m_accountID) || !password.equals(m_password))
+		    	return;
+		    String acc_date = rootElement.getAttribute("date");
+		    BLog.output("ACCOUNT", "accountID:%s password:%s acc_date:%s \n", accountID, password, acc_date);
+	
+		    // 钱加载
+		    {
+		    	NodeList nodelist_Money = rootElement.getElementsByTagName("Money");
+		    	if(nodelist_Money.getLength() == 1)
+		    	{
+		    		Node Node_Money = nodelist_Money.item(0);
+		    		String total = ((Element)Node_Money).getAttribute("total");
+		    		m_money = Float.parseFloat(total);
+		    	}
+		    }
+		    
+		    // 选股列表加载
+		    m_stockSelectList.clear();
+		    {
+		    	NodeList nodelist_SelectList = rootElement.getElementsByTagName("SelectList");
+		        if(nodelist_SelectList.getLength() == 1)
+	        	{
+		        	Node Node_SelectList = nodelist_SelectList.item(0);
+		        	NodeList nodelist_Stock = Node_SelectList.getChildNodes();
+			        for (int i = 0; i < nodelist_Stock.getLength(); i++) {
+			        	Node node_Stock = nodelist_Stock.item(i);
+			        	if(node_Stock.getNodeType() == Node.ELEMENT_NODE)
+			        	{
+				        	String stockID = ((Element)node_Stock).getAttribute("stockID");
+				        	BLog.output("ACCOUNT", "stockID:%s \n", stockID);
+				        	m_stockSelectList.add(stockID); 
+			        	}
+			        }
+	        	}
+		    }
+		    
+		    // 委托单加载
+		    m_commissionOrderList.clear();
+		    {
+		    	NodeList nodelist_CommissionOrderList = rootElement.getElementsByTagName("CommissionOrderList");
+		        if(nodelist_CommissionOrderList.getLength() == 1)
+	        	{
+		        	Node Node_CommissionOrderList = nodelist_CommissionOrderList.item(0);
+		        	NodeList nodelist_Stock = Node_CommissionOrderList.getChildNodes();
+			        for (int i = 0; i < nodelist_Stock.getLength(); i++) {
+			        	Node node_Stock = nodelist_Stock.item(i);
+			        	if(node_Stock.getNodeType() == Node.ELEMENT_NODE)
+			        	{
+			        		String date = ((Element)node_Stock).getAttribute("date");
+			        		String time = ((Element)node_Stock).getAttribute("time");
+				        	String tranAct = ((Element)node_Stock).getAttribute("tranAct");
+				        	String stockID = ((Element)node_Stock).getAttribute("stockID");
+				        	String amount = ((Element)node_Stock).getAttribute("amount");
+				        	String price = ((Element)node_Stock).getAttribute("price");
+				        	
+				        	CommissionOrder cCommissionOrder = new CommissionOrder();
+				        	cCommissionOrder.date = date;
+				        	cCommissionOrder.time = time;
+				        	if(tranAct.equals("BUY")) cCommissionOrder.tranAct = TRANACT.BUY;
+				        	if(tranAct.equals("SELL")) cCommissionOrder.tranAct = TRANACT.SELL;
+				        	cCommissionOrder.stockID = stockID;
+				        	cCommissionOrder.amount = Integer.parseInt(amount);
+				        	cCommissionOrder.price = Float.parseFloat(price);
+				        	m_commissionOrderList.add(cCommissionOrder);
+			        	}
+			        }
+	        	}
+		    }
+		    
+		    // 交割单加载 
+		    m_deliveryOrderList.clear();
+		    {
+		    	NodeList nodelist_DeliveryOrderList = rootElement.getElementsByTagName("DeliveryOrderList");
+		        if(nodelist_DeliveryOrderList.getLength() == 1)
+	        	{
+		        	Node Node_DeliveryOrderList = nodelist_DeliveryOrderList.item(0);
+		        	NodeList nodelist_Stock = Node_DeliveryOrderList.getChildNodes();
+			        for (int i = 0; i < nodelist_Stock.getLength(); i++) {
+			        	Node node_Stock = nodelist_Stock.item(i);
+			        	if(node_Stock.getNodeType() == Node.ELEMENT_NODE)
+			        	{
+			        		String date = ((Element)node_Stock).getAttribute("date");
+			        		String time = ((Element)node_Stock).getAttribute("time");
+				        	String tranAct = ((Element)node_Stock).getAttribute("tranAct");
+				        	String stockID = ((Element)node_Stock).getAttribute("stockID");
+				        	String amount = ((Element)node_Stock).getAttribute("amount");
+				        	String holdAvePrice = ((Element)node_Stock).getAttribute("holdAvePrice");
+				        	String tranPrice = ((Element)node_Stock).getAttribute("tranPrice");
+				        	String transactionCost = ((Element)node_Stock).getAttribute("transactionCost");
+				        	
+				        	DeliveryOrder cDeliveryOrder = new DeliveryOrder();
+				        	cDeliveryOrder.date = date;
+				        	cDeliveryOrder.time = time;
+				        	if(tranAct.equals("BUY")) cDeliveryOrder.tranAct = TRANACT.BUY;
+				        	if(tranAct.equals("SELL")) cDeliveryOrder.tranAct = TRANACT.SELL;
+				        	cDeliveryOrder.stockID = stockID;
+				        	cDeliveryOrder.amount = Integer.parseInt(amount);
+				        	cDeliveryOrder.holdAvePrice = Float.parseFloat(holdAvePrice);
+				        	cDeliveryOrder.tranPrice = Float.parseFloat(tranPrice);
+				        	cDeliveryOrder.transactionCost = Float.parseFloat(transactionCost);
+				        	m_deliveryOrderList.add(cDeliveryOrder);
+			        	}
+			        }
+	        	}
+		    }
+		    
+		    // 持股加载
+		    m_holdStockList.clear();
+		    {
+		    	NodeList nodelist_HoldStockList = rootElement.getElementsByTagName("HoldStockList");
+		        if(nodelist_HoldStockList.getLength() == 1)
+	        	{
+		        	Node Node_HoldStockList = nodelist_HoldStockList.item(0);
+		        	NodeList nodelist_Stock = Node_HoldStockList.getChildNodes();
+			        for (int i = 0; i < nodelist_Stock.getLength(); i++) {
+			        	Node node_Stock = nodelist_Stock.item(i);
+			        	if(node_Stock.getNodeType() == Node.ELEMENT_NODE)
+			        	{
+			        		String stockID = ((Element)node_Stock).getAttribute("stockID");
+			        		String createDate = ((Element)node_Stock).getAttribute("createDate");
+				        	String createTime = ((Element)node_Stock).getAttribute("createTime");
+				        	String holdDayCnt = ((Element)node_Stock).getAttribute("holdDayCnt");
+				        	String totalAmount = ((Element)node_Stock).getAttribute("totalAmount");
+				        	String totalCanSell = ((Element)node_Stock).getAttribute("totalCanSell");
+				        	String holdAvePrice = ((Element)node_Stock).getAttribute("holdAvePrice");
+				        	String curPrice = ((Element)node_Stock).getAttribute("curPrice");
+				        	String transactionCost = ((Element)node_Stock).getAttribute("transactionCost");
+				        	
+				        	HoldStock cHoldStock = new HoldStock();
+				        	cHoldStock.stockID = stockID;
+				        	cHoldStock.createDate = createDate;
+				        	cHoldStock.createTime = createTime;
+				        	cHoldStock.holdDayCnt = Integer.parseInt(holdDayCnt);
+				        	cHoldStock.totalAmount = Integer.parseInt(totalAmount);
+				        	cHoldStock.totalCanSell = Integer.parseInt(totalCanSell);
+				        	cHoldStock.holdAvePrice = Float.parseFloat(holdAvePrice);
+				        	cHoldStock.curPrice = Float.parseFloat(curPrice);
+				        	cHoldStock.transactionCost = Float.parseFloat(transactionCost);
+				        	m_holdStockList.add(cHoldStock);
+			        	}
+			        }
+	        	}
+		    }
+		    // 全部加载完毕
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.getMessage()); 
+			return;
+		}
+	}
+	
 	/**
 	 * 成员-----------------------------------------------------------------------
 	 */
 	
-	private float m_money;
 	private float m_transactionCostsRatio;
+	private String m_accountID;
+	private String m_password;
 	
+	private float m_money;
 	private List<String> m_stockSelectList; // 选股列表
-	
 	private List<CommissionOrder> m_commissionOrderList; // 模拟账户中  下单直接成交, 委托单一直未空
 	private List<HoldStock> m_holdStockList;
 	private List<DeliveryOrder> m_deliveryOrderList;

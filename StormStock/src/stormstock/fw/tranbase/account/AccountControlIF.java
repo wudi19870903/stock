@@ -32,7 +32,14 @@ public class AccountControlIF {
 	
 	public void setAccountType(ACCOUNTTYPE eAccIFType)
 	{
-		m_account = new AccountEntity(eAccIFType, "account001", "account001_password");
+		if(ACCOUNTTYPE.MOCK == eAccIFType)
+		{
+			m_account = new AccountEntity(eAccIFType, "mock001", "mock001_password");
+		}
+		if(ACCOUNTTYPE.REAL == eAccIFType)
+		{
+			m_account = new AccountEntity(eAccIFType, "xxx", "xxx");
+		}
 	}
 	
 	/*
