@@ -2,14 +2,21 @@ package stormstock.fw.tranbase.account;
 
 import java.util.List;
 
+import stormstock.fw.base.BLog;
 import stormstock.fw.tranbase.account.AccountPublicDef.CommissionOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.DeliveryOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 
 public class RealAccountOpe extends IAccountOpe {
 
+	public RealAccountOpe(String accountName, String password)
+	{
+		BLog.output("ACCOUNT", "Account REAL AccountName:%s Password:%s\n", 
+				accountName, password);
+	}
+	
 	@Override
-	public boolean newDayInit() {
+	public boolean newDayInit(String date, String time) {
 		// TODO Auto-generated method stub
 		return false;
 	}

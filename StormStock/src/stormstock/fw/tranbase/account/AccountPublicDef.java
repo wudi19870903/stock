@@ -2,6 +2,12 @@ package stormstock.fw.tranbase.account;
 
 public class AccountPublicDef {
 	
+	public enum ACCOUNTTYPE 
+	{
+		MOCK,
+		REAL,
+	}
+	
 	/*
 	 * 交易动作枚举
 	 */

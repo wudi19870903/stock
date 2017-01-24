@@ -17,7 +17,7 @@ import stormstock.fw.stockclearanalyzer.StockClearAnalyzer;
 import stormstock.fw.stockcreateanalyzer.StockCreateAnalyzer;
 import stormstock.fw.stockselectanalyzer.StockSelectAnalyzer;
 import stormstock.fw.tranbase.account.AccountControlIF;
-import stormstock.fw.tranbase.account.AccountControlIF.ACCOUNTTYPE;
+import stormstock.fw.tranbase.account.AccountPublicDef.ACCOUNTTYPE;
 import stormstock.fw.tranbase.com.GlobalUserObj;
 import stormstock.fw.tranbase.com.IEigenStock;
 import stormstock.fw.tranbase.com.IStrategyClear;

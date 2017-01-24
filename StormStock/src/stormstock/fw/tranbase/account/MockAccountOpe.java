@@ -16,18 +16,22 @@ import stormstock.fw.tranbase.stockdata.StockTime;
 
 public class MockAccountOpe extends IAccountOpe {
 	
-	public MockAccountOpe(float money, float transactionCostsRatio)
+	public MockAccountOpe(String accountName, String password)
 	{
 		super();
-		m_money = money;
-		m_transactionCostsRatio = transactionCostsRatio;
+		
+		m_money = 100000.00f;
+		m_transactionCostsRatio = 0.0016f;
 		m_commissionOrderList = new ArrayList<CommissionOrder>();
 		m_holdStockList = new ArrayList<HoldStock>();
 		m_deliveryOrderList = new ArrayList<DeliveryOrder>();
+		
+		BLog.output("ACCOUNT", "Account MOCK AccountName:%s Password:%s money:%.2f transactionCostsRatio:%.4f\n", 
+				accountName, password, m_money, m_transactionCostsRatio);
 	}
 	
 	@Override
-	public boolean newDayInit() 
+	public boolean newDayInit(String date, String time) 
 	{ 
 		// 新一天时，未成交委托单清空
 		m_commissionOrderList.clear();
@@ -210,6 +214,7 @@ public class MockAccountOpe extends IAccountOpe {
 	/**
 	 * 成员-----------------------------------------------------------------------
 	 */
+	
 	private float m_money;
 	private float m_transactionCostsRatio;
 	private List<CommissionOrder> m_commissionOrderList; // 模拟账户中  下单直接成交, 委托单一直未空

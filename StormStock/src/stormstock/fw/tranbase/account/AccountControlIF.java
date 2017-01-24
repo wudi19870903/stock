@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import stormstock.fw.base.BLog;
+import stormstock.fw.tranbase.account.AccountPublicDef.ACCOUNTTYPE;
 import stormstock.fw.tranbase.account.AccountPublicDef.CommissionOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.DeliveryOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
@@ -15,16 +16,9 @@ import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
  */
 public class AccountControlIF {
 	
-	public enum ACCOUNTTYPE 
-	{
-		MOCK,
-		REAL,
-	}
-	
 	public AccountControlIF()
 	{
 		m_account = null;
-		m_stockSelectList = new ArrayList<String>();
 	}
 	
 	/*
@@ -38,21 +32,7 @@ public class AccountControlIF {
 	
 	public void setAccountType(ACCOUNTTYPE eAccIFType)
 	{
-		IAccountOpe cIAccountOpe = null;
-		if(eAccIFType == ACCOUNTTYPE.MOCK)
-		{
-			float moneyInit = 100000.00f;
-			float transactionCostsRatio = 0.0016f;
-			BLog.output("ACCOUNT", "setAccountType MOCK money:%.2f transactionCostsRatio:%.4f\n", 
-					moneyInit, transactionCostsRatio);
-			cIAccountOpe = new MockAccountOpe(moneyInit, transactionCostsRatio);
-		} 
-		else if(eAccIFType == ACCOUNTTYPE.REAL)
-		{
-			BLog.output("ACCOUNT", "setAccountType REAL \n");
-			cIAccountOpe = new RealAccountOpe();
-		}
-		m_account = new AccountEntity(cIAccountOpe);
+		m_account = new AccountEntity(eAccIFType, "account001", "account001_password");
 	}
 	
 	/*
@@ -63,7 +43,7 @@ public class AccountControlIF {
 	{
 		BLog.output("ACCOUNT", "[%s %s] account new day reset \n", date, time);
 		// 账户重新初始化
-		m_account.newDayInit();
+		m_account.newDayInit(date, time);
 		return true;
 	}
 	
@@ -76,6 +56,16 @@ public class AccountControlIF {
 	public float getAvailableMoney()
 	{
 		return m_account.getAvailableMoney();
+	}
+	
+	public void setStockSelectList(List<String> stockIDList)
+	{
+		m_account.setStockSelectList(stockIDList);
+	}
+	
+	public List<String> getStockSelectList()
+	{
+		return m_account.getStockSelectList();
 	}
 
 	/*
@@ -94,68 +84,6 @@ public class AccountControlIF {
 	public int pushSellOrder(String date, String time, String stockID, float price, int amount)
 	{
 		return m_account.pushSellOrder(date, time, stockID, price, amount);
-	}
-	
-	
-	// 选股列表设置
-	public void setStockSelectList(List<String> stockIDList)
-	{
-		m_stockSelectList.clear();
-		for(int i=0; i<stockIDList.size();i++)
-		{
-			String newstockID = stockIDList.get(i);
-			m_stockSelectList.add(newstockID);
-		}
-		
-		// 选股中排除已经持有的
-		List<HoldStock> cStockHoldList =  getStockHoldList(null,null);
-		for(int i=0;i<cStockHoldList.size();i++)
-		{
-			m_stockSelectList.remove(cStockHoldList.get(i).stockID);
-		}
-	}
-	
-	// 选股列表获取
-	public List<String> getStockSelectList()
-	{
-		List<String> newList = new ArrayList<String>();
-		for(int i=0; i< m_stockSelectList.size();i++)
-		{
-			String stockID = m_stockSelectList.get(i);
-			if(!help_inAccount(stockID))  // 选股列表排除掉已经在买入列表的
-			{
-				newList.add(stockID);
-			}
-		}
-		return newList;
-	}
-	// 帮助函数 判断股票是否存在于 买卖单委托列表，持有列表中
-	private boolean help_inAccount(String stockID)
-	{
-		List<CommissionOrder> cCommissionOrderList = m_account.getCommissionOrderList();
-		for(int i=0;i<cCommissionOrderList.size();i++)
-		{
-			if(cCommissionOrderList.get(i).stockID.equals(stockID))
-			{
-				return true;
-			}
-		}
-		
-		List<HoldStock> cHoldStockList = m_account.getHoldStockList(null,null);
-		for(int i=0;i<cHoldStockList.size();i++)
-		{
-			if(cHoldStockList.get(i).stockID.equals(stockID))
-			{
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	public boolean clearStockSelectList()
-	{
-		m_stockSelectList.clear();
-		return true;
 	}
 	
 	// 获得委托列表（未成交）
@@ -208,6 +136,4 @@ public class AccountControlIF {
 	 */
 	// 账户实体
 	private AccountEntity m_account;
-	// 选股列表
-	private List<String> m_stockSelectList;
 }

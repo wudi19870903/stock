@@ -12,7 +12,7 @@ abstract public class IAccountOpe {
 	public IAccountOpe() { }
 	
 	// 隔日开始账户初始化
-	abstract public boolean newDayInit();
+	abstract public boolean newDayInit(String date, String time);
 	// 推送买单委托，返回实际下单量
 	abstract public int pushBuyOrder(String date, String time, String id, float price, int amount); 
 	// 推送卖单委托，返回实际下单量
