@@ -270,7 +270,8 @@ public class StockDataIF {
 			}
 			else
 			{
-				BLog.error("STOCKDATA", "DataEngine.getDayKDataQianFuQuan error(%d) \n", cResultDayKData.error);
+				BLog.error("STOCKDATA", "DataEngine.getDayKDataQianFuQuan(%s %s %s) error(%d) \n", 
+						stockID, fromDate, endDate, cResultDayKData.error);
 			}
 			
 //			BLog.output("TEST", "DataEngine getDayKDataQianFuQuan(%d)\n", retList.size());

@@ -17,7 +17,7 @@ import stormstock.fw.tranbase.stockdata.StockTime;
 
 public class MockAccountOpe extends IAccountOpe {
 	
-	public MockAccountOpe(String accountID, String password)
+	public MockAccountOpe(String accountID, String password, boolean connectFlag)
 	{
 		super();
 		
@@ -26,9 +26,9 @@ public class MockAccountOpe extends IAccountOpe {
 		m_accountID = accountID;
 		m_password = password;
 		
+		m_dataSyncFlag = connectFlag;
 		m_mockAccountOpeStore = new MockAccountOpeStore(m_accountID, m_password);
-		m_dataSyncFlag = true;
-				
+
 		// 交易流数据
 		{
 			m_money = 100000.00f;

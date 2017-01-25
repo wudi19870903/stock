@@ -20,7 +20,7 @@ public class AccountEntity {
 		IAccountOpe cIAccountOpe = null;
 		if(eAccType == ACCOUNTTYPE.MOCK)
 		{
-			cIAccountOpe = new MockAccountOpe(accountID, password);
+			cIAccountOpe = new MockAccountOpe(accountID, password, true);
 		} 
 		else if(eAccType == ACCOUNTTYPE.REAL)
 		{

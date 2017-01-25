@@ -134,10 +134,10 @@ public class TestStockDataIF {
 		
 		if(bTestSingle)
 		{
-			String testDate = "2016-03-09";
+			String testDate = "2016-03-01";
 			String testTime = "09:30:00";
 			
-			ResultStockTime cResultStockTime = cStockDataIF.getStockTime("000546", testDate, testTime);
+			ResultStockTime cResultStockTime = cStockDataIF.getStockTime("000938", testDate, testTime);
 		
 			if(0 == cResultStockTime.error)
 			{

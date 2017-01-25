@@ -24,7 +24,7 @@ public class Application {
 		
 		//cTranEngine.setTranMode(TRANTIMEMODE.REALTIME);
 		cTranEngine.setTranMode(TRANTIMEMODE.HISTORYMOCK);
-		cTranEngine.setHistoryTimeSpan("2016-03-01", "2016-03-05");
+		cTranEngine.setHistoryTimeSpan("2016-03-01", "2016-03-02");
 		
 		cTranEngine.run();
 		

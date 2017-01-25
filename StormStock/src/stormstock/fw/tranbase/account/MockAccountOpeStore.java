@@ -177,6 +177,7 @@ public class MockAccountOpeStore {
         		String transactionCostVal =String.format("%.3f", cHoldStock.transactionCost);
         				
         		Element Node_Stock = doc.createElement("Stock");
+        		Node_Stock.setAttribute("stockID", cHoldStock.stockID);
         		Node_Stock.setAttribute("createDate", cHoldStock.createDate);
         		Node_Stock.setAttribute("createTime", cHoldStock.createTime);
         		Node_Stock.setAttribute("holdDayCnt", holdDayCntVal);
@@ -320,8 +321,7 @@ public class MockAccountOpeStore {
 		    String password = rootElement.getAttribute("password");
 		    if(!accountID.equals(m_accountID) || !password.equals(m_password))
 			{
-		    	BLog.output("ACCOUNT", "MockAccountOpeStore storeInit (accountID or password error)\n");
-				storeInit();
+		    	BLog.error("ACCOUNT", "MockAccountOpeStore storeInit (accountID or password error)\n");
 				return null; // ’À∫≈√ÿ√‹≤ª∂‘ load ß∞‹
 			}
 		    
