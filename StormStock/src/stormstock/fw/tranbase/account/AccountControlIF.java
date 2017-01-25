@@ -42,6 +42,11 @@ public class AccountControlIF {
 		}
 	}
 	
+	public void printAccount(String date, String time)
+	{
+		m_account.printAccount(date, time);
+	}
+	
 	/*
 	 * 账户新日期初始化
 	 * 持股均可卖出

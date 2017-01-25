@@ -90,7 +90,7 @@ public class BLog {
 	}
 	public static void reloadConfig()
 	{
-		outputConsole("BLog.reloadConfig \n");
+		//outputConsole("BLog.reloadConfig \n");
 		String xmlStr = "";
 		String configFileFullName = s_strConfig + "\\" + s_strLogConfigName;
 		File cfile=new File(configFileFullName);
@@ -127,7 +127,7 @@ public class BLog {
 	        	Node tag_content = tag_contents.item(i);
 	        	String tag_name = ((Element)tag_content).getAttribute("name");
 	        	String tag_output = ((Element)tag_content).getAttribute("output");
-	        	outputConsole("name:%s tag_output:%s \n", tag_name, tag_output);
+	        	//outputConsole("name:%s tag_output:%s \n", tag_name, tag_output);
 	        	
 	        	int output_flg = Integer.parseInt(tag_output);
 	        	if(output_flg == 0)

@@ -22,7 +22,7 @@ public class Application {
 		
 		cTranEngine.setAccountType(TRANACCOUNTTYPE.MOCK); 
 		
-		//cTranEngine.setTranMode(TRANTIMEMODE.REALTIME);
+//		cTranEngine.setTranMode(TRANTIMEMODE.REALTIME);
 		cTranEngine.setTranMode(TRANTIMEMODE.HISTORYMOCK);
 		cTranEngine.setHistoryTimeSpan("2016-03-01", "2016-03-02");
 		

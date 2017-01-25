@@ -173,6 +173,39 @@ public class AccountEntity {
 		float all_asset = all_marketval + getAvailableMoney();
 		return all_asset;
 	}
+	
+	public void printAccount(String date, String time)
+	{
+		BLog.output("ACCOUNT", "    ---ACCOUNT---INFO---\n");
+		float fTotalAssets = this.getTotalAssets(date, time);
+		float fAvailableMoney = this.getAvailableMoney();
+		List<HoldStock> cStockHoldList = this.getHoldStockList(date, time);
+		List<DeliveryOrder> cDeliveryOrderList = this.getDeliveryOrderList();
+		
+		BLog.output("ACCOUNT", "    -TotalAssets: %.3f\n", fTotalAssets);
+		BLog.output("ACCOUNT", "    -AvailableMoney: %.3f\n", fAvailableMoney);
+		for(int i=0; i<cStockHoldList.size(); i++ )
+		{
+			HoldStock cHoldStock = cStockHoldList.get(i);
+			BLog.output("ACCOUNT", "    -HoldStock: %s %s %s %.3f %.3f %d %.3f(%.3f) %d\n", 
+					cHoldStock.stockID, cHoldStock.createDate, cHoldStock.createTime,
+					cHoldStock.holdAvePrice, cHoldStock.curPrice, cHoldStock.totalAmount,
+					cHoldStock.curPrice*cHoldStock.totalAmount, cHoldStock.transactionCost,
+					cHoldStock.holdDayCnt);
+		}
+		for(int i=0; i<cDeliveryOrderList.size(); i++ )
+		{
+			DeliveryOrder cDeliveryOrder = cDeliveryOrderList.get(i);
+			String tranOpe = "BUY"; 
+			if(cDeliveryOrder.tranAct == TRANACT.SELL ) tranOpe = "SELL";
+				
+			BLog.output("ACCOUNT", "    -DeliveryOrder: %s %s %s %s %.3f %.3f %d %.3f(%.3f)\n", 
+					cDeliveryOrder.date, cDeliveryOrder.time,
+					tranOpe, cDeliveryOrder.stockID, 
+					cDeliveryOrder.holdAvePrice, cDeliveryOrder.tranPrice, cDeliveryOrder.amount,
+					cDeliveryOrder.tranPrice*cDeliveryOrder.amount, cDeliveryOrder.transactionCost);
+		}
+	}
 
 	/** **********************************************************************
 	 * 账户操作接口，可以设置为模拟或真实
