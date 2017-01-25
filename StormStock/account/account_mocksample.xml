@@ -11,17 +11,17 @@
 	
 	<!-- 当日委托单列表 -->
 	<CommissionOrderList>
-		<Stock date="2017-01-01" time="21:30:00" tranact="BUY" stockID="000001" amount="3200" price="2.68" />
+		<Stock date="2017-01-01" time="21:30:00" tranAct="BUY" stockID="000001" amount="3200" price="2.68" />
 	</CommissionOrderList>
+	
+	<!-- 持股列表 -->
+	<HoldStockList>
+		<Stock stockID="000001" createDate="2017-01-01" createTime="21:30:00" holdDayCnt="2"  totalAmount="3200" totalCanSell ="1000" holdAvePrice="2.10" curPrice="2.68" transactionCost="250.35" />
+	</HoldStockList>
 	
 	<!-- 当日交割单列表 -->
 	<DeliveryOrderList>
 		<Stock date="2017-01-01" time="21:30:00" tranAct="BUY" stockID="000001" amount="3200" holdAvePrice="2.10" tranPrice="2.68" transactionCost="250.35" />
 	</DeliveryOrderList>
-	
-	<!-- 持股列表 -->
-	<HoldStockList>
-		<Stock stockID="000001" createDate="2017-01-01" createTime="21:30:00" holdDayCnt="2"  totalAmount="3200" totalCanSell ="1000" holdAvePrice="2.10" curPrice="2.68" transactionCosts="250.35" />
-	</HoldStockList>
 
 </account>
