@@ -23,7 +23,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			UseOfMFC="1"
 			CharacterSet="2"
 			>
@@ -93,7 +93,9 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			ConfigurationType="1"
+			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -112,6 +114,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="&quot;C:\Program Files (x86)\Java\jdk1.8.0_45\include\win32&quot;;&quot;C:\Program Files (x86)\Java\jdk1.8.0_45\include&quot;"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -247,7 +250,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="&quot;C:\Program Files (x86)\Java\jdk1.8.0_45\include\win32&quot;;&quot;C:\Program Files (x86)\Java\jdk1.8.0_45\include&quot;"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -305,10 +308,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\org_mokey_stormv_stock_analysis_capi_CATHSAccount.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -329,7 +328,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\stormstock_capi_CATHSAccount.cpp"
+				RelativePath=".\stormstock_ori_capi_CATHSAccount.cpp"
 				>
 			</File>
 			<File
@@ -355,15 +354,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\org_mokey_stormv_stock_analysis_capi_CATHSAccount.h"
-				>
-			</File>
-			<File
 				RelativePath=".\stdafx.h"
 				>
 			</File>
 			<File
-				RelativePath=".\stormstock_capi_CATHSAccount.h"
+				RelativePath=".\stormstock_ori_capi_CATHSAccount.h"
 				>
 			</File>
 			<File

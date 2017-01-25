@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "org_mokey_stormv_stock_analysis_capi_CATHSAccount.h"
+#include "stormstock_ori_capi_CATHSAccount.h"
 #include "TongHuaShun.h"
 #include <string>
 using namespace std;
@@ -28,7 +28,12 @@ static string jstringTostring(JNIEnv* env, jstring jstr)
 	return rtnString;
 }
 
-JNIEXPORT jint JNICALL Java_org_mokey_stormv_stock_analysis_capi_CATHSAccount_initialize
+/*
+* Class:     stormstock_capi_CATHSAccount
+* Method:    initialize
+* Signature: ()I
+*/
+JNIEXPORT jint JNICALL Java_stormstock_ori_capi_CATHSAccount_initialize
 (JNIEnv *, jclass)
 {
 	int rtn = 0;
@@ -36,7 +41,12 @@ JNIEXPORT jint JNICALL Java_org_mokey_stormv_stock_analysis_capi_CATHSAccount_in
 	return rtn;
 }
 
-JNIEXPORT jfloat JNICALL Java_org_mokey_stormv_stock_analysis_capi_CATHSAccount_getAvailableMoney
+/*
+* Class:     stormstock_capi_CATHSAccount
+* Method:    getAvailableMoney
+* Signature: ()F
+*/
+JNIEXPORT jfloat JNICALL Java_stormstock_ori_capi_CATHSAccount_getAvailableMoney
 (JNIEnv *, jclass)
 {
 	float availableMoney = 0.0f;
@@ -44,7 +54,12 @@ JNIEXPORT jfloat JNICALL Java_org_mokey_stormv_stock_analysis_capi_CATHSAccount_
 	return availableMoney;
 }
 
-JNIEXPORT jfloat JNICALL Java_org_mokey_stormv_stock_analysis_capi_CATHSAccount_getAllMoney
+/*
+* Class:     stormstock_capi_CATHSAccount
+* Method:    getAllMoney
+* Signature: ()F
+*/
+JNIEXPORT jfloat JNICALL Java_stormstock_ori_capi_CATHSAccount_getAllMoney
 (JNIEnv *, jclass)
 {
 	float allMoney = 0.0f;
@@ -52,7 +67,12 @@ JNIEXPORT jfloat JNICALL Java_org_mokey_stormv_stock_analysis_capi_CATHSAccount_
 	return allMoney;
 }
 
-JNIEXPORT jfloat JNICALL Java_org_mokey_stormv_stock_analysis_capi_CATHSAccount_getAllStockMarketValue
+/*
+* Class:     stormstock_capi_CATHSAccount
+* Method:    getAllStockMarketValue
+* Signature: ()F
+*/
+JNIEXPORT jfloat JNICALL Java_stormstock_ori_capi_CATHSAccount_getAllStockMarketValue
 (JNIEnv *, jclass)
 {
 	float allStockMarketValue = 0.0f;
@@ -60,7 +80,12 @@ JNIEXPORT jfloat JNICALL Java_org_mokey_stormv_stock_analysis_capi_CATHSAccount_
 	return allStockMarketValue;
 }
 
-JNIEXPORT jint JNICALL Java_org_mokey_stormv_stock_analysis_capi_CATHSAccount_buyStock
+/*
+* Class:     stormstock_capi_CATHSAccount
+* Method:    buyStock
+* Signature: (Ljava/lang/String;IF)I
+*/
+JNIEXPORT jint JNICALL Java_stormstock_ori_capi_CATHSAccount_buyStock
 (JNIEnv * env, jclass, jstring stockId, jint amount, jfloat price)
 {
 	int rtn = 0;
@@ -71,7 +96,12 @@ JNIEXPORT jint JNICALL Java_org_mokey_stormv_stock_analysis_capi_CATHSAccount_bu
 	return rtn;
 }
 
-JNIEXPORT jint JNICALL Java_org_mokey_stormv_stock_analysis_capi_CATHSAccount_sellStock
+/*
+* Class:     stormstock_capi_CATHSAccount
+* Method:    sellStock
+* Signature: (Ljava/lang/String;IF)I
+*/
+JNIEXPORT jint JNICALL Java_stormstock_ori_capi_CATHSAccount_sellStock
 (JNIEnv * env, jclass, jstring stockId, jint amount, jfloat price)
 {
 	int rtn = 0;
