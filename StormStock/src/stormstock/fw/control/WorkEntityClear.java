@@ -29,10 +29,10 @@ public class WorkEntityClear {
 		
 		// 从账户拉取已持股
 		AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
-		List<HoldStock> cStockHoldList = accIF.getStockHoldList(null,null);
-		for(int i=0;i<cStockHoldList.size();i++)
+		List<HoldStock> cHoldStockList = accIF.getHoldStockList(null,null);
+		for(int i=0;i<cHoldStockList.size();i++)
 		{
-			HoldStock cHoldStock = cStockHoldList.get(i);
+			HoldStock cHoldStock = cHoldStockList.get(i);
 			if(cHoldStock.totalCanSell > 0)
 			{
 				msg_builder.addStockID(cHoldStock.stockID);

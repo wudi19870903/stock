@@ -120,18 +120,18 @@ public class AccountControlIF {
 	 * 时间用户更新现价
 	 * 如果传入null，则不更新现价
 	 */
-	public List<HoldStock> getStockHoldList(String date, String time)
+	public List<HoldStock> getHoldStockList(String date, String time)
 	{
 		return m_account.getHoldStockList(date, time);
 	}
-	public HoldStock getStockHold(String date, String time, String stockID)
+	public HoldStock getHoldStock(String date, String time, String stockID)
 	{
-		List<HoldStock> cStockHoldList = getStockHoldList(date, time);
-		for(int i=0;i<cStockHoldList.size();i++)
+		List<HoldStock> cHoldStockList = getHoldStockList(date, time);
+		for(int i=0;i<cHoldStockList.size();i++)
 		{
-			if(cStockHoldList.get(i).stockID.equals(stockID))
+			if(cHoldStockList.get(i).stockID.equals(stockID))
 			{
-				return cStockHoldList.get(i);
+				return cHoldStockList.get(i);
 			}
 		}
 		return null;

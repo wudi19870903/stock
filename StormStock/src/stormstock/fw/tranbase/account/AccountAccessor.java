@@ -33,14 +33,14 @@ public class AccountAccessor {
 		return m_accountControlIF.getCommissionOrderList();
 	}
 	
-	public List<HoldStock> getStockHoldList()
+	public List<HoldStock> getHoldStockList()
 	{
-		return m_accountControlIF.getStockHoldList(m_date, m_time);
+		return m_accountControlIF.getHoldStockList(m_date, m_time);
 	}
 	
-	public HoldStock getStockHold(String stockID)
+	public HoldStock getHoldStock(String stockID)
 	{
-		return m_accountControlIF.getStockHold(m_date, m_time, stockID);
+		return m_accountControlIF.getHoldStock(m_date, m_time, stockID);
 	}
 	
 	public List<DeliveryOrder> getDeliveryOrderList()

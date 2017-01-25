@@ -46,7 +46,7 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 		
 		float fTotalAssets = cAccountControlIF.getTotalAssets(m_date, m_time);
 		float fAvailableMoney = cAccountControlIF.getAvailableMoney();
-		List<HoldStock> cStockHoldList = cAccountControlIF.getStockHoldList(m_date, m_time);
+		List<HoldStock> cHoldStockList = cAccountControlIF.getHoldStockList(m_date, m_time);
 		List<DeliveryOrder> cDeliveryOrderList = cAccountControlIF.getDeliveryOrderList();
 		
 		// 添加当前总资产，可用钱
@@ -55,9 +55,9 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 		
 		BLog.output("REPORT", "    -TotalAssets: %.3f\n", fTotalAssets);
 		BLog.output("REPORT", "    -AvailableMoney: %.3f\n", fAvailableMoney);
-		for(int i=0; i<cStockHoldList.size(); i++ )
+		for(int i=0; i<cHoldStockList.size(); i++ )
 		{
-			HoldStock cHoldStock = cStockHoldList.get(i);
+			HoldStock cHoldStock = cHoldStockList.get(i);
 			BLog.output("REPORT", "    -HoldStock: %s %s %s %.3f %.3f %d %.3f(%.3f) %d\n", 
 					cHoldStock.stockID, cHoldStock.createDate, cHoldStock.createTime,
 					cHoldStock.holdAvePrice, cHoldStock.curPrice, cHoldStock.totalAmount,
@@ -78,9 +78,9 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 			
 			// 判断清仓交割单
 			boolean bIsClearDeliveryOrder = false;
-			for(int j=0; j<cStockHoldList.size(); j++ )
+			for(int j=0; j<cHoldStockList.size(); j++ )
 			{
-				HoldStock cHoldStock = cStockHoldList.get(j);
+				HoldStock cHoldStock = cHoldStockList.get(j);
 				if(cHoldStock.stockID.equals(cDeliveryOrder.stockID))
 				{
 					bIsClearDeliveryOrder = false;

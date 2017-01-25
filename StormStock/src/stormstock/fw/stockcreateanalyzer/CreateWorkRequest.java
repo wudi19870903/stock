@@ -92,7 +92,7 @@ public class CreateWorkRequest extends BQThreadRequest {
 				// 做成 ctx
 				AccountAccessor cAccountAccessor = accIF.getAccountAccessor(m_date, m_time);
 				StockDataAccessor cStockDataAccessor = stockDataIF.getStockDataAccessor(yesterday_date, m_time);
-				Target cTarget = new Target(cStock, cAccountAccessor.getStockHold(stockID));
+				Target cTarget = new Target(cStock, cAccountAccessor.getHoldStock(stockID));
 				TranContext ctx = new TranContext(m_date, m_time, 
 						cTarget,  // 目标对象带有 股票数据与持股信息
 						cAccountAccessor, // ctx带有账户访问器
@@ -135,7 +135,7 @@ public class CreateWorkRequest extends BQThreadRequest {
 			
 		// 根据建仓策略，做成建仓项
 		int create_max_count = cIStrategyCreate.strategy_create_max_count();
-		int alreadyCount = accIF.getStockHoldList(null, null).size() + accIF.getBuyCommissionOrderList().size();
+		int alreadyCount = accIF.getHoldStockList(null, null).size() + accIF.getBuyCommissionOrderList().size();
 		int buyStockCount = create_max_count - alreadyCount;
 		buyStockCount = Math.min(buyStockCount,cCreateResultWrapperList.size());
 		

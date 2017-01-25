@@ -93,7 +93,7 @@ public class ClearWorkRequest extends BQThreadRequest {
 				// 做成 ctx
 				AccountAccessor cAccountAccessor = accIF.getAccountAccessor(m_date, m_time);
 				StockDataAccessor cStockDataAccessor = stockDataIF.getStockDataAccessor(yesterday_date, m_time);
-				Target cTarget = new Target(cStock, cAccountAccessor.getStockHold(stockID));
+				Target cTarget = new Target(cStock, cAccountAccessor.getHoldStock(stockID));
 				TranContext ctx = new TranContext(m_date, m_time, 
 						cTarget,  // 目标对象带有 股票数据与持股信息
 						cAccountAccessor, // ctx带有账户访问器
@@ -146,7 +146,7 @@ public class ClearWorkRequest extends BQThreadRequest {
 			cItemBuild.setStockID(cClearResultWrapper.stockId);
 			cItemBuild.setPrice(cClearResultWrapper.fPrice);
 			// 调用账户获取持有量
-			HoldStock cHoldStock = accIF.getStockHold(null, null, cClearResultWrapper.stockId);
+			HoldStock cHoldStock = accIF.getHoldStock(null, null, cClearResultWrapper.stockId);
 			cItemBuild.setAmount(cHoldStock.totalCanSell);
 		}
 		StockClearAnalysis.StockClearAnalysisCompleteNotify msg = msg_builder.build();
