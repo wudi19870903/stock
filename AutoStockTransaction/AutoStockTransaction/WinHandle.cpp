@@ -249,6 +249,69 @@ HWND findZijinGupiaoWin(HWND hWnd)
 	return NULL;
 }
 
+HWND findHoldStockWin(HWND hWnd)
+{
+	TESTLOG("findHoldStockWin#\n");
+	
+	HWND hZijinGupiao = findZijinGupiaoWin(hWnd);
+
+	HWND hChildL1=NULL;
+	for(;;) {
+		hChildL1 = FindWindowExW(hZijinGupiao, hChildL1, 0, 0);
+		if (hChildL1 == NULL)
+			break;
+		char szTitleL1[200];
+		char szClassL1[200];
+		char szWinTextL1[200];
+		GetWindowText(hChildL1, szTitleL1, sizeof(szTitleL1) / sizeof(char));
+		GetClassName(hChildL1, szClassL1, sizeof(szClassL1) / sizeof(char));
+		GetWindowText(hChildL1, szWinTextL1, sizeof(szWinTextL1) / sizeof(char));
+
+		if (0 == strcmp(szWinTextL1, "HexinScrollWnd"))
+		{
+			TESTLOG("findZijinGupiaoWin# hWndL1 = 0x%x szClassL1[%s] szWinTextL1[%s]\n",hChildL1, szClassL1,szWinTextL1);
+
+			HWND hChildL2 = NULL;
+			for(;;) {
+				hChildL2 = FindWindowExW(hChildL1, hChildL2, 0, 0);
+				if (hChildL2 == NULL)
+					break;
+				char szTitleL2[200];
+				char szClassL2[200];
+				char szWinTextL2[200];
+				GetWindowText(hChildL2, szTitleL2, sizeof(szTitleL2) / sizeof(char)); 
+				GetClassName(hChildL2, szClassL2, sizeof(szClassL2) / sizeof(char));
+				GetWindowText(hChildL2, szWinTextL2, sizeof(szWinTextL2) / sizeof(char));
+				TESTLOG("findZijinGupiaoWin# hWndL2 = 0x%x szClassL2[%s] szWinTextL2[%s]\n",hChildL2, szClassL2,szWinTextL2);
+
+				if (0 == strcmp(szWinTextL2, "HexinScrollWnd2"))
+				{
+					HWND hChildL3 = NULL;
+					int iTimesCheck = 0;
+					int iFIndex = 0;
+					for(;;) {
+						hChildL3 = FindWindowExW(hChildL2, hChildL3, 0, 0);
+						if (hChildL3 == NULL)
+							break;
+						char szTitleL3[200];
+						char szClassL3[200];
+						char szWinTextL3[200];
+						GetWindowText(hChildL3, szTitleL3, sizeof(szTitleL3) / sizeof(char)); 
+						GetClassName(hChildL3, szClassL3, sizeof(szClassL3) / sizeof(char));
+						GetWindowText(hChildL3, szWinTextL3, sizeof(szWinTextL3) / sizeof(char));
+						iFIndex++;
+						if (0 == strcmp(szClassL3, "CVirtualGridCtrl"))
+						{
+							return hChildL3;
+						}
+					}
+				}
+			}
+		}
+	}
+	return NULL;
+}
+
 HWND findBuyWin(HWND hWnd)
 {
 	TESTLOG("findBuyWin#\n");
@@ -903,4 +966,54 @@ int Flush_F5()
 	::PostMessage(hWnd, WM_KEYUP, VK_F5, 0);
 	Sleep(50);
 	return 0;
+}
+
+bool setClipboard(std::string in_buf)
+{
+	if(::OpenClipboard(NULL))
+	{
+		::EmptyClipboard();
+		HGLOBAL clipbuffer;
+		char *buffer;
+		clipbuffer = ::GlobalAlloc(GMEM_DDESHARE, in_buf.length()+1);
+		buffer = (char *)::GlobalLock(clipbuffer);
+		strcpy(buffer, in_buf.c_str());
+		::GlobalUnlock(clipbuffer);
+		::SetClipboardData(CF_TEXT, clipbuffer);
+		::CloseClipboard();
+		return true;
+	}
+	return false;
+}
+
+bool getClipboard(std::string & out_buf)
+{
+	if(::OpenClipboard(NULL))
+	{
+		//获得剪贴板数据
+		HGLOBAL hMem = GetClipboardData(CF_TEXT);
+		if(NULL != hMem)
+		{
+			char* lpStr = (char*)::GlobalLock(hMem); 
+			if(NULL != lpStr)
+			{
+				printf("%s",lpStr );
+				out_buf.assign(lpStr,strlen(lpStr));
+				::GlobalUnlock(hMem);
+				return true;
+			}
+		}
+		::CloseClipboard();
+		return true;
+	}
+	return false;
+}
+
+bool clearClipboard()
+{
+	if(::OpenClipboard(NULL))
+	{
+		return ::EmptyClipboard();
+	}
+	return false;
 }

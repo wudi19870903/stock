@@ -11,10 +11,17 @@ float THSAPI_GetAvailableMoney();
 float THSAPI_GetAllMoney();
 // 获取账户股票总市值
 float THSAPI_GetAllStockMarketValue();
+// 获取持股列表
+struct HoldStock
+{
+
+};
+bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList);
 
 // 买入股票接口
 int THSAPI_BuyStock(const char* stockId, const int buyAmount, const float price);
 // 卖出股票接口
 int THSAPI_SellStock(const char* stockId, const int sellAmount, const float price);
 
+int THSAPI_GetHoldStockList();
 

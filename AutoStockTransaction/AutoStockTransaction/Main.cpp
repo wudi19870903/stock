@@ -5,7 +5,10 @@
 
 void Test()
 {
-	//int iRetInit = THSAPI_TongHuaShunInit();
+	int iRetInit = THSAPI_TongHuaShunInit();
+	
+	std::list<HoldStock> cResultList;
+	THSAPI_GetHoldStock(cResultList);
 
 	//HWND hZhangDieXianZhi = Find_ZhangDieXianZhi();
 	//if (NULL != hZhangDieXianZhi)
@@ -172,6 +175,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	printf("[TEST] THSAPI_SellStock = %d\n", iSellRetFirst);
 
 	printf("### Main End\n");
-	//system("pause");
+
+	system("pause");
+
 	return 0;
 }

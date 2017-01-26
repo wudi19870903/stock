@@ -11,6 +11,8 @@ HWND findZijinGupiaoWin(HWND hWnd);
 HWND findBuyWin(HWND hWnd);
 HWND findSellWin(HWND hWnd);
 
+HWND findHoldStockWin(HWND hWnd);
+
 //////////////////////////////////////////////////////////////////////////
 //  main win in desktop
 
@@ -41,5 +43,10 @@ int CloseTijiaoChengGong();
 
 // flush
 int Flush_F5();
+
+// Clipboard
+bool setClipboard(std::string in_buf);
+bool getClipboard(std::string & out_buf);
+bool clearClipboard();
 
 

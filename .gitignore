@@ -34,4 +34,8 @@ local.properties
 StormStock/data/
 StormStock/out/
 *.txt
-*/output/*
+*output*
+*Release*
+*Debug*
+*.ncb
+*log.txt

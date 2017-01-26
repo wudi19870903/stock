@@ -11,6 +11,8 @@ static HWND s_hMainWin = NULL;
 static HWND s_hLeftTreeView = NULL;
 
 static HWND s_hZijinGupiaoWin = NULL;
+static HWND s_hHoldStockWin = NULL;
+
 static HWND s_hBuyWin = NULL;
 static HWND s_hSellWin = NULL;
 
@@ -20,8 +22,8 @@ int THSAPI_TongHuaShunInit()
 	DFileLog::GetInstance()->EnableSaveLog(true);
 	TESTLOG("THSAPI_TongHuaShunInit#\n");
 
+	// 初始化窗口句柄
 	HWND hWnd = FindTongHuaShunMainWin();
-
 	TESTLOG("hWnd = 0x%x\n",hWnd);
 	if (NULL == hWnd)
 	{
@@ -31,6 +33,7 @@ int THSAPI_TongHuaShunInit()
 	s_hMainWin = hWnd;
 	TESTLOG("THSAPI_TongHuaShunInit# search main win ok\n");
 
+	// 初始化左侧TreeView句柄
 	HWND hLeftTreeView = findLeftTreeView(hWnd);
 	if (NULL == hLeftTreeView)
 	{
@@ -45,6 +48,7 @@ int THSAPI_TongHuaShunInit()
 		return -21;
 	}
 
+	// 初始化资金股票主窗口句柄
 	HWND hZijinGupiaoWin = findZijinGupiaoWin(hWnd);
 	if (NULL == hZijinGupiaoWin)
 	{
@@ -54,6 +58,17 @@ int THSAPI_TongHuaShunInit()
 	s_hZijinGupiaoWin = hZijinGupiaoWin;
 	TESTLOG("THSAPI_TongHuaShunInit# search ZijinGupiaoWin ok\n");
 
+	// 初始化持股窗口句柄
+	HWND hHoldStockWin = findHoldStockWin(hWnd);
+	if (NULL == hHoldStockWin)
+	{
+		TESTLOG("THSAPI_TongHuaShunInit# [ERROR] hHoldStockWin error\n");
+		return -60;
+	}
+	s_hHoldStockWin = hHoldStockWin;
+	TESTLOG("THSAPI_TongHuaShunInit# search HoldStockWin ok\n");
+
+	// 初始化买入窗口句柄
 	HWND hBuyWin = findBuyWin(hWnd);
 	if (NULL == hBuyWin)
 	{
@@ -63,6 +78,7 @@ int THSAPI_TongHuaShunInit()
 	s_hBuyWin = hBuyWin;
 	TESTLOG("THSAPI_TongHuaShunInit# search BuyWin ok\n");
 
+	// 初始化卖出窗口句柄
 	HWND hSellWin = findSellWin(hWnd);
 	if (NULL == hSellWin)
 	{
@@ -72,12 +88,13 @@ int THSAPI_TongHuaShunInit()
 	s_hSellWin = hSellWin;
 	TESTLOG("THSAPI_TongHuaShunInit# search SellWin ok\n");
 
+	// 关闭无用窗口
 	if (0!=CancelAllMainWin())
 	{
 		TESTLOG("THSAPI_TongHuaShunInit# [ERROR] CancelAllMainWin error\n");
 		return -60;
 	}
-	
+
 	Flush_F5();
 
 	return 0;
@@ -211,6 +228,75 @@ float THSAPI_GetAllStockMarketValue()
 	}
 	return 0.0f;
 }
+
+bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
+{
+	if (s_hHoldStockWin)
+	{
+		// 缓存剪切板现有内容
+		std::string buf_save;
+		bool bBufSaved = false;
+		for (int i=0; i<100; i++)
+		{
+			if (getClipboard(buf_save))
+			{
+				if (clearClipboard())
+				{
+					bBufSaved = true;
+					break;
+				}
+			}
+			Sleep(50);
+		}
+
+		// 数据拷贝到剪切板
+		std::string buf;
+		bool bBufCopied = false;
+		if (bBufSaved)
+		{
+			for (int i=0; i<100; i++)
+			{
+				
+				keybd_event(VK_CONTROL, (BYTE)0, 0 ,0);
+				::SendMessage(s_hHoldStockWin,WM_KEYDOWN,'C',MapVirtualKey('C',0));
+				Sleep(50);
+				::SendMessage(s_hHoldStockWin,WM_KEYUP,'C',MapVirtualKey('C',0));
+				keybd_event(VK_CONTROL, (BYTE)0, KEYEVENTF_KEYUP,0);
+
+				if(getClipboard(buf) && buf.length()>0)
+				{
+					bBufCopied = true;
+					break;
+				}
+				Sleep(50);
+			}
+		}
+
+		// 恢复剪切板原有内容
+		bool bRecoverd = false;
+		if(bBufSaved)
+		{
+			for (int i=0; i<100; i++)
+			{
+				if (setClipboard(buf_save))
+				{
+					bRecoverd = true;
+					break;
+				}
+				Sleep(50);
+			}
+		}
+		 
+		// 解析拷贝数据
+		if(bBufCopied)
+		{
+			return true;
+		}
+		 
+	}
+	return false;
+}
+
 
 int THSAPI_BuyStock(const char* stockId, const int buyAmount, const float price)
 {

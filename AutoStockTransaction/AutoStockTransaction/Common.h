@@ -3,5 +3,5 @@
 #include <list>
 using namespace std;
 
-//#define TESTLOG DFileLog::GetInstance()->OutoutA
-#define TESTLOG(...)
+#define TESTLOG DFileLog::GetInstance()->OutoutA
+//#define TESTLOG(...)
