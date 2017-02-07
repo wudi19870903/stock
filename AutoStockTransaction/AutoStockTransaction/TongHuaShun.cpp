@@ -259,7 +259,7 @@ bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
 				
 				keybd_event(VK_CONTROL, (BYTE)0, 0 ,0);
 				::SendMessage(s_hHoldStockWin,WM_KEYDOWN,'C',MapVirtualKey('C',0));
-				Sleep(50);
+				Sleep(100);
 				::SendMessage(s_hHoldStockWin,WM_KEYUP,'C',MapVirtualKey('C',0));
 				keybd_event(VK_CONTROL, (BYTE)0, KEYEVENTF_KEYUP,0);
 
@@ -290,9 +290,26 @@ bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
 		// ½âÎö¿½±´Êý¾Ý
 		if(bBufCopied)
 		{
+			printf("%s", buf.c_str());
+
+			std::string copyStr = DString::replace(buf, "\r\n", "");
+
+			std::list<std::string> cells = DString::split(copyStr, "\t");
+			std::list<std::string> firstLineColumes;
+
+			if (cells.size() > 16)
+			{
+				//firstLineColumes = DString::split(lines.front(), "\t");
+
+				//std::list<std::string>::iterator it;
+				//for (it = lines.begin(); it != lines.end(); it++)
+				//{
+				//	std::string tem = *it;
+				//}
+
+			}
 			return true;
 		}
-		 
 	}
 	return false;
 }

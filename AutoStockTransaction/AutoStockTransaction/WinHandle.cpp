@@ -975,7 +975,7 @@ bool setClipboard(std::string in_buf)
 		::EmptyClipboard();
 		HGLOBAL clipbuffer;
 		char *buffer;
-		clipbuffer = ::GlobalAlloc(GMEM_DDESHARE, in_buf.length()+1);
+		clipbuffer = ::GlobalAlloc(GMEM_DDESHARE, (in_buf.length()+1)*2);
 		buffer = (char *)::GlobalLock(clipbuffer);
 		strcpy(buffer, in_buf.c_str());
 		::GlobalUnlock(clipbuffer);
@@ -997,9 +997,10 @@ bool getClipboard(std::string & out_buf)
 			char* lpStr = (char*)::GlobalLock(hMem); 
 			if(NULL != lpStr)
 			{
-				printf("%s",lpStr );
+				//printf("%s",lpStr );
 				out_buf.assign(lpStr,strlen(lpStr));
 				::GlobalUnlock(hMem);
+				::CloseClipboard();
 				return true;
 			}
 		}
@@ -1013,7 +1014,9 @@ bool clearClipboard()
 {
 	if(::OpenClipboard(NULL))
 	{
-		return ::EmptyClipboard();
+		bool bRet = ::EmptyClipboard();
+		::CloseClipboard();
+		return bRet;
 	}
 	return false;
 }

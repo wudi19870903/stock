@@ -22,10 +22,11 @@
     <ProjectGuid>{CBC0FE30-A4FB-44BA-A23B-3E4825F82A4C}</ProjectGuid>
     <RootNamespace>AutoStockTransaction</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
     <UseOfMfc>Static</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
@@ -89,6 +90,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalIncludeDirectories>C:\Program Files\Java\jdk1.8.0_111\include;C:\Program Files\Java\jdk1.8.0_111\include\win32</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -125,21 +127,19 @@
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="DCLib.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="org_mokey_stormv_stock_analysis_capi_CATHSAccount.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="stormstock_capi_CATHSAccount.cpp" />
+    <ClCompile Include="stormstock_ori_capi_CATHSAccount.cpp" />
     <ClCompile Include="TongHuaShun.cpp" />
     <ClCompile Include="WinHandle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
     <ClInclude Include="DCLib.h" />
-    <ClInclude Include="org_mokey_stormv_stock_analysis_capi_CATHSAccount.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="stormstock_capi_CATHSAccount.h" />
+    <ClInclude Include="stormstock_ori_capi_CATHSAccount.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TongHuaShun.h" />
     <ClInclude Include="WinHandle.h" />

@@ -25,6 +25,11 @@
 #include "io.h"
 #include "direct.h"
 
+#include <string>
+#include <list>
+#include <map>
+
+
 #ifndef INCLUDE_DCLIB
 #define INCLUDE_DCLIB
 
@@ -358,6 +363,16 @@ private:
 	 * Can not create the instance.
 	**/
 	DStr(){}
+};
+
+class DCLIB_API DString
+{
+public:
+	static std::list<std::string> split(std::string s, std::string delim);
+	static std::string replace(std::string s, std::string strSrc, std::string strDes);
+
+private:
+	DString() {}
 };
 
 /*

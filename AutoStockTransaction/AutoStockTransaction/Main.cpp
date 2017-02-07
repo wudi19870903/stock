@@ -45,8 +45,8 @@ void Test()
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	//Test();
-	//return 0;
+	Test();
+	return 0;
 	//////////////////////////////////////////////////////////////////////////
 
 	DFileLog::GetInstance()->Clear();
