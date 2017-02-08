@@ -21,7 +21,11 @@ struct HoldStock
 	float curPrice;
 };
 bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList);
-
+// 获取当日委托列表
+struct CommissionOrder
+{
+};
+bool THSAPI_GetCommissionOrderList(std::list<CommissionOrder> & resultList);
 // 买入股票接口
 int THSAPI_BuyStock(const char* stockId, const int buyAmount, const float price);
 // 卖出股票接口

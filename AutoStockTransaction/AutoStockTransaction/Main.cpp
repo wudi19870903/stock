@@ -7,10 +7,6 @@ void Test()
 {
 	int iRetInit = THSAPI_TongHuaShunInit();
 	
-	std::list<HoldStock> cResultList;
-	THSAPI_GetHoldStock(cResultList);
-
-
 
 	//HWND hZhangDieXianZhi = Find_ZhangDieXianZhi();
 	//if (NULL != hZhangDieXianZhi)
@@ -47,135 +43,183 @@ void Test()
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	Test();
-	return 0;
+	//Test();
+	//return 0;
 	//////////////////////////////////////////////////////////////////////////
-
 	DFileLog::GetInstance()->Clear();
 	DFileLog::GetInstance()->EnableSaveLog(true);
 
 	printf("### Main Begin\n");
 
 	//////////////////////////////////////////////////////////////////////////
-	int iTestTimes_Init = 1;
-	int iInitRetFirst = -1;
-	for (int i=0; i<iTestTimes_Init; i++)
 	{
-		if (0 == i)
+		int iTestTimes_Init = 1;
+		int iInitRetFirst = -1;
+		for (int i=0; i<iTestTimes_Init; i++)
 		{
-			iInitRetFirst = THSAPI_TongHuaShunInit();
-		}
-		else
-		{
-			int iInitRet = THSAPI_TongHuaShunInit();
-			if (iInitRetFirst != iInitRet)
+			if (0 == i)
 			{
-				printf("[TEST] THSAPI_TongHuaShunInit Error [%d]\n", iInitRet);
+				iInitRetFirst = THSAPI_TongHuaShunInit();
+			}
+			else
+			{
+				int iInitRet = THSAPI_TongHuaShunInit();
+				if (iInitRetFirst != iInitRet)
+				{
+					printf("[TEST] THSAPI_TongHuaShunInit Error [%d]\n", iInitRet);
+				}
 			}
 		}
+		printf("[TEST] THSAPI_TongHuaShunInit = %d\n", iInitRetFirst);
 	}
-	printf("[TEST] THSAPI_TongHuaShunInit = %d\n", iInitRetFirst);
+
 
 	//////////////////////////////////////////////////////////////////////////
-	int iTestTimes_AvailableMoney = 1;
-	float fAvailableMoneyFirst = -1;
-	for (int i=0; i<iTestTimes_AvailableMoney; i++)
 	{
-		if (0 == i)
+		int iTestTimes_AvailableMoney = 1;
+		float fAvailableMoneyFirst = -1;
+		for (int i=0; i<iTestTimes_AvailableMoney; i++)
 		{
-			fAvailableMoneyFirst = THSAPI_GetAvailableMoney();
-		}
-		else
-		{
-			int fAvailableMoney = THSAPI_GetAvailableMoney();
-			if (iInitRetFirst != fAvailableMoney)
+			if (0 == i)
 			{
-				printf("[TEST] THSAPI_GetAvailableMoney Error [%.2f]\n", fAvailableMoney);
+				fAvailableMoneyFirst = THSAPI_GetAvailableMoney();
+			}
+			else
+			{
+				int fAvailableMoney = THSAPI_GetAvailableMoney();
+				if (fAvailableMoneyFirst != fAvailableMoney)
+				{
+					printf("[TEST] THSAPI_GetAvailableMoney Error [%.2f]\n", fAvailableMoney);
+				}
 			}
 		}
+		printf("[TEST] THSAPI_GetAvailableMoney = %f\n", fAvailableMoneyFirst);
 	}
-	printf("[TEST] THSAPI_GetAvailableMoney = %f\n", fAvailableMoneyFirst);
 
 	//////////////////////////////////////////////////////////////////////////
-	int iTestTimes_AllMoney = 1;
-	float fAllMoneyFirst = -1;
-	for (int i=0; i<iTestTimes_AllMoney; i++)
 	{
-		if (0 == i)
+		int iTestTimes_AllMoney = 1;
+		float fAllMoneyFirst = -1;
+		for (int i=0; i<iTestTimes_AllMoney; i++)
 		{
-			fAllMoneyFirst = THSAPI_GetAllMoney();
-		}
-		else
-		{
-			float fAllMoney = THSAPI_GetAllMoney();
-			if (fAllMoneyFirst != fAllMoney)
+			if (0 == i)
 			{
-				printf("[TEST] THSAPI_GetAllMoney Error [%.2f]\n", fAllMoney);
+				fAllMoneyFirst = THSAPI_GetAllMoney();
+			}
+			else
+			{
+				float fAllMoney = THSAPI_GetAllMoney();
+				if (fAllMoneyFirst != fAllMoney)
+				{
+					printf("[TEST] THSAPI_GetAllMoney Error [%.2f]\n", fAllMoney);
+				}
 			}
 		}
+		printf("[TEST] THSAPI_GetAllMoney = %f\n", fAllMoneyFirst);
 	}
-	printf("[TEST] THSAPI_GetAllMoney = %f\n", fAllMoneyFirst);
+
 
 	//////////////////////////////////////////////////////////////////////////
-	int iTestTimes_StockMarketValue = 1;
-	float fStockMarketValueFirst = -1;
-	for (int i=0; i<iTestTimes_StockMarketValue; i++)
 	{
-		if (0 == i)
+		int iTestTimes_StockMarketValue = 1;
+		float fStockMarketValueFirst = -1;
+		for (int i=0; i<iTestTimes_StockMarketValue; i++)
 		{
-			fStockMarketValueFirst = THSAPI_GetAllStockMarketValue();
-		}
-		else
-		{
-			float fStockMarketValue = THSAPI_GetAllStockMarketValue();
-			if (fStockMarketValueFirst != fStockMarketValue)
+			if (0 == i)
 			{
-				printf("[TEST] THSAPI_GetStockMarketValue Error [%.2f]\n", fStockMarketValue);
+				fStockMarketValueFirst = THSAPI_GetAllStockMarketValue();
+			}
+			else
+			{
+				float fStockMarketValue = THSAPI_GetAllStockMarketValue();
+				if (fStockMarketValueFirst != fStockMarketValue)
+				{
+					printf("[TEST] THSAPI_GetStockMarketValue Error [%.2f]\n", fStockMarketValue);
+				}
 			}
 		}
+		printf("[TEST] THSAPI_GetStockMarketValue = %f\n", fStockMarketValueFirst);
 	}
-	printf("[TEST] THSAPI_GetStockMarketValue = %f\n", fStockMarketValueFirst);
 
 	//////////////////////////////////////////////////////////////////////////
-	int iTestTimes_Buy = 1;
-	int iBuyRetFirst = -1;
-	for (int i=0; i<iTestTimes_Buy; i++)
 	{
-		if (0 == i)
+		int iTestTimes_Buy = 0;
+		int iBuyRetFirst = -1;
+		for (int i=0; i<iTestTimes_Buy; i++)
 		{
-			iBuyRetFirst = THSAPI_BuyStock("601988",100,1.00);
-		}
-		else
-		{
-			int iBuyRet = THSAPI_BuyStock("601988",100,1.00);
-			if (iBuyRetFirst != iBuyRet)
+			if (0 == i)
 			{
-				printf("[TEST] THSAPI_BuyStock Error [%d]\n", iBuyRet);
+				iBuyRetFirst = THSAPI_BuyStock("601988",100,1.00);
+			}
+			else
+			{
+				int iBuyRet = THSAPI_BuyStock("601988",100,1.00);
+				if (iBuyRetFirst != iBuyRet)
+				{
+					printf("[TEST] THSAPI_BuyStock Error [%d]\n", iBuyRet);
+				}
 			}
 		}
+		printf("[TEST] THSAPI_BuyStock = %d\n", iBuyRetFirst);
 	}
-	printf("[TEST] THSAPI_BuyStock = %d\n", iBuyRetFirst);
 
 	//////////////////////////////////////////////////////////////////////////
-	int iTestTimes_Sell = 1;
-	int iSellRetFirst = -1;
-	for (int i=0; i<iTestTimes_Sell; i++)
 	{
-		if (0 == i)
+		int iTestTimes_Sell = 0;
+		int iSellRetFirst = -1;
+		for (int i=0; i<iTestTimes_Sell; i++)
 		{
-			iSellRetFirst = THSAPI_SellStock("601988",100,4.01);
-		}
-		else
-		{
-			int iSellRet = THSAPI_SellStock("601988",100,4.01);
-			if (iSellRetFirst != iSellRet)
+			if (0 == i)
 			{
-				printf("[TEST] THSAPI_SellStock Error [%d]\n", iSellRet);
+				iSellRetFirst = THSAPI_SellStock("601988",100,4.01);
+			}
+			else
+			{
+				int iSellRet = THSAPI_SellStock("601988",100,4.01);
+				if (iSellRetFirst != iSellRet)
+				{
+					printf("[TEST] THSAPI_SellStock Error [%d]\n", iSellRet);
+				}
 			}
 		}
+		printf("[TEST] THSAPI_SellStock = %d\n", iSellRetFirst);
 	}
-	printf("[TEST] THSAPI_SellStock = %d\n", iSellRetFirst);
 
+	//////////////////////////////////////////////////////////////////////////
+	{
+		int iTestTimes_HoldStock = 1;
+		bool bHoldStockRetFirst = false;
+		std::list<HoldStock> cResultList;
+		for (int i=0; i<iTestTimes_HoldStock; i++)
+		{
+			if (0 == i)
+			{
+				bHoldStockRetFirst = THSAPI_GetHoldStock(cResultList);
+			}
+			else
+			{
+				bool bHoldStockRet = THSAPI_GetHoldStock(cResultList);
+				if (bHoldStockRetFirst != bHoldStockRet)
+				{
+					printf("[TEST] THSAPI_GetHoldStock Error [%d]\n", bHoldStockRet);
+				}
+			}
+		}
+		printf("[TEST] THSAPI_SellStock list size %d\n", cResultList.size());
+		std::list<HoldStock>::iterator it;
+		for (it = cResultList.begin(); it != cResultList.end(); it++)
+		{
+			HoldStock cHoldStock = *it;
+			printf("[%s %d %d %.3f %.3f]\n",
+				cHoldStock.stockID.c_str(),
+				cHoldStock.totalAmount,
+				cHoldStock.availableAmount,
+				cHoldStock.refPrimeCostPrice,
+				cHoldStock.curPrice);
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////
 	printf("### Main End\n");
 
 	system("pause");

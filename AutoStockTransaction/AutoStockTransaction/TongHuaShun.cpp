@@ -391,6 +391,10 @@ bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
 	return false;
 }
 
+bool THSAPI_GetCommissionOrderList(std::list<CommissionOrder> & resultList)
+{
+	return true;
+}
 
 int THSAPI_BuyStock(const char* stockId, const int buyAmount, const float price)
 {
