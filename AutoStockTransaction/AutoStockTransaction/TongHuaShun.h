@@ -14,7 +14,11 @@ float THSAPI_GetAllStockMarketValue();
 // 获取持股列表
 struct HoldStock
 {
-
+	std::string stockID;
+	int totalAmount;
+	int availableAmount;
+	float refPrimeCostPrice;
+	float curPrice;
 };
 bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList);
 

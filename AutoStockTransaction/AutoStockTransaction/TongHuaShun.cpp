@@ -250,6 +250,7 @@ bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
 		}
 
 		// 数据拷贝到剪切板
+
 		std::string buf;
 		bool bBufCopied = false;
 		if (bBufSaved)
@@ -290,22 +291,98 @@ bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
 		// 解析拷贝数据
 		if(bBufCopied)
 		{
-			printf("%s", buf.c_str());
-
+			//printf("%s", buf.c_str());
 			std::string copyStr = DString::replace(buf, "\r\n", "");
-
 			std::list<std::string> cells = DString::split(copyStr, "\t");
-			std::list<std::string> firstLineColumes;
-
-			if (cells.size() > 16)
+			if (cells.size() > 16 && cells.size() % 16 == 0)
 			{
-				//firstLineColumes = DString::split(lines.front(), "\t");
+				int iCol_ID = -1;
+				int iCol_TotalAmount = -1;
+				int iCol_AvailableAmount = -1;
+				int iCol_RefPrimeCostPrice = -1;
+				int iCol_CurPrice = -1;
+				std::string sID;
+				std::string sTotalAmount;
+				std::string sAvailableAmount;
+				std::string sRefPrimeCostPrice;
+				std::string sCurPrice;
 
-				//std::list<std::string>::iterator it;
-				//for (it = lines.begin(); it != lines.end(); it++)
-				//{
-				//	std::string tem = *it;
-				//}
+				std::list<std::string>::iterator it;
+				int index = 0;
+				for (it = cells.begin(); it != cells.end(); it++,index++)
+				{
+					std::string cell = *it;
+					if (index < 16)
+					{
+						if (0 == cell.compare("证券代码"))
+						{
+							iCol_ID = index;
+						}
+						if (0 == cell.compare("股票余额"))
+						{
+							iCol_TotalAmount = index;
+						}
+						if (0 == cell.compare("可用余额"))
+						{
+							iCol_AvailableAmount = index;
+						}
+						if (0 == cell.compare("参考成本价"))
+						{
+							iCol_RefPrimeCostPrice = index;
+						}
+						if (0 == cell.compare("市价"))
+						{
+							iCol_CurPrice = index;
+						}
+					}
+					if (index == 16)
+					{
+						if (-1==iCol_ID 
+							|| -1==iCol_TotalAmount
+							|| -1==iCol_AvailableAmount
+							|| -1==iCol_RefPrimeCostPrice
+							|| -1==iCol_CurPrice)
+						{
+							return false;
+						}
+					}
+					if (index>=16)
+					{
+						if (index%16 == iCol_ID)
+						{
+							sID = cell;
+						}
+						if (index%16 == iCol_TotalAmount)
+						{
+							sTotalAmount = cell;
+						}
+						if (index%16 == iCol_AvailableAmount)
+						{
+							sAvailableAmount = cell;
+						}
+						if (index%16 == iCol_RefPrimeCostPrice)
+						{
+							sRefPrimeCostPrice = cell;
+						}
+						if (index%16 == iCol_CurPrice)
+						{
+							sCurPrice = cell;
+						}
+						if ((index+1)%16 ==0)
+						{
+							//printf("ID:%s TotalAmount:%s AvailableAmount:%s RefPrimeCostPrice:%s CurPrice:%s\n"
+							//	,sID.c_str(),sTotalAmount.c_str(),sAvailableAmount.c_str(),sRefPrimeCostPrice.c_str(),sCurPrice.c_str());
+						
+							HoldStock cHoldStock;
+							cHoldStock.stockID = sID;
+							cHoldStock.totalAmount = atoi(sTotalAmount.c_str());
+							cHoldStock.availableAmount = atoi(sAvailableAmount.c_str());
+							cHoldStock.refPrimeCostPrice = atof(sRefPrimeCostPrice.c_str());
+							cHoldStock.curPrice = atof(sCurPrice.c_str());
+							resultList.push_back(cHoldStock);
+						}
+					}
+				}
 
 			}
 			return true;

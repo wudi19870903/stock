@@ -991,18 +991,25 @@ bool getClipboard(std::string & out_buf)
 	if(::OpenClipboard(NULL))
 	{
 		//获得剪贴板数据
-		HGLOBAL hMem = GetClipboardData(CF_TEXT);
+		HGLOBAL hMem = GetClipboardData(CF_UNICODETEXT);
 		if(NULL != hMem)
 		{
-			char* lpStr = (char*)::GlobalLock(hMem); 
-			if(NULL != lpStr)
+			wchar_t* lpStrW = (wchar_t*)::GlobalLock(hMem); 
+			int lenWCS = lstrlenW(lpStrW);
+			int lenMBS = lenWCS*2;
+			char * lpStr = new char[lenMBS];
+			memset(lpStr, 0, lenMBS);
+			int iCvt = DStr::WinWcsToMbs(lpStrW,lenWCS,lpStr,lenMBS);
+			if (iCvt > 0 && NULL!= lpStr)
 			{
-				//printf("%s",lpStr );
+				//printf("%s",lpStr);
 				out_buf.assign(lpStr,strlen(lpStr));
+				delete[] lpStr;
 				::GlobalUnlock(hMem);
 				::CloseClipboard();
 				return true;
 			}
+			delete[] lpStr;
 		}
 		::CloseClipboard();
 		return true;

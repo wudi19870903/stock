@@ -10,6 +10,8 @@ void Test()
 	std::list<HoldStock> cResultList;
 	THSAPI_GetHoldStock(cResultList);
 
+
+
 	//HWND hZhangDieXianZhi = Find_ZhangDieXianZhi();
 	//if (NULL != hZhangDieXianZhi)
 	//{
