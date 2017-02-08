@@ -6,6 +6,9 @@
 void Test()
 {
 	int iRetInit = THSAPI_TongHuaShunInit();
+
+	std::list<CommissionOrder> cResultList;
+	bool bHoldStockRet = THSAPI_GetCommissionOrderList(cResultList);
 	
 
 	//HWND hZhangDieXianZhi = Find_ZhangDieXianZhi();
@@ -196,26 +199,27 @@ int _tmain(int argc, _TCHAR* argv[])
 			{
 				if (0 == i)
 				{
-					bHoldStockRetFirst = THSAPI_GetHoldStock(cResultList);
+					bHoldStockRetFirst = THSAPI_GetHoldStockList(cResultList);
 				}
 				else
 				{
-					bool bHoldStockRet = THSAPI_GetHoldStock(cResultList);
+					bool bHoldStockRet = THSAPI_GetHoldStockList(cResultList);
 					if (bHoldStockRetFirst != bHoldStockRet)
 					{
-						printf("[TEST] THSAPI_GetHoldStock Error [%d]\n", bHoldStockRet);
+						printf("[TEST] THSAPI_GetHoldStockList Error [%d]\n", bHoldStockRet);
 					}
 				}
 			}
-			printf("[TEST] THSAPI_GetHoldStock list size %d\n", cResultList.size());
+			printf("[TEST] THSAPI_GetHoldStockList list size %d\n", cResultList.size());
 			std::list<HoldStock>::iterator it;
 			for (it = cResultList.begin(); it != cResultList.end(); it++)
 			{
 				HoldStock cHoldStock = *it;
-				printf("[%s %d %d %.3f %.3f]\n",
+				printf("[%s %d %d %.3f %.3f %.3f]\n",
 					cHoldStock.stockID.c_str(),
 					cHoldStock.totalAmount,
 					cHoldStock.availableAmount,
+					cHoldStock.refProfitLoss,
 					cHoldStock.refPrimeCostPrice,
 					cHoldStock.curPrice);
 			}

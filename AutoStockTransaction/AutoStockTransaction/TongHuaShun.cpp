@@ -12,6 +12,8 @@ static HWND s_hLeftTreeView = NULL;
 
 static HWND s_hZijinGupiaoWin = NULL;
 static HWND s_hHoldStockWin = NULL;
+static HWND s_hCommissionOrderWin = NULL;
+static HWND s_hDealOrderWin = NULL;
 
 static HWND s_hBuyWin = NULL;
 static HWND s_hSellWin = NULL;
@@ -67,6 +69,26 @@ int THSAPI_TongHuaShunInit()
 	}
 	s_hHoldStockWin = hHoldStockWin;
 	TESTLOG("THSAPI_TongHuaShunInit# search HoldStockWin ok\n");
+
+	// 初始化当日委托窗口句柄
+	HWND hCommissionOrderWin = findCommissionOrderWin(hWnd);
+	if (NULL == hCommissionOrderWin)
+	{
+		TESTLOG("THSAPI_TongHuaShunInit# [ERROR] findCommissionOrderWin error\n");
+		return -32;
+	}
+	s_hCommissionOrderWin = hCommissionOrderWin;
+	TESTLOG("THSAPI_TongHuaShunInit# search CommissionOrderWin ok\n");
+
+	// 初始化当日成交窗口句柄
+	HWND hDealOrderWin = findDealOrderWin(hWnd);
+	if (NULL == hDealOrderWin)
+	{
+		TESTLOG("THSAPI_TongHuaShunInit# [ERROR] findDealOrderWin error\n");
+		return -33;
+	}
+	s_hDealOrderWin = hDealOrderWin;
+	TESTLOG("THSAPI_TongHuaShunInit# search DealOrderWin ok\n");
 
 	// 初始化买入窗口句柄
 	HWND hBuyWin = findBuyWin(hWnd);
@@ -229,12 +251,7 @@ float THSAPI_GetAllStockMarketValue()
 	return 0.0f;
 }
 
-bool THSAPI_GetCommissionOrderList(std::list<CommissionOrder> & resultList)
-{
-	return true;
-}
-
-bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
+bool THSAPI_GetHoldStockList(std::list<HoldStock> & resultList)
 {
 	if (s_hHoldStockWin)
 	{
@@ -304,11 +321,13 @@ bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
 				int iCol_ID = -1;
 				int iCol_TotalAmount = -1;
 				int iCol_AvailableAmount = -1;
+				int iCol_RefProfitLoss = -1;
 				int iCol_RefPrimeCostPrice = -1;
 				int iCol_CurPrice = -1;
 				std::string sID;
 				std::string sTotalAmount;
 				std::string sAvailableAmount;
+				std::string sRefProfitLoss;
 				std::string sRefPrimeCostPrice;
 				std::string sCurPrice;
 
@@ -331,6 +350,10 @@ bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
 						{
 							iCol_AvailableAmount = index;
 						}
+						if (0 == cell.compare("参考盈亏"))
+						{
+							iCol_RefProfitLoss = index;
+						}
 						if (0 == cell.compare("参考成本价"))
 						{
 							iCol_RefPrimeCostPrice = index;
@@ -345,6 +368,7 @@ bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
 						if (-1==iCol_ID 
 							|| -1==iCol_TotalAmount
 							|| -1==iCol_AvailableAmount
+							|| -1 == iCol_RefProfitLoss
 							|| -1==iCol_RefPrimeCostPrice
 							|| -1==iCol_CurPrice)
 						{
@@ -365,6 +389,10 @@ bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
 						{
 							sAvailableAmount = cell;
 						}
+						if (index%16 == iCol_RefProfitLoss)
+						{
+							sRefProfitLoss = cell;
+						}
 						if (index%16 == iCol_RefPrimeCostPrice)
 						{
 							sRefPrimeCostPrice = cell;
@@ -375,13 +403,14 @@ bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
 						}
 						if ((index+1)%16 ==0)
 						{
-							//printf("ID:%s TotalAmount:%s AvailableAmount:%s RefPrimeCostPrice:%s CurPrice:%s\n"
-							//	,sID.c_str(),sTotalAmount.c_str(),sAvailableAmount.c_str(),sRefPrimeCostPrice.c_str(),sCurPrice.c_str());
+							//printf("ID:%s TotalAmount:%s AvailableAmount:%s RefProfitLoss:%s RefPrimeCostPrice:%s CurPrice:%s\n"
+							//	,sID.c_str(),sTotalAmount.c_str(),sAvailableAmount.c_str(),sRefProfitLoss.c_str(),sRefPrimeCostPrice.c_str(),sCurPrice.c_str());
 						
 							HoldStock cHoldStock;
 							cHoldStock.stockID = sID;
 							cHoldStock.totalAmount = atoi(sTotalAmount.c_str());
 							cHoldStock.availableAmount = atoi(sAvailableAmount.c_str());
+							cHoldStock.refProfitLoss = atof(sRefProfitLoss.c_str());
 							cHoldStock.refPrimeCostPrice = atof(sRefPrimeCostPrice.c_str());
 							cHoldStock.curPrice = atof(sCurPrice.c_str());
 							resultList.push_back(cHoldStock);
@@ -394,6 +423,11 @@ bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
 		}
 	}
 	return false;
+}
+
+bool THSAPI_GetCommissionOrderList(std::list<CommissionOrder> & resultList)
+{
+	return true;
 }
 
 bool THSAPI_GetDealOrderList(std::list<DealOrder> & resultList)

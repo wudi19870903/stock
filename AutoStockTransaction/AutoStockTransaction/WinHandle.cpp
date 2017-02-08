@@ -353,6 +353,18 @@ HWND findHoldStockWin(HWND hWnd)
 	return NULL;
 }
 
+HWND findCommissionOrderWin(HWND hWnd)
+{
+	TESTLOG("findCommissionOrderWin#\n");
+	return NULL;
+}
+
+HWND findDealOrderWin(HWND hWnd)
+{
+	TESTLOG("findDealOrderWin#\n");
+	return NULL;
+}
+
 HWND findBuyWin(HWND hWnd)
 {
 	TESTLOG("findBuyWin#\n");

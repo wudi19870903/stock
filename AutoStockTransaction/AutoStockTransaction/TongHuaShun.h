@@ -15,7 +15,6 @@ enum TRANACT
 // 当日委托单定义
 struct CommissionOrder
 {
-	std::string date; // 日期
 	std::string time; // 时间
 	std::string stockID; // 股票ID
 	TRANACT tranAct; // 交易动作
@@ -31,6 +30,7 @@ struct HoldStock
 	std::string stockID; // 股票ID
 	int totalAmount; // 总数量
 	int availableAmount; // 可卖数量
+	float refProfitLoss; // 参考盈亏
 	float refPrimeCostPrice; // 参考成本价
 	float curPrice; // 当前价
 };
@@ -38,7 +38,6 @@ struct HoldStock
 // 当日成交单定义
 struct DealOrder
 {
-	std::string date; // 日期
 	std::string time; // 时间
 	std::string stockID; // 股票ID
 	TRANACT tranAct; // 交易动作
@@ -61,18 +60,18 @@ float THSAPI_GetTotalAssets();
 // 获取账户股票总市值
 float THSAPI_GetAllStockMarketValue();
 
+// 获取持股列表
+bool THSAPI_GetHoldStockList(std::list<HoldStock> & resultList);
+
 // 获取当日委托列表
 bool THSAPI_GetCommissionOrderList(std::list<CommissionOrder> & resultList);
 
-// 获取持股列表
-bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList);
-
-// 获取当日交割单列表
+// 获取当日成交单列表
 bool THSAPI_GetDealOrderList(std::list<DealOrder> & resultList);
 
-// 买入股票接口
+// 买入委托下单接口
 int THSAPI_BuyStock(const char* stockId, const int buyAmount, const float price);
 
-// 卖出股票接口
+// 卖出委托下单接口
 int THSAPI_SellStock(const char* stockId, const int sellAmount, const float price);
 

@@ -11,7 +11,10 @@ HWND findZijinGupiaoWin(HWND hWnd);
 HWND findBuyWin(HWND hWnd);
 HWND findSellWin(HWND hWnd);
 
+HWND findCommissionOrderWin(HWND hWnd);
 HWND findHoldStockWin(HWND hWnd);
+HWND findDealOrderWin(HWND hWnd);
+
 
 //////////////////////////////////////////////////////////////////////////
 //  main win in desktop
