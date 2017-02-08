@@ -128,6 +128,8 @@ int selectMasterTreeViewItem(HWND hTreeView, int index = -1)
 		TreeView_SelectItem(hTreeView, tvItem.hItem);
 		// 撤单
 		tvItem.hItem = TreeView_GetNextSibling(hTreeView, tvItem.hItem);
+		// 新股申购
+		tvItem.hItem = TreeView_GetNextSibling(hTreeView, tvItem.hItem);
 		// 双向
 		tvItem.hItem = TreeView_GetNextSibling(hTreeView, tvItem.hItem);
 		// 市价
@@ -138,13 +140,52 @@ int selectMasterTreeViewItem(HWND hTreeView, int index = -1)
 		{
 			if (TreeView_Expand(hTreeView, tvItem.hItem, TVE_EXPAND))
 			{
-				// 资金股票选择
+				// 资金股票获取
 				tvItem.hItem = TreeView_GetChild(hTreeView, tvItem.hItem);
 				if (!tvItem.hItem)
 					continue;
+				// 展开成功
+				// 资金股票选择
 				TreeView_SelectItem(hTreeView, tvItem.hItem);
 
-				// 选会买入
+				// 当日委托
+				tvItem.hItem = TreeView_GetNextSibling(hTreeView, tvItem.hItem);
+				TreeView_SelectItem(hTreeView, tvItem.hItem);
+
+				// 当日成交
+				tvItem.hItem = TreeView_GetNextSibling(hTreeView, tvItem.hItem);
+				TreeView_SelectItem(hTreeView, tvItem.hItem);
+
+				//// 历史委托
+				//tvItem.hItem = TreeView_GetNextSibling(hTreeView, tvItem.hItem);
+				//TreeView_SelectItem(hTreeView, tvItem.hItem);
+
+				//// 历史成交
+				//tvItem.hItem = TreeView_GetNextSibling(hTreeView, tvItem.hItem);
+				//TreeView_SelectItem(hTreeView, tvItem.hItem);
+
+				//// 资金明细
+				//tvItem.hItem = TreeView_GetNextSibling(hTreeView, tvItem.hItem);
+				//TreeView_SelectItem(hTreeView, tvItem.hItem);
+
+				//// 对账单
+				//tvItem.hItem = TreeView_GetNextSibling(hTreeView, tvItem.hItem);
+				//TreeView_SelectItem(hTreeView, tvItem.hItem);
+
+				//// 交割单
+				//tvItem.hItem = TreeView_GetNextSibling(hTreeView, tvItem.hItem);
+				//TreeView_SelectItem(hTreeView, tvItem.hItem);
+
+				//// 新股申购查询
+				//tvItem.hItem = TreeView_GetNextSibling(hTreeView, tvItem.hItem);
+				//TreeView_SelectItem(hTreeView, tvItem.hItem);
+
+				if (NULL == tvItem.hItem)
+				{
+					return -1; // treeview不正确
+				}
+
+				// 获得买入项目
 				tvItem.hItem = TreeView_GetRoot(hTreeView);
 				// 买入选择
 				TreeView_SelectItem(hTreeView, tvItem.hItem);

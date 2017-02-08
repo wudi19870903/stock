@@ -63,7 +63,7 @@ int THSAPI_TongHuaShunInit()
 	if (NULL == hHoldStockWin)
 	{
 		TESTLOG("THSAPI_TongHuaShunInit# [ERROR] hHoldStockWin error\n");
-		return -60;
+		return -31;
 	}
 	s_hHoldStockWin = hHoldStockWin;
 	TESTLOG("THSAPI_TongHuaShunInit# search HoldStockWin ok\n");
@@ -143,13 +143,13 @@ float THSAPI_GetAvailableMoney()
 	return 0.0f;
 }
 
-float THSAPI_GetAllMoney()
+float THSAPI_GetTotalAssets()
 {
-	TESTLOG("THSAPI_GetAllMoney#\n");
+	TESTLOG("THSAPI_GetTotalAssets#\n");
 	Flush_F5();
 	if (!s_hZijinGupiaoWin)
 	{
-		TESTLOG("THSAPI_GetAllMoney# [ERROR] ZijinGupiaoWin error\n");
+		TESTLOG("THSAPI_GetTotalAssets# [ERROR] ZijinGupiaoWin error\n");
 		return 0.0f;
 	}
 	HWND hChild = NULL;
@@ -172,14 +172,14 @@ float THSAPI_GetAllMoney()
 				GetWindowText(hChild, szWinText, sizeof(szWinText) / sizeof(char));
 				if (0 != strcmp(szWinText, ""))
 				{
-					TESTLOG("THSAPI_GetAllMoney# hWnd = 0x%x szClass[%s] szWinText[%s]\n",hChild, szClass,szWinText);
+					TESTLOG("THSAPI_GetTotalAssets# hWnd = 0x%x szClass[%s] szWinText[%s]\n",hChild, szClass,szWinText);
 					float allMoney = 0.0f;
 					sscanf(szWinText ,"%f", &allMoney);
 					return  allMoney;
 				}
 				Sleep(10);
 			}
-			TESTLOG("THSAPI_GetAllMoney# [ERROR] THSAPI_GetAllMoney\n");
+			TESTLOG("THSAPI_GetTotalAssets# [ERROR] THSAPI_GetTotalAssets\n");
 			return 0.0f;
 		}
 	}
@@ -229,6 +229,11 @@ float THSAPI_GetAllStockMarketValue()
 	return 0.0f;
 }
 
+bool THSAPI_GetCommissionOrderList(std::list<CommissionOrder> & resultList)
+{
+	return true;
+}
+
 bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
 {
 	if (s_hHoldStockWin)
@@ -236,7 +241,7 @@ bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
 		// ª∫¥ÊºÙ«–∞Âœ÷”–ƒ⁄»›
 		std::string buf_save;
 		bool bBufSaved = false;
-		for (int i=0; i<100; i++)
+		for (int i=0; i<10; i++)
 		{
 			if (getClipboard(buf_save))
 			{
@@ -246,7 +251,7 @@ bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
 					break;
 				}
 			}
-			Sleep(50);
+			Sleep(20);
 		}
 
 		//  ˝æ›øΩ±¥µΩºÙ«–∞Â
@@ -255,7 +260,7 @@ bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
 		bool bBufCopied = false;
 		if (bBufSaved)
 		{
-			for (int i=0; i<100; i++)
+			for (int i=0; i<10; i++)
 			{
 				
 				keybd_event(VK_CONTROL, (BYTE)0, 0 ,0);
@@ -269,7 +274,7 @@ bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
 					bBufCopied = true;
 					break;
 				}
-				Sleep(50);
+				Sleep(20);
 			}
 		}
 
@@ -277,14 +282,14 @@ bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
 		bool bRecoverd = false;
 		if(bBufSaved)
 		{
-			for (int i=0; i<100; i++)
+			for (int i=0; i<10; i++)
 			{
 				if (setClipboard(buf_save))
 				{
 					bRecoverd = true;
 					break;
 				}
-				Sleep(50);
+				Sleep(10);
 			}
 		}
 		 
@@ -391,9 +396,9 @@ bool THSAPI_GetHoldStock(std::list<HoldStock> & resultList)
 	return false;
 }
 
-bool THSAPI_GetCommissionOrderList(std::list<CommissionOrder> & resultList)
+bool THSAPI_GetDealOrderList(std::list<DealOrder> & resultList)
 {
-	return true;
+	return false;
 }
 
 int THSAPI_BuyStock(const char* stockId, const int buyAmount, const float price)

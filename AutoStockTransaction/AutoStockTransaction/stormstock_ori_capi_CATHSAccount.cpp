@@ -63,7 +63,7 @@ JNIEXPORT jfloat JNICALL Java_stormstock_ori_capi_CATHSAccount_getAllMoney
 (JNIEnv *, jclass)
 {
 	float allMoney = 0.0f;
-	allMoney = THSAPI_GetAllMoney();
+	allMoney = THSAPI_GetTotalAssets();
 	return allMoney;
 }
 
