@@ -8,7 +8,7 @@ void Test()
 	int iRetInit = THSAPI_TongHuaShunInit();
 
 	std::list<CommissionOrder> cResultList;
-	bool bHoldStockRet = THSAPI_GetCommissionOrderList(cResultList);
+	int iHoldStockRet = THSAPI_GetCommissionOrderList(cResultList);
 	
 
 	//HWND hZhangDieXianZhi = Find_ZhangDieXianZhi();
@@ -87,11 +87,12 @@ int _tmain(int argc, _TCHAR* argv[])
 			{
 				if (0 == i)
 				{
-					fAvailableMoneyFirst = THSAPI_GetAvailableMoney();
+					THSAPI_GetAvailableMoney(fAvailableMoneyFirst);
 				}
 				else
 				{
-					int fAvailableMoney = THSAPI_GetAvailableMoney();
+					float fAvailableMoney = -1;
+					THSAPI_GetAvailableMoney(fAvailableMoney);
 					if (fAvailableMoneyFirst != fAvailableMoney)
 					{
 						printf("[TEST] THSAPI_GetAvailableMoney Error [%.2f]\n", fAvailableMoney);
@@ -103,24 +104,25 @@ int _tmain(int argc, _TCHAR* argv[])
 
 		////////////////////////////////////////////////////////////////////////// -> test THSAPI_GetTotalAssets
 		{
-			int iTestTimes_AllMoney = 1;
-			float fAllMoneyFirst = -1;
-			for (int i=0; i<iTestTimes_AllMoney; i++)
+			int iTestTimes_TotalAssets = 1;
+			float fTotalAssetsFirst = -1;
+			for (int i=0; i<iTestTimes_TotalAssets; i++)
 			{
 				if (0 == i)
 				{
-					fAllMoneyFirst = THSAPI_GetTotalAssets();
+					THSAPI_GetTotalAssets(fTotalAssetsFirst);
 				}
 				else
 				{
-					float fAllMoney = THSAPI_GetTotalAssets();
-					if (fAllMoneyFirst != fAllMoney)
+					float fTotalAssets = -1;
+					THSAPI_GetTotalAssets(fTotalAssets);
+					if (fTotalAssetsFirst != fTotalAssets)
 					{
-						printf("[TEST] THSAPI_GetTotalAssets Error [%.2f]\n", fAllMoney);
+						printf("[TEST] THSAPI_GetTotalAssets Error [%.2f]\n", fTotalAssets);
 					}
 				}
 			}
-			printf("[TEST] THSAPI_GetTotalAssets = %f\n", fAllMoneyFirst);
+			printf("[TEST] THSAPI_GetTotalAssets = %f\n", fTotalAssetsFirst);
 		}
 
 
@@ -132,11 +134,12 @@ int _tmain(int argc, _TCHAR* argv[])
 			{
 				if (0 == i)
 				{
-					fStockMarketValueFirst = THSAPI_GetAllStockMarketValue();
+					THSAPI_GetAllStockMarketValue(fStockMarketValueFirst);
 				}
 				else
 				{
-					float fStockMarketValue = THSAPI_GetAllStockMarketValue();
+					float fStockMarketValue = -1;
+					THSAPI_GetAllStockMarketValue(fStockMarketValue);
 					if (fStockMarketValueFirst != fStockMarketValue)
 					{
 						printf("[TEST] THSAPI_GetStockMarketValue Error [%.2f]\n", fStockMarketValue);
@@ -176,11 +179,11 @@ int _tmain(int argc, _TCHAR* argv[])
 			{
 				if (0 == i)
 				{
-					iSellRetFirst = THSAPI_SellStock("601988",100,4.01);
+					iSellRetFirst = THSAPI_SellStock("601988",100,4.01f);
 				}
 				else
 				{
-					int iSellRet = THSAPI_SellStock("601988",100,4.01);
+					int iSellRet = THSAPI_SellStock("601988",100,4.01f);
 					if (iSellRetFirst != iSellRet)
 					{
 						printf("[TEST] THSAPI_SellStock Error [%d]\n", iSellRet);
@@ -193,20 +196,20 @@ int _tmain(int argc, _TCHAR* argv[])
 		////////////////////////////////////////////////////////////////////////// -> test THSAPI_GetHoldStockList
 		{
 			int iTestTimes_HoldStock = 1;
-			bool bHoldStockRetFirst = false;
+			int iHoldStockRetFirst = -1;
 			std::list<HoldStock> cResultList;
 			for (int i=0; i<iTestTimes_HoldStock; i++)
 			{
 				if (0 == i)
 				{
-					bHoldStockRetFirst = THSAPI_GetHoldStockList(cResultList);
+					iHoldStockRetFirst = THSAPI_GetHoldStockList(cResultList);
 				}
 				else
 				{
-					bool bHoldStockRet = THSAPI_GetHoldStockList(cResultList);
-					if (bHoldStockRetFirst != bHoldStockRet)
+					int iHoldStockRet = THSAPI_GetHoldStockList(cResultList);
+					if (iHoldStockRetFirst != iHoldStockRet)
 					{
-						printf("[TEST] THSAPI_GetHoldStockList Error [%d]\n", bHoldStockRet);
+						printf("[TEST] THSAPI_GetHoldStockList Error [%d]\n", iHoldStockRet);
 					}
 				}
 			}
@@ -215,7 +218,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			for (it = cResultList.begin(); it != cResultList.end(); it++)
 			{
 				HoldStock cHoldStock = *it;
-				printf("[%s %d %d %.3f %.3f %.3f]\n",
+				printf("    {%s %d %d %.3f %.3f %.3f}\n",
 					cHoldStock.stockID.c_str(),
 					cHoldStock.totalAmount,
 					cHoldStock.availableAmount,
@@ -228,20 +231,20 @@ int _tmain(int argc, _TCHAR* argv[])
 		////////////////////////////////////////////////////////////////////////// -> test THSAPI_GetCommissionOrderList
 		{
 			int iTestTimes_CommissionOrder = 1;
-			bool bCommissionOrderRetFirst = false;
+			int iCommissionOrderRetFirst = -1;
 			std::list<CommissionOrder> cResultList;
 			for (int i=0; i<iTestTimes_CommissionOrder; i++)
 			{
 				if (0 == i)
 				{
-					bCommissionOrderRetFirst = THSAPI_GetCommissionOrderList(cResultList);
+					iCommissionOrderRetFirst = THSAPI_GetCommissionOrderList(cResultList);
 				}
 				else
 				{
-					bool bCommissionOrderRet = THSAPI_GetCommissionOrderList(cResultList);
-					if (bCommissionOrderRetFirst != bCommissionOrderRet)
+					int iCommissionOrderRet = THSAPI_GetCommissionOrderList(cResultList);
+					if (iCommissionOrderRetFirst != iCommissionOrderRet)
 					{
-						printf("[TEST] THSAPI_GetCommissionOrderList Error [%d]\n", bCommissionOrderRet);
+						printf("[TEST] THSAPI_GetCommissionOrderList Error [%d]\n", iCommissionOrderRet);
 					}
 				}
 			}
@@ -250,7 +253,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			for (it = cResultList.begin(); it != cResultList.end(); it++)
 			{
 				CommissionOrder cCommissionOrder = *it;
-				printf("[%s %s %d %d %.3f %d %.3f]\n",
+				printf("    {%s %s %d %d %.3f %d %.3f}\n",
 					cCommissionOrder.time.c_str(),
 					cCommissionOrder.stockID.c_str(),
 					cCommissionOrder.tranAct,
@@ -264,20 +267,20 @@ int _tmain(int argc, _TCHAR* argv[])
 		////////////////////////////////////////////////////////////////////////// -> test THSAPI_GetDealOrderList
 		{
 			int iTestTimes_DealOrder = 1;
-			bool bDealOrderRetFirst = false;
+			int iDealOrderRetFirst = false;
 			std::list<DealOrder> cResultList;
 			for (int i=0; i<iTestTimes_DealOrder; i++)
 			{
 				if (0 == i)
 				{
-					bDealOrderRetFirst = THSAPI_GetDealOrderList(cResultList);
+					iDealOrderRetFirst = THSAPI_GetDealOrderList(cResultList);
 				}
 				else
 				{
-					bool bDealOrderRet = THSAPI_GetDealOrderList(cResultList);
-					if (bDealOrderRetFirst != bDealOrderRet)
+					int iDealOrderRet = THSAPI_GetDealOrderList(cResultList);
+					if (iDealOrderRetFirst != iDealOrderRet)
 					{
-						printf("[TEST] THSAPI_GetDealOrderList Error [%d]\n", bDealOrderRet);
+						printf("[TEST] THSAPI_GetDealOrderList Error [%d]\n", iDealOrderRet);
 					}
 				}
 			}
@@ -286,7 +289,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			for (it = cResultList.begin(); it != cResultList.end(); it++)
 			{
 				DealOrder cDealOrder = *it;
-				printf("[%s %s %d %d %.3f %d %.3f]\n",
+				printf("    {%s %s %d %d %.3f}\n",
 					cDealOrder.time.c_str(),
 					cDealOrder.stockID.c_str(),
 					cDealOrder.tranAct,

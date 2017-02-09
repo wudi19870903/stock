@@ -873,7 +873,7 @@ HWND Find_WeiTuoQueRen(int& iflag,string& id, int& amount, float& price)
 			//printf("Find_WeiTuoQueRen# hChildL1 = 0x%x szClassL1[%s] szWinTextL1[%s]\n",hMainWin, szClassL1,szWinTextL1);
 			if (10 == index && 0 == strcmp("Static", szClassL1))
 			{
-				strcpy(szWinText10Caption,szWinTextL1);
+				strcpy_s(szWinText10Caption, 200, szWinTextL1);
 				iCheckCount++;
 			}
 			if (12 == index && 0 == strcmp("Static", szClassL1) && 0 == strcmp("Î¯ÍÐÈ·ÈÏ", szWinTextL1))
@@ -909,10 +909,10 @@ HWND Find_WeiTuoQueRen(int& iflag,string& id, int& amount, float& price)
 				}
 				id = string(szId);
 				int iamount = 0;
-				sscanf(szAmount ,"%d", &iamount);	
+				sscanf_s(szAmount ,"%d", &iamount);	
 				amount = iamount;
 				float fprice = 0.0f;
-				sscanf(szPrice ,"%f", &fprice);
+				sscanf_s(szPrice ,"%f", &fprice);
 				price = fprice;
 
 				//printf("Find_WeiTuoQueRen# hChildL1 = 0x%x szClassL1[%s] szWinTextL1[%s]\n",hMainWin, szClassL1,szWinTextL1);
@@ -1255,9 +1255,10 @@ bool setClipboard(std::string in_buf)
 		::EmptyClipboard();
 		HGLOBAL clipbuffer;
 		char *buffer;
-		clipbuffer = ::GlobalAlloc(GMEM_DDESHARE, (in_buf.length()+1)*2);
+		int size = (in_buf.length() + 1) * 2;
+		clipbuffer = ::GlobalAlloc(GMEM_DDESHARE, size);
 		buffer = (char *)::GlobalLock(clipbuffer);
-		strcpy(buffer, in_buf.c_str());
+		strcpy_s(buffer, size, in_buf.c_str());
 		::GlobalUnlock(clipbuffer);
 		::SetClipboardData(CF_TEXT, clipbuffer);
 		::CloseClipboard();
@@ -1301,7 +1302,11 @@ bool clearClipboard()
 {
 	if(::OpenClipboard(NULL))
 	{
-		bool bRet = ::EmptyClipboard();
+		bool bRet = false;
+		if (TRUE == ::EmptyClipboard())
+		{
+			bRet = true;
+		}
 		::CloseClipboard();
 		return bRet;
 	}

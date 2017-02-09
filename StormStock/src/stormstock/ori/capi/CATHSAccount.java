@@ -1,8 +1,14 @@
 package stormstock.ori.capi;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.List;
 import java.util.Properties;
+
+/*
+ * http://blog.csdn.net/qinjuning/article/details/7607214
+ */
  
 public class CATHSAccount {
 	
@@ -49,19 +55,202 @@ public class CATHSAccount {
 		System.loadLibrary(libraryName);
     }
 	
-	// TongHuaShun Initialize
-	// 0 : success
+	/*
+	 * **************************************************************************
+	 * public class define
+	 */
+	
+	/*
+	 * 可用资金结果
+	 */
+	public static class ResultAvailableMoney
+	{
+		public ResultAvailableMoney()
+		{
+			error = 0;
+			availableMoney = 0.0f;
+		}
+		public int error;
+		public float availableMoney;
+	}
+	
+	/*
+	 * 总资产结果
+	 */
+	public static class ResultTotalAssets
+	{
+		public ResultTotalAssets()
+		{
+			error = 0;
+			totalAssets = 0.0f;
+		}
+		public int error;
+		public float totalAssets;
+	}
+	
+	/*
+	 * 持股总市值结果
+	 */
+	public static class ResultAllStockMarketValue
+	{
+		public ResultAllStockMarketValue()
+		{
+			error = 0;
+			allStockMarketValue = 0.0f;
+		}
+		public int error;
+		public float allStockMarketValue;
+	}
+	
+	/*
+	 * 交易动作枚举
+	 */
+	public enum TRANACT 
+	{
+		BUY,
+		SELL,
+	}
+	
+	/*
+	 * 当日持股定义
+	 */
+	public static class HoldStock 
+	{
+		public String stockID; // 股票ID
+		public int totalAmount; // 持有总量（股）
+		public int availableAmount; // 可卖数量
+		public float refProfitLoss; // 参考盈亏
+		public float refPrimeCostPrice; // 参考成本价
+		public float curPrice; // 当前价
+	}
+	
+	/*
+	 * 当日股票委托单定义
+	 */
+	public static class CommissionOrder 
+	{
+		public String time;
+		public String stockID;
+		public TRANACT tranAct;
+		public int commissionAmount; // 委托数量
+		public float commissionPrice; // 委托价格
+		public int dealAmount; // 成交数量
+		public float dealPrice; // 成交价格
+	}
+	
+	/*
+	 * 当日成交单定义
+	 */
+	public static class DealOrder 
+	{
+		public String time;
+		public String stockID;        // 股票ID
+		public TRANACT tranAct;       // 交易动作
+		public int dealAmount; // 成交数量
+		public float dealPrice; // 成交价格
+	}
+	
+	/*
+	 * 持股列表结果
+	 */
+	public static class ResultHoldStockList
+	{
+		public ResultHoldStockList()
+		{
+			error = 0;
+			resultList = new ArrayList<HoldStock>();
+		}
+		public int error;
+		public List<HoldStock> resultList;
+	}
+	
+	/*
+	 * 当日委托列表结果
+	 */
+	public static class ResultCommissionOrderList
+	{
+		public ResultCommissionOrderList()
+		{
+			error = 0;
+			resultList = new ArrayList<CommissionOrder>();
+		}
+		public int error;
+		public List<CommissionOrder> resultList;
+	}
+	
+	/*
+	 * 当日成交列表结果
+	 */
+	public static class ResultDealOrderList
+	{
+		public ResultDealOrderList()
+		{
+			error = 0;
+			resultList = new ArrayList<DealOrder>();
+		}
+		public int error;
+		public List<DealOrder> resultList;
+	}
+	
+	/*
+	 * **************************************************************************
+	 * public IF define
+	 */
+	
+	/*
+	 * TongHuaShun Initialize
+	 * 同花顺初始化
+	 * 0 成功
+	 */
 	public static native int initialize();
 	
-	public static native float getAvailableMoney();
+	/*
+	 * getAvailableMoney
+	 * 获取可用资金
+	 */
+	public static native ResultAvailableMoney getAvailableMoney();
 	
-	public static native float getAllMoney();
+	/*
+	 * getTotalAssets
+	 * 获取总资产
+	 */
+	public static native ResultTotalAssets getTotalAssets();
 	
-	public static native float getAllStockMarketValue();
+	/*
+	 * getAllStockMarketValue
+	 * 获取股票总市值
+	 */
+	public static native ResultAllStockMarketValue getAllStockMarketValue();
 	
-	// 0 : success to commit buy order
+	/*
+	 * getHoldStockList
+	 * 获取持股列表
+	 */
+	public static native ResultHoldStockList getHoldStockList();
+
+	/*
+	 * getCommissionOrderList
+	 * 获取当日委托列表
+	 */
+	public static native ResultCommissionOrderList getCommissionOrderList();
+
+	/*
+	 * getDealOrderList
+	 * 获取当日成交列表
+	 */
+	public static native ResultDealOrderList getDealOrderList();
+	
+	/*
+	 * buyStock
+	 * 委托买入下单
+	 * 0 委托成功
+	 */
 	public static native int buyStock(String stockId, int amount, float price);
 	
-	// 0 : success to commit sell order
+	/*
+	 * buyStock
+	 * 委托卖出下单
+	 * 0 委托成功
+	 */
 	public static native int sellStock(String stockId, int amount, float price);
 }

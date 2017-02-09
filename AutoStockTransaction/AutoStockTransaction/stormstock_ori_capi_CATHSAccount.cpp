@@ -50,7 +50,7 @@ JNIEXPORT jfloat JNICALL Java_stormstock_ori_capi_CATHSAccount_getAvailableMoney
 (JNIEnv *, jclass)
 {
 	float availableMoney = 0.0f;
-	availableMoney = THSAPI_GetAvailableMoney();
+	THSAPI_GetAvailableMoney(availableMoney);
 	return availableMoney;
 }
 
@@ -62,9 +62,9 @@ JNIEXPORT jfloat JNICALL Java_stormstock_ori_capi_CATHSAccount_getAvailableMoney
 JNIEXPORT jfloat JNICALL Java_stormstock_ori_capi_CATHSAccount_getAllMoney
 (JNIEnv *, jclass)
 {
-	float allMoney = 0.0f;
-	allMoney = THSAPI_GetTotalAssets();
-	return allMoney;
+	float totalAssets = 0.0f;
+	THSAPI_GetTotalAssets(totalAssets);
+	return totalAssets;
 }
 
 /*
@@ -76,7 +76,7 @@ JNIEXPORT jfloat JNICALL Java_stormstock_ori_capi_CATHSAccount_getAllStockMarket
 (JNIEnv *, jclass)
 {
 	float allStockMarketValue = 0.0f;
-	allStockMarketValue = THSAPI_GetAllStockMarketValue();
+	THSAPI_GetAllStockMarketValue(allStockMarketValue);
 	return allStockMarketValue;
 }
 

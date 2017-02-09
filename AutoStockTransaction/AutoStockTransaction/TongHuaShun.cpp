@@ -7,6 +7,7 @@
 #include "commctrl.h"
 #include "WinHandle.h"
 
+static bool s_initFLag = false;
 static HWND s_hMainWin = NULL;
 static HWND s_hLeftTreeView = NULL;
 
@@ -119,17 +120,22 @@ int THSAPI_TongHuaShunInit()
 
 	Flush_F5();
 
+	s_initFLag = true;
 	return 0;
 }
 
-float THSAPI_GetAvailableMoney()
+int THSAPI_GetAvailableMoney(float & availableMoney)
 {
 	TESTLOG("THSAPI_GetAvailableMoney#\n");
+	if (!s_initFLag)
+	{
+		return -10;
+	}
 	Flush_F5();
 	if (!s_hZijinGupiaoWin)
 	{
 		TESTLOG("THSAPI_GetAvailableMoney# [ERROR] ZijinGupiaoWin error\n");
-		return 0.0f;
+		return -20;
 	}
 	HWND hChild = NULL;
 	int index =0;
@@ -152,27 +158,33 @@ float THSAPI_GetAvailableMoney()
 				if (0 != strcmp(szWinText, ""))
 				{
 					TESTLOG("THSAPI_GetAvailableMoney# hWnd = 0x%x szClass[%s] szWinText[%s]\n",hChild, szClass,szWinText);
-					float availableMoney = 0.0f;
-					sscanf(szWinText ,"%f", &availableMoney);
-					return  availableMoney;
+					float val = 0.0f;
+					sscanf_s(szWinText ,"%f", &val);
+					availableMoney = val;
+					return 0;
 				}
 				Sleep(10);
 			}
 			TESTLOG("THSAPI_GetAvailableMoney# [ERROR] THSAPI_GetAvailableMoney\n");
-			return 0.0f;
+			return -30;
 		}
 	}
-	return 0.0f;
+	return -100;
 }
 
-float THSAPI_GetTotalAssets()
+int THSAPI_GetTotalAssets(float & totalAssets)
 {
 	TESTLOG("THSAPI_GetTotalAssets#\n");
+	if (!s_initFLag)
+	{
+		return -10;
+	}
+
 	Flush_F5();
 	if (!s_hZijinGupiaoWin)
 	{
 		TESTLOG("THSAPI_GetTotalAssets# [ERROR] ZijinGupiaoWin error\n");
-		return 0.0f;
+		return -20;
 	}
 	HWND hChild = NULL;
 	int index =0;
@@ -195,27 +207,33 @@ float THSAPI_GetTotalAssets()
 				if (0 != strcmp(szWinText, ""))
 				{
 					TESTLOG("THSAPI_GetTotalAssets# hWnd = 0x%x szClass[%s] szWinText[%s]\n",hChild, szClass,szWinText);
-					float allMoney = 0.0f;
-					sscanf(szWinText ,"%f", &allMoney);
-					return  allMoney;
+					float val = 0.0f;
+					sscanf_s(szWinText ,"%f", &val);
+					totalAssets = val;
+					return 0;
 				}
 				Sleep(10);
 			}
 			TESTLOG("THSAPI_GetTotalAssets# [ERROR] THSAPI_GetTotalAssets\n");
-			return 0.0f;
+			return -30;
 		}
 	}
-	return 0.0f;
+	return -100;
 }
 
-float THSAPI_GetAllStockMarketValue()
+int THSAPI_GetAllStockMarketValue(float & allStockMarketValue)
 {
-	TESTLOG("THSAPI_GetStockMarketValue#\n");
+	TESTLOG("THSAPI_GetAllStockMarketValue#\n");
+	if (!s_initFLag)
+	{
+		return -10;
+	}
+
 	Flush_F5();
 	if (!s_hZijinGupiaoWin)
 	{
-		TESTLOG("THSAPI_GetStockMarketValue# [ERROR] ZijinGupiaoWin error\n");
-		return 0.0f;
+		TESTLOG("THSAPI_GetAllStockMarketValue# [ERROR] ZijinGupiaoWin error\n");
+		return -20;
 	}
 	HWND hChild = NULL;
 	int index =0;
@@ -238,21 +256,29 @@ float THSAPI_GetAllStockMarketValue()
 				if (0 != strcmp(szWinText, ""))
 				{
 					TESTLOG("THSAPI_GetStockMarketValue# hWnd = 0x%x szClass[%s] szWinText[%s]\n",hChild, szClass,szWinText);
-					float stockMarketValue = 0.0f;
-					sscanf(szWinText ,"%f", &stockMarketValue);
-					return  stockMarketValue;
+					float val = 0.0f;
+					sscanf_s(szWinText ,"%f", &val);
+					allStockMarketValue = val;
+					return  0;
 				}
 				Sleep(10);
 			}
 			TESTLOG("THSAPI_GetStockMarketValue# [ERROR] THSAPI_GetStockMarketValue\n");
-			return 0.0f;
+			return -30;
 		}
 	}
-	return 0.0f;
+	return -100;
 }
 
-bool THSAPI_GetHoldStockList(std::list<HoldStock> & resultList)
+int THSAPI_GetHoldStockList(std::list<HoldStock> & resultList)
 {
+	if (!s_initFLag)
+	{
+		return -10;
+	}
+
+	resultList.clear();
+
 	if (s_hHoldStockWin)
 	{
 		std::string buf;
@@ -316,7 +342,7 @@ bool THSAPI_GetHoldStockList(std::list<HoldStock> & resultList)
 				|| -1==iCol_RefPrimeCostPrice
 				|| -1==iCol_CurPrice)
 			{
-				return false;
+				return -20;
 			}
 
 			// 遍历余行
@@ -329,7 +355,7 @@ bool THSAPI_GetHoldStockList(std::list<HoldStock> & resultList)
 
 					if (row0_cols.size() != row_cols.size())
 					{
-						return false; // 列不吻合
+						return -30; // 列不吻合
 					}
 					
 
@@ -355,15 +381,15 @@ bool THSAPI_GetHoldStockList(std::list<HoldStock> & resultList)
 						}
 						if (indexCol == iCol_RefProfitLoss)
 						{
-							cHoldStock.refProfitLoss = atof(cell.c_str());
+							cHoldStock.refProfitLoss = (float)atof(cell.c_str());
 						}
 						if (indexCol == iCol_RefPrimeCostPrice)
 						{
-							cHoldStock.refPrimeCostPrice = atof(cell.c_str());
+							cHoldStock.refPrimeCostPrice = (float)atof(cell.c_str());
 						}
 						if (indexCol == iCol_CurPrice)
 						{
-							cHoldStock.curPrice = atof(cell.c_str());
+							cHoldStock.curPrice = (float)atof(cell.c_str());
 						}
 					}
 
@@ -371,14 +397,19 @@ bool THSAPI_GetHoldStockList(std::list<HoldStock> & resultList)
 				}
 			}
 
-			return true;
+			return 0;
 		}
 	}
-	return false;
+	return -100;
 }
 
-bool THSAPI_GetCommissionOrderList(std::list<CommissionOrder> & resultList)
+int THSAPI_GetCommissionOrderList(std::list<CommissionOrder> & resultList)
 {
+	if (!s_initFLag)
+	{
+		return -10;
+	}
+
 	resultList.clear();
 
 	if (s_hCommissionOrderWin)
@@ -449,7 +480,7 @@ bool THSAPI_GetCommissionOrderList(std::list<CommissionOrder> & resultList)
 				|| -1==iCol_dealAmount
 				|| -1==iCol_dealPrice)
 			{
-				return false;
+				return -20;
 			}
 
 			// 遍历余行
@@ -462,7 +493,7 @@ bool THSAPI_GetCommissionOrderList(std::list<CommissionOrder> & resultList)
 
 					if (row0_cols.size() != row_cols.size())
 					{
-						return false; // 列不吻合
+						return -30; // 列不吻合
 					}
 
 					CommissionOrder cCommissionOrder;
@@ -498,7 +529,7 @@ bool THSAPI_GetCommissionOrderList(std::list<CommissionOrder> & resultList)
 						}
 						if (indexCol == iCol_commissionPrice)
 						{
-							cCommissionOrder.commissionPrice = atof(cell.c_str());
+							cCommissionOrder.commissionPrice = (float)atof(cell.c_str());
 						}
 						if (indexCol == iCol_dealAmount)
 						{
@@ -506,7 +537,7 @@ bool THSAPI_GetCommissionOrderList(std::list<CommissionOrder> & resultList)
 						}
 						if (indexCol == iCol_dealPrice)
 						{
-							cCommissionOrder.dealPrice = atof(cell.c_str());
+							cCommissionOrder.dealPrice = (float)atof(cell.c_str());
 						}
 					}
 
@@ -514,14 +545,21 @@ bool THSAPI_GetCommissionOrderList(std::list<CommissionOrder> & resultList)
 				}
 			}
 
-			return true;
+			return 0;
 		}
 	}
-	return false;
+	return -100;
 }
 
-bool THSAPI_GetDealOrderList(std::list<DealOrder> & resultList)
+int THSAPI_GetDealOrderList(std::list<DealOrder> & resultList)
 {
+	if (!s_initFLag)
+	{
+		return -10;
+	}
+
+	resultList.clear();
+
 	if (s_hDealOrderWin)
 	{
 		std::string buf;
@@ -578,7 +616,7 @@ bool THSAPI_GetDealOrderList(std::list<DealOrder> & resultList)
 				|| -1==iCol_dealAmount
 				|| -1==iCol_dealPrice)
 			{
-				return false;
+				return -20;
 			}
 
 			// 遍历余行
@@ -591,7 +629,7 @@ bool THSAPI_GetDealOrderList(std::list<DealOrder> & resultList)
 
 					if (row0_cols.size() != row_cols.size())
 					{
-						return false; // 列不吻合
+						return -30; // 列不吻合
 					}
 
 					DealOrder cDealOrder;
@@ -627,7 +665,7 @@ bool THSAPI_GetDealOrderList(std::list<DealOrder> & resultList)
 						}
 						if (indexCol == iCol_dealPrice)
 						{
-							cDealOrder.dealPrice = atof(cell.c_str());
+							cDealOrder.dealPrice = (float)atof(cell.c_str());
 						}
 					}
 
@@ -635,15 +673,20 @@ bool THSAPI_GetDealOrderList(std::list<DealOrder> & resultList)
 				}
 			}
 
-			return true;
+			return 0;
 		}
 	}
-	return false;
+	return -100;
 }
 
 int THSAPI_BuyStock(const char* stockId, const int buyAmount, const float price)
 {
 	TESTLOG("THSAPI_BuyStock#\n");
+	if (!s_initFLag)
+	{
+		return -10;
+	}
+
 	Flush_F5();
 	HWND hStockIDWin = NULL;
 	HWND hStockPriceWin = NULL;
@@ -652,12 +695,12 @@ int THSAPI_BuyStock(const char* stockId, const int buyAmount, const float price)
 	if (NULL == s_hBuyWin)
 	{
 		TESTLOG("THSAPI_BuyStock# [ERROR] BuyWin error\n");
-		return -10;
+		return -11;
 	}
 	if (0!=CancelAllMainWin())
 	{
 		TESTLOG("THSAPI_BuyStock# [ERROR] CancelAllMainWin error\n");
-		return -11;
+		return -12;
 	}
 	HWND hChildL1 = NULL;
 	int index =0;
@@ -720,7 +763,7 @@ int THSAPI_BuyStock(const char* stockId, const int buyAmount, const float price)
 
 	// 填写买入数量
 	char szBuyAmount[200];
-	sprintf(szBuyAmount, "%d", buyAmount);
+	sprintf_s(szBuyAmount, "%d", buyAmount);
 	for (int i=0;i<10;i++)
 	{
 		SendMessageA(hStockAmountWin, WM_SETTEXT, 0, (LPARAM) szBuyAmount);
@@ -738,7 +781,7 @@ int THSAPI_BuyStock(const char* stockId, const int buyAmount, const float price)
 	SendMessageA(hStockPriceWin, WM_SETFOCUS, 0, 0);
 	Sleep(10);
 	char szPrice[200];
-	sprintf(szPrice, "%.2f", price);
+	sprintf_s(szPrice, "%.2f", price);
 	for (int i=0;i<100;i++)
 	{
 		SendMessageA(hStockPriceWin, WM_SETTEXT, 0, (LPARAM) szPrice);
@@ -862,6 +905,11 @@ int THSAPI_BuyStock(const char* stockId, const int buyAmount, const float price)
 int THSAPI_SellStock(const char* stockId, const int sellAmount, const float price)
 {
 	TESTLOG("THSAPI_SellStock#\n");
+	if (!s_initFLag)
+	{
+		return -10;
+	}
+
 	Flush_F5();
 	HWND hStockIDWin = NULL;
 	HWND hStockPriceWin = NULL;
@@ -870,12 +918,12 @@ int THSAPI_SellStock(const char* stockId, const int sellAmount, const float pric
 	if (NULL == s_hSellWin)
 	{
 		TESTLOG("THSAPI_SellStock# [ERROR] SellWin error\n");
-		return -10;
+		return -11;
 	}
 	if (0!=CancelAllMainWin())
 	{
 		TESTLOG("THSAPI_SellStock# [ERROR] CancelAllMainWin error\n");
-		return -11;
+		return -12;
 	}
 	HWND hChildL1 = NULL;
 	int index =0;
@@ -938,7 +986,7 @@ int THSAPI_SellStock(const char* stockId, const int sellAmount, const float pric
 
 	// 填写卖出数量
 	char szSellAmount[200];
-	sprintf(szSellAmount, "%d", sellAmount);
+	sprintf_s(szSellAmount, "%d", sellAmount);
 	for (int i=0;i<10;i++)
 	{
 		SendMessageA(hStockAmountWin, WM_SETTEXT, 0, (LPARAM) szSellAmount);
@@ -956,7 +1004,7 @@ int THSAPI_SellStock(const char* stockId, const int sellAmount, const float pric
 	SendMessageA(hStockPriceWin, WM_SETFOCUS, 0, 0);
 	Sleep(10);
 	char szPrice[200];
-	sprintf(szPrice, "%.2f", price);
+	sprintf_s(szPrice, "%.2f", price);
 	for (int i=0;i<100;i++)
 	{
 		SendMessageA(hStockPriceWin, WM_SETTEXT, 0, (LPARAM) szPrice);
