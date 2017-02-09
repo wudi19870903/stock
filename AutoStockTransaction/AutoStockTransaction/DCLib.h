@@ -368,7 +368,7 @@ private:
 class DCLIB_API DString
 {
 public:
-	static std::list<std::string> split(std::string s, std::string delim);
+	static std::list<std::string> split(std::string s, std::string delim, bool ignoreNull = false);
 	static std::string replace(std::string s, std::string strSrc, std::string strDes);
 
 private:

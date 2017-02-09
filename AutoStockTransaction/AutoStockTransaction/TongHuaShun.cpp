@@ -259,114 +259,118 @@ bool THSAPI_GetHoldStockList(std::list<HoldStock> & resultList)
 		bool bCopy = getCtrlVFormWin(s_hHoldStockWin,buf);
 		 
 		// 解析拷贝数据
-		if(bCopy)
+		if(bCopy && buf.length()>0)
 		{
 			//printf("%s", buf.c_str());
-			std::string copyStr = DString::replace(buf, "\r\n", "");
-			std::list<std::string> cells = DString::split(copyStr, "\t");
-			if (cells.size() > 16 && cells.size() % 16 == 0)
-			{
-				int iCol_ID = -1;
-				int iCol_TotalAmount = -1;
-				int iCol_AvailableAmount = -1;
-				int iCol_RefProfitLoss = -1;
-				int iCol_RefPrimeCostPrice = -1;
-				int iCol_CurPrice = -1;
-				std::string sID;
-				std::string sTotalAmount;
-				std::string sAvailableAmount;
-				std::string sRefProfitLoss;
-				std::string sRefPrimeCostPrice;
-				std::string sCurPrice;
+			std::string copyStr = DString::replace(buf, "\r", "");
+			std::list<std::string> rows =  DString::split(copyStr, "\n");
 
+			std::list<std::string> row0_cols = DString::split(rows.front(), "\t");
+			rows.pop_front();
+
+			// 确定列索引
+			int iCol_ID = -1;
+			int iCol_TotalAmount = -1;
+			int iCol_AvailableAmount = -1;
+			int iCol_RefProfitLoss = -1;
+			int iCol_RefPrimeCostPrice = -1;
+			int iCol_CurPrice = -1;
+			{
 				std::list<std::string>::iterator it;
-				int index = 0;
-				for (it = cells.begin(); it != cells.end(); it++,index++)
+				int indexCol = 0;
+				for (it = row0_cols.begin(); it != row0_cols.end(); it++,indexCol++)
 				{
 					std::string cell = *it;
-					if (index < 16)
+
+					if (0 == cell.compare("证券代码"))
 					{
-						if (0 == cell.compare("证券代码"))
-						{
-							iCol_ID = index;
-						}
-						if (0 == cell.compare("股票余额"))
-						{
-							iCol_TotalAmount = index;
-						}
-						if (0 == cell.compare("可用余额"))
-						{
-							iCol_AvailableAmount = index;
-						}
-						if (0 == cell.compare("参考盈亏"))
-						{
-							iCol_RefProfitLoss = index;
-						}
-						if (0 == cell.compare("参考成本价"))
-						{
-							iCol_RefPrimeCostPrice = index;
-						}
-						if (0 == cell.compare("市价"))
-						{
-							iCol_CurPrice = index;
-						}
+						iCol_ID = indexCol;
 					}
-					if (index == 16)
+					if (0 == cell.compare("股票余额"))
 					{
-						if (-1==iCol_ID 
-							|| -1==iCol_TotalAmount
-							|| -1==iCol_AvailableAmount
-							|| -1 == iCol_RefProfitLoss
-							|| -1==iCol_RefPrimeCostPrice
-							|| -1==iCol_CurPrice)
-						{
-							return false;
-						}
+						iCol_TotalAmount = indexCol;
 					}
-					if (index>=16)
+					if (0 == cell.compare("可用余额"))
 					{
-						if (index%16 == iCol_ID)
-						{
-							sID = cell;
-						}
-						if (index%16 == iCol_TotalAmount)
-						{
-							sTotalAmount = cell;
-						}
-						if (index%16 == iCol_AvailableAmount)
-						{
-							sAvailableAmount = cell;
-						}
-						if (index%16 == iCol_RefProfitLoss)
-						{
-							sRefProfitLoss = cell;
-						}
-						if (index%16 == iCol_RefPrimeCostPrice)
-						{
-							sRefPrimeCostPrice = cell;
-						}
-						if (index%16 == iCol_CurPrice)
-						{
-							sCurPrice = cell;
-						}
-						if ((index+1)%16 ==0)
-						{
-							//printf("ID:%s TotalAmount:%s AvailableAmount:%s RefProfitLoss:%s RefPrimeCostPrice:%s CurPrice:%s\n"
-							//	,sID.c_str(),sTotalAmount.c_str(),sAvailableAmount.c_str(),sRefProfitLoss.c_str(),sRefPrimeCostPrice.c_str(),sCurPrice.c_str());
-						
-							HoldStock cHoldStock;
-							cHoldStock.stockID = sID;
-							cHoldStock.totalAmount = atoi(sTotalAmount.c_str());
-							cHoldStock.availableAmount = atoi(sAvailableAmount.c_str());
-							cHoldStock.refProfitLoss = atof(sRefProfitLoss.c_str());
-							cHoldStock.refPrimeCostPrice = atof(sRefPrimeCostPrice.c_str());
-							cHoldStock.curPrice = atof(sCurPrice.c_str());
-							resultList.push_back(cHoldStock);
-						}
+						iCol_AvailableAmount = indexCol;
+					}
+					if (0 == cell.compare("参考盈亏"))
+					{
+						iCol_RefProfitLoss = indexCol;
+					}
+					if (0 == cell.compare("参考成本价"))
+					{
+						iCol_RefPrimeCostPrice = indexCol;
+					}
+					if (0 == cell.compare("市价"))
+					{
+						iCol_CurPrice = indexCol;
 					}
 				}
-
 			}
+
+			if (-1==iCol_ID 
+				|| -1==iCol_TotalAmount
+				|| -1==iCol_AvailableAmount
+				|| -1 == iCol_RefProfitLoss
+				|| -1==iCol_RefPrimeCostPrice
+				|| -1==iCol_CurPrice)
+			{
+				return false;
+			}
+
+			// 遍历余行
+			{
+				std::list<std::string>::iterator it_row;
+				for (it_row = rows.begin(); it_row != rows.end(); it_row++)
+				{
+					std::string row = *it_row;
+					std::list<std::string> row_cols = DString::split(row, "\t");
+
+					if (row0_cols.size() != row_cols.size())
+					{
+						return false; // 列不吻合
+					}
+					
+
+					HoldStock cHoldStock;
+
+					std::list<std::string>::iterator it_col;
+					int indexCol = 0;
+					for (it_col = row_cols.begin(); it_col != row_cols.end(); it_col++,indexCol++)
+					{
+						std::string cell = *it_col;
+
+						if (indexCol == iCol_ID)
+						{
+							cHoldStock.stockID = cell;
+						}
+						if (indexCol == iCol_TotalAmount)
+						{
+							cHoldStock.totalAmount = atoi(cell.c_str());
+						}
+						if (indexCol == iCol_AvailableAmount)
+						{
+							cHoldStock.availableAmount = atoi(cell.c_str());
+						}
+						if (indexCol == iCol_RefProfitLoss)
+						{
+							cHoldStock.refProfitLoss = atof(cell.c_str());
+						}
+						if (indexCol == iCol_RefPrimeCostPrice)
+						{
+							cHoldStock.refPrimeCostPrice = atof(cell.c_str());
+						}
+						if (indexCol == iCol_CurPrice)
+						{
+							cHoldStock.curPrice = atof(cell.c_str());
+						}
+					}
+
+					resultList.push_back(cHoldStock);
+				}
+			}
+
 			return true;
 		}
 	}
@@ -375,17 +379,141 @@ bool THSAPI_GetHoldStockList(std::list<HoldStock> & resultList)
 
 bool THSAPI_GetCommissionOrderList(std::list<CommissionOrder> & resultList)
 {
+	resultList.clear();
+
 	if (s_hCommissionOrderWin)
 	{
 		std::string buf;
 		bool bCopy = getCtrlVFormWin(s_hCommissionOrderWin,buf);
 
 		// 解析拷贝数据
-		if(bCopy)
+		if(bCopy && buf.length()>0)
 		{
-			printf("%s", buf.c_str());
-			std::string copyStr = DString::replace(buf, "\r\n", "");
-			std::list<std::string> cells = DString::split(copyStr, "\t");
+			//printf("%s", buf.c_str());
+			std::string copyStr = DString::replace(buf, "\r", "");
+			std::list<std::string> rows =  DString::split(copyStr, "\n");
+
+			std::list<std::string> row0_cols = DString::split(rows.front(), "\t");
+			rows.pop_front();
+
+			// 确定列索引
+			int iCol_time = -1;
+			int iCol_stockID = -1;
+			int iCol_tranAct = -1;
+			int iCol_commissionAmount = -1;
+			int iCol_commissionPrice = -1;
+			int iCol_dealAmount = -1;
+			int iCol_dealPrice = -1;
+			{
+				std::list<std::string>::iterator it;
+				int indexCol = 0;
+				for (it = row0_cols.begin(); it != row0_cols.end(); it++,indexCol++)
+				{
+					std::string cell = *it;
+					if (0 == cell.compare("委托时间"))
+					{
+						iCol_time = indexCol;
+					}
+					if (0 == cell.compare("证券代码"))
+					{
+						iCol_stockID = indexCol;
+					}
+					if (0 == cell.compare("操作"))
+					{
+						iCol_tranAct = indexCol;
+					}
+					if (0 == cell.compare("委托数量"))
+					{
+						iCol_commissionAmount = indexCol;
+					}
+					if (0 == cell.compare("委托价格"))
+					{
+						iCol_commissionPrice = indexCol;
+					}
+					if (0 == cell.compare("成交数量"))
+					{
+						iCol_dealAmount = indexCol;
+					}
+					if (0 == cell.compare("成交均价"))
+					{
+						iCol_dealPrice = indexCol;
+					}
+				}
+			}
+
+			if (-1==iCol_time 
+				|| -1==iCol_stockID
+				|| -1==iCol_tranAct
+				|| -1 == iCol_commissionAmount
+				|| -1==iCol_commissionPrice
+				|| -1==iCol_dealAmount
+				|| -1==iCol_dealPrice)
+			{
+				return false;
+			}
+
+			// 遍历余行
+			{
+				std::list<std::string>::iterator it_row;
+				for (it_row = rows.begin(); it_row != rows.end(); it_row++)
+				{
+					std::string row = *it_row;
+					std::list<std::string> row_cols = DString::split(row, "\t");
+
+					if (row0_cols.size() != row_cols.size())
+					{
+						return false; // 列不吻合
+					}
+
+					CommissionOrder cCommissionOrder;
+
+					std::list<std::string>::iterator it_col;
+					int indexCol = 0;
+					for (it_col = row_cols.begin(); it_col != row_cols.end(); it_col++,indexCol++)
+					{
+						std::string cell = *it_col;
+
+						if (indexCol == iCol_time)
+						{
+							cCommissionOrder.time = cell;
+						}
+						if (indexCol == iCol_stockID)
+						{
+							cCommissionOrder.stockID = cell;
+						}
+						if (indexCol == iCol_tranAct)
+						{
+							if (cell.compare("证券买入") == 0)
+							{
+								cCommissionOrder.tranAct = TRANACT::BUY;
+							}
+							if (cell.compare("证券卖出") == 0)
+							{
+								cCommissionOrder.tranAct = TRANACT::SELL;
+							}
+						}
+						if (indexCol == iCol_commissionAmount)
+						{
+							cCommissionOrder.commissionAmount = atoi(cell.c_str());
+						}
+						if (indexCol == iCol_commissionPrice)
+						{
+							cCommissionOrder.commissionPrice = atof(cell.c_str());
+						}
+						if (indexCol == iCol_dealAmount)
+						{
+							cCommissionOrder.dealAmount = atoi(cell.c_str());
+						}
+						if (indexCol == iCol_dealPrice)
+						{
+							cCommissionOrder.dealPrice = atof(cell.c_str());
+						}
+					}
+
+					resultList.push_back(cCommissionOrder);
+				}
+			}
+
 			return true;
 		}
 	}
@@ -400,11 +528,113 @@ bool THSAPI_GetDealOrderList(std::list<DealOrder> & resultList)
 		bool bCopy = getCtrlVFormWin(s_hDealOrderWin,buf);
 
 		// 解析拷贝数据
-		if(bCopy)
+		if(bCopy && buf.length()>0)
 		{
-			printf("%s", buf.c_str());
-			std::string copyStr = DString::replace(buf, "\r\n", "");
-			std::list<std::string> cells = DString::split(copyStr, "\t");
+			//printf("%s", buf.c_str());
+			std::string copyStr = DString::replace(buf, "\r", "");
+			std::list<std::string> rows =  DString::split(copyStr, "\n");
+
+			std::list<std::string> row0_cols = DString::split(rows.front(), "\t");
+			rows.pop_front();
+
+			// 确定列索引
+			int iCol_time = -1;
+			int iCol_stockID = -1;
+			int iCol_tranAct = -1;
+			int iCol_dealAmount = -1;
+			int iCol_dealPrice = -1;
+			{
+				std::list<std::string>::iterator it;
+				int indexCol = 0;
+				for (it = row0_cols.begin(); it != row0_cols.end(); it++,indexCol++)
+				{
+					std::string cell = *it;
+					if (0 == cell.compare("成交时间"))
+					{
+						iCol_time = indexCol;
+					}
+					if (0 == cell.compare("证券代码"))
+					{
+						iCol_stockID = indexCol;
+					}
+					if (0 == cell.compare("操作"))
+					{
+						iCol_tranAct = indexCol;
+					}
+					if (0 == cell.compare("成交数量"))
+					{
+						iCol_dealAmount = indexCol;
+					}
+					if (0 == cell.compare("成交均价"))
+					{
+						iCol_dealPrice = indexCol;
+					}
+				}
+			}
+
+			if (-1==iCol_time 
+				|| -1==iCol_stockID
+				|| -1==iCol_tranAct
+				|| -1==iCol_dealAmount
+				|| -1==iCol_dealPrice)
+			{
+				return false;
+			}
+
+			// 遍历余行
+			{
+				std::list<std::string>::iterator it_row;
+				for (it_row = rows.begin(); it_row != rows.end(); it_row++)
+				{
+					std::string row = *it_row;
+					std::list<std::string> row_cols = DString::split(row, "\t");
+
+					if (row0_cols.size() != row_cols.size())
+					{
+						return false; // 列不吻合
+					}
+
+					DealOrder cDealOrder;
+
+					std::list<std::string>::iterator it_col;
+					int indexCol = 0;
+					for (it_col = row_cols.begin(); it_col != row_cols.end(); it_col++,indexCol++)
+					{
+						std::string cell = *it_col;
+
+						if (indexCol == iCol_time)
+						{
+							cDealOrder.time = cell;
+						}
+						if (indexCol == iCol_stockID)
+						{
+							cDealOrder.stockID = cell;
+						}
+						if (indexCol == iCol_tranAct)
+						{
+							if (cell.compare("证券买入") == 0)
+							{
+								cDealOrder.tranAct = TRANACT::BUY;
+							}
+							if (cell.compare("证券卖出") == 0)
+							{
+								cDealOrder.tranAct = TRANACT::SELL;
+							}
+						}
+						if (indexCol == iCol_dealAmount)
+						{
+							cDealOrder.dealAmount = atoi(cell.c_str());
+						}
+						if (indexCol == iCol_dealPrice)
+						{
+							cDealOrder.dealPrice = atof(cell.c_str());
+						}
+					}
+
+					resultList.push_back(cDealOrder);
+				}
+			}
+
 			return true;
 		}
 	}

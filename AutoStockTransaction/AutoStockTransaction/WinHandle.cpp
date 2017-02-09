@@ -453,6 +453,7 @@ HWND findCommissionOrderWin(HWND hWnd)
 									if (0 == strcmp(szClassL5, "CVirtualGridCtrl"))
 									{
 										// 找到了参考CVirtualGridCtrl，从中CtrlV测试内容
+										Sleep(100);
 										std::string buf;
 										bool bCtrlV = getCtrlVFormWin(hChildL5,buf);
 										int pos=buf.find("委托时间");
@@ -571,6 +572,7 @@ HWND findDealOrderWin(HWND hWnd)
 									if (0 == strcmp(szClassL5, "CVirtualGridCtrl"))
 									{
 										// 找到了参考CVirtualGridCtrl，从中CtrlV测试内容
+										Sleep(100);
 										std::string buf;
 										bool bCtrlV = getCtrlVFormWin(hChildL5,buf);
 										int pos=buf.find("成交时间");
@@ -1311,7 +1313,7 @@ bool getCtrlVFormWin(HWND hWnd,std::string & out_buf)
 	// 缓存剪切板现有内容
 	std::string buf_save;
 	bool bBufSaved = false;
-	for (int i=0; i<10; i++)
+	for (int i=0; i<5; i++)
 	{
 		if (getClipboard(buf_save))
 		{
@@ -1321,7 +1323,7 @@ bool getCtrlVFormWin(HWND hWnd,std::string & out_buf)
 				break;
 			}
 		}
-		Sleep(20);
+		Sleep(100);
 	}
 
 	// 数据拷贝到剪切板
@@ -1329,11 +1331,11 @@ bool getCtrlVFormWin(HWND hWnd,std::string & out_buf)
 	bool bBufCopied = false;
 	if (bBufSaved)
 	{
-		for (int i=0; i<10; i++)
+		for (int i=0; i<5; i++)
 		{
 			keybd_event(VK_CONTROL, (BYTE)0, 0 ,0);
 			::SendMessage(hWnd,WM_KEYDOWN,'C',MapVirtualKey('C',0));
-			Sleep(100);
+			Sleep(200);
 			::SendMessage(hWnd,WM_KEYUP,'C',MapVirtualKey('C',0));
 			keybd_event(VK_CONTROL, (BYTE)0, KEYEVENTF_KEYUP,0);
 
@@ -1342,7 +1344,7 @@ bool getCtrlVFormWin(HWND hWnd,std::string & out_buf)
 				bBufCopied = true;
 				break;
 			}
-			Sleep(20);
+			Sleep(100);
 		}
 	}
 
@@ -1350,14 +1352,14 @@ bool getCtrlVFormWin(HWND hWnd,std::string & out_buf)
 	bool bRecoverd = false;
 	if(bBufSaved)
 	{
-		for (int i=0; i<10; i++)
+		for (int i=0; i<5; i++)
 		{
 			if (setClipboard(buf_save))
 			{
 				bRecoverd = true;
 				break;
 			}
-			Sleep(10);
+			Sleep(100);
 		}
 	}
 
