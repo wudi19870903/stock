@@ -51,5 +51,6 @@ int Flush_F5();
 bool setClipboard(std::string in_buf);
 bool getClipboard(std::string & out_buf);
 bool clearClipboard();
+bool getCtrlVFormWin(HWND hWnd,std::string & out_buf);
 
 

@@ -356,12 +356,237 @@ HWND findHoldStockWin(HWND hWnd)
 HWND findCommissionOrderWin(HWND hWnd)
 {
 	TESTLOG("findCommissionOrderWin#\n");
+
+	HWND hChildL1 = NULL;
+	for(;;) {
+		hChildL1 = FindWindowExW(hWnd, hChildL1, 0, 0);
+		if (hChildL1 == NULL)
+			break;
+		char szTitleL1[200];
+		char szClassL1[200];
+		char szWinTextL1[200];
+		GetWindowText(hChildL1, szTitleL1, sizeof(szTitleL1) / sizeof(char));
+		GetClassName(hChildL1, szClassL1, sizeof(szClassL1) / sizeof(char));
+		GetWindowText(hChildL1, szWinTextL1, sizeof(szWinTextL1) / sizeof(char));
+
+		if (0 == strcmp(szClassL1, "AfxMDIFrame42s"))
+		{
+			TESTLOG("findCommissionOrderWin# hWndL1 = 0x%x szClassL1[%s] szWinTextL1[%s]\n",hChildL1, szClassL1,szWinTextL1);
+
+			HWND hChildL2 = NULL;
+			for(;;) {
+				hChildL2 = FindWindowExW(hChildL1, hChildL2, 0, 0);
+				if (hChildL2 == NULL)
+					break;
+				char szTitleL2[200];
+				char szClassL2[200];
+				char szWinTextL2[200];
+				GetWindowText(hChildL2, szTitleL2, sizeof(szTitleL2) / sizeof(char)); 
+				GetClassName(hChildL2, szClassL2, sizeof(szClassL2) / sizeof(char));
+				GetWindowText(hChildL2, szWinTextL2, sizeof(szWinTextL2) / sizeof(char));
+				TESTLOG("findCommissionOrderWin# hWndL2 = 0x%x szClassL2[%s] szWinTextL2[%s]\n",hChildL2, szClassL2,szWinTextL2);
+
+				HWND hChild_HexinScrollWnd = NULL;
+				HWND hChildL3 = NULL;
+				int iTimesCheck = 0;
+				int iFIndex = 0;
+				for(;;) {
+					hChildL3 = FindWindowExW(hChildL2, hChildL3, 0, 0);
+					if (hChildL3 == NULL)
+						break;
+					char szTitleL3[200];
+					char szClassL3[200];
+					char szWinTextL3[200];
+					GetWindowText(hChildL3, szTitleL3, sizeof(szTitleL3) / sizeof(char)); 
+					GetClassName(hChildL3, szClassL3, sizeof(szClassL3) / sizeof(char));
+					GetWindowText(hChildL3, szWinTextL3, sizeof(szWinTextL3) / sizeof(char));
+					iFIndex++;
+
+					//TESTLOG("findCommissionOrderWin# hWndL3 = 0x%x szClassL3[%s] szWinTextL3[%s]\n",hChildL3, szClassL3,szWinTextL3);
+					
+					if (0 == strcmp(szWinTextL3, "显示分笔成交"))
+					{
+						iTimesCheck++;
+					}
+					if (0 == strcmp(szWinTextL3, "合同编号"))
+					{
+						iTimesCheck++;
+					}
+					if (0 == strcmp(szWinTextL3, "显示撤单记录"))
+					{
+						iTimesCheck++;
+					}
+					if (0 == strcmp(szWinTextL3, "HexinScrollWnd"))
+					{
+						hChild_HexinScrollWnd = hChildL3;
+					}
+					if (3 == iTimesCheck && NULL != hChild_HexinScrollWnd)
+					{
+						// 找到了 hChild_HexinScrollWnd
+						HWND hChildL4 = NULL;
+						for(;;) {
+							hChildL4 = FindWindowExW(hChildL3, hChildL4, 0, 0);
+							if (hChildL4 == NULL)
+								break;
+							char szTitleL4[200];
+							char szClassL4[200];
+							char szWinTextL4[200];
+							GetWindowText(hChildL4, szTitleL4, sizeof(szTitleL4) / sizeof(char)); 
+							GetClassName(hChildL4, szClassL4, sizeof(szClassL4) / sizeof(char));
+							GetWindowText(hChildL4, szWinTextL4, sizeof(szWinTextL4) / sizeof(char));
+							//TESTLOG("findCommissionOrderWin# hWndL4 = 0x%x szClassL4[%s] szWinTextL4[%s]\n",hChildL4, szClassL4,szWinTextL4);
+							if (0 == strcmp(szWinTextL4, "HexinScrollWnd2"))
+							{
+								// 找到了 HexinScrollWnd2
+								HWND hChildL5 = NULL;
+								for(;;) {
+									hChildL5 = FindWindowExW(hChildL4, hChildL5, 0, 0);
+									if (hChildL5 == NULL)
+										break;
+									char szTitleL5[200];
+									char szClassL5[200];
+									char szWinTextL5[200];
+									GetWindowText(hChildL5, szTitleL5, sizeof(szTitleL5) / sizeof(char)); 
+									GetClassName(hChildL5, szClassL5, sizeof(szClassL5) / sizeof(char));
+									GetWindowText(hChildL5, szWinTextL5, sizeof(szWinTextL5) / sizeof(char));
+									//TESTLOG("findCommissionOrderWin# hWndL5 = 0x%x szClassL5[%s] szWinTextL5[%s]\n",hChildL5, szClassL5,szWinTextL5);
+									if (0 == strcmp(szClassL5, "CVirtualGridCtrl"))
+									{
+										// 找到了参考CVirtualGridCtrl，从中CtrlV测试内容
+										std::string buf;
+										bool bCtrlV = getCtrlVFormWin(hChildL5,buf);
+										int pos=buf.find("委托时间");
+										if (bCtrlV && pos >= 0 && pos<20)
+										{
+											return hChildL5;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 	return NULL;
 }
 
 HWND findDealOrderWin(HWND hWnd)
 {
 	TESTLOG("findDealOrderWin#\n");
+	HWND hChildL1 = NULL;
+	for(;;) {
+		hChildL1 = FindWindowExW(hWnd, hChildL1, 0, 0);
+		if (hChildL1 == NULL)
+			break;
+		char szTitleL1[200];
+		char szClassL1[200];
+		char szWinTextL1[200];
+		GetWindowText(hChildL1, szTitleL1, sizeof(szTitleL1) / sizeof(char));
+		GetClassName(hChildL1, szClassL1, sizeof(szClassL1) / sizeof(char));
+		GetWindowText(hChildL1, szWinTextL1, sizeof(szWinTextL1) / sizeof(char));
+
+		if (0 == strcmp(szClassL1, "AfxMDIFrame42s"))
+		{
+			TESTLOG("findCommissionOrderWin# hWndL1 = 0x%x szClassL1[%s] szWinTextL1[%s]\n",hChildL1, szClassL1,szWinTextL1);
+
+			HWND hChildL2 = NULL;
+			for(;;) {
+				hChildL2 = FindWindowExW(hChildL1, hChildL2, 0, 0);
+				if (hChildL2 == NULL)
+					break;
+				char szTitleL2[200];
+				char szClassL2[200];
+				char szWinTextL2[200];
+				GetWindowText(hChildL2, szTitleL2, sizeof(szTitleL2) / sizeof(char)); 
+				GetClassName(hChildL2, szClassL2, sizeof(szClassL2) / sizeof(char));
+				GetWindowText(hChildL2, szWinTextL2, sizeof(szWinTextL2) / sizeof(char));
+				TESTLOG("findCommissionOrderWin# hWndL2 = 0x%x szClassL2[%s] szWinTextL2[%s]\n",hChildL2, szClassL2,szWinTextL2);
+
+				HWND hChild_HexinScrollWnd = NULL;
+				HWND hChildL3 = NULL;
+				int iTimesCheck = 0;
+				int iFIndex = 0;
+				for(;;) {
+					hChildL3 = FindWindowExW(hChildL2, hChildL3, 0, 0);
+					if (hChildL3 == NULL)
+						break;
+					char szTitleL3[200];
+					char szClassL3[200];
+					char szWinTextL3[200];
+					GetWindowText(hChildL3, szTitleL3, sizeof(szTitleL3) / sizeof(char)); 
+					GetClassName(hChildL3, szClassL3, sizeof(szClassL3) / sizeof(char));
+					GetWindowText(hChildL3, szWinTextL3, sizeof(szWinTextL3) / sizeof(char));
+					iFIndex++;
+
+					//TESTLOG("findCommissionOrderWin# hWndL3 = 0x%x szClassL3[%s] szWinTextL3[%s]\n",hChildL3, szClassL3,szWinTextL3);
+
+					if (0 == strcmp(szWinTextL3, "显示分笔成交"))
+					{
+						iTimesCheck++;
+					}
+					if (0 == strcmp(szWinTextL3, "合同编号"))
+					{
+						iTimesCheck++;
+					}
+					if (0 == strcmp(szWinTextL3, "显示撤单记录"))
+					{
+						iTimesCheck++;
+					}
+					if (0 == strcmp(szWinTextL3, "HexinScrollWnd"))
+					{
+						hChild_HexinScrollWnd = hChildL3;
+					}
+					if (3 == iTimesCheck && NULL != hChild_HexinScrollWnd)
+					{
+						// 找到了 hChild_HexinScrollWnd
+						HWND hChildL4 = NULL;
+						for(;;) {
+							hChildL4 = FindWindowExW(hChildL3, hChildL4, 0, 0);
+							if (hChildL4 == NULL)
+								break;
+							char szTitleL4[200];
+							char szClassL4[200];
+							char szWinTextL4[200];
+							GetWindowText(hChildL4, szTitleL4, sizeof(szTitleL4) / sizeof(char)); 
+							GetClassName(hChildL4, szClassL4, sizeof(szClassL4) / sizeof(char));
+							GetWindowText(hChildL4, szWinTextL4, sizeof(szWinTextL4) / sizeof(char));
+							//TESTLOG("findCommissionOrderWin# hWndL4 = 0x%x szClassL4[%s] szWinTextL4[%s]\n",hChildL4, szClassL4,szWinTextL4);
+							if (0 == strcmp(szWinTextL4, "HexinScrollWnd2"))
+							{
+								// 找到了 HexinScrollWnd2
+								HWND hChildL5 = NULL;
+								for(;;) {
+									hChildL5 = FindWindowExW(hChildL4, hChildL5, 0, 0);
+									if (hChildL5 == NULL)
+										break;
+									char szTitleL5[200];
+									char szClassL5[200];
+									char szWinTextL5[200];
+									GetWindowText(hChildL5, szTitleL5, sizeof(szTitleL5) / sizeof(char)); 
+									GetClassName(hChildL5, szClassL5, sizeof(szClassL5) / sizeof(char));
+									GetWindowText(hChildL5, szWinTextL5, sizeof(szWinTextL5) / sizeof(char));
+									//TESTLOG("findCommissionOrderWin# hWndL5 = 0x%x szClassL5[%s] szWinTextL5[%s]\n",hChildL5, szClassL5,szWinTextL5);
+									if (0 == strcmp(szClassL5, "CVirtualGridCtrl"))
+									{
+										// 找到了参考CVirtualGridCtrl，从中CtrlV测试内容
+										std::string buf;
+										bool bCtrlV = getCtrlVFormWin(hChildL5,buf);
+										int pos=buf.find("成交时间");
+										if (bCtrlV && pos >= 0 && pos<20)
+										{
+											return hChildL5;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 	return NULL;
 }
 
@@ -1078,5 +1303,70 @@ bool clearClipboard()
 		::CloseClipboard();
 		return bRet;
 	}
+	return false;
+}
+
+bool getCtrlVFormWin(HWND hWnd,std::string & out_buf)
+{
+	// 缓存剪切板现有内容
+	std::string buf_save;
+	bool bBufSaved = false;
+	for (int i=0; i<10; i++)
+	{
+		if (getClipboard(buf_save))
+		{
+			if (clearClipboard())
+			{
+				bBufSaved = true;
+				break;
+			}
+		}
+		Sleep(20);
+	}
+
+	// 数据拷贝到剪切板
+	std::string buf;
+	bool bBufCopied = false;
+	if (bBufSaved)
+	{
+		for (int i=0; i<10; i++)
+		{
+			keybd_event(VK_CONTROL, (BYTE)0, 0 ,0);
+			::SendMessage(hWnd,WM_KEYDOWN,'C',MapVirtualKey('C',0));
+			Sleep(100);
+			::SendMessage(hWnd,WM_KEYUP,'C',MapVirtualKey('C',0));
+			keybd_event(VK_CONTROL, (BYTE)0, KEYEVENTF_KEYUP,0);
+
+			if(getClipboard(buf) && buf.length()>0)
+			{
+				bBufCopied = true;
+				break;
+			}
+			Sleep(20);
+		}
+	}
+
+	// 恢复剪切板原有内容
+	bool bRecoverd = false;
+	if(bBufSaved)
+	{
+		for (int i=0; i<10; i++)
+		{
+			if (setClipboard(buf_save))
+			{
+				bRecoverd = true;
+				break;
+			}
+			Sleep(10);
+		}
+	}
+
+	// 解析拷贝数据
+	if(bBufCopied)
+	{
+		out_buf.assign(buf);
+		return true;
+	}
+
 	return false;
 }

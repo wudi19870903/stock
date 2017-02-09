@@ -80,7 +80,7 @@ int THSAPI_TongHuaShunInit()
 	s_hCommissionOrderWin = hCommissionOrderWin;
 	TESTLOG("THSAPI_TongHuaShunInit# search CommissionOrderWin ok\n");
 
-	// 初始化当日成交窗口句柄
+	////// 初始化当日成交窗口句柄
 	HWND hDealOrderWin = findDealOrderWin(hWnd);
 	if (NULL == hDealOrderWin)
 	{
@@ -255,63 +255,11 @@ bool THSAPI_GetHoldStockList(std::list<HoldStock> & resultList)
 {
 	if (s_hHoldStockWin)
 	{
-		// 缓存剪切板现有内容
-		std::string buf_save;
-		bool bBufSaved = false;
-		for (int i=0; i<10; i++)
-		{
-			if (getClipboard(buf_save))
-			{
-				if (clearClipboard())
-				{
-					bBufSaved = true;
-					break;
-				}
-			}
-			Sleep(20);
-		}
-
-		// 数据拷贝到剪切板
-
 		std::string buf;
-		bool bBufCopied = false;
-		if (bBufSaved)
-		{
-			for (int i=0; i<10; i++)
-			{
-				
-				keybd_event(VK_CONTROL, (BYTE)0, 0 ,0);
-				::SendMessage(s_hHoldStockWin,WM_KEYDOWN,'C',MapVirtualKey('C',0));
-				Sleep(100);
-				::SendMessage(s_hHoldStockWin,WM_KEYUP,'C',MapVirtualKey('C',0));
-				keybd_event(VK_CONTROL, (BYTE)0, KEYEVENTF_KEYUP,0);
-
-				if(getClipboard(buf) && buf.length()>0)
-				{
-					bBufCopied = true;
-					break;
-				}
-				Sleep(20);
-			}
-		}
-
-		// 恢复剪切板原有内容
-		bool bRecoverd = false;
-		if(bBufSaved)
-		{
-			for (int i=0; i<10; i++)
-			{
-				if (setClipboard(buf_save))
-				{
-					bRecoverd = true;
-					break;
-				}
-				Sleep(10);
-			}
-		}
+		bool bCopy = getCtrlVFormWin(s_hHoldStockWin,buf);
 		 
 		// 解析拷贝数据
-		if(bBufCopied)
+		if(bCopy)
 		{
 			//printf("%s", buf.c_str());
 			std::string copyStr = DString::replace(buf, "\r\n", "");
@@ -427,11 +375,39 @@ bool THSAPI_GetHoldStockList(std::list<HoldStock> & resultList)
 
 bool THSAPI_GetCommissionOrderList(std::list<CommissionOrder> & resultList)
 {
-	return true;
+	if (s_hCommissionOrderWin)
+	{
+		std::string buf;
+		bool bCopy = getCtrlVFormWin(s_hCommissionOrderWin,buf);
+
+		// 解析拷贝数据
+		if(bCopy)
+		{
+			printf("%s", buf.c_str());
+			std::string copyStr = DString::replace(buf, "\r\n", "");
+			std::list<std::string> cells = DString::split(copyStr, "\t");
+			return true;
+		}
+	}
+	return false;
 }
 
 bool THSAPI_GetDealOrderList(std::list<DealOrder> & resultList)
 {
+	if (s_hDealOrderWin)
+	{
+		std::string buf;
+		bool bCopy = getCtrlVFormWin(s_hDealOrderWin,buf);
+
+		// 解析拷贝数据
+		if(bCopy)
+		{
+			printf("%s", buf.c_str());
+			std::string copyStr = DString::replace(buf, "\r\n", "");
+			std::list<std::string> cells = DString::split(copyStr, "\t");
+			return true;
+		}
+	}
 	return false;
 }
 
