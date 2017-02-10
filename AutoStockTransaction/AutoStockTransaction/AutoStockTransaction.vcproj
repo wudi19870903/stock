@@ -23,7 +23,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			UseOfMFC="1"
 			CharacterSet="2"
 			>
@@ -328,10 +328,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\stormstock_ori_capi_CATHSAccount.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\TongHuaShun.cpp"
 				>
 			</File>
@@ -339,6 +335,14 @@
 				RelativePath=".\WinHandle.cpp"
 				>
 			</File>
+			<Filter
+				Name="jni"
+				>
+				<File
+					RelativePath=".\jni\impl.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -358,10 +362,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\stormstock_ori_capi_CATHSAccount.h"
-				>
-			</File>
-			<File
 				RelativePath=".\targetver.h"
 				>
 			</File>
@@ -373,6 +373,54 @@
 				RelativePath=".\WinHandle.h"
 				>
 			</File>
+			<Filter
+				Name="jni"
+				>
+				<File
+					RelativePath=".\jni\stormstock_ori_capi_CATHSAccount.h"
+					>
+				</File>
+				<File
+					RelativePath=".\jni\stormstock_ori_capi_CATHSAccount_CommissionOrder.h"
+					>
+				</File>
+				<File
+					RelativePath=".\jni\stormstock_ori_capi_CATHSAccount_DealOrder.h"
+					>
+				</File>
+				<File
+					RelativePath=".\jni\stormstock_ori_capi_CATHSAccount_HoldStock.h"
+					>
+				</File>
+				<File
+					RelativePath=".\jni\stormstock_ori_capi_CATHSAccount_ResultAllStockMarketValue.h"
+					>
+				</File>
+				<File
+					RelativePath=".\jni\stormstock_ori_capi_CATHSAccount_ResultAvailableMoney.h"
+					>
+				</File>
+				<File
+					RelativePath=".\jni\stormstock_ori_capi_CATHSAccount_ResultCommissionOrderList.h"
+					>
+				</File>
+				<File
+					RelativePath=".\jni\stormstock_ori_capi_CATHSAccount_ResultDealOrderList.h"
+					>
+				</File>
+				<File
+					RelativePath=".\jni\stormstock_ori_capi_CATHSAccount_ResultHoldStockList.h"
+					>
+				</File>
+				<File
+					RelativePath=".\jni\stormstock_ori_capi_CATHSAccount_ResultTotalAssets.h"
+					>
+				</File>
+				<File
+					RelativePath=".\jni\stormstock_ori_capi_CATHSAccount_TRANACT.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"

@@ -2,6 +2,10 @@ package stormstock.ori.capi;
 
 import java.util.Formatter;
 
+import stormstock.ori.capi.CATHSAccount.ResultAllStockMarketValue;
+import stormstock.ori.capi.CATHSAccount.ResultAvailableMoney;
+import stormstock.ori.capi.CATHSAccount.ResultTotalAssets;
+
 public class TestCATHSAccount {
 
 	// for test: please be carefull
@@ -14,19 +18,19 @@ public class TestCATHSAccount {
         int iInitRet = CATHSAccount.initialize();
         fmt.format("CATHSAccount.initialize = %d\n", iInitRet);
 
-        float avalableMoney = CATHSAccount.getAvailableMoney();
-        fmt.format("CATHSAccount.getAvailableMoney = %.2f\n", avalableMoney);
+        ResultAvailableMoney cResultAvailableMoney = CATHSAccount.getAvailableMoney();
+        fmt.format("CATHSAccount.getAvailableMoney err(%d) AvailableMoney(%.2f)\n", cResultAvailableMoney.error, cResultAvailableMoney.availableMoney);
         
-        float allMoney = CATHSAccount.getAllMoney();
-        fmt.format("CATHSAccount.getAllMoney = %.2f\n", allMoney);
+        ResultTotalAssets cResultTotalAssets = CATHSAccount.getTotalAssets();
+        fmt.format("CATHSAccount.getTotalAssets err(%d) AvailableMoney(%.2f)\n", cResultTotalAssets.error, cResultTotalAssets.totalAssets);
         
-        float allStockMarketValue = CATHSAccount.getAllStockMarketValue();
-        fmt.format("CATHSAccount.getAllStockMarketValue = %.2f\n", allStockMarketValue);
+        ResultAllStockMarketValue cResultAllStockMarketValue = CATHSAccount.getAllStockMarketValue();
+        fmt.format("CATHSAccount.getAllStockMarketValue err(%d) AvailableMoney(%.2f)\n", cResultAllStockMarketValue.error, cResultAllStockMarketValue.allStockMarketValue);
         
-        int iBuyRet = CATHSAccount.buyStock("601988", 100, 3.7f);
+        int iBuyRet = CATHSAccount.buyStock("601988", 100, 0.7f);
         fmt.format("CATHSAccount.buyStock = %d\n", iBuyRet);
         
-        int iSellRet = CATHSAccount.sellStock("601988", 100, 3.7f);
+        int iSellRet = CATHSAccount.sellStock("601988", 100, 10.7f);
         fmt.format("CATHSAccount.sellStock = %d\n", iSellRet);
         
         fmt.format("### main end\n");

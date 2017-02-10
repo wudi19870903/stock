@@ -8,8 +8,8 @@
 // 交易动作定义
 enum TRANACT
 {
-	BUY,
-	SELL,
+	TRANACT_BUY,
+	TRANACT_SELL,
 };
 
 // 持股定义

@@ -24,6 +24,9 @@ import org.xml.sax.InputSource;
 
 import stormstock.fw.tranengine_lite.ANLStockDayKData;
 import stormstock.ori.capi.CATHSAccount;
+import stormstock.ori.capi.CATHSAccount.ResultAllStockMarketValue;
+import stormstock.ori.capi.CATHSAccount.ResultAvailableMoney;
+import stormstock.ori.capi.CATHSAccount.ResultTotalAssets;
 import stormstock.ori.stockdata.DataWebStockRealTimeInfo;
 import stormstock.ori.stockdata.DataWebStockRealTimeInfo.ResultRealTimeInfo;
 import stormstock.ori.stockdata.CommonDef.*;
@@ -234,9 +237,16 @@ public class RunAutoRealTimeTransection {
 			// print info
 			logstr = "Please check sell info... \n";
 			outputLog(logstr);	
-	        float avalableMoney = CATHSAccount.getAvailableMoney();
-	        float allMoney = CATHSAccount.getAllMoney();
-	        float allStockMarketValue = CATHSAccount.getAllStockMarketValue();
+			
+			ResultAvailableMoney cResultAvailableMoney = CATHSAccount.getAvailableMoney();
+	        //fmt.format("CATHSAccount.getAvailableMoney err(%d) AvailableMoney(%.2f)\n", cResultAvailableMoney.error, cResultAvailableMoney.availableMoney);
+	        ResultTotalAssets cResultTotalAssets = CATHSAccount.getTotalAssets();
+	        //fmt.format("CATHSAccount.getTotalAssets err(%d) AvailableMoney(%.2f)\n", cResultTotalAssets.error, cResultTotalAssets.totalAssets);
+	        ResultAllStockMarketValue cResultAllStockMarketValue = CATHSAccount.getAllStockMarketValue();
+	        //fmt.format("CATHSAccount.getAllStockMarketValue err(%d) AvailableMoney(%.2f)\n", cResultAllStockMarketValue.error, cResultAllStockMarketValue.allStockMarketValue);
+	        float avalableMoney = cResultAvailableMoney.availableMoney;
+	        float allMoney = cResultTotalAssets.totalAssets;
+	        float allStockMarketValue = cResultAllStockMarketValue.allStockMarketValue;
 	        logstr = String.format("[THS Account] allMoney:%.3f\n", allMoney);
 	        outputLog(logstr);
 	        logstr = String.format("[THS Account] avalableMoney:%.3f\n", avalableMoney);

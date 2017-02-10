@@ -8,6 +8,7 @@ import java.util.Properties;
 
 /*
  * http://blog.csdn.net/qinjuning/article/details/7607214
+ * http://blog.csdn.net/buleriver/article/details/26577895
  */
  
 public class CATHSAccount {
@@ -200,6 +201,7 @@ public class CATHSAccount {
 	/*
 	 * TongHuaShun Initialize
 	 * 同花顺初始化
+	 * return ErrorCode
 	 * 0 成功
 	 */
 	public static native int initialize();
@@ -243,14 +245,16 @@ public class CATHSAccount {
 	/*
 	 * buyStock
 	 * 委托买入下单
-	 * 0 委托成功
+	 * return ErrorCode
+	 * 0 成功
 	 */
 	public static native int buyStock(String stockId, int amount, float price);
 	
 	/*
 	 * buyStock
 	 * 委托卖出下单
-	 * 0 委托成功
+	 * return ErrorCode
+	 * 0 成功
 	 */
 	public static native int sellStock(String stockId, int amount, float price);
 }

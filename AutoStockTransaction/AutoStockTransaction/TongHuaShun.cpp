@@ -516,11 +516,11 @@ int THSAPI_GetCommissionOrderList(std::list<CommissionOrder> & resultList)
 						{
 							if (cell.compare("证券买入") == 0)
 							{
-								cCommissionOrder.tranAct = TRANACT::BUY;
+								cCommissionOrder.tranAct = TRANACT_BUY;
 							}
 							if (cell.compare("证券卖出") == 0)
 							{
-								cCommissionOrder.tranAct = TRANACT::SELL;
+								cCommissionOrder.tranAct = TRANACT_SELL;
 							}
 						}
 						if (indexCol == iCol_commissionAmount)
@@ -652,11 +652,11 @@ int THSAPI_GetDealOrderList(std::list<DealOrder> & resultList)
 						{
 							if (cell.compare("证券买入") == 0)
 							{
-								cDealOrder.tranAct = TRANACT::BUY;
+								cDealOrder.tranAct = TRANACT_BUY; 
 							}
 							if (cell.compare("证券卖出") == 0)
 							{
-								cDealOrder.tranAct = TRANACT::SELL;
+								cDealOrder.tranAct = TRANACT_SELL;
 							}
 						}
 						if (indexCol == iCol_dealAmount)
