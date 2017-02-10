@@ -75,7 +75,7 @@ public class CATHSAccount {
 	{
 		public ResultAvailableMoney()
 		{
-			error = 0;
+			error = -1;
 			availableMoney = 0.0f;
 		}
 		public int error;
@@ -89,7 +89,7 @@ public class CATHSAccount {
 	{
 		public ResultTotalAssets()
 		{
-			error = 0;
+			error = -1;
 			totalAssets = 0.0f;
 		}
 		public int error;
@@ -103,7 +103,7 @@ public class CATHSAccount {
 	{
 		public ResultAllStockMarketValue()
 		{
-			error = 0;
+			error = -1;
 			allStockMarketValue = 0.0f;
 		}
 		public int error;
@@ -165,8 +165,8 @@ public class CATHSAccount {
 	{
 		public ResultHoldStockList()
 		{
-			error = 0;
-			resultList = new ArrayList<HoldStock>();
+			error = -1;
+			resultList = null;
 		}
 		public int error;
 		public List<HoldStock> resultList;
@@ -179,8 +179,8 @@ public class CATHSAccount {
 	{
 		public ResultCommissionOrderList()
 		{
-			error = 0;
-			resultList = new ArrayList<CommissionOrder>();
+			error = -1;
+			resultList = null;
 		}
 		public int error;
 		public List<CommissionOrder> resultList;
@@ -193,8 +193,8 @@ public class CATHSAccount {
 	{
 		public ResultDealOrderList()
 		{
-			error = 0;
-			resultList = new ArrayList<DealOrder>();
+			error = -1;
+			resultList = null;
 		}
 		public int error;
 		public List<DealOrder> resultList;
