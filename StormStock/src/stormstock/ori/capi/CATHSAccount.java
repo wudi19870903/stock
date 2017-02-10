@@ -9,6 +9,13 @@ import java.util.Properties;
 /*
  * http://blog.csdn.net/qinjuning/article/details/7607214
  * http://blog.csdn.net/buleriver/article/details/26577895
+ * 
+ * 签名查看：
+ * http://blog.csdn.net/qq_17387361/article/details/52701481
+ * 在bin下，执行 javap -s stormstock.ori.capi.CATHSAccount
+ * 
+ * jni的C++文件生成
+ * 在代码src下,执行 javah stormstock.ori.capi.CATHSAccount
  */
  
 public class CATHSAccount {

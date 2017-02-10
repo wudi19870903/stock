@@ -208,10 +208,73 @@ JNIEXPORT jobject JNICALL Java_stormstock_ori_capi_CATHSAccount_getAllStockMarke
 * Signature: ()Lstormstock/ori/capi/CATHSAccount/ResultHoldStockList;
 */
 JNIEXPORT jobject JNICALL Java_stormstock_ori_capi_CATHSAccount_getHoldStockList
-(JNIEnv *, jclass)
+(JNIEnv * env, jclass)
 {
-	jobject jobj;
-	return jobj;
+	TESTLOG("Java_stormstock_ori_capi_CATHSAccount_getHoldStockList\n");
+
+	int err = 0;
+	std::list<HoldStock> cResultList;
+	err = THSAPI_GetHoldStockList(cResultList);
+
+	TESTLOG("   THSAPI_GetHoldStockList err(%d) cResultList size(%d)\n",err,cResultList.size());
+
+	// 构建对象
+
+	jclass jcls_ResultHoldStockList = env->FindClass("stormstock/ori/capi/CATHSAccount$ResultHoldStockList");
+	if (NULL == jcls_ResultHoldStockList)
+	{
+		TESTLOG("   jcls_ResultHoldStockList ERROR\n");
+	}
+
+	jmethodID mid_ResultHoldStockList_init = env->GetMethodID(jcls_ResultHoldStockList, "<init>", "()V");
+	if (NULL == mid_ResultHoldStockList_init)
+	{
+		TESTLOG("   mid_ResultHoldStockList_init ERROR\n");
+	}
+
+	jobject jobj_ResultHoldStockList = env->NewObject(jcls_ResultHoldStockList, mid_ResultHoldStockList_init);
+	if (NULL == jobj_ResultHoldStockList)
+	{
+		TESTLOG("   jobj_ResultHoldStockList ERROR\n");
+	}
+
+	// 填充
+
+	jfieldID fid_error = env->GetFieldID(jcls_ResultHoldStockList, "error", "I");  
+	if (NULL == fid_error)
+	{
+		TESTLOG("   fid_error ERROR\n");
+	}
+	env->SetIntField(jobj_ResultHoldStockList, fid_error, (int)err); 
+
+	jclass jcls_HoldStock = env->FindClass("stormstock/ori/capi/CATHSAccount$HoldStock");
+	if (NULL == jcls_HoldStock)
+	{
+		TESTLOG("   jcls_HoldStock ERROR\n");
+	}
+	jclass jcls_List = env->FindClass("Ljava/util/List;");
+	if (NULL == jcls_List)
+	{
+		TESTLOG("   jcls_List ERROR\n");
+	}
+	jmethodID mid_List_init = env->GetMethodID(jcls_List, "<init>", "()V");
+	if (NULL == mid_List_init)
+	{
+		TESTLOG("   mid_List_init ERROR\n");
+	}
+	jobject jobj_List = env->NewObject(jcls_List,mid_List_init);
+	if (NULL == jobj_List)
+	{
+		TESTLOG("   jobj_List ERROR\n");
+	}
+	jfieldID fid_resultList = env->GetFieldID(jcls_ResultHoldStockList, "resultList", "Ljava/util/List;");  
+	if (NULL == fid_resultList)
+	{
+		TESTLOG("   fid_resultList ERROR\n");
+	}
+	env->SetObjectField(jobj_ResultHoldStockList, fid_resultList, jobj_List); 
+
+	return jobj_ResultHoldStockList;
 }
 
 /*
@@ -220,10 +283,46 @@ JNIEXPORT jobject JNICALL Java_stormstock_ori_capi_CATHSAccount_getHoldStockList
 * Signature: ()Lstormstock/ori/capi/CATHSAccount/ResultCommissionOrderList;
 */
 JNIEXPORT jobject JNICALL Java_stormstock_ori_capi_CATHSAccount_getCommissionOrderList
-(JNIEnv *, jclass)
+(JNIEnv * env, jclass)
 {
-	jobject jobj;
-	return jobj;
+	TESTLOG("Java_stormstock_ori_capi_CATHSAccount_getCommissionOrderList\n");
+
+	int err = 0;
+	std::list<CommissionOrder> cResultList;
+	err = THSAPI_GetCommissionOrderList(cResultList);
+
+	TESTLOG("   THSAPI_GetCommissionOrderList err(%d) cResultList size(%d)\n",err,cResultList.size());
+
+	// 构建对象
+
+	jclass jcls_ResultCommissionOrderList = env->FindClass("stormstock/ori/capi/CATHSAccount$ResultCommissionOrderList");
+	if (NULL == jcls_ResultCommissionOrderList)
+	{
+		TESTLOG("   jcls_ResultCommissionOrderList ERROR\n");
+	}
+
+	jmethodID mid_ResultCommissionOrderList_init = env->GetMethodID(jcls_ResultCommissionOrderList, "<init>", "()V");
+	if (NULL == mid_ResultCommissionOrderList_init)
+	{
+		TESTLOG("   mid_ResultCommissionOrderList_init ERROR\n");
+	}
+
+	jobject jobj_ResultCommissionOrderList = env->NewObject(jcls_ResultCommissionOrderList, mid_ResultCommissionOrderList_init);
+	if (NULL == jobj_ResultCommissionOrderList)
+	{
+		TESTLOG("   jobj_ResultCommissionOrderList ERROR\n");
+	}
+
+	// 填充
+
+	jfieldID fid_error = env->GetFieldID(jcls_ResultCommissionOrderList, "error", "I");  
+	if (NULL == fid_error)
+	{
+		TESTLOG("   fid_error ERROR\n");
+	}
+	env->SetIntField(jobj_ResultCommissionOrderList, fid_error, (int)err); 
+
+	return jobj_ResultCommissionOrderList;
 }
 
 
@@ -233,10 +332,46 @@ JNIEXPORT jobject JNICALL Java_stormstock_ori_capi_CATHSAccount_getCommissionOrd
 * Signature: ()Lstormstock/ori/capi/CATHSAccount/ResultDealOrderList;
 */
 JNIEXPORT jobject JNICALL Java_stormstock_ori_capi_CATHSAccount_getDealOrderList
-(JNIEnv *, jclass)
+(JNIEnv * env, jclass)
 {
-	jobject jobj;
-	return jobj;
+	TESTLOG("Java_stormstock_ori_capi_CATHSAccount_getCommissionOrderList\n");
+
+	int err = 0;
+	std::list<DealOrder> cResultList;
+	err = THSAPI_GetDealOrderList(cResultList);
+
+	TESTLOG("   THSAPI_GetDealOrderList err(%d) cResultList size(%d)\n",err,cResultList.size());
+
+	// 构建对象
+
+	jclass jcls_ResultDealOrderList = env->FindClass("stormstock/ori/capi/CATHSAccount$ResultDealOrderList");
+	if (NULL == jcls_ResultDealOrderList)
+	{
+		TESTLOG("   jcls_ResultDealOrderList ERROR\n");
+	}
+
+	jmethodID mid_ResultDealOrderList_init = env->GetMethodID(jcls_ResultDealOrderList, "<init>", "()V");
+	if (NULL == mid_ResultDealOrderList_init)
+	{
+		TESTLOG("   mid_ResultDealOrderList_init ERROR\n");
+	}
+
+	jobject jobj_ResultDealOrderList = env->NewObject(jcls_ResultDealOrderList, mid_ResultDealOrderList_init);
+	if (NULL == jobj_ResultDealOrderList)
+	{
+		TESTLOG("   jobj_ResultDealOrderList ERROR\n");
+	}
+
+	// 填充
+
+	jfieldID fid_error = env->GetFieldID(jcls_ResultDealOrderList, "error", "I");  
+	if (NULL == fid_error)
+	{
+		TESTLOG("   fid_error ERROR\n");
+	}
+	env->SetIntField(jobj_ResultDealOrderList, fid_error, (int)err); 
+
+	return jobj_ResultDealOrderList;
 }
 
 
