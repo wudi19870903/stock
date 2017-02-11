@@ -5,6 +5,9 @@
 //////////////////////////////////////////////////////////////////////////
 // Sub windows in TongHuaShun
 
+void setMainWin(HWND hWnd);
+int Hide_MainWin();
+
 HWND findLeftTreeView(HWND hWnd);
 int selectMasterTreeViewItem(HWND hTreeView, int index);
 HWND findZijinGupiaoWin(HWND hWnd);

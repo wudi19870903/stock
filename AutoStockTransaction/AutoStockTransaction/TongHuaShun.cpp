@@ -34,6 +34,7 @@ int THSAPI_TongHuaShunInit()
 		return -10;
 	}
 	s_hMainWin = hWnd;
+	setMainWin(s_hMainWin);
 	TESTLOG("THSAPI_TongHuaShunInit# search main win ok\n");
 
 	// ³õÊ¼»¯×ó²àTreeView¾ä±ú
@@ -119,6 +120,7 @@ int THSAPI_TongHuaShunInit()
 	}
 
 	Flush_F5();
+	Hide_MainWin();
 
 	s_initFLag = true;
 	return 0;

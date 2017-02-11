@@ -9,6 +9,20 @@
 //////////////////////////////////////////////////////////////////////////
 // find sub windows in tonghuashun
 
+HWND s_hMainWin = NULL;
+void setMainWin(HWND hWnd)
+{
+	s_hMainWin = hWnd;
+}
+
+int Hide_MainWin()
+{
+	HWND hMainWin = s_hMainWin;
+	::ShowWindow(hMainWin, SW_MINIMIZE);
+	return 0;
+}
+
+
 HWND findLeftTreeView(HWND hWnd) // and select expend 
 {
 	TESTLOG("findLeftTreeView#\n");
@@ -123,9 +137,11 @@ int selectMasterTreeViewItem(HWND hTreeView, int index = -1)
 		tvItem.hItem = TreeView_GetRoot(hTreeView);
 		// 买入选择
 		TreeView_SelectItem(hTreeView, tvItem.hItem);
+		Sleep(100);
 		// 卖出选择
 		tvItem.hItem = TreeView_GetNextSibling(hTreeView, tvItem.hItem);
 		TreeView_SelectItem(hTreeView, tvItem.hItem);
+		Sleep(100);
 		// 撤单
 		tvItem.hItem = TreeView_GetNextSibling(hTreeView, tvItem.hItem);
 		// 新股申购
@@ -147,14 +163,17 @@ int selectMasterTreeViewItem(HWND hTreeView, int index = -1)
 				// 展开成功
 				// 资金股票选择
 				TreeView_SelectItem(hTreeView, tvItem.hItem);
+				Sleep(100);
 
 				// 当日委托
 				tvItem.hItem = TreeView_GetNextSibling(hTreeView, tvItem.hItem);
 				TreeView_SelectItem(hTreeView, tvItem.hItem);
+				Sleep(100);
 
 				// 当日成交
 				tvItem.hItem = TreeView_GetNextSibling(hTreeView, tvItem.hItem);
 				TreeView_SelectItem(hTreeView, tvItem.hItem);
+				Sleep(100);
 
 				//// 历史委托
 				//tvItem.hItem = TreeView_GetNextSibling(hTreeView, tvItem.hItem);
@@ -189,6 +208,7 @@ int selectMasterTreeViewItem(HWND hTreeView, int index = -1)
 				tvItem.hItem = TreeView_GetRoot(hTreeView);
 				// 买入选择
 				TreeView_SelectItem(hTreeView, tvItem.hItem);
+				Sleep(100);
 				return 0;
 			}
 		}
@@ -453,7 +473,6 @@ HWND findCommissionOrderWin(HWND hWnd)
 									if (0 == strcmp(szClassL5, "CVirtualGridCtrl"))
 									{
 										// 找到了参考CVirtualGridCtrl，从中CtrlV测试内容
-										Sleep(100);
 										std::string buf;
 										bool bCtrlV = getCtrlVFormWin(hChildL5,buf);
 										int pos=buf.find("委托时间");
@@ -572,7 +591,6 @@ HWND findDealOrderWin(HWND hWnd)
 									if (0 == strcmp(szClassL5, "CVirtualGridCtrl"))
 									{
 										// 找到了参考CVirtualGridCtrl，从中CtrlV测试内容
-										Sleep(100);
 										std::string buf;
 										bool bCtrlV = getCtrlVFormWin(hChildL5,buf);
 										int pos=buf.find("成交时间");
@@ -1243,13 +1261,29 @@ int Flush_F5()
 {
 	HWND hWnd = FindTongHuaShunMainWin();
 	::PostMessage(hWnd, WM_KEYDOWN, VK_F5, 0);
+	Sleep(10);
 	::PostMessage(hWnd, WM_KEYUP, VK_F5, 0);
-	Sleep(50);
+	Sleep(200);
 	return 0;
+}
+
+bool isAvailableClipboard()
+{
+	bool bRet = false;
+	if (::OpenClipboard(NULL))
+	{
+		
+		if (::CloseClipboard())
+		{
+			bRet = true;
+		}
+	}
+	return bRet;
 }
 
 bool setClipboard(std::string in_buf)
 {
+	bool bRet = false;
 	if(::OpenClipboard(NULL))
 	{
 		::EmptyClipboard();
@@ -1262,13 +1296,14 @@ bool setClipboard(std::string in_buf)
 		::GlobalUnlock(clipbuffer);
 		::SetClipboardData(CF_TEXT, clipbuffer);
 		::CloseClipboard();
-		return true;
+		bRet = true;
 	}
-	return false;
+	return bRet;
 }
 
 bool getClipboard(std::string & out_buf)
 {
+	bool bRet = false;
 	if(::OpenClipboard(NULL))
 	{
 		//获得剪贴板数据
@@ -1281,36 +1316,38 @@ bool getClipboard(std::string & out_buf)
 			char * lpStr = new char[lenMBS];
 			memset(lpStr, 0, lenMBS);
 			int iCvt = DStr::WinWcsToMbs(lpStrW,lenWCS,lpStr,lenMBS);
-			if (iCvt > 0 && NULL!= lpStr)
+			if (iCvt >= 0 && NULL!= lpStr)
 			{
 				//printf("%s",lpStr);
-				out_buf.assign(lpStr,strlen(lpStr));
-				delete[] lpStr;
-				::GlobalUnlock(hMem);
-				::CloseClipboard();
-				return true;
+				out_buf.assign(lpStr, strlen(lpStr));
+				bRet = true;
 			}
 			delete[] lpStr;
+			::GlobalUnlock(hMem);
+		}
+		else
+		{
+			// 剪切板空
+			out_buf.assign("", strlen(""));
+			bRet = true;
 		}
 		::CloseClipboard();
-		return true;
 	}
-	return false;
+	return bRet;
 }
 
 bool clearClipboard()
 {
+	bool bRet = false;
 	if(::OpenClipboard(NULL))
 	{
-		bool bRet = false;
 		if (TRUE == ::EmptyClipboard())
 		{
 			bRet = true;
 		}
 		::CloseClipboard();
-		return bRet;
 	}
-	return false;
+	return bRet;
 }
 
 bool getCtrlVFormWin(HWND hWnd,std::string & out_buf)
@@ -1328,7 +1365,6 @@ bool getCtrlVFormWin(HWND hWnd,std::string & out_buf)
 				break;
 			}
 		}
-		Sleep(100);
 	}
 
 	// 数据拷贝到剪切板
@@ -1336,20 +1372,24 @@ bool getCtrlVFormWin(HWND hWnd,std::string & out_buf)
 	bool bBufCopied = false;
 	if (bBufSaved)
 	{
-		for (int i=0; i<5; i++)
+		for (size_t i = 0; i < 5; i++)
 		{
-			keybd_event(VK_CONTROL, (BYTE)0, 0 ,0);
-			::SendMessage(hWnd,WM_KEYDOWN,'C',MapVirtualKey('C',0));
-			Sleep(200);
-			::SendMessage(hWnd,WM_KEYUP,'C',MapVirtualKey('C',0));
-			keybd_event(VK_CONTROL, (BYTE)0, KEYEVENTF_KEYUP,0);
-
-			if(getClipboard(buf) && buf.length()>0)
+			if (isAvailableClipboard())
 			{
-				bBufCopied = true;
-				break;
+				keybd_event(VK_CONTROL, (BYTE)0, 0, 0);
+				Sleep(50);
+				::SendMessage(hWnd, WM_KEYDOWN, 'C', MapVirtualKey('C', 0));
+				::SendMessage(hWnd, WM_KEYUP, 'C', MapVirtualKey('C', 0));
+				Sleep(50);
+				keybd_event(VK_CONTROL, (BYTE)0, KEYEVENTF_KEYUP, 0);
+				Sleep(100);
+
+				if (getClipboard(buf) && buf.size() > 0)
+				{
+					bBufCopied = true;
+					break;
+				}
 			}
-			Sleep(100);
 		}
 	}
 
@@ -1364,7 +1404,6 @@ bool getCtrlVFormWin(HWND hWnd,std::string & out_buf)
 				bRecoverd = true;
 				break;
 			}
-			Sleep(100);
 		}
 	}
 
