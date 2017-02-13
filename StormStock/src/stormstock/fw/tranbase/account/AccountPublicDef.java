@@ -71,6 +71,7 @@ public class AccountPublicDef {
 		public int availableAmount; // 可卖数量
 		public float refPrimeCostPrice; // 参考成本价
 		public float curPrice; // 当前价
+		public int investigationDays; // 考察持有天数，程序监控日开始计算
 		
 		public HoldStock()
 		{
@@ -79,6 +80,7 @@ public class AccountPublicDef {
 			availableAmount = 0;
 			refPrimeCostPrice = 0.0f;
 			curPrice = 0.0f;
+			investigationDays = 0;
 		}
 		
 		public void CopyFrom(HoldStock c)
@@ -88,6 +90,7 @@ public class AccountPublicDef {
 			availableAmount = c.availableAmount;
 			refPrimeCostPrice = c.refPrimeCostPrice;
 			curPrice = c.curPrice;
+			investigationDays = c.investigationDays;
 		}
 		
 		public float profit() // 利润值（盈亏金额，不计算交易费用）

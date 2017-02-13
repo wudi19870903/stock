@@ -7,6 +7,8 @@ import stormstock.fw.base.BLog;
 import stormstock.fw.tranbase.account.AccountPublicDef.CommissionOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.DealOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
+import stormstock.ori.capi.CATHSAccount;
+import stormstock.ori.capi.CATHSAccount.ResultDealOrderList;
 
 public class RealAccountOpe extends IAccountOpe {
 

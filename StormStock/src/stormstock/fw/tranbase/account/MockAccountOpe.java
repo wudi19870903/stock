@@ -51,12 +51,13 @@ public class MockAccountOpe extends IAccountOpe {
 		// 新一天时，未成交委托单清空
 		m_commissionOrderList.clear();
 		
-		// 新一天时，所有持股均可卖
+		// 新一天时，所有持股均可卖，监控天数加1
 		HoldStock cHoldStock = null;
 		for(int i = 0; i< m_holdStockList.size(); i++)
 		{
 			cHoldStock = m_holdStockList.get(i);
 			cHoldStock.availableAmount = cHoldStock.totalAmount;
+			cHoldStock.investigationDays = cHoldStock.investigationDays + 1;
 		}
 		
 		// 新一天时，交割单清空
