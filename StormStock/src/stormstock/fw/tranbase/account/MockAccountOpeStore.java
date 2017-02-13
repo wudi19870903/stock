@@ -154,7 +154,7 @@ public class MockAccountOpeStore {
         				
         		Element Node_Stock = doc.createElement("Stock");
         		Node_Stock.setAttribute("time", cCommissionOrder.time);
-        		Node_Stock.setAttribute("tranact", tranactVal);
+        		Node_Stock.setAttribute("tranAct", tranactVal);
         		Node_Stock.setAttribute("stockID", cCommissionOrder.stockID);
         		Node_Stock.setAttribute("amount", amountVal);
         		Node_Stock.setAttribute("price", priceVal);
@@ -176,8 +176,8 @@ public class MockAccountOpeStore {
         		Element Node_Stock = doc.createElement("Stock");
         		Node_Stock.setAttribute("stockID", cHoldStock.stockID);
         		Node_Stock.setAttribute("totalAmount", totalAmountVal);
-        		Node_Stock.setAttribute("availableAmountVal", availableAmountVal);
-        		Node_Stock.setAttribute("refPrimeCostPriceVal", refPrimeCostPriceVal);
+        		Node_Stock.setAttribute("availableAmount", availableAmountVal);
+        		Node_Stock.setAttribute("refPrimeCostPrice", refPrimeCostPriceVal);
         		Node_Stock.setAttribute("curPrice", curPriceVal);
         		Node_HoldStockList.appendChild(Node_Stock);
         	}
@@ -196,7 +196,7 @@ public class MockAccountOpeStore {
         				
         		Element Node_Stock = doc.createElement("Stock");
         		Node_Stock.setAttribute("time", cDealOrder.time);
-        		Node_Stock.setAttribute("tranact", tranactVal);
+        		Node_Stock.setAttribute("tranAct", tranactVal);
         		Node_Stock.setAttribute("stockID", cDealOrder.stockID);
         		Node_Stock.setAttribute("amount", amountVal);
         		Node_Stock.setAttribute("price", priceVal);
