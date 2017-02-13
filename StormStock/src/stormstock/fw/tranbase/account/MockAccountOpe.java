@@ -51,7 +51,7 @@ public class MockAccountOpe extends IAccountOpe {
 		// 新一天时，未成交委托单清空
 		m_commissionOrderList.clear();
 		
-		// 新一天时，所有持股均可卖，持仓天数+1
+		// 新一天时，所有持股均可卖
 		HoldStock cHoldStock = null;
 		for(int i = 0; i< m_holdStockList.size(); i++)
 		{
@@ -95,12 +95,12 @@ public class MockAccountOpe extends IAccountOpe {
 			cHoldStock = cNewHoldStock;
 		}
 		
-		// 重置对象
+		// 重置对象 (交易费用直接体现在参考成本价里)
 		float transactionCosts = m_transactionCostsRatio*price*realBuyAmount;
 		int oriTotalAmount = cHoldStock.totalAmount;
 		float oriHoldAvePrice = cHoldStock.refPrimeCostPrice;
 		cHoldStock.totalAmount = cHoldStock.totalAmount + realBuyAmount;
-		cHoldStock.refPrimeCostPrice = (oriHoldAvePrice*oriTotalAmount + price*realBuyAmount)/cHoldStock.totalAmount;
+		cHoldStock.refPrimeCostPrice = (oriHoldAvePrice*oriTotalAmount + price*realBuyAmount + transactionCosts)/cHoldStock.totalAmount;
 		cHoldStock.curPrice = price;
 		
 		m_money = m_money - realBuyAmount*price;
@@ -145,31 +145,31 @@ public class MockAccountOpe extends IAccountOpe {
 			int realSellAmount = Math.min(cHoldStock.totalAmount, amount);
 			realSellAmount = realSellAmount/100*100;
 			
-			// 重置对象
+			// 重置对象 (交易费用在卖出价钱中扣除)
+			float transactionCosts = m_transactionCostsRatio*price*realSellAmount;
 			int oriTotalAmount = cHoldStock.totalAmount;
 			float oriHoldAvePrice = cHoldStock.refPrimeCostPrice;
 			cHoldStock.totalAmount = cHoldStock.totalAmount - realSellAmount;
+			cHoldStock.curPrice = price;
+			m_money = m_money + price*realSellAmount - transactionCosts;
 			if(cHoldStock.totalAmount == 0) // 卖光则不计算买入价格 清零
 			{
 				cHoldStock.refPrimeCostPrice = 0.0f;
 			}
 			else
 			{
-				cHoldStock.refPrimeCostPrice = (oriHoldAvePrice*oriTotalAmount - price*realSellAmount)/cHoldStock.totalAmount;
+				cHoldStock.refPrimeCostPrice = (oriHoldAvePrice*oriTotalAmount - price*realSellAmount - transactionCosts)/cHoldStock.totalAmount;
 			}
-			cHoldStock.curPrice = price;
-			m_money = m_money + price*realSellAmount;
 			
 			// 清仓计算
-			float DealOrder_transactionCost = 0.0f;
 			if(cHoldStock.totalAmount == 0)
 			{
 				m_holdStockList.remove(cHoldStock);
 			}
 			
-			BLog.output("ACCOUNT", " @Sell [%s %s] [%s %.3f %d %.3f %.3f] \n", 
+			BLog.output("ACCOUNT", " @Sell [%s %s] [%s %.3f %d %.3f(%.3f) %.3f] \n", 
 					date, time,
-					stockID, price, realSellAmount, price*realSellAmount, m_money);
+					stockID, price, realSellAmount, price*realSellAmount, transactionCosts, m_money);
 			
 			// 生成交割单
 			DealOrder cDealOrder = new DealOrder();

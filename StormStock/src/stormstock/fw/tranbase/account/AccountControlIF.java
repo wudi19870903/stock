@@ -34,11 +34,11 @@ public class AccountControlIF {
 	{
 		if(ACCOUNTTYPE.MOCK == eAccIFType)
 		{
-			m_account = new AccountEntity(eAccIFType, "mock001", "mock001_password");
+			m_account = new Account(eAccIFType, "mock001", "mock001_password");
 		}
 		if(ACCOUNTTYPE.REAL == eAccIFType)
 		{
-			m_account = new AccountEntity(eAccIFType, "xxx", "xxx");
+			m_account = new Account(eAccIFType, "xxx", "xxx");
 		}
 	}
 	
@@ -147,5 +147,5 @@ public class AccountControlIF {
 	 * 成员-----------------------------------------------------------------
 	 */
 	// 账户实体
-	private AccountEntity m_account;
+	private Account m_account;
 }

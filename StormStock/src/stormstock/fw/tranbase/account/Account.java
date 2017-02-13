@@ -10,10 +10,10 @@ import stormstock.fw.tranbase.account.AccountPublicDef.DealOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 import stormstock.fw.tranbase.account.AccountPublicDef.TRANACT;
 
-public class AccountEntity {
+public class Account {
 	
 	// 构造账户实体时，需要传入操作接口（模拟，真实）
-	public AccountEntity(ACCOUNTTYPE eAccType, String accountID, String password)
+	public Account(ACCOUNTTYPE eAccType, String accountID, String password)
 	{
 		IAccountOpe cIAccountOpe = null;
 		if(eAccType == ACCOUNTTYPE.MOCK)

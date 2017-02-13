@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <account ID="mock001" password="mock001_password">
-  <Money total="67000.000"/>
-  <SelectList>
-    <Stock stockID="000609"/>
-    <Stock stockID="000975"/>
-    <Stock stockID="000410"/>
-    <Stock stockID="000923"/>
-    <Stock stockID="000567"/>
-  </SelectList>
+  <Money total="67736.344"/>
+  <SelectList/>
   <CommissionOrderList/>
   <HoldStockList>
-    <Stock createDate="2017-01-26" createTime="09:32:00" curPrice="11.000" holdAvePrice="11.000" holdDayCnt="0" stockID="000410" totalAmount="3000" totalCanSell="0" transactionCost="52.800"/>
+    <Stock availableAmountVal="0" curPrice="17.200" refPrimeCostPriceVal="17.228" stockID="600030" totalAmount="1900"/>
   </HoldStockList>
-  <DeliveryOrderList>
-    <Stock amount="3000" date="2017-01-26" holdAvePrice="0.000" stockID="000410" time="09:32:00" tranPrice="11.000" tranact="BUY" transactionCost="0.000"/>
-  </DeliveryOrderList>
+  <DealOrderList>
+    <Stock amount="1900" price="17.200" stockID="600030" time="09:30:00" tranact="BUY"/>
+  </DealOrderList>
 </account>

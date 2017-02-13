@@ -44,15 +44,25 @@ public class StrategyCreate extends IStrategyCreate {
 //		{
 //			out_sr.bCreate = true;
 //		}
-				
-		// 建仓为跌幅一定时
-		float fYesterdayClosePrice = ctx.target().stock().GetLastYesterdayClosePrice();
-		float fNowPrice = ctx.target().stock().getLatestPrice();
-		float fRatio = (fNowPrice - fYesterdayClosePrice)/fYesterdayClosePrice;
 		
-		if(fRatio < -0.02)
+		
+		boolean bTest = true;
+		
+		if (bTest)
 		{
 			out_sr.bCreate = true;
+		}
+		else
+		{
+			// 建仓为跌幅一定时
+			float fYesterdayClosePrice = ctx.target().stock().GetLastYesterdayClosePrice();
+			float fNowPrice = ctx.target().stock().getLatestPrice();
+			float fRatio = (fNowPrice - fYesterdayClosePrice)/fYesterdayClosePrice;
+			
+			if(fRatio < -0.02)
+			{
+				out_sr.bCreate = true;
+			}
 		}
 	}
 

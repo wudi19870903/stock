@@ -1,11 +1,11 @@
 <config>
 	<tag name="BASE" output="0" />
 	<tag name="EVENT" output="0" />
-	<tag name="CTRL" output="1" />
+	<tag name="CTRL" output="0" />
 	<tag name="STOCKDATA" output="0" />
-	<tag name="SELECT" output="1" />
-	<tag name="CREATE" output="1" />
-	<tag name="CLEAR" output="1" />
+	<tag name="SELECT" output="0" />
+	<tag name="CREATE" output="0" />
+	<tag name="CLEAR" output="0" />
 	<tag name="ACCOUNT" output="1" />
 	<tag name="REPORT" output="1" />
 </config>

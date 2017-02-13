@@ -97,7 +97,7 @@ public class AccountPublicDef {
 		
 		public float profitRatio() // ÀûÈó±È£¨Ó¯¿÷±ÈÀý£©
 		{
-			return (curPrice - refPrimeCostPrice)/totalAmount;
+			return (curPrice - refPrimeCostPrice)/refPrimeCostPrice;
 		}
 	}
 	
