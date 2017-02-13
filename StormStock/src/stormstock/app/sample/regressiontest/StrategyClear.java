@@ -29,10 +29,6 @@ public class StrategyClear extends IStrategyClear {
 		
 		
 		HoldStock cHoldStock = ctx.target().holdStock();
-		if(cHoldStock.holdDayCnt > 10) // 持股天数大于10 卖出
-		{
-			out_sr.bClear = true;
-		}
 			
 		if(cHoldStock.profitRatio() > 0.02 || cHoldStock.profitRatio() < -0.02) // 止盈止损2个点卖
 		{

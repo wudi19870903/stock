@@ -3,7 +3,7 @@ package stormstock.fw.tranbase.account;
 import java.util.List;
 
 import stormstock.fw.tranbase.account.AccountPublicDef.CommissionOrder;
-import stormstock.fw.tranbase.account.AccountPublicDef.DeliveryOrder;
+import stormstock.fw.tranbase.account.AccountPublicDef.DealOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 import stormstock.fw.tranbase.stockdata.StockDay;
 
@@ -29,5 +29,5 @@ abstract public class IAccountOpe {
 	// 获得持股列表（包含已经持有的，与当天下单成交的）
 	abstract public List<HoldStock> getHoldStockList(String date, String time);
 	// 获得当日交割单列表（已成交的，包含买入和卖出的）
-	abstract public List<DeliveryOrder> getDeliveryOrderList();
+	abstract public List<DealOrder> getDealOrderList();
 }

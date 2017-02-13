@@ -9,7 +9,7 @@ import stormstock.fw.base.BQThread.BQThreadRequest;
 import stormstock.fw.base.BImageCurve;
 import stormstock.fw.event.ReportAnalysis;
 import stormstock.fw.tranbase.account.AccountControlIF;
-import stormstock.fw.tranbase.account.AccountPublicDef.DeliveryOrder;
+import stormstock.fw.tranbase.account.AccountPublicDef.DealOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 import stormstock.fw.tranbase.account.AccountPublicDef.TRANACT;
 import stormstock.fw.tranbase.com.GlobalUserObj;
@@ -47,7 +47,7 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 		float fTotalAssets = cAccountControlIF.getTotalAssets(m_date, m_time);
 		float fAvailableMoney = cAccountControlIF.getAvailableMoney();
 		List<HoldStock> cHoldStockList = cAccountControlIF.getHoldStockList(m_date, m_time);
-		List<DeliveryOrder> cDeliveryOrderList = cAccountControlIF.getDeliveryOrderList();
+		List<DealOrder> cDealOrderList = cAccountControlIF.getDealOrderList();
 		
 		// 添加当前总资产，可用钱
 		cDailyReport.fTotalAssets = fTotalAssets;
@@ -58,39 +58,36 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 		for(int i=0; i<cHoldStockList.size(); i++ )
 		{
 			HoldStock cHoldStock = cHoldStockList.get(i);
-			BLog.output("REPORT", "    -HoldStock: %s %s %s %.3f %.3f %d %.3f(%.3f) %d\n", 
-					cHoldStock.stockID, cHoldStock.createDate, cHoldStock.createTime,
-					cHoldStock.holdAvePrice, cHoldStock.curPrice, cHoldStock.totalAmount,
-					cHoldStock.curPrice*cHoldStock.totalAmount, cHoldStock.transactionCost,
-					cHoldStock.holdDayCnt);
+			BLog.output("REPORT", "    -HoldStock: %s %.3f %.3f %d %.3f\n", 
+					cHoldStock.stockID,
+					cHoldStock.refPrimeCostPrice, cHoldStock.curPrice, cHoldStock.totalAmount,
+					cHoldStock.curPrice*cHoldStock.totalAmount);
 		}
-		for(int i=0; i<cDeliveryOrderList.size(); i++ )
+		for(int i=0; i<cDealOrderList.size(); i++ )
 		{
-			DeliveryOrder cDeliveryOrder = cDeliveryOrderList.get(i);
+			DealOrder cDealOrder = cDealOrderList.get(i);
 			String tranOpe = "BUY"; 
-			if(cDeliveryOrder.tranAct == TRANACT.SELL ) tranOpe = "SELL";
+			if(cDealOrder.tranAct == TRANACT.SELL ) tranOpe = "SELL";
 				
-			BLog.output("REPORT", "    -DeliveryOrder: %s %s %s %s %.3f %.3f %d %.3f(%.3f)\n", 
-					cDeliveryOrder.date, cDeliveryOrder.time,
-					tranOpe, cDeliveryOrder.stockID, 
-					cDeliveryOrder.holdAvePrice, cDeliveryOrder.tranPrice, cDeliveryOrder.amount,
-					cDeliveryOrder.tranPrice*cDeliveryOrder.amount, cDeliveryOrder.transactionCost);
+			BLog.output("REPORT", "    -DealOrder: %s %s %s %d %.3f\n", 
+					cDealOrder.time, tranOpe, cDealOrder.stockID, 
+					cDealOrder.amount, cDealOrder.price);
 			
 			// 判断清仓交割单
-			boolean bIsClearDeliveryOrder = false;
+			boolean bIsClearDealOrder = false;
 			for(int j=0; j<cHoldStockList.size(); j++ )
 			{
 				HoldStock cHoldStock = cHoldStockList.get(j);
-				if(cHoldStock.stockID.equals(cDeliveryOrder.stockID))
+				if(cHoldStock.stockID.equals(cDealOrder.stockID))
 				{
-					bIsClearDeliveryOrder = false;
+					bIsClearDealOrder = false;
 					break;
 				}
 			}
-			if(bIsClearDeliveryOrder)
+			if(bIsClearDealOrder)
 			{
 				// 添加清仓交割单
-				cDailyReport.cClearDeliveryOrder.add(cDeliveryOrder);
+				cDailyReport.cClearDealOrder.add(cDealOrder);
 			}
 		}
 		

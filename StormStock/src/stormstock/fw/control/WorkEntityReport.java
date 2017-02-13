@@ -8,7 +8,6 @@ import stormstock.fw.base.BWaitObj;
 import stormstock.fw.event.ReportAnalysis;
 import stormstock.fw.event.StockCreateAnalysis;
 import stormstock.fw.tranbase.account.AccountControlIF;
-import stormstock.fw.tranbase.account.AccountPublicDef.DeliveryOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 import stormstock.fw.tranbase.com.GlobalUserObj;
 

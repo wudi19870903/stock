@@ -1,5 +1,7 @@
 package stormstock.fw.tranbase.account;
 
+import stormstock.ori.capi.CATHSAccount.TRANACT;
+
 public class AccountPublicDef {
 	
 	public enum ACCOUNTTYPE 
@@ -18,48 +20,44 @@ public class AccountPublicDef {
 	}
 	
 	/*
-	 * 股票委托单定义
+	 * 股票当日委托单定义
 	 */
 	public static class CommissionOrder 
 	{
-		public String date;
 		public String time;
-		public TRANACT tranAct; // 交易动作
 		public String stockID;
-		public int amount; 
-		public float price;
+		public TRANACT tranAct;
+		public int amount; // 委托数量
+		public float price; // 委托价格
 		
 		public void CopyFrom(CommissionOrder c)
 		{
-			tranAct = c.tranAct;
+			time = c.time;
 			stockID = c.stockID;
+			tranAct = c.tranAct;
 			amount = c.amount;
 			price = c.price;
 		}
 	}
 	
 	/*
-	 * 股票交割单定义
+	 * 股票当日成交单定义
 	 */
-	public static class DeliveryOrder 
+	public static class DealOrder 
 	{
-		public String date;
 		public String time;
-		public TRANACT tranAct;       // 交易动作
-		public String stockID;        // 股票ID
-		public int amount;            // 交易量
-		public float holdAvePrice;    // 持有均价
-		public float tranPrice;       // 交易价格
-		public float transactionCost; // 交易费用
+		public String stockID;
+		public TRANACT tranAct;
+		public int amount; // 成交数量
+		public float price; // 成交价格
 		
-		public void CopyFrom(DeliveryOrder c)
+		public void CopyFrom(DealOrder c)
 		{
-			tranAct = c.tranAct;
+			time = c.time;
 			stockID = c.stockID;
+			tranAct = c.tranAct;
 			amount = c.amount;
-			holdAvePrice = c.holdAvePrice;
-			tranPrice = c.tranPrice;
-			transactionCost = c.transactionCost;
+			price = c.price;
 		}
 	}
 	
@@ -71,37 +69,32 @@ public class AccountPublicDef {
 		public HoldStock()
 		{
 			stockID = "";
-			createDate = "0000-00-00";
-			createTime = "00:00:00";
-			holdDayCnt = 0;
 			totalAmount = 0;
-			totalCanSell = 0;
-			holdAvePrice = 0.0f;
+			availableAmount = 0;
+			refProfitLoss = 0.0f;
+			refPrimeCostPrice = 0.0f;
 			curPrice = 0.0f;
-			transactionCost = 0.0f;
 		}
 		
 		public float profit() // 利润值（盈亏金额，不计算交易费用）
 		{
-			return (curPrice - holdAvePrice)*totalAmount;
+			return (curPrice - refPrimeCostPrice)*totalAmount;
 		}
 		public float profitRatio() // 利润比（盈亏比例）
 		{
-			return (curPrice - holdAvePrice)/holdAvePrice;
+			return (curPrice - refPrimeCostPrice)/totalAmount;
 		}
 		
 		/**
 		 * 成员 *************************************************************
 		 */
+	
 		public String stockID; // 股票ID
-		public String createDate; // 建仓日期
-		public String createTime; // 建仓时间
-		public int holdDayCnt; // 持股天数（当天买入为0天）
 		public int totalAmount; // 持有总量（股）
-		public int totalCanSell; // 可卖数量
-		public float holdAvePrice; // 持有均价 
-		public float curPrice;   // 当前价格
-		public float transactionCost; // 交易费用
+		public int availableAmount; // 可卖数量
+		public float refProfitLoss; // 参考盈亏
+		public float refPrimeCostPrice; // 参考成本价
+		public float curPrice; // 当前价
 	}
 	
 }

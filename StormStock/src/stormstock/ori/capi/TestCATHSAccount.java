@@ -38,7 +38,7 @@ public class TestCATHSAccount {
 		// 总资产测试
 		{
 	        ResultTotalAssets cResultTotalAssets = CATHSAccount.getTotalAssets();
-	        fmt.format("CATHSAccount.getTotalAssets err(%d) AvailableMoney(%.2f)\n", cResultTotalAssets.error, cResultTotalAssets.totalAssets);
+	        fmt.format("CATHSAccount.getTotalAssets err(%d) TotalAssets(%.2f)\n", cResultTotalAssets.error, cResultTotalAssets.totalAssets);
 		}
 
 		// 所有股票总市值测试

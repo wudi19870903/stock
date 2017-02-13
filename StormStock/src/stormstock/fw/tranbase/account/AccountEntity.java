@@ -6,11 +6,9 @@ import java.util.List;
 import stormstock.fw.base.BLog;
 import stormstock.fw.tranbase.account.AccountPublicDef.ACCOUNTTYPE;
 import stormstock.fw.tranbase.account.AccountPublicDef.CommissionOrder;
-import stormstock.fw.tranbase.account.AccountPublicDef.DeliveryOrder;
+import stormstock.fw.tranbase.account.AccountPublicDef.DealOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 import stormstock.fw.tranbase.account.AccountPublicDef.TRANACT;
-import stormstock.fw.tranbase.stockdata.StockDataIF;
-import stormstock.fw.tranbase.stockdata.StockTime;
 
 public class AccountEntity {
 	
@@ -69,9 +67,9 @@ public class AccountEntity {
 	}
 	
 	// 获得当日交割单列表（已成交的，包含买入和卖出的）
-	public List<DeliveryOrder> getDeliveryOrderList()
+	public List<DealOrder> getDealOrderList()
 	{
-		return m_cIAccountOpe.getDeliveryOrderList();
+		return m_cIAccountOpe.getDealOrderList();
 	}
 		
 	// ***********************************************************************
@@ -125,39 +123,39 @@ public class AccountEntity {
 	}
 	
 	// 获得买交割单列表(已成交的)
-	public List<DeliveryOrder> getBuyDeliveryOrderList()
+	public List<DealOrder> getBuyDealOrderList()
 	{
-		List<DeliveryOrder> cBuyDeliveryOrderList = new ArrayList<DeliveryOrder>();
-		List<DeliveryOrder> cDeliveryOrderList = getDeliveryOrderList();
-		for(int i= 0;i<cDeliveryOrderList.size();i++)
+		List<DealOrder> cBuyDealOrderList = new ArrayList<DealOrder>();
+		List<DealOrder> cDealOrderList = getDealOrderList();
+		for(int i= 0;i<cDealOrderList.size();i++)
 		{
-			DeliveryOrder cDeliveryOrder = cDeliveryOrderList.get(i);
-			if(cDeliveryOrder.tranAct == TRANACT.BUY)
+			DealOrder cDealOrder = cDealOrderList.get(i);
+			if(cDealOrder.tranAct == TRANACT.BUY)
 			{
-				DeliveryOrder cNewDeliveryOrder = new DeliveryOrder();
-				cNewDeliveryOrder.CopyFrom(cDeliveryOrder);
-				cBuyDeliveryOrderList.add(cNewDeliveryOrder);
+				DealOrder cNewcDealOrder = new DealOrder();
+				cNewcDealOrder.CopyFrom(cDealOrder);
+				cBuyDealOrderList.add(cNewcDealOrder);
 			}
 		}
-		return cBuyDeliveryOrderList;
+		return cBuyDealOrderList;
 	}
 	
 	// 获得卖交割单列表(已成交的)
-	public List<DeliveryOrder> getSellDeliveryOrderList()
+	public List<DealOrder> getSellDealOrderList()
 	{
-		List<DeliveryOrder> cSellDeliveryOrderList = new ArrayList<DeliveryOrder>();
-		List<DeliveryOrder> cDeliveryOrderList = getDeliveryOrderList();
-		for(int i= 0;i<cDeliveryOrderList.size();i++)
+		List<DealOrder> cSellDealOrderList = new ArrayList<DealOrder>();
+		List<DealOrder> cDealOrderList = getDealOrderList();
+		for(int i= 0;i<cDealOrderList.size();i++)
 		{
-			DeliveryOrder cDeliveryOrder = cDeliveryOrderList.get(i);
-			if(cDeliveryOrder.tranAct == TRANACT.SELL)
+			DealOrder cDealOrder = cDealOrderList.get(i);
+			if(cDealOrder.tranAct == TRANACT.SELL)
 			{
-				DeliveryOrder cNewDeliveryOrder = new DeliveryOrder();
-				cNewDeliveryOrder.CopyFrom(cDeliveryOrder);
-				cSellDeliveryOrderList.add(cNewDeliveryOrder);
+				DealOrder cNewDealOrder = new DealOrder();
+				cNewDealOrder.CopyFrom(cDealOrder);
+				cSellDealOrderList.add(cNewDealOrder);
 			}
 		}
-		return cSellDeliveryOrderList;
+		return cSellDealOrderList;
 	}
 	
 	// 获得账户总资产
@@ -180,30 +178,27 @@ public class AccountEntity {
 		float fTotalAssets = this.getTotalAssets(date, time);
 		float fAvailableMoney = this.getAvailableMoney();
 		List<HoldStock> cStockHoldList = this.getHoldStockList(date, time);
-		List<DeliveryOrder> cDeliveryOrderList = this.getDeliveryOrderList();
+		List<DealOrder> cDealOrderList = this.getDealOrderList();
 		
 		BLog.output("ACCOUNT", "    -TotalAssets: %.3f\n", fTotalAssets);
 		BLog.output("ACCOUNT", "    -AvailableMoney: %.3f\n", fAvailableMoney);
 		for(int i=0; i<cStockHoldList.size(); i++ )
 		{
 			HoldStock cHoldStock = cStockHoldList.get(i);
-			BLog.output("ACCOUNT", "    -HoldStock: %s %s %s %.3f %.3f %d %.3f(%.3f) %d\n", 
-					cHoldStock.stockID, cHoldStock.createDate, cHoldStock.createTime,
-					cHoldStock.holdAvePrice, cHoldStock.curPrice, cHoldStock.totalAmount,
-					cHoldStock.curPrice*cHoldStock.totalAmount, cHoldStock.transactionCost,
-					cHoldStock.holdDayCnt);
+			BLog.output("ACCOUNT", "    -HoldStock: %s %.3f %.3f %d %.3f\n", 
+					cHoldStock.stockID, 
+					cHoldStock.refPrimeCostPrice, cHoldStock.curPrice, cHoldStock.totalAmount,
+					cHoldStock.curPrice*cHoldStock.totalAmount);
 		}
-		for(int i=0; i<cDeliveryOrderList.size(); i++ )
+		for(int i=0; i<cDealOrderList.size(); i++ )
 		{
-			DeliveryOrder cDeliveryOrder = cDeliveryOrderList.get(i);
+			DealOrder cDealOrder = cDealOrderList.get(i);
 			String tranOpe = "BUY"; 
-			if(cDeliveryOrder.tranAct == TRANACT.SELL ) tranOpe = "SELL";
+			if(cDealOrder.tranAct == TRANACT.SELL ) tranOpe = "SELL";
 				
-			BLog.output("ACCOUNT", "    -DeliveryOrder: %s %s %s %s %.3f %.3f %d %.3f(%.3f)\n", 
-					cDeliveryOrder.date, cDeliveryOrder.time,
-					tranOpe, cDeliveryOrder.stockID, 
-					cDeliveryOrder.holdAvePrice, cDeliveryOrder.tranPrice, cDeliveryOrder.amount,
-					cDeliveryOrder.tranPrice*cDeliveryOrder.amount, cDeliveryOrder.transactionCost);
+			BLog.output("ACCOUNT", "    -DealOrder: %s %s %s %d %.3f\n", 
+					cDealOrder.time, tranOpe, cDealOrder.stockID, 
+					cDealOrder.amount, cDealOrder.price);
 		}
 	}
 

@@ -3,7 +3,7 @@ package stormstock.fw.report;
 import java.util.ArrayList;
 import java.util.List;
 
-import stormstock.fw.tranbase.account.AccountPublicDef.DeliveryOrder;
+import stormstock.fw.tranbase.account.AccountPublicDef.DealOrder;
 
 /*
  * 信息收集器
@@ -16,12 +16,12 @@ public class InfoCollector {
 	{
 		public DailyReport(String date)
 		{
-			cClearDeliveryOrder = new ArrayList<DeliveryOrder>();
+			cClearDealOrder = new ArrayList<DealOrder>();
 		}
 		public String date; // 日期
 		public float fTotalAssets; // 总资产
 		public float fAvailableMoney; // 可用资金
-		public List<DeliveryOrder> cClearDeliveryOrder; // 清仓交割单列表
+		public List<DealOrder> cClearDealOrder; // 清仓交割单列表
 		
 		public float fSHComposite;
 	}

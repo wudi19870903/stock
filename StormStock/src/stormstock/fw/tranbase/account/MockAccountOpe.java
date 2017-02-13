@@ -5,7 +5,7 @@ import java.util.List;
 
 import stormstock.fw.base.BLog;
 import stormstock.fw.tranbase.account.AccountPublicDef.CommissionOrder;
-import stormstock.fw.tranbase.account.AccountPublicDef.DeliveryOrder;
+import stormstock.fw.tranbase.account.AccountPublicDef.DealOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 import stormstock.fw.tranbase.account.AccountPublicDef.TRANACT;
 import stormstock.fw.tranbase.account.MockAccountOpeStore.StoreEntity;
@@ -35,7 +35,7 @@ public class MockAccountOpe extends IAccountOpe {
 			m_stockSelectList = new ArrayList<String>();
 			m_commissionOrderList = new ArrayList<CommissionOrder>();
 			m_holdStockList = new ArrayList<HoldStock>();
-			m_deliveryOrderList = new ArrayList<DeliveryOrder>();
+			m_dealOrderList = new ArrayList<DealOrder>();
 			
 			//load
 			load();
@@ -56,12 +56,11 @@ public class MockAccountOpe extends IAccountOpe {
 		for(int i = 0; i< m_holdStockList.size(); i++)
 		{
 			cHoldStock = m_holdStockList.get(i);
-			cHoldStock.totalCanSell = cHoldStock.totalAmount;
-			cHoldStock.holdDayCnt = cHoldStock.holdDayCnt + 1;
+			cHoldStock.availableAmount = cHoldStock.totalAmount;
 		}
 		
 		// 新一天时，交割单清空
-		m_deliveryOrderList.clear();
+		m_dealOrderList.clear();
 		
 		store();
 		
@@ -91,8 +90,6 @@ public class MockAccountOpe extends IAccountOpe {
 		{
 			HoldStock cNewHoldStock = new HoldStock();
 			cNewHoldStock.stockID = stockID;
-			cNewHoldStock.createDate = date;
-			cNewHoldStock.createTime = time;
 			cNewHoldStock.curPrice = price;
 			m_holdStockList.add(cNewHoldStock);
 			cHoldStock = cNewHoldStock;
@@ -101,12 +98,11 @@ public class MockAccountOpe extends IAccountOpe {
 		// 重置对象
 		float transactionCosts = m_transactionCostsRatio*price*realBuyAmount;
 		int oriTotalAmount = cHoldStock.totalAmount;
-		float oriHoldAvePrice = cHoldStock.holdAvePrice;
+		float oriHoldAvePrice = cHoldStock.refPrimeCostPrice;
 		cHoldStock.totalAmount = cHoldStock.totalAmount + realBuyAmount;
-		cHoldStock.holdAvePrice = (oriHoldAvePrice*oriTotalAmount + price*realBuyAmount)/cHoldStock.totalAmount;
+		cHoldStock.refPrimeCostPrice = (oriHoldAvePrice*oriTotalAmount + price*realBuyAmount)/cHoldStock.totalAmount;
 		cHoldStock.curPrice = price;
-
-		cHoldStock.transactionCost = cHoldStock.transactionCost + transactionCosts;
+		
 		m_money = m_money - realBuyAmount*price;
 		
 		BLog.output("ACCOUNT", " @Buy [%s %s] [%s %.3f %d %.3f(%.3f) %.3f] \n", 
@@ -114,16 +110,14 @@ public class MockAccountOpe extends IAccountOpe {
 				stockID, price, realBuyAmount, price*realBuyAmount, transactionCosts, m_money);
 		
 		// 生成交割单
-		DeliveryOrder cDeliveryOrder = new DeliveryOrder();
-		cDeliveryOrder.date = date;
-		cDeliveryOrder.time = time;
-		cDeliveryOrder.tranAct = TRANACT.BUY;
-		cDeliveryOrder.stockID = stockID;
-		cDeliveryOrder.holdAvePrice = oriHoldAvePrice;
-		cDeliveryOrder.tranPrice = price;
-		cDeliveryOrder.amount = realBuyAmount;
-		cDeliveryOrder.transactionCost = 0.0f; // 交割单的交易费用在全部卖出时结算
-		m_deliveryOrderList.add(cDeliveryOrder);
+		DealOrder cDealOrder = new DealOrder();
+		cDealOrder.time = time;
+		cDealOrder.tranAct = TRANACT.BUY;
+		cDealOrder.stockID = stockID;
+		cDealOrder.amount = realBuyAmount;
+		cDealOrder.price = price;
+		
+		m_dealOrderList.add(cDealOrder);
 		
 		store();
 		
@@ -153,43 +147,38 @@ public class MockAccountOpe extends IAccountOpe {
 			
 			// 重置对象
 			int oriTotalAmount = cHoldStock.totalAmount;
-			float oriHoldAvePrice = cHoldStock.holdAvePrice;
+			float oriHoldAvePrice = cHoldStock.refPrimeCostPrice;
 			cHoldStock.totalAmount = cHoldStock.totalAmount - realSellAmount;
 			if(cHoldStock.totalAmount == 0) // 卖光则不计算买入价格 清零
 			{
-				cHoldStock.holdAvePrice = 0.0f;
+				cHoldStock.refPrimeCostPrice = 0.0f;
 			}
 			else
 			{
-				cHoldStock.holdAvePrice = (oriHoldAvePrice*oriTotalAmount - price*realSellAmount)/cHoldStock.totalAmount;
+				cHoldStock.refPrimeCostPrice = (oriHoldAvePrice*oriTotalAmount - price*realSellAmount)/cHoldStock.totalAmount;
 			}
 			cHoldStock.curPrice = price;
 			m_money = m_money + price*realSellAmount;
 			
 			// 清仓计算
-			float DeliveryOrder_transactionCost = 0.0f;
+			float DealOrder_transactionCost = 0.0f;
 			if(cHoldStock.totalAmount == 0)
 			{
-				m_money = m_money - cHoldStock.transactionCost;
-				DeliveryOrder_transactionCost = cHoldStock.transactionCost;
 				m_holdStockList.remove(cHoldStock);
 			}
 			
-			BLog.output("ACCOUNT", " @Sell [%s %s] [%s %.3f %d %.3f(%.3f) %.3f] \n", 
+			BLog.output("ACCOUNT", " @Sell [%s %s] [%s %.3f %d %.3f %.3f] \n", 
 					date, time,
-					stockID, price, realSellAmount, price*realSellAmount, cHoldStock.transactionCost, m_money);
+					stockID, price, realSellAmount, price*realSellAmount, m_money);
 			
 			// 生成交割单
-			DeliveryOrder cDeliveryOrder = new DeliveryOrder();
-			cDeliveryOrder.date = date;
-			cDeliveryOrder.time = time;
-			cDeliveryOrder.tranAct = TRANACT.SELL;
-			cDeliveryOrder.stockID = stockID;
-			cDeliveryOrder.holdAvePrice = oriHoldAvePrice;
-			cDeliveryOrder.tranPrice = price;
-			cDeliveryOrder.amount = realSellAmount;
-			cDeliveryOrder.transactionCost = DeliveryOrder_transactionCost; // 交割单的交易费用在全部卖出时结算
-			m_deliveryOrderList.add(cDeliveryOrder);
+			DealOrder cDealOrder = new DealOrder();
+			cDealOrder.time = time;
+			cDealOrder.tranAct = TRANACT.SELL;
+			cDealOrder.stockID = stockID;
+			cDealOrder.price = price;
+			cDealOrder.amount = realSellAmount;
+			m_dealOrderList.add(cDealOrder);
 			
 			store();
 			
@@ -284,8 +273,8 @@ public class MockAccountOpe extends IAccountOpe {
 	}
 	
 	@Override
-	public List<DeliveryOrder> getDeliveryOrderList() {
-		return m_deliveryOrderList;
+	public List<DealOrder> getDealOrderList() {
+		return m_dealOrderList;
 	}
 	
 	private void load()
@@ -302,8 +291,8 @@ public class MockAccountOpe extends IAccountOpe {
 			    m_commissionOrderList.addAll(cStoreEntity.commissionOrderList);
 			    m_holdStockList.clear();
 			    m_holdStockList.addAll(cStoreEntity.holdStockList);
-			    m_deliveryOrderList.clear();
-			    m_deliveryOrderList.addAll(cStoreEntity.deliveryOrderList);
+			    m_dealOrderList.clear();
+			    m_dealOrderList.addAll(cStoreEntity.dealOrderList);
 			}
 		}
 	}
@@ -317,7 +306,7 @@ public class MockAccountOpe extends IAccountOpe {
 			cStoreEntity.stockSelectList = m_stockSelectList;
 			cStoreEntity.commissionOrderList = m_commissionOrderList;
 			cStoreEntity.holdStockList = m_holdStockList;
-			cStoreEntity.deliveryOrderList = m_deliveryOrderList;
+			cStoreEntity.dealOrderList = m_dealOrderList;
 			m_mockAccountOpeStore.store(cStoreEntity);
 		}
 	}
@@ -337,5 +326,5 @@ public class MockAccountOpe extends IAccountOpe {
 	private List<String> m_stockSelectList; // 选股列表
 	private List<CommissionOrder> m_commissionOrderList; // 模拟账户中  下单直接成交, 委托单一直未空
 	private List<HoldStock> m_holdStockList;
-	private List<DeliveryOrder> m_deliveryOrderList;
+	private List<DealOrder> m_dealOrderList;
 }

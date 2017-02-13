@@ -6,7 +6,7 @@ import java.util.List;
 import stormstock.fw.base.BLog;
 import stormstock.fw.tranbase.account.AccountPublicDef.ACCOUNTTYPE;
 import stormstock.fw.tranbase.account.AccountPublicDef.CommissionOrder;
-import stormstock.fw.tranbase.account.AccountPublicDef.DeliveryOrder;
+import stormstock.fw.tranbase.account.AccountPublicDef.DealOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 
 /*
@@ -138,9 +138,9 @@ public class AccountControlIF {
 	}
 	
 	// 获得交割单列表
-	public List<DeliveryOrder> getDeliveryOrderList()
+	public List<DealOrder> getDealOrderList()
 	{
-		return m_account.getDeliveryOrderList();
+		return m_account.getDealOrderList();
 	}
 	
 	/**

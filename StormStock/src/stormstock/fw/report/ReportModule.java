@@ -11,7 +11,7 @@ import stormstock.fw.event.ReportAnalysis;
 import stormstock.fw.event.StockClearAnalysis;
 import stormstock.fw.stockclearanalyzer.ClearWorkRequest;
 import stormstock.fw.tranbase.account.AccountControlIF;
-import stormstock.fw.tranbase.account.AccountPublicDef.DeliveryOrder;
+import stormstock.fw.tranbase.account.AccountPublicDef.DealOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 import stormstock.fw.tranbase.com.GlobalUserObj;
 

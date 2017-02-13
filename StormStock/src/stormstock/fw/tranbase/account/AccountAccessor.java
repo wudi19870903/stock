@@ -3,7 +3,7 @@ package stormstock.fw.tranbase.account;
 import java.util.List;
 
 import stormstock.fw.tranbase.account.AccountPublicDef.CommissionOrder;
-import stormstock.fw.tranbase.account.AccountPublicDef.DeliveryOrder;
+import stormstock.fw.tranbase.account.AccountPublicDef.DealOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 
 /*
@@ -43,9 +43,9 @@ public class AccountAccessor {
 		return m_accountControlIF.getHoldStock(m_date, m_time, stockID);
 	}
 	
-	public List<DeliveryOrder> getDeliveryOrderList()
+	public List<DealOrder> getDealOrderList()
 	{
-		return m_accountControlIF.getDeliveryOrderList();
+		return m_accountControlIF.getDealOrderList();
 	}
 
 	private String m_date;

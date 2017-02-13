@@ -31,7 +31,7 @@ import org.xml.sax.InputSource;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BUtilsXML;
 import stormstock.fw.tranbase.account.AccountPublicDef.CommissionOrder;
-import stormstock.fw.tranbase.account.AccountPublicDef.DeliveryOrder;
+import stormstock.fw.tranbase.account.AccountPublicDef.DealOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 import stormstock.fw.tranbase.account.AccountPublicDef.TRANACT;
 
@@ -43,7 +43,7 @@ public class MockAccountOpeStore {
 		List<String> stockSelectList;
 		List<CommissionOrder> commissionOrderList;
 		List<HoldStock> holdStockList;
-		List<DeliveryOrder> deliveryOrderList;
+		List<DealOrder> dealOrderList;
 	}
 	
 	public MockAccountOpeStore(String accountID, String password)
@@ -153,7 +153,6 @@ public class MockAccountOpeStore {
         		String priceVal =String.format("%.3f", cCommissionOrder.price);
         				
         		Element Node_Stock = doc.createElement("Stock");
-        		Node_Stock.setAttribute("date", cCommissionOrder.date);
         		Node_Stock.setAttribute("time", cCommissionOrder.time);
         		Node_Stock.setAttribute("tranact", tranactVal);
         		Node_Stock.setAttribute("stockID", cCommissionOrder.stockID);
@@ -169,51 +168,40 @@ public class MockAccountOpeStore {
         	for(int i=0;i<cStoreEntity.holdStockList.size();i++)
         	{
         		HoldStock cHoldStock = cStoreEntity.holdStockList.get(i);
-        		String holdDayCntVal = String.format("%d", cHoldStock.holdDayCnt);
         		String totalAmountVal =String.format("%d", cHoldStock.totalAmount);
-        		String totalCanSellVal =String.format("%d", cHoldStock.totalCanSell);
-        		String holdAvePriceVal =String.format("%.3f", cHoldStock.holdAvePrice);
+        		String availableAmountVal =String.format("%d", cHoldStock.availableAmount);
+        		String refPrimeCostPriceVal =String.format("%.3f", cHoldStock.refPrimeCostPrice);
         		String curPriceVal =String.format("%.3f", cHoldStock.curPrice);
-        		String transactionCostVal =String.format("%.3f", cHoldStock.transactionCost);
         				
         		Element Node_Stock = doc.createElement("Stock");
         		Node_Stock.setAttribute("stockID", cHoldStock.stockID);
-        		Node_Stock.setAttribute("createDate", cHoldStock.createDate);
-        		Node_Stock.setAttribute("createTime", cHoldStock.createTime);
-        		Node_Stock.setAttribute("holdDayCnt", holdDayCntVal);
         		Node_Stock.setAttribute("totalAmount", totalAmountVal);
-        		Node_Stock.setAttribute("totalCanSell", totalCanSellVal);
-        		Node_Stock.setAttribute("holdAvePrice", holdAvePriceVal);
+        		Node_Stock.setAttribute("availableAmountVal", availableAmountVal);
+        		Node_Stock.setAttribute("refPrimeCostPriceVal", refPrimeCostPriceVal);
         		Node_Stock.setAttribute("curPrice", curPriceVal);
-        		Node_Stock.setAttribute("transactionCost", transactionCostVal);
         		Node_HoldStockList.appendChild(Node_Stock);
         	}
         	
         	// CommissionOrderList
-        	Element Node_DeliveryOrderList=doc.createElement("DeliveryOrderList");
-        	root.appendChild(Node_DeliveryOrderList);
-        	for(int i=0;i<cStoreEntity.deliveryOrderList.size();i++)
+        	Element Node_DealOrderList=doc.createElement("DealOrderList");
+        	root.appendChild(Node_DealOrderList);
+        	for(int i=0;i<cStoreEntity.dealOrderList.size();i++)
         	{
-        		DeliveryOrder cDeliveryOrder = cStoreEntity.deliveryOrderList.get(i);
+        		DealOrder cDealOrder = cStoreEntity.dealOrderList.get(i);
         		String tranactVal = "";
-        		if(cDeliveryOrder.tranAct == TRANACT.BUY) tranactVal= "BUY";
-        		if(cDeliveryOrder.tranAct == TRANACT.SELL) tranactVal= "SELL";
-        		String amountVal = String.format("%d", cDeliveryOrder.amount);
-        		String holdAvePriceVal =String.format("%.3f", cDeliveryOrder.holdAvePrice);
-        		String tranPriceVal =String.format("%.3f", cDeliveryOrder.tranPrice);
-        		String transactionCostVal =String.format("%.3f", cDeliveryOrder.transactionCost);
+        		if(cDealOrder.tranAct == TRANACT.BUY) tranactVal= "BUY";
+        		if(cDealOrder.tranAct == TRANACT.SELL) tranactVal= "SELL";
+        		String amountVal = String.format("%d", cDealOrder.amount);
+        		String priceVal =String.format("%.3f", cDealOrder.price);
         				
         		Element Node_Stock = doc.createElement("Stock");
-        		Node_Stock.setAttribute("date", cDeliveryOrder.date);
-        		Node_Stock.setAttribute("time", cDeliveryOrder.time);
+        		Node_Stock.setAttribute("time", cDealOrder.time);
         		Node_Stock.setAttribute("tranact", tranactVal);
-        		Node_Stock.setAttribute("stockID", cDeliveryOrder.stockID);
+        		Node_Stock.setAttribute("stockID", cDealOrder.stockID);
         		Node_Stock.setAttribute("amount", amountVal);
-        		Node_Stock.setAttribute("holdAvePrice", holdAvePriceVal);
-        		Node_Stock.setAttribute("tranPrice", tranPriceVal);
-        		Node_Stock.setAttribute("transactionCost", transactionCostVal);
+        		Node_Stock.setAttribute("price", priceVal);
         		
-        		Node_DeliveryOrderList.appendChild(Node_Stock);
+        		Node_DealOrderList.appendChild(Node_Stock);
         	}
         }
 		
@@ -372,7 +360,6 @@ public class MockAccountOpeStore {
 			        	Node node_Stock = nodelist_Stock.item(i);
 			        	if(node_Stock.getNodeType() == Node.ELEMENT_NODE)
 			        	{
-			        		String date = ((Element)node_Stock).getAttribute("date");
 			        		String time = ((Element)node_Stock).getAttribute("time");
 				        	String tranAct = ((Element)node_Stock).getAttribute("tranAct");
 				        	String stockID = ((Element)node_Stock).getAttribute("stockID");
@@ -380,7 +367,6 @@ public class MockAccountOpeStore {
 				        	String price = ((Element)node_Stock).getAttribute("price");
 				        	
 				        	CommissionOrder cCommissionOrder = new CommissionOrder();
-				        	cCommissionOrder.date = date;
 				        	cCommissionOrder.time = time;
 				        	if(tranAct.equals("BUY")) cCommissionOrder.tranAct = TRANACT.BUY;
 				        	if(tranAct.equals("SELL")) cCommissionOrder.tranAct = TRANACT.SELL;
@@ -406,25 +392,18 @@ public class MockAccountOpeStore {
 			        	if(node_Stock.getNodeType() == Node.ELEMENT_NODE)
 			        	{
 			        		String stockID = ((Element)node_Stock).getAttribute("stockID");
-			        		String createDate = ((Element)node_Stock).getAttribute("createDate");
-				        	String createTime = ((Element)node_Stock).getAttribute("createTime");
-				        	String holdDayCnt = ((Element)node_Stock).getAttribute("holdDayCnt");
 				        	String totalAmount = ((Element)node_Stock).getAttribute("totalAmount");
-				        	String totalCanSell = ((Element)node_Stock).getAttribute("totalCanSell");
-				        	String holdAvePrice = ((Element)node_Stock).getAttribute("holdAvePrice");
+				        	String availableAmount = ((Element)node_Stock).getAttribute("availableAmount");
+				        	String refPrimeCostPrice = ((Element)node_Stock).getAttribute("refPrimeCostPrice");
 				        	String curPrice = ((Element)node_Stock).getAttribute("curPrice");
 				        	String transactionCost = ((Element)node_Stock).getAttribute("transactionCost");
 				        	
 				        	HoldStock cHoldStock = new HoldStock();
 				        	cHoldStock.stockID = stockID;
-				        	cHoldStock.createDate = createDate;
-				        	cHoldStock.createTime = createTime;
-				        	cHoldStock.holdDayCnt = Integer.parseInt(holdDayCnt);
 				        	cHoldStock.totalAmount = Integer.parseInt(totalAmount);
-				        	cHoldStock.totalCanSell = Integer.parseInt(totalCanSell);
-				        	cHoldStock.holdAvePrice = Float.parseFloat(holdAvePrice);
+				        	cHoldStock.availableAmount = Integer.parseInt(availableAmount);
+				        	cHoldStock.refPrimeCostPrice = Float.parseFloat(refPrimeCostPrice);
 				        	cHoldStock.curPrice = Float.parseFloat(curPrice);
-				        	cHoldStock.transactionCost = Float.parseFloat(transactionCost);
 				        	holdStockList.add(cHoldStock);
 			        	}
 			        }
@@ -432,13 +411,13 @@ public class MockAccountOpeStore {
 		    }
 		    
 		    // ½»¸îµ¥¼ÓÔØ 
-		    List<DeliveryOrder> deliveryOrderList = new ArrayList<DeliveryOrder>();
+		    List<DealOrder> dealOrderList = new ArrayList<DealOrder>();
 		    {
-		    	NodeList nodelist_DeliveryOrderList = rootElement.getElementsByTagName("DeliveryOrderList");
-		        if(nodelist_DeliveryOrderList.getLength() == 1)
+		    	NodeList nodelist_DealOrderList = rootElement.getElementsByTagName("DealOrderList");
+		        if(nodelist_DealOrderList.getLength() == 1)
 	        	{
-		        	Node Node_DeliveryOrderList = nodelist_DeliveryOrderList.item(0);
-		        	NodeList nodelist_Stock = Node_DeliveryOrderList.getChildNodes();
+		        	Node Node_DealOrderList = nodelist_DealOrderList.item(0);
+		        	NodeList nodelist_Stock = Node_DealOrderList.getChildNodes();
 			        for (int i = 0; i < nodelist_Stock.getLength(); i++) {
 			        	Node node_Stock = nodelist_Stock.item(i);
 			        	if(node_Stock.getNodeType() == Node.ELEMENT_NODE)
@@ -448,21 +427,16 @@ public class MockAccountOpeStore {
 				        	String tranAct = ((Element)node_Stock).getAttribute("tranAct");
 				        	String stockID = ((Element)node_Stock).getAttribute("stockID");
 				        	String amount = ((Element)node_Stock).getAttribute("amount");
-				        	String holdAvePrice = ((Element)node_Stock).getAttribute("holdAvePrice");
-				        	String tranPrice = ((Element)node_Stock).getAttribute("tranPrice");
-				        	String transactionCost = ((Element)node_Stock).getAttribute("transactionCost");
+				        	String price = ((Element)node_Stock).getAttribute("price");
 				        	
-				        	DeliveryOrder cDeliveryOrder = new DeliveryOrder();
-				        	cDeliveryOrder.date = date;
-				        	cDeliveryOrder.time = time;
-				        	if(tranAct.equals("BUY")) cDeliveryOrder.tranAct = TRANACT.BUY;
-				        	if(tranAct.equals("SELL")) cDeliveryOrder.tranAct = TRANACT.SELL;
-				        	cDeliveryOrder.stockID = stockID;
-				        	cDeliveryOrder.amount = Integer.parseInt(amount);
-				        	cDeliveryOrder.holdAvePrice = Float.parseFloat(holdAvePrice);
-				        	cDeliveryOrder.tranPrice = Float.parseFloat(tranPrice);
-				        	cDeliveryOrder.transactionCost = Float.parseFloat(transactionCost);
-				        	deliveryOrderList.add(cDeliveryOrder);
+				        	DealOrder cDealOrder = new DealOrder();
+				        	cDealOrder.time = time;
+				        	if(tranAct.equals("BUY")) cDealOrder.tranAct = TRANACT.BUY;
+				        	if(tranAct.equals("SELL")) cDealOrder.tranAct = TRANACT.SELL;
+				        	cDealOrder.stockID = stockID;
+				        	cDealOrder.amount = Integer.parseInt(amount);
+				        	cDealOrder.price = Float.parseFloat(price);
+				        	dealOrderList.add(cDealOrder);
 			        	}
 			        }
 	        	}
@@ -473,7 +447,7 @@ public class MockAccountOpeStore {
 		    cStoreEntity.stockSelectList = stockSelectList;
 		    cStoreEntity.commissionOrderList = commissionOrderList;
 		    cStoreEntity.holdStockList = holdStockList;
-		    cStoreEntity.deliveryOrderList = deliveryOrderList;
+		    cStoreEntity.dealOrderList = dealOrderList;
 		    return cStoreEntity;
 		}
 		catch(Exception e)

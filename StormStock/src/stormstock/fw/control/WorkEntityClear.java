@@ -33,7 +33,7 @@ public class WorkEntityClear {
 		for(int i=0;i<cHoldStockList.size();i++)
 		{
 			HoldStock cHoldStock = cHoldStockList.get(i);
-			if(cHoldStock.totalCanSell > 0)
+			if(cHoldStock.availableAmount > 0)
 			{
 				msg_builder.addStockID(cHoldStock.stockID);
 			}

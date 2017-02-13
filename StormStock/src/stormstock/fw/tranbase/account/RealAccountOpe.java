@@ -5,7 +5,7 @@ import java.util.List;
 
 import stormstock.fw.base.BLog;
 import stormstock.fw.tranbase.account.AccountPublicDef.CommissionOrder;
-import stormstock.fw.tranbase.account.AccountPublicDef.DeliveryOrder;
+import stormstock.fw.tranbase.account.AccountPublicDef.DealOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 
 public class RealAccountOpe extends IAccountOpe {
@@ -108,7 +108,7 @@ public class RealAccountOpe extends IAccountOpe {
 	}
 
 	@Override
-	public List<DeliveryOrder> getDeliveryOrderList() {
+	public List<DealOrder> getDealOrderList() {
 		// TODO Auto-generated method stub
 		return null;
 	}
