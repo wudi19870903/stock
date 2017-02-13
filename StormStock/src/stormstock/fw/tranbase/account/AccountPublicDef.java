@@ -66,35 +66,39 @@ public class AccountPublicDef {
 	 */
 	public static class HoldStock 
 	{
+		public String stockID; // 股票ID
+		public int totalAmount; // 持有总量（股）
+		public int availableAmount; // 可卖数量
+		public float refPrimeCostPrice; // 参考成本价
+		public float curPrice; // 当前价
+		
 		public HoldStock()
 		{
 			stockID = "";
 			totalAmount = 0;
 			availableAmount = 0;
-			refProfitLoss = 0.0f;
 			refPrimeCostPrice = 0.0f;
 			curPrice = 0.0f;
+		}
+		
+		public void CopyFrom(HoldStock c)
+		{
+			stockID = c.stockID;
+			totalAmount = c.totalAmount;
+			availableAmount = c.availableAmount;
+			refPrimeCostPrice = c.refPrimeCostPrice;
+			curPrice = c.curPrice;
 		}
 		
 		public float profit() // 利润值（盈亏金额，不计算交易费用）
 		{
 			return (curPrice - refPrimeCostPrice)*totalAmount;
 		}
+		
 		public float profitRatio() // 利润比（盈亏比例）
 		{
 			return (curPrice - refPrimeCostPrice)/totalAmount;
 		}
-		
-		/**
-		 * 成员 *************************************************************
-		 */
-	
-		public String stockID; // 股票ID
-		public int totalAmount; // 持有总量（股）
-		public int availableAmount; // 可卖数量
-		public float refProfitLoss; // 参考盈亏
-		public float refPrimeCostPrice; // 参考成本价
-		public float curPrice; // 当前价
 	}
 	
 }
