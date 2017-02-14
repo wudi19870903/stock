@@ -1,5 +1,6 @@
 package stormstock.fw.control;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import stormstock.fw.base.BEventSys;
@@ -29,7 +30,8 @@ public class WorkEntityClear {
 		
 		// 从账户拉取已持股
 		AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
-		List<HoldStock> cHoldStockList = accIF.getHoldStockList(null,null);
+		List<HoldStock> cHoldStockList = new ArrayList<HoldStock>();
+		accIF.getHoldStockList(null,null,cHoldStockList);
 		for(int i=0;i<cHoldStockList.size();i++)
 		{
 			HoldStock cHoldStock = cHoldStockList.get(i);

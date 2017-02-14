@@ -12,6 +12,7 @@ import stormstock.fw.event.StockCreateAnalysis;
 import stormstock.fw.event.Transaction;
 import stormstock.fw.tranbase.account.AccountAccessor;
 import stormstock.fw.tranbase.account.AccountControlIF;
+import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 import stormstock.fw.tranbase.com.GlobalUserObj;
 import stormstock.fw.tranbase.com.IStrategyCreate;
 import stormstock.fw.tranbase.com.IStrategyCreate.CreateResult;
@@ -135,7 +136,10 @@ public class CreateWorkRequest extends BQThreadRequest {
 			
 		// 根据建仓策略，做成建仓项
 		int create_max_count = cIStrategyCreate.strategy_create_max_count();
-		int alreadyCount = accIF.getHoldStockList(null, null).size() + accIF.getBuyCommissionOrderList().size();
+		
+		List<HoldStock> cHoldStockList = new ArrayList<HoldStock>();
+		accIF.getHoldStockList(null, null, cHoldStockList);
+		int alreadyCount = cHoldStockList.size() + accIF.getBuyCommissionOrderList().size();
 		int buyStockCount = create_max_count - alreadyCount;
 		buyStockCount = Math.min(buyStockCount,cCreateResultWrapperList.size());
 		

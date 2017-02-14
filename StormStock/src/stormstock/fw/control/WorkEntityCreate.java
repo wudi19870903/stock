@@ -1,5 +1,6 @@
 package stormstock.fw.control;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import stormstock.fw.base.BEventSys;
@@ -28,7 +29,8 @@ public class WorkEntityCreate {
 		
 		// 从账户拉取已选股票
 		AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
-		List<String> cSelectIDList = accIF.getStockSelectList(); 
+		List<String> cSelectIDList = new ArrayList<String>();
+		accIF.getStockSelectList(cSelectIDList); 
 		for(int i=0;i<cSelectIDList.size();i++)
 		{
 			msg_builder.addStockID(cSelectIDList.get(i));

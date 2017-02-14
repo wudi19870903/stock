@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import stormstock.fw.base.BLog;
+import stormstock.fw.base.BTypeDefine.RefFloat;
 import stormstock.fw.tranbase.account.AccountPublicDef.ACCOUNTTYPE;
 import stormstock.fw.tranbase.account.AccountPublicDef.CommissionOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.DealOrder;
@@ -65,19 +66,19 @@ public class AccountControlIF {
 		return m_account.getTotalAssets(date, time);
 	}
 	
-	public float getAvailableMoney()
+	public int getAvailableMoney(RefFloat out_availableMoney)
 	{
-		return m_account.getAvailableMoney();
+		return m_account.getAvailableMoney(out_availableMoney);
 	}
 	
-	public void setStockSelectList(List<String> stockIDList)
+	public int setStockSelectList(List<String> stockIDList)
 	{
-		m_account.setStockSelectList(stockIDList);
+		return m_account.setStockSelectList(stockIDList);
 	}
 	
-	public List<String> getStockSelectList()
+	public int getStockSelectList(List<String> out_list)
 	{
-		return m_account.getStockSelectList();
+		return m_account.getStockSelectList(out_list);
 	}
 
 	/*
@@ -99,9 +100,9 @@ public class AccountControlIF {
 	}
 	
 	// 获得委托列表（未成交）
-	public List<CommissionOrder> getCommissionOrderList()
+	public int getCommissionOrderList(List<CommissionOrder> out_list)
 	{
-		return m_account.getCommissionOrderList();
+		return m_account.getCommissionOrderList(out_list);
 	}
 	// 获得买单委托列表（未成交）
 	public List<CommissionOrder> getBuyCommissionOrderList()
@@ -120,13 +121,14 @@ public class AccountControlIF {
 	 * 时间用户更新现价
 	 * 如果传入null，则不更新现价
 	 */
-	public List<HoldStock> getHoldStockList(String date, String time)
+	public int getHoldStockList(String date, String time, List<HoldStock> out_list)
 	{
-		return m_account.getHoldStockList(date, time);
+		return m_account.getHoldStockList(date, time, out_list);
 	}
 	public HoldStock getHoldStock(String date, String time, String stockID)
 	{
-		List<HoldStock> cHoldStockList = getHoldStockList(date, time);
+		List<HoldStock> cHoldStockList = new ArrayList<HoldStock>();
+		getHoldStockList(date, time, cHoldStockList);
 		for(int i=0;i<cHoldStockList.size();i++)
 		{
 			if(cHoldStockList.get(i).stockID.equals(stockID))
@@ -138,9 +140,9 @@ public class AccountControlIF {
 	}
 	
 	// 获得交割单列表
-	public List<DealOrder> getDealOrderList()
+	public int getDealOrderList(List<DealOrder> out_list)
 	{
-		return m_account.getDealOrderList();
+		return m_account.getDealOrderList(out_list);
 	}
 	
 	/**

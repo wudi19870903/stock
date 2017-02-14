@@ -6,6 +6,7 @@ import java.util.List;
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BQThread.BQThreadRequest;
+import stormstock.fw.base.BTypeDefine.RefFloat;
 import stormstock.fw.base.BImageCurve;
 import stormstock.fw.event.ReportAnalysis;
 import stormstock.fw.tranbase.account.AccountControlIF;
@@ -45,16 +46,19 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 		
 		
 		float fTotalAssets = cAccountControlIF.getTotalAssets(m_date, m_time);
-		float fAvailableMoney = cAccountControlIF.getAvailableMoney();
-		List<HoldStock> cHoldStockList = cAccountControlIF.getHoldStockList(m_date, m_time);
-		List<DealOrder> cDealOrderList = cAccountControlIF.getDealOrderList();
+		RefFloat availableMoney = new RefFloat();
+		cAccountControlIF.getAvailableMoney(availableMoney);
+		List<HoldStock> cHoldStockList = new ArrayList<HoldStock>();
+		cAccountControlIF.getHoldStockList(m_date, m_time, cHoldStockList);
+		List<DealOrder> cDealOrderList = new ArrayList<DealOrder>();
+		cAccountControlIF.getDealOrderList(cDealOrderList);
 		
 		// 添加当前总资产，可用钱
 		cDailyReport.fTotalAssets = fTotalAssets;
-		cDailyReport.fAvailableMoney = fAvailableMoney;
+		cDailyReport.fAvailableMoney = availableMoney.value;
 		
 		BLog.output("REPORT", "    -TotalAssets: %.3f\n", fTotalAssets);
-		BLog.output("REPORT", "    -AvailableMoney: %.3f\n", fAvailableMoney);
+		BLog.output("REPORT", "    -AvailableMoney: %.3f\n", availableMoney.value);
 		for(int i=0; i<cHoldStockList.size(); i++ )
 		{
 			HoldStock cHoldStock = cHoldStockList.get(i);

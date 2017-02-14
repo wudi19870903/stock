@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <account ID="mock001" password="mock001_password">
-  <Money total="63512.875"/>
+  <Money total="67736.344"/>
   <SelectList/>
   <CommissionOrderList/>
   <HoldStockList>
-    <Stock availableAmount="0" curPrice="17.200" refPrimeCostPrice="17.228" stockID="600030" totalAmount="1800"/>
+    <Stock availableAmount="0" curPrice="17.200" refPrimeCostPrice="17.228" stockID="600030" totalAmount="1900"/>
   </HoldStockList>
   <DealOrderList>
-    <Stock amount="1800" price="17.200" stockID="600030" time="09:30:00" tranAct="BUY"/>
+    <Stock amount="1900" price="17.200" stockID="600030" time="09:30:00" tranAct="BUY"/>
   </DealOrderList>
 </account>

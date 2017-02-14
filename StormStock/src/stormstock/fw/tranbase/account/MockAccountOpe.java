@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import stormstock.fw.base.BLog;
+import stormstock.fw.base.BTypeDefine.RefFloat;
 import stormstock.fw.tranbase.account.AccountPublicDef.CommissionOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.DealOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
@@ -46,7 +47,7 @@ public class MockAccountOpe extends IAccountOpe {
 	}
 	
 	@Override
-	public boolean newDayInit(String date, String time) 
+	public int newDayInit(String date, String time) 
 	{ 
 		// 新一天时，未成交委托单清空
 		m_commissionOrderList.clear();
@@ -65,7 +66,7 @@ public class MockAccountOpe extends IAccountOpe {
 		
 		store();
 		
-		return true; 
+		return 0; 
 	}
 
 	@Override
@@ -190,12 +191,13 @@ public class MockAccountOpe extends IAccountOpe {
 	}
 
 	@Override
-	public float getAvailableMoney() {
-		return m_money;
+	public int getAvailableMoney(RefFloat out_availableMoney) {
+		out_availableMoney.value = m_money;
+		return 0;
 	}
 
 	@Override
-	public void setStockSelectList(List<String> stockIDList) {
+	public int setStockSelectList(List<String> stockIDList) {
 		m_stockSelectList.clear();
 		for(int i=0; i<stockIDList.size();i++)
 		{
@@ -204,32 +206,36 @@ public class MockAccountOpe extends IAccountOpe {
 		}
 		
 		// 选股中排除已经持有的
-		List<HoldStock> cStockHoldList =  getHoldStockList(null,null);
-		for(int i=0;i<cStockHoldList.size();i++)
+		List<HoldStock> cHoldStockList = new ArrayList<HoldStock>();
+		getHoldStockList(null,null,cHoldStockList);
+		for(int i=0;i<cHoldStockList.size();i++)
 		{
-			m_stockSelectList.remove(cStockHoldList.get(i).stockID);
+			m_stockSelectList.remove(cHoldStockList.get(i).stockID);
 		}
 		
 		store();
+		
+		return 0;
 	}
 
 	@Override
-	public List<String> getStockSelectList() {
-		List<String> newList = new ArrayList<String>();
+	public int getStockSelectList(List<String> out_list) {
+		out_list.clear();
 		for(int i=0; i< m_stockSelectList.size();i++)
 		{
 			String stockID = m_stockSelectList.get(i);
 			if(!help_inAccount(stockID))  // 选股列表排除掉已经在买入列表的
 			{
-				newList.add(stockID);
+				out_list.add(stockID);
 			}
 		}
-		return newList;
+		return 0;
 	}
 	// 帮助函数 判断股票是否存在于 买卖单委托列表，持有列表中
 	private boolean help_inAccount(String stockID)
 	{
-		List<CommissionOrder> cCommissionOrderList = this.getCommissionOrderList();
+		List<CommissionOrder> cCommissionOrderList = new ArrayList<CommissionOrder>();
+		this.getCommissionOrderList(cCommissionOrderList);
 		for(int i=0;i<cCommissionOrderList.size();i++)
 		{
 			if(cCommissionOrderList.get(i).stockID.equals(stockID))
@@ -238,7 +244,8 @@ public class MockAccountOpe extends IAccountOpe {
 			}
 		}
 		
-		List<HoldStock> cHoldStockList = this.getHoldStockList(null,null);
+		List<HoldStock> cHoldStockList = new ArrayList<HoldStock>();
+		this.getHoldStockList(null,null,cHoldStockList);
 		for(int i=0;i<cHoldStockList.size();i++)
 		{
 			if(cHoldStockList.get(i).stockID.equals(stockID))
@@ -251,12 +258,14 @@ public class MockAccountOpe extends IAccountOpe {
 	}
 	
 	@Override
-	public List<CommissionOrder> getCommissionOrderList() {
-		return m_commissionOrderList;
+	public int getCommissionOrderList(List<CommissionOrder> out_list) {
+		out_list.clear();
+		out_list.addAll(m_commissionOrderList);
+		return 0;
 	}
 	
 	@Override
-	public List<HoldStock> getHoldStockList(String date, String time) {
+	public int getHoldStockList(String date, String time, List<HoldStock> out_list) {
 		// 当有日期时间参数时，更新持股现价
 		if(null != date && null != time)
 		{
@@ -270,12 +279,14 @@ public class MockAccountOpe extends IAccountOpe {
 				}
 			}
 		}
-		return m_holdStockList;
+		out_list.addAll(m_holdStockList);
+		return 0;
 	}
 	
 	@Override
-	public List<DealOrder> getDealOrderList() {
-		return m_dealOrderList;
+	public int getDealOrderList(List<DealOrder> out_list) {
+		out_list.addAll(m_dealOrderList);
+		return 0;
 	}
 	
 	private void load()
