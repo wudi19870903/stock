@@ -68,7 +68,7 @@ public class MockAccountOpe extends IAccountOpe {
 	}
 
 	@Override
-	public int pushBuyOrder(String date, String time, String stockID, float price, int amount) {
+	public int pushBuyOrder(String date, String time, String stockID, int amount, float price) {
 		
 		// 买入量标准化
 		int maxBuyAmount = (int)(m_money/price);
@@ -105,9 +105,9 @@ public class MockAccountOpe extends IAccountOpe {
 		
 		m_money = m_money - realBuyAmount*price;
 		
-		BLog.output("ACCOUNT", " @MockAccountOpe pushBuyOrder [%s %s] [%s %.3f %d %.3f(%.3f) %.3f] \n", 
+		BLog.output("ACCOUNT", " @MockAccountOpe pushBuyOrder [%s %s] [%s %d %.3f %.3f(%.3f) %.3f] \n", 
 				date, time,
-				stockID, price, realBuyAmount, price*realBuyAmount, transactionCosts, m_money);
+				stockID, realBuyAmount, price, realBuyAmount*price, transactionCosts, m_money);
 		
 		// 生成交割单
 		DealOrder cDealOrder = new DealOrder();
@@ -125,7 +125,7 @@ public class MockAccountOpe extends IAccountOpe {
 	}
 
 	@Override
-	public int pushSellOrder(String date, String time, String stockID, float price, int amount) {
+	public int pushSellOrder(String date, String time, String stockID, int amount, float price) {
 		
 		// 获取持有对象
 		HoldStock cHoldStock = null;
@@ -167,9 +167,9 @@ public class MockAccountOpe extends IAccountOpe {
 				m_holdStockList.remove(cHoldStock);
 			}
 			
-			BLog.output("ACCOUNT", " @MockAccountOpe pushSellOrder [%s %s] [%s %.3f %d %.3f(%.3f) %.3f] \n", 
+			BLog.output("ACCOUNT", " @MockAccountOpe pushSellOrder [%s %s] [%s %d %.3f %.3f(%.3f) %.3f] \n", 
 					date, time,
-					stockID, price, realSellAmount, price*realSellAmount, transactionCosts, m_money);
+					stockID, realSellAmount, price, realSellAmount*price, transactionCosts, m_money);
 			
 			// 生成交割单
 			DealOrder cDealOrder = new DealOrder();

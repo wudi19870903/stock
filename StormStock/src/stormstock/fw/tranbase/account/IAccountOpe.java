@@ -13,9 +13,9 @@ abstract public class IAccountOpe {
 	// 隔日开始账户初始化
 	abstract public int newDayInit(String date, String time);
 	// 推送买单委托
-	abstract public int pushBuyOrder(String date, String time, String id, float price, int amount); 
+	abstract public int pushBuyOrder(String date, String time, String id, int amount, float price); 
 	// 推送卖单委托
-	abstract public int pushSellOrder(String date, String time, String id, float price, int amount);
+	abstract public int pushSellOrder(String date, String time, String id, int amount, float price);
 	// 获得账户可用资金
 	abstract public int getAvailableMoney(RefFloat out_availableMoney);
 	// 获得委托单列表

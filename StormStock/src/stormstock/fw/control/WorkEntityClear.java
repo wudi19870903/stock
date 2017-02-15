@@ -71,10 +71,10 @@ public class WorkEntityClear {
 				int amount = cClearItemList.get(i).getAmount();	
 				
 				AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
-				int succCnt = accIF.pushSellOrder(clearedDate, clearedTime, stockID, price, amount); // 调用账户模块卖出股票
-				if(succCnt >= 0)
+				int iPush = accIF.pushSellOrder(clearedDate, clearedTime, stockID, amount, price); // 调用账户模块卖出股票
+				if(iPush == 0)
 				{
-					BLog.output("CTRL", "        -sellStock(%s) price(%.2f) amount(%d)\n", stockID, price,succCnt);
+					BLog.output("CTRL", "        -sellStock(%s) amount(%d) price(%.2f)\n", stockID, amount, price);
 				}
 			}
 			m_WaitObjForClear.Notify();

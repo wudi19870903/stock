@@ -35,20 +35,20 @@ public class RealAccountOpe extends IAccountOpe {
 	}
 
 	@Override
-	public int pushBuyOrder(String date, String time, String id, float price, int amount) {
+	public int pushBuyOrder(String date, String time, String id, int amount, float price) {
 		int iBuyRet = CATHSAccount.buyStock(id, amount, price);
-		BLog.output("ACCOUNT", " @RealAccountOpe pushBuyOrder err(%d) [%s %s] [%s %.3f %d %.3f] \n", 
+		BLog.output("ACCOUNT", " @RealAccountOpe pushBuyOrder err(%d) [%s %s] [%s %d %.3f %.3f] \n", 
 				date, time,
-				iBuyRet, id, price, amount, price*amount);
+				iBuyRet, id, amount, price, amount*price);
 		return iBuyRet;
 	}
 
 	@Override
-	public int pushSellOrder(String date, String time, String id, float price, int amount) {
+	public int pushSellOrder(String date, String time, String id, int amount, float price) {
 		int iSellRet = CATHSAccount.sellStock(id, amount, price);
-		BLog.output("ACCOUNT", " @RealAccountOpe pushSellOrder err(%d) [%s %s] [%s %.3f %d %.3f] \n", 
+		BLog.output("ACCOUNT", " @RealAccountOpe pushSellOrder err(%d) [%s %s] [%s %d %.3f %.3f] \n", 
 				date, time,
-				iSellRet, id, price, amount, price*amount);
+				iSellRet, id, amount, price, amount*price);
 		return 0;
 	}
 
