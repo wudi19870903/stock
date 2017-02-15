@@ -32,6 +32,7 @@ local.properties
 *.jpg
 *.iml
 StormStock/data/
+StormStock/account/*.xml
 StormStock/out/
 *.txt
 *output*
