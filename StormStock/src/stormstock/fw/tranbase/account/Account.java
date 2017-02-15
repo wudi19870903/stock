@@ -12,6 +12,7 @@ import stormstock.fw.tranbase.account.AccountPublicDef.CommissionOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.DealOrder;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 import stormstock.fw.tranbase.account.AccountPublicDef.TRANACT;
+import stormstock.fw.tranbase.account.AccountStore.StoreEntity;
 
 public class Account {
 	
@@ -30,6 +31,8 @@ public class Account {
 		m_cIAccountOpe = cIAccountOpe;
 		m_holdStockInvestigationDaysMap = new HashMap<String, Integer>();
 		m_stockSelectList = new ArrayList<String>();
+		m_accountStore = new AccountStore(accountID, password);
+		load();
 	}
 	
 	// ***********************************************************************
@@ -72,7 +75,9 @@ public class Account {
 		{
 			iNewDayInit = -201;
 		}
-				
+			
+		load();
+		
 		return iNewDayInit;
 	}
 	
@@ -148,6 +153,8 @@ public class Account {
 		{
 			m_stockSelectList.remove(cHoldStockList.get(i).stockID);
 		}
+		
+		store();
 		
 		return 0;
 	}
@@ -284,6 +291,23 @@ public class Account {
 		return all_asset;
 	}
 	
+	private void load()
+	{
+		StoreEntity cStoreEntity = m_accountStore.load();
+		if(null != cStoreEntity)
+		{
+		    m_stockSelectList.clear();
+		    m_stockSelectList.addAll(cStoreEntity.stockSelectList);
+		}
+	}
+	
+	private void store()
+	{
+		StoreEntity cStoreEntity = new StoreEntity();
+		cStoreEntity.stockSelectList = m_stockSelectList;
+		m_accountStore.store(cStoreEntity);
+	}
+	
 	public void printAccount(String date, String time)
 	{
 		BLog.output("ACCOUNT", "    ---ACCOUNT---INFO---\n");
@@ -324,4 +348,5 @@ public class Account {
 	private Map<String, Integer> m_holdStockInvestigationDaysMap;
 	
 	private List<String> m_stockSelectList; // 选股列表
+	private AccountStore m_accountStore;
 }
