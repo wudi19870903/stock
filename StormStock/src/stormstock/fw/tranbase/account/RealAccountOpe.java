@@ -21,8 +21,6 @@ public class RealAccountOpe extends IAccountOpe {
 
 	public RealAccountOpe(String accountID, String password)
 	{
-		m_holdStockInvestigationDaysMap = new HashMap<String, Integer>();
-		
 		BLog.output("ACCOUNT", " @RealAccountOpe Construct AccountID:%s Password:%s\n", 
 				accountID, password);
 	}
@@ -33,42 +31,6 @@ public class RealAccountOpe extends IAccountOpe {
 		BLog.output("ACCOUNT", " @RealAccountOpe newDayInit err(%d) \n", 
 				date, time,
 				iInitRet);
-		
-		// 更新调查天数map
-		Map<String, Integer> newHoldStockInvestigationDaysMap = new HashMap<String, Integer>();
-		
-		List<HoldStock> cHoldStockList = new ArrayList<HoldStock>();
-		int iGetHoldStockList = getHoldStockList(date, time, cHoldStockList);
-		if(0 == iGetHoldStockList)
-		{
-			for(int i=0; i<cHoldStockList.size();i++)
-			{
-				HoldStock cHoldStock = cHoldStockList.get(i);
-				newHoldStockInvestigationDaysMap.put(cHoldStock.stockID, 0);
-			}
-			for(Map.Entry<String, Integer> entry:newHoldStockInvestigationDaysMap.entrySet()){   
-				String key = entry.getKey();
-				
-				int iInvestigationDays = 0;
-				if(m_holdStockInvestigationDaysMap.containsKey(key))
-				{
-					iInvestigationDays = m_holdStockInvestigationDaysMap.get(key);
-				}
-				entry.setValue(iInvestigationDays);
-			} 
-			for(Map.Entry<String, Integer> entry:newHoldStockInvestigationDaysMap.entrySet()){   
-				int iInvestigationDays = entry.getValue();
-				entry.setValue(iInvestigationDays+1);
-			} 
-			
-			m_holdStockInvestigationDaysMap.clear();
-			m_holdStockInvestigationDaysMap.putAll(newHoldStockInvestigationDaysMap);
-		}
-		else
-		{
-			iInitRet = -201;
-		}
-		
 		return iInitRet;
 	}
 
@@ -152,15 +114,10 @@ public class RealAccountOpe extends IAccountOpe {
         	cNewItem.refPrimeCostPrice = cHoldStock.refPrimeCostPrice;
         	cNewItem.curPrice = cHoldStock.curPrice;
         	cNewItem.investigationDays = 0;
-        	if(m_holdStockInvestigationDaysMap.containsKey(cNewItem.stockID))
-        	{
-        		cNewItem.investigationDays = m_holdStockInvestigationDaysMap.get(cNewItem.stockID);
-        	}
 
 			out_list.add(cNewItem);
         }
 	        
-		
 		return cResultHoldStockList.error;
 	}
 
@@ -196,9 +153,4 @@ public class RealAccountOpe extends IAccountOpe {
         
 		return cResultDealOrderList.error;
 	}
-	
-	/**
-	 * 成员-----------------------------------------------------------------------
-	 */
-	private Map<String, Integer> m_holdStockInvestigationDaysMap;
 }

@@ -1,7 +1,9 @@
 package stormstock.fw.tranbase.account;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import stormstock.fw.base.BLog;
 import stormstock.fw.base.BTypeDefine.RefFloat;
@@ -26,6 +28,7 @@ public class Account {
 			cIAccountOpe = new RealAccountOpe(accountID, password);
 		}
 		m_cIAccountOpe = cIAccountOpe;
+		m_holdStockInvestigationDaysMap = new HashMap<String, Integer>();
 		m_stockSelectList = new ArrayList<String>();
 	}
 	
@@ -35,7 +38,42 @@ public class Account {
 	// 隔日开始账户初始化
 	public int newDayInit(String date, String time)
 	{
-		return m_cIAccountOpe.newDayInit(date, time);
+		int iNewDayInit = m_cIAccountOpe.newDayInit(date, time);
+		
+		// 更新调查天数map
+		Map<String, Integer> newHoldStockInvestigationDaysMap = new HashMap<String, Integer>();
+		
+		List<HoldStock> cHoldStockList = new ArrayList<HoldStock>();
+		int iGetHoldStockList = getHoldStockList(date, time, cHoldStockList);
+		if(0 == iGetHoldStockList)
+		{
+			for(int i=0; i<cHoldStockList.size();i++)
+			{
+				HoldStock cHoldStock = cHoldStockList.get(i);
+				newHoldStockInvestigationDaysMap.put(cHoldStock.stockID, 0);
+			}
+			for(Map.Entry<String, Integer> entry:newHoldStockInvestigationDaysMap.entrySet()){   
+				String key = entry.getKey();
+				int iInvestigationDays = 0;
+				if(m_holdStockInvestigationDaysMap.containsKey(key))
+				{
+					iInvestigationDays = m_holdStockInvestigationDaysMap.get(key);
+				}
+				entry.setValue(iInvestigationDays);
+			} 
+			for(Map.Entry<String, Integer> entry:newHoldStockInvestigationDaysMap.entrySet()){   
+				int iInvestigationDays = entry.getValue();
+				entry.setValue(iInvestigationDays+1);
+			} 
+			m_holdStockInvestigationDaysMap.clear();
+			m_holdStockInvestigationDaysMap.putAll(newHoldStockInvestigationDaysMap);
+		}
+		else
+		{
+			iNewDayInit = -201;
+		}
+				
+		return iNewDayInit;
 	}
 	
 	// 推送买单委托，返回实际下单量
@@ -65,7 +103,23 @@ public class Account {
 	// 获得持股列表（包含已经持有的，与当天下单成交的）
 	public int getHoldStockList(String date, String time, List<HoldStock> out_list)
 	{
-		return m_cIAccountOpe.getHoldStockList(date, time, out_list);
+		int iGetHoldStockList = m_cIAccountOpe.getHoldStockList(date, time, out_list);
+		if(0 == iGetHoldStockList)
+		{
+			for(int i=0;i<out_list.size();i++)
+	        {
+	        	HoldStock cHoldStock = out_list.get(i);
+	        	if(m_holdStockInvestigationDaysMap.containsKey(cHoldStock.stockID))
+	        	{
+	        		cHoldStock.investigationDays = m_holdStockInvestigationDaysMap.get(cHoldStock.stockID);
+	        	}
+	        	else
+	        	{
+	        		cHoldStock.investigationDays = 0;
+	        	}
+	        }
+		}
+		return iGetHoldStockList;
 	}
 	
 	// 获得当日交割单列表（已成交的，包含买入和卖出的）
@@ -267,5 +321,7 @@ public class Account {
 	 * 账户操作接口，可以设置为模拟或真实
 	 */
 	private IAccountOpe m_cIAccountOpe;
+	private Map<String, Integer> m_holdStockInvestigationDaysMap;
+	
 	private List<String> m_stockSelectList; // 选股列表
 }
