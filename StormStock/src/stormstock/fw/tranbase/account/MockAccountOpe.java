@@ -42,7 +42,7 @@ public class MockAccountOpe extends IAccountOpe {
 			load();
 		}
 
-		BLog.output("ACCOUNT", "Account MOCK AccountID:%s Password:%s money:%.2f transactionCostsRatio:%.4f\n", 
+		BLog.output("ACCOUNT", " @MockAccountOpe Construct AccountID:%s Password:%s money:%.2f transactionCostsRatio:%.4f\n", 
 				m_accountID, password, m_money, m_transactionCostsRatio);
 	}
 	
@@ -66,6 +66,8 @@ public class MockAccountOpe extends IAccountOpe {
 		
 		store();
 		
+		BLog.output("ACCOUNT", " @MockAccountOpe newDayInit\n", 
+				date, time);
 		return 0; 
 	}
 
@@ -107,7 +109,7 @@ public class MockAccountOpe extends IAccountOpe {
 		
 		m_money = m_money - realBuyAmount*price;
 		
-		BLog.output("ACCOUNT", " @Buy [%s %s] [%s %.3f %d %.3f(%.3f) %.3f] \n", 
+		BLog.output("ACCOUNT", " @MockAccountOpe pushBuyOrder [%s %s] [%s %.3f %d %.3f(%.3f) %.3f] \n", 
 				date, time,
 				stockID, price, realBuyAmount, price*realBuyAmount, transactionCosts, m_money);
 		
@@ -169,7 +171,7 @@ public class MockAccountOpe extends IAccountOpe {
 				m_holdStockList.remove(cHoldStock);
 			}
 			
-			BLog.output("ACCOUNT", " @Sell [%s %s] [%s %.3f %d %.3f(%.3f) %.3f] \n", 
+			BLog.output("ACCOUNT", " @MockAccountOpe pushSellOrder [%s %s] [%s %.3f %d %.3f(%.3f) %.3f] \n", 
 					date, time,
 					stockID, price, realSellAmount, price*realSellAmount, transactionCosts, m_money);
 			
@@ -334,8 +336,9 @@ public class MockAccountOpe extends IAccountOpe {
 	private boolean m_dataSyncFlag;
 	private MockAccountOpeStore m_mockAccountOpeStore;
 
-	private float m_money;
 	private List<String> m_stockSelectList; // 选股列表
+	
+	private float m_money;
 	private List<CommissionOrder> m_commissionOrderList; // 模拟账户中  下单直接成交, 委托单一直未空
 	private List<HoldStock> m_holdStockList;
 	private List<DealOrder> m_dealOrderList;
