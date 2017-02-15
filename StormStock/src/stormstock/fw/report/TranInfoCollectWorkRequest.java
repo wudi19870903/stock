@@ -52,13 +52,16 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 		cAccountControlIF.getHoldStockList(m_date, m_time, cHoldStockList);
 		List<DealOrder> cDealOrderList = new ArrayList<DealOrder>();
 		cAccountControlIF.getDealOrderList(cDealOrderList);
+		List<String> cStockSelectList = new ArrayList<String>();
+		cAccountControlIF.getStockSelectList(cStockSelectList);
 		
-		// 添加当前总资产，可用钱
+		// 打印添加当前总资产，可用钱
 		cDailyReport.fTotalAssets = fTotalAssets;
 		cDailyReport.fAvailableMoney = availableMoney.value;
-		
 		BLog.output("REPORT", "    -TotalAssets: %.3f\n", fTotalAssets);
 		BLog.output("REPORT", "    -AvailableMoney: %.3f\n", availableMoney.value);
+		
+		// 打印持股
 		for(int i=0; i<cHoldStockList.size(); i++ )
 		{
 			HoldStock cHoldStock = cHoldStockList.get(i);
@@ -67,6 +70,7 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 					cHoldStock.refPrimeCostPrice, cHoldStock.curPrice, cHoldStock.totalAmount,
 					cHoldStock.curPrice*cHoldStock.totalAmount);
 		}
+		// 打印当日成交
 		for(int i=0; i<cDealOrderList.size(); i++ )
 		{
 			DealOrder cDealOrder = cDealOrderList.get(i);
@@ -93,6 +97,24 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 				// 添加清仓交割单
 				cDailyReport.cClearDealOrder.add(cDealOrder);
 			}
+		}
+		
+		// 打印晚间选股
+		if(cStockSelectList.size() > 0)
+		{
+			String logStr = "";
+			logStr += String.format("    -SelectList:[ ");
+			for(int i=0; i<cStockSelectList.size(); i++ )
+			{
+				String stockId = cStockSelectList.get(i);
+				logStr += String.format("%s ", stockId);
+				if (i >= 7 && cStockSelectList.size()-1 > 16) {
+					logStr += String.format("... ", stockId);
+					break;
+				}
+			}
+			logStr += String.format("]");
+			BLog.output("REPORT", "%s\n", logStr);
 		}
 		
 		// 添加DailyReport

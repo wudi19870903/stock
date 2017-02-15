@@ -23,7 +23,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			UseOfMFC="1"
 			CharacterSet="2"
 			>
@@ -154,7 +154,7 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			UseOfMFC="1"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
@@ -250,7 +250,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;C:\Program Files (x86)\Java\jdk1.8.0_45\include\win32&quot;;&quot;C:\Program Files (x86)\Java\jdk1.8.0_45\include&quot;"
+				AdditionalIncludeDirectories=".;&quot;C:\Program Files (x86)\Java\jdk1.8.0_45\include\win32&quot;;&quot;C:\Program Files (x86)\Java\jdk1.8.0_45\include&quot;"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

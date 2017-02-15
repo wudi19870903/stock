@@ -17,32 +17,21 @@ public class StrategySelect extends IStrategySelect {
 //				ctx.date(), ctx.time(), 
 //				curStock.getCurLatestStockInfo().ID ,curStock.GetLastDate() , curStock.GetLastClosePrice());
 		
-		boolean bTest = true;
-		
-		if (bTest)
+		// 连续2阴线，选入，选入优先级是最大价格差
+		List<StockDay> cStockDayList = ctx.target().stock().getCurStockDayData();
+		int iSize = cStockDayList.size();
+		if(iSize > 4)
 		{
-			out_sr.bSelect = true;
-		}
-		else
-		{
-			// 连续2阴线，选入，选入优先级是最大价格差
-			List<StockDay> cStockDayList = ctx.target().stock().getCurStockDayData();
-			int iSize = cStockDayList.size();
-			if(iSize > 4)
-			{
-				StockDay cStockDayCur = cStockDayList.get(iSize-1);
-				StockDay cStockDayBefore1 = cStockDayList.get(iSize-2);
-				StockDay cStockDayBefore2 = cStockDayList.get(iSize-3);
-				//StockDay cStockDayBefore3 = cStockDayList.get(iSize-4);
+			StockDay cStockDayCur = cStockDayList.get(iSize-1);
+			StockDay cStockDayBefore1 = cStockDayList.get(iSize-2);
+			StockDay cStockDayBefore2 = cStockDayList.get(iSize-3);
 
-				if(cStockDayCur.close() < cStockDayCur.open() && cStockDayCur.close() < cStockDayBefore1.close()
-						&& cStockDayBefore1.close() < cStockDayBefore1.open() && cStockDayBefore1.close() < cStockDayBefore2.close()
-						//&& cStockDayBefore2.close() < cStockDayBefore2.open() && cStockDayBefore2.close() < cStockDayBefore3.close()
-						)
-				{
-					out_sr.bSelect = true;
-					out_sr.fPriority = cStockDayBefore2.close() - cStockDayCur.close();
-				}
+			if(cStockDayCur.close() < cStockDayCur.open() && cStockDayCur.close() < cStockDayBefore1.close()
+					&& cStockDayBefore1.close() < cStockDayBefore1.open() && cStockDayBefore1.close() < cStockDayBefore2.close()
+					)
+			{
+				out_sr.bSelect = true;
+				out_sr.fPriority = cStockDayBefore2.close() - cStockDayCur.close();
 			}
 		}
 	}
@@ -50,7 +39,7 @@ public class StrategySelect extends IStrategySelect {
 	@Override
 	public int strategy_select_max_count() {
 		// TODO Auto-generated method stub
-		return 5;
+		return 3;
 	}
 
 }

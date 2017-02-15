@@ -21,8 +21,6 @@ static HWND s_hSellWin = NULL;
 
 int THSAPI_TongHuaShunInit()
 {
-	DFileLog::GetInstance()->Clear();
-	DFileLog::GetInstance()->EnableSaveLog(true);
 	TESTLOG("THSAPI_TongHuaShunInit#\n");
 
 	// ³õÊ¼»¯´°¿Ú¾ä±ú

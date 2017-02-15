@@ -64,8 +64,6 @@ public class MockAccountOpe extends IAccountOpe {
 		
 		store();
 		
-		BLog.output("ACCOUNT", " @MockAccountOpe newDayInit\n", 
-				date, time);
 		return 0; 
 	}
 

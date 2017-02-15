@@ -26,43 +26,14 @@ public class StrategyCreate extends IStrategyCreate {
 //				ctx.date(), ctx.time(), 
 //				curStock.getCurLatestStockInfo().ID, curStock.GetLastDate() , stockTimeStr);
 		
-//		// 距离当前之前产生的最高点跌幅超过3个点时候买
-//		List<StockTime> cStockTimeList = ctx.target().stock().getLatestStockTimeList();
-//		int size = cStockTimeList.size();
-//
-//		float curHighest = cStockTimeList.get(0).price;
-//		for(int i=0;i<size;i++)
-//		{
-//			StockTime cStockTime = cStockTimeList.get(i);
-//			if(cStockTime.price >= curHighest) curHighest = cStockTime.price;
-//		}
-//		
-//		float curPrice = cStockTimeList.get(size-1).price;
-//		
-//		float testRatio = (curPrice - curHighest)/curHighest;
-//		if(testRatio < -0.02)
-//		{
-//			out_sr.bCreate = true;
-//		}
+		// 建仓为跌幅一定时
+		float fYesterdayClosePrice = ctx.target().stock().GetLastYesterdayClosePrice();
+		float fNowPrice = ctx.target().stock().getLatestPrice();
+		float fRatio = (fNowPrice - fYesterdayClosePrice)/fYesterdayClosePrice;
 		
-		
-		boolean bTest = true;
-		
-		if (bTest)
+		if(fRatio < -0.02)
 		{
 			out_sr.bCreate = true;
-		}
-		else
-		{
-			// 建仓为跌幅一定时
-			float fYesterdayClosePrice = ctx.target().stock().GetLastYesterdayClosePrice();
-			float fNowPrice = ctx.target().stock().getLatestPrice();
-			float fRatio = (fNowPrice - fYesterdayClosePrice)/fYesterdayClosePrice;
-			
-			if(fRatio < -0.02)
-			{
-				out_sr.bCreate = true;
-			}
 		}
 	}
 

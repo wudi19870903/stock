@@ -30,12 +30,12 @@ public class StrategyClear extends IStrategyClear {
 		
 		HoldStock cHoldStock = ctx.target().holdStock();
 		
-//		if(cHoldStock.investigationDays >= 3) // 调查天数控制
-//		{
-//			out_sr.bClear = true;
-//		}
+		if(cHoldStock.investigationDays >= 3) // 调查天数控制
+		{
+			out_sr.bClear = true;
+		}
 			
-		if(cHoldStock.profitRatio() > 0.02 || cHoldStock.profitRatio() < -0.02) // 止盈止损2个点卖
+		if(cHoldStock.profitRatio() > 0.05 || cHoldStock.profitRatio() < -0.05) // 止盈止损2个点卖
 		{
 			out_sr.bClear = true;
 		}

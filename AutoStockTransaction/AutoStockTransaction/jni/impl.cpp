@@ -39,7 +39,7 @@ JNIEXPORT jint JNICALL Java_stormstock_ori_capi_CATHSAccount_initialize
 (JNIEnv *, jclass)
 {
 	//DFileLog::GetInstance()->Clear();
-	//DFileLog::GetInstance()->EnableSaveLog(true);
+	DFileLog::GetInstance()->EnableSaveLog(false);
 
 	int err = 0;
 	err = THSAPI_TongHuaShunInit();

@@ -134,20 +134,20 @@ public class WorkEntity {
 					stockDataIF.updateAllLocalStocks(dateStr);
 				}
 				
-				// 21:30 收集交易信息
-				timestr = "21:30:00";
-				if(waitForDateTime(dateStr, timestr))
-				{
-					BLog.output("CTRL", "[%s %s] transaction info collection \n", dateStr, timestr);
-					m_entityReport.tranInfoCollect(dateStr, timestr);
-				}
-				
 				// 22:00 选股 等待选股完毕
 				timestr = "22:00:00";
 				if(waitForDateTime(dateStr, timestr))
 				{
 					BLog.output("CTRL", "[%s %s] StockSelectAnalysis \n", dateStr, timestr);
 					m_entitySelect.selectStock(dateStr, timestr);
+				}
+				
+				// 22:30 当日报告信息收集
+				timestr = "22:30:00";
+				if(waitForDateTime(dateStr, timestr))
+				{
+					BLog.output("CTRL", "[%s %s] transaction info collection \n", dateStr, timestr);
+					m_entityReport.tranInfoCollect(dateStr, timestr);
 				}
 			}
 			else

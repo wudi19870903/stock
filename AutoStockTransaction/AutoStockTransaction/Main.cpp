@@ -49,8 +49,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	//Test();
 	//return 0;
 	//////////////////////////////////////////////////////////////////////////
-	DFileLog::GetInstance()->Clear();
-	DFileLog::GetInstance()->EnableSaveLog(true);
+	// DFileLog::GetInstance()->Clear();
+	DFileLog::GetInstance()->EnableSaveLog(false);
 
 	printf("### Main Begin\n");
 
