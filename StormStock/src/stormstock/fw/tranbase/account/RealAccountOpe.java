@@ -21,7 +21,6 @@ public class RealAccountOpe extends IAccountOpe {
 
 	public RealAccountOpe(String accountID, String password)
 	{
-		m_stockSelectList = new ArrayList<String>();
 		m_holdStockInvestigationDaysMap = new HashMap<String, Integer>();
 		
 		BLog.output("ACCOUNT", " @RealAccountOpe Construct AccountID:%s Password:%s\n", 
@@ -98,65 +97,6 @@ public class RealAccountOpe extends IAccountOpe {
 		BLog.output("ACCOUNT", " @RealAccountOpe getAvailableMoney err(%d) availableMoney(%.3f) \n", 
 				cResultAvailableMoney.error, cResultAvailableMoney.availableMoney);
 		return cResultAvailableMoney.error;
-	}
-
-	@Override
-	public int setStockSelectList(List<String> stockIDList) {
-		m_stockSelectList.clear();
-		for(int i=0; i<stockIDList.size();i++)
-		{
-			String newstockID = stockIDList.get(i);
-			m_stockSelectList.add(newstockID);
-		}
-		
-		// 选股中排除已经持有的
-		List<HoldStock> cHoldStockList = new ArrayList<HoldStock>();
-		getHoldStockList(null,null,cHoldStockList);
-		for(int i=0;i<cHoldStockList.size();i++)
-		{
-			m_stockSelectList.remove(cHoldStockList.get(i).stockID);
-		}
-		
-		return 0;
-	}
-
-	@Override
-	public int getStockSelectList(List<String> out_list) {
-		out_list.clear();
-		for(int i=0; i< m_stockSelectList.size();i++)
-		{
-			String stockID = m_stockSelectList.get(i);
-			if(!help_inAccount(stockID))  // 选股列表排除掉已经在买入列表的
-			{
-				out_list.add(stockID);
-			}
-		}
-		return 0;
-	}
-	// 帮助函数 判断股票是否存在于 买卖单委托列表，持有列表中
-	private boolean help_inAccount(String stockID)
-	{
-		List<CommissionOrder> cCommissionOrderList = new ArrayList<CommissionOrder>();
-		this.getCommissionOrderList(cCommissionOrderList);
-		for(int i=0;i<cCommissionOrderList.size();i++)
-		{
-			if(cCommissionOrderList.get(i).stockID.equals(stockID))
-			{
-				return true;
-			}
-		}
-		
-		List<HoldStock> cHoldStockList = new ArrayList<HoldStock>();
-		this.getHoldStockList(null,null,cHoldStockList);
-		for(int i=0;i<cHoldStockList.size();i++)
-		{
-			if(cHoldStockList.get(i).stockID.equals(stockID))
-			{
-				return true;
-			}
-		}
-		
-		return false;
 	}
 	
 	@Override
@@ -260,7 +200,5 @@ public class RealAccountOpe extends IAccountOpe {
 	/**
 	 * 成员-----------------------------------------------------------------------
 	 */
-	private List<String> m_stockSelectList; // 选股列表
-	
 	private Map<String, Integer> m_holdStockInvestigationDaysMap;
 }

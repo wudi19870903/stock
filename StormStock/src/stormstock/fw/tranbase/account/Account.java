@@ -26,6 +26,7 @@ public class Account {
 			cIAccountOpe = new RealAccountOpe(accountID, password);
 		}
 		m_cIAccountOpe = cIAccountOpe;
+		m_stockSelectList = new ArrayList<String>();
 	}
 	
 	// ***********************************************************************
@@ -79,14 +80,63 @@ public class Account {
 	// 选股列表设置
 	public int setStockSelectList(List<String> stockIDList)
 	{
-		return m_cIAccountOpe.setStockSelectList(stockIDList);
+		m_stockSelectList.clear();
+		for(int i=0; i<stockIDList.size();i++)
+		{
+			String newstockID = stockIDList.get(i);
+			m_stockSelectList.add(newstockID);
+		}
+		
+		// 选股中排除已经持有的
+		List<HoldStock> cHoldStockList = new ArrayList<HoldStock>();
+		getHoldStockList(null,null,cHoldStockList);
+		for(int i=0;i<cHoldStockList.size();i++)
+		{
+			m_stockSelectList.remove(cHoldStockList.get(i).stockID);
+		}
+		
+		return 0;
 	}
 	// 选股列表获取
 	public int getStockSelectList(List<String> out_list)
 	{
-		return m_cIAccountOpe.getStockSelectList(out_list);
+		out_list.clear();
+		for(int i=0; i< m_stockSelectList.size();i++)
+		{
+			String stockID = m_stockSelectList.get(i);
+			if(!help_inAccount(stockID))  // 选股列表排除掉已经在买入列表的
+			{
+				out_list.add(stockID);
+			}
+		}
+		return 0;
 	}
-
+	// 帮助函数判断股票是否存在于 买卖单委托列表，持有列表中
+	private boolean help_inAccount(String stockID)
+	{
+		List<CommissionOrder> cCommissionOrderList = new ArrayList<CommissionOrder>();
+		this.getCommissionOrderList(cCommissionOrderList);
+		for(int i=0;i<cCommissionOrderList.size();i++)
+		{
+			if(cCommissionOrderList.get(i).stockID.equals(stockID))
+			{
+				return true;
+			}
+		}
+		
+		List<HoldStock> cHoldStockList = new ArrayList<HoldStock>();
+		this.getHoldStockList(null,null,cHoldStockList);
+		for(int i=0;i<cHoldStockList.size();i++)
+		{
+			if(cHoldStockList.get(i).stockID.equals(stockID))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	// 获得买委托列表(未成交的)
 	public List<CommissionOrder> getBuyCommissionOrderList()
 	{
@@ -217,4 +267,5 @@ public class Account {
 	 * 账户操作接口，可以设置为模拟或真实
 	 */
 	private IAccountOpe m_cIAccountOpe;
+	private List<String> m_stockSelectList; // 选股列表
 }

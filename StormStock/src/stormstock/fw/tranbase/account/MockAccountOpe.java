@@ -33,7 +33,6 @@ public class MockAccountOpe extends IAccountOpe {
 		// 交易流数据
 		{
 			m_money = 100000.00f;
-			m_stockSelectList = new ArrayList<String>();
 			m_commissionOrderList = new ArrayList<CommissionOrder>();
 			m_holdStockList = new ArrayList<HoldStock>();
 			m_dealOrderList = new ArrayList<DealOrder>();
@@ -197,67 +196,6 @@ public class MockAccountOpe extends IAccountOpe {
 		out_availableMoney.value = m_money;
 		return 0;
 	}
-
-	@Override
-	public int setStockSelectList(List<String> stockIDList) {
-		m_stockSelectList.clear();
-		for(int i=0; i<stockIDList.size();i++)
-		{
-			String newstockID = stockIDList.get(i);
-			m_stockSelectList.add(newstockID);
-		}
-		
-		// 选股中排除已经持有的
-		List<HoldStock> cHoldStockList = new ArrayList<HoldStock>();
-		getHoldStockList(null,null,cHoldStockList);
-		for(int i=0;i<cHoldStockList.size();i++)
-		{
-			m_stockSelectList.remove(cHoldStockList.get(i).stockID);
-		}
-		
-		store();
-		
-		return 0;
-	}
-
-	@Override
-	public int getStockSelectList(List<String> out_list) {
-		out_list.clear();
-		for(int i=0; i< m_stockSelectList.size();i++)
-		{
-			String stockID = m_stockSelectList.get(i);
-			if(!help_inAccount(stockID))  // 选股列表排除掉已经在买入列表的
-			{
-				out_list.add(stockID);
-			}
-		}
-		return 0;
-	}
-	// 帮助函数 判断股票是否存在于 买卖单委托列表，持有列表中
-	private boolean help_inAccount(String stockID)
-	{
-		List<CommissionOrder> cCommissionOrderList = new ArrayList<CommissionOrder>();
-		this.getCommissionOrderList(cCommissionOrderList);
-		for(int i=0;i<cCommissionOrderList.size();i++)
-		{
-			if(cCommissionOrderList.get(i).stockID.equals(stockID))
-			{
-				return true;
-			}
-		}
-		
-		List<HoldStock> cHoldStockList = new ArrayList<HoldStock>();
-		this.getHoldStockList(null,null,cHoldStockList);
-		for(int i=0;i<cHoldStockList.size();i++)
-		{
-			if(cHoldStockList.get(i).stockID.equals(stockID))
-			{
-				return true;
-			}
-		}
-		
-		return false;
-	}
 	
 	@Override
 	public int getCommissionOrderList(List<CommissionOrder> out_list) {
@@ -299,8 +237,6 @@ public class MockAccountOpe extends IAccountOpe {
 			if(null != cStoreEntity)
 			{
 			    m_money = cStoreEntity.money;
-			    m_stockSelectList.clear();
-			    m_stockSelectList.addAll(cStoreEntity.stockSelectList);
 			    m_commissionOrderList.clear();
 			    m_commissionOrderList.addAll(cStoreEntity.commissionOrderList);
 			    m_holdStockList.clear();
@@ -317,7 +253,6 @@ public class MockAccountOpe extends IAccountOpe {
 		{
 			StoreEntity cStoreEntity = new StoreEntity();
 			cStoreEntity.money = m_money;
-			cStoreEntity.stockSelectList = m_stockSelectList;
 			cStoreEntity.commissionOrderList = m_commissionOrderList;
 			cStoreEntity.holdStockList = m_holdStockList;
 			cStoreEntity.dealOrderList = m_dealOrderList;
@@ -335,8 +270,6 @@ public class MockAccountOpe extends IAccountOpe {
 	
 	private boolean m_dataSyncFlag;
 	private MockAccountOpeStore m_mockAccountOpeStore;
-
-	private List<String> m_stockSelectList; // 选股列表
 	
 	private float m_money;
 	private List<CommissionOrder> m_commissionOrderList; // 模拟账户中  下单直接成交, 委托单一直未空

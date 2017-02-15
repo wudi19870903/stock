@@ -40,7 +40,6 @@ public class MockAccountOpeStore {
 	public static class StoreEntity
 	{
 		public float money;
-		List<String> stockSelectList;
 		List<CommissionOrder> commissionOrderList;
 		List<HoldStock> holdStockList;
 		List<DealOrder> dealOrderList;
@@ -127,18 +126,6 @@ public class MockAccountOpeStore {
         	Element Node_Money=doc.createElement("Money");
         	Node_Money.setAttribute("total", totalVal);
         	root.appendChild(Node_Money);
-        	
-        	// StockSelectList
-        	Element Node_StockSelectList=doc.createElement("SelectList");
-        	root.appendChild(Node_StockSelectList);
-        	for(int i=0;i<cStoreEntity.stockSelectList.size();i++)
-        	{
-        		String stockID = cStoreEntity.stockSelectList.get(i);
-        		
-        		Element Node_Stock = doc.createElement("Stock");
-        		Node_Stock.setAttribute("stockID", stockID);
-        		Node_StockSelectList.appendChild(Node_Stock);
-        	}
         	
         	// CommissionOrderList
         	Element Node_CommissionOrderList=doc.createElement("CommissionOrderList");
@@ -444,7 +431,6 @@ public class MockAccountOpeStore {
 		    
 		    StoreEntity cStoreEntity = new StoreEntity();
 		    cStoreEntity.money = money;
-		    cStoreEntity.stockSelectList = stockSelectList;
 		    cStoreEntity.commissionOrderList = commissionOrderList;
 		    cStoreEntity.holdStockList = holdStockList;
 		    cStoreEntity.dealOrderList = dealOrderList;
