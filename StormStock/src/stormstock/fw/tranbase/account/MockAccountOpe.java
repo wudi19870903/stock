@@ -39,6 +39,9 @@ public class MockAccountOpe extends IAccountOpe {
 			
 			//load
 			load();
+			
+			//store
+			store();
 		}
 
 		BLog.output("ACCOUNT", " @MockAccountOpe Construct AccountID:%s Password:%s money:%.2f transactionCostsRatio:%.4f\n", 
