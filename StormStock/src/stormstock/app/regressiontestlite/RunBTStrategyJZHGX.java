@@ -12,8 +12,8 @@ import stormstock.fw.tranengine_lite.ANLStock;
 import stormstock.fw.tranengine_lite.ANLStockDayKData;
 import stormstock.fw.tranengine_lite.ANLStockPool;
 import stormstock.fw.tranengine_lite.ANLUserAcc;
-//
-//public class RunBTStrategyJZHGX extends ANLStrategyEngine  {
+
+public class RunBTStrategyJZHGX  {
 //	
 //	// 股票分值表，用于给每天的股票打分
 //	static class ANLPolicyStockCK
@@ -445,4 +445,4 @@ import stormstock.fw.tranengine_lite.ANLUserAcc;
 //		RunBTStrategyJZHGX cANLPolicyJZHG = new RunBTStrategyJZHGX();
 //		cANLPolicyJZHG.run("2010-01-01", "2016-01-05");
 //	}
-//}
+}
