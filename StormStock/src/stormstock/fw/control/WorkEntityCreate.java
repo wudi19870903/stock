@@ -68,10 +68,10 @@ public class WorkEntityCreate {
 				
 				
 				AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
-				int succCnt = accIF.pushBuyOrder(createdDate, createdTime, stockID, price, amount); // 调用账户模块买入股票
-				if(succCnt > 0)
+				int iPush = accIF.pushBuyOrder(createdDate, createdTime, stockID, amount, price); // 调用账户模块买入股票
+				if(iPush == 0)
 				{
-					BLog.output("CTRL", "        -buyStock(%s) price(%.2f) amount(%d)\n", stockID, price,succCnt);
+					BLog.output("CTRL", "        -buyStock(%s) amount(%d) price(%.2f)\n", stockID, amount, price);
 				}
 			}
 			m_WaitObjForCreate.Notify();

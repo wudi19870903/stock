@@ -1,0 +1,297 @@
+[2017-02-15 23:59:02.578][      TEST] --->>> MainBegin
+[2017-02-15 23:59:02.867][   ACCOUNT] MockAccountOpeStore load
+[2017-02-15 23:59:02.868][   ACCOUNT] MockAccountOpeStore storeInit (no file)
+[2017-02-15 23:59:02.902][   ACCOUNT]  @MockAccountOpe Construct AccountID:mock001 Password:mock001_password money:100000.00 transactionCostsRatio:0.0016
+[2017-02-15 23:59:02.904][   ACCOUNT] AccountStore storeInit (no file)
+[2017-02-15 23:59:02.906][   ACCOUNT]     ---ACCOUNT---INFO---
+[2017-02-15 23:59:02.907][   ACCOUNT]     -TotalAssets: 100000.000
+[2017-02-15 23:59:02.907][   ACCOUNT]     -AvailableMoney: 100000.000
+[2017-02-15 23:59:03.050][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000003)  error(-1)
+[2017-02-15 23:59:03.053][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000013)  error(-1)
+[2017-02-15 23:59:03.054][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000015)  error(-1)
+[2017-02-15 23:59:03.056][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000024)  error(-1)
+[2017-02-15 23:59:03.059][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000033)  error(-1)
+[2017-02-15 23:59:03.061][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000047)  error(-1)
+[2017-02-15 23:59:03.068][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000405)  error(-1)
+[2017-02-15 23:59:03.068][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000406)  error(-1)
+[2017-02-15 23:59:03.069][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000412)  error(-1)
+[2017-02-15 23:59:03.076][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000508)  error(-1)
+[2017-02-15 23:59:03.077][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000515)  error(-1)
+[2017-02-15 23:59:03.079][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000522)  error(-1)
+[2017-02-15 23:59:03.080][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000527)  error(-1)
+[2017-02-15 23:59:03.081][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000535)  error(-1)
+[2017-02-15 23:59:03.083][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000542)  error(-1)
+[2017-02-15 23:59:03.085][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000549)  error(-1)
+[2017-02-15 23:59:03.086][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000556)  error(-1)
+[2017-02-15 23:59:03.088][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000562)  error(-1)
+[2017-02-15 23:59:03.090][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000569)  error(-1)
+[2017-02-15 23:59:03.093][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000578)  error(-1)
+[2017-02-15 23:59:03.095][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000583)  error(-1)
+[2017-02-15 23:59:03.097][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000588)  error(-1)
+[2017-02-15 23:59:03.099][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000594)  error(-1)
+[2017-02-15 23:59:03.101][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000602)  error(-1)
+[2017-02-15 23:59:03.106][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000618)  error(-1)
+[2017-02-15 23:59:03.107][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000621)  error(-1)
+[2017-02-15 23:59:03.111][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000653)  error(-1)
+[2017-02-15 23:59:03.112][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000658)  error(-1)
+[2017-02-15 23:59:03.113][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000660)  error(-1)
+[2017-02-15 23:59:03.115][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000675)  error(-1)
+[2017-02-15 23:59:03.118][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000689)  error(-1)
+[2017-02-15 23:59:03.120][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000699)  error(-1)
+[2017-02-15 23:59:03.124][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000730)  error(-1)
+[2017-02-15 23:59:03.127][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000763)  error(-1)
+[2017-02-15 23:59:03.128][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000765)  error(-1)
+[2017-02-15 23:59:03.128][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000769)  error(-1)
+[2017-02-15 23:59:03.130][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000787)  error(-1)
+[2017-02-15 23:59:03.132][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000805)  error(-1)
+[2017-02-15 23:59:03.134][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000817)  error(-1)
+[2017-02-15 23:59:03.137][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000827)  error(-1)
+[2017-02-15 23:59:03.139][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000832)  error(-1)
+[2017-02-15 23:59:03.142][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000866)  error(-1)
+[2017-02-15 23:59:03.157][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000956)  error(-1)
+[2017-02-15 23:59:03.167][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(000991)  error(-1)
+[2017-02-15 23:59:03.198][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(002257)  error(-1)
+[2017-02-15 23:59:03.230][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(002525)  error(-1)
+[2017-02-15 23:59:03.251][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(002710)  error(-1)
+[2017-02-15 23:59:03.252][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(002720)  error(-1)
+[2017-02-15 23:59:03.273][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(002839)  error(-1)
+[2017-02-15 23:59:03.275][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(002845)  error(-1)
+[2017-02-15 23:59:03.275][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(002846)  error(-1)
+[2017-02-15 23:59:03.276][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(002847)  error(-1)
+[2017-02-15 23:59:03.276][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(002848)  error(-1)
+[2017-02-15 23:59:03.300][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(300186)  error(-1)
+[2017-02-15 23:59:03.317][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(300361)  error(-1)
+[2017-02-15 23:59:03.342][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(300578)  error(-1)
+[2017-02-15 23:59:03.344][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(300597)  error(-1)
+[2017-02-15 23:59:03.345][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(300599)  error(-1)
+[2017-02-15 23:59:03.346][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(300600)  error(-1)
+[2017-02-15 23:59:03.347][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(300601)  error(-1)
+[2017-02-15 23:59:03.348][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(300602)  error(-1)
+[2017-02-15 23:59:03.348][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(300603)  error(-1)
+[2017-02-15 23:59:03.348][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(300605)  error(-1)
+[2017-02-15 23:59:03.348][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(300606)  error(-1)
+[2017-02-15 23:59:03.349][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(300607)  error(-1)
+[2017-02-15 23:59:03.349][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(300608)  error(-1)
+[2017-02-15 23:59:03.349][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(300609)  error(-1)
+[2017-02-15 23:59:03.350][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(300610)  error(-1)
+[2017-02-15 23:59:03.362][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600102)  error(-1)
+[2017-02-15 23:59:03.371][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600181)  error(-1)
+[2017-02-15 23:59:03.374][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600205)  error(-1)
+[2017-02-15 23:59:03.379][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600253)  error(-1)
+[2017-02-15 23:59:03.380][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600263)  error(-1)
+[2017-02-15 23:59:03.382][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600286)  error(-1)
+[2017-02-15 23:59:03.384][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600296)  error(-1)
+[2017-02-15 23:59:03.388][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600349)  error(-1)
+[2017-02-15 23:59:03.390][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600357)  error(-1)
+[2017-02-15 23:59:03.398][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600472)  error(-1)
+[2017-02-15 23:59:03.405][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600553)  error(-1)
+[2017-02-15 23:59:03.408][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600591)  error(-1)
+[2017-02-15 23:59:03.410][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600607)  error(-1)
+[2017-02-15 23:59:03.412][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600625)  error(-1)
+[2017-02-15 23:59:03.413][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600627)  error(-1)
+[2017-02-15 23:59:03.414][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600631)  error(-1)
+[2017-02-15 23:59:03.414][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600632)  error(-1)
+[2017-02-15 23:59:03.416][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600646)  error(-1)
+[2017-02-15 23:59:03.418][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600659)  error(-1)
+[2017-02-15 23:59:03.420][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600669)  error(-1)
+[2017-02-15 23:59:03.420][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600670)  error(-1)
+[2017-02-15 23:59:03.422][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600672)  error(-1)
+[2017-02-15 23:59:03.426][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600700)  error(-1)
+[2017-02-15 23:59:03.427][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600709)  error(-1)
+[2017-02-15 23:59:03.432][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600752)  error(-1)
+[2017-02-15 23:59:03.433][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600762)  error(-1)
+[2017-02-15 23:59:03.434][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600772)  error(-1)
+[2017-02-15 23:59:03.436][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600786)  error(-1)
+[2017-02-15 23:59:03.437][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600788)  error(-1)
+[2017-02-15 23:59:03.439][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600799)  error(-1)
+[2017-02-15 23:59:03.442][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600813)  error(-1)
+[2017-02-15 23:59:03.445][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600832)  error(-1)
+[2017-02-15 23:59:03.447][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600840)  error(-1)
+[2017-02-15 23:59:03.448][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600842)  error(-1)
+[2017-02-15 23:59:03.449][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600849)  error(-1)
+[2017-02-15 23:59:03.450][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600852)  error(-1)
+[2017-02-15 23:59:03.452][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600878)  error(-1)
+[2017-02-15 23:59:03.454][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600899)  error(-1)
+[2017-02-15 23:59:03.455][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600939)  error(-1)
+[2017-02-15 23:59:03.458][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(600991)  error(-1)
+[2017-02-15 23:59:03.463][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(601206)  error(-1)
+[2017-02-15 23:59:03.464][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(601212)  error(-1)
+[2017-02-15 23:59:03.465][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(601268)  error(-1)
+[2017-02-15 23:59:03.466][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(601299)  error(-1)
+[2017-02-15 23:59:03.476][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(601881)  error(-1)
+[2017-02-15 23:59:03.488][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(603040)  error(-1)
+[2017-02-15 23:59:03.489][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(603089)  error(-1)
+[2017-02-15 23:59:03.499][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(603177)  error(-1)
+[2017-02-15 23:59:03.500][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(603208)  error(-1)
+[2017-02-15 23:59:03.503][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(603358)  error(-1)
+[2017-02-15 23:59:03.504][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(603360)  error(-1)
+[2017-02-15 23:59:03.505][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(603429)  error(-1)
+[2017-02-15 23:59:03.514][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(603615)  error(-1)
+[2017-02-15 23:59:03.515][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(603626)  error(-1)
+[2017-02-15 23:59:03.516][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(603637)  error(-1)
+[2017-02-15 23:59:03.517][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(603677)  error(-1)
+[2017-02-15 23:59:03.520][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(603839)  error(-1)
+[2017-02-15 23:59:03.522][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(603881)  error(-1)
+[2017-02-15 23:59:03.524][   WARNING] (CTRL) LoadStockIDSet stockDataIF.getLatestStockInfo stockID(603966)  error(-1)
+[2017-02-15 23:59:03.526][   ACCOUNT] [2016-03-01 09:27:00] account new day reset 
+[2017-02-15 23:59:03.860][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-01 22:30:00]
+[2017-02-15 23:59:03.861][    REPORT]     -TotalAssets: 100000.000
+[2017-02-15 23:59:03.861][    REPORT]     -AvailableMoney: 100000.000
+[2017-02-15 23:59:03.863][   ACCOUNT] [2016-03-02 09:27:00] account new day reset 
+[2017-02-15 23:59:03.915][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-02 22:30:00]
+[2017-02-15 23:59:03.916][    REPORT]     -TotalAssets: 100000.000
+[2017-02-15 23:59:03.916][    REPORT]     -AvailableMoney: 100000.000
+[2017-02-15 23:59:03.917][   ACCOUNT] [2016-03-03 09:27:00] account new day reset 
+[2017-02-15 23:59:03.967][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-03 22:30:00]
+[2017-02-15 23:59:03.968][    REPORT]     -TotalAssets: 100000.000
+[2017-02-15 23:59:03.968][    REPORT]     -AvailableMoney: 100000.000
+[2017-02-15 23:59:03.968][   ACCOUNT] [2016-03-04 09:27:00] account new day reset 
+[2017-02-15 23:59:03.996][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-04 22:30:00]
+[2017-02-15 23:59:03.996][    REPORT]     -TotalAssets: 100000.000
+[2017-02-15 23:59:03.996][    REPORT]     -AvailableMoney: 100000.000
+[2017-02-15 23:59:03.997][    REPORT]     -SelectList:[ 000025 000049 000018 ]
+[2017-02-15 23:59:03.997][   ACCOUNT] [2016-03-07 09:27:00] account new day reset 
+[2017-02-15 23:59:05.492][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-07 22:30:00]
+[2017-02-15 23:59:05.494][    REPORT]     -TotalAssets: 100000.000
+[2017-02-15 23:59:05.494][    REPORT]     -AvailableMoney: 100000.000
+[2017-02-15 23:59:05.495][   ACCOUNT] [2016-03-08 09:27:00] account new day reset 
+[2017-02-15 23:59:05.515][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-08 22:30:00]
+[2017-02-15 23:59:05.515][    REPORT]     -TotalAssets: 100000.000
+[2017-02-15 23:59:05.515][    REPORT]     -AvailableMoney: 100000.000
+[2017-02-15 23:59:05.515][    REPORT]     -SelectList:[ 000001 ]
+[2017-02-15 23:59:05.516][   ACCOUNT] [2016-03-09 09:27:00] account new day reset 
+[2017-02-15 23:59:06.094][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-09 22:30:00]
+[2017-02-15 23:59:06.095][    REPORT]     -TotalAssets: 100000.000
+[2017-02-15 23:59:06.095][    REPORT]     -AvailableMoney: 100000.000
+[2017-02-15 23:59:06.095][    REPORT]     -SelectList:[ 000022 000048 000060 ]
+[2017-02-15 23:59:06.095][   ACCOUNT] [2016-03-10 09:27:00] account new day reset 
+[2017-02-15 23:59:07.173][   ACCOUNT]  @MockAccountOpe pushBuyOrder [2016-03-10 10:03:00] [000060 3000 11.000 33001.000(52.802) 66999.000] 
+[2017-02-15 23:59:07.259][   ACCOUNT]  @MockAccountOpe pushBuyOrder [2016-03-10 14:45:00] [000048 1000 31.350 31350.000(50.160) 35649.000] 
+[2017-02-15 23:59:07.284][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-10 22:30:00]
+[2017-02-15 23:59:07.284][    REPORT]     -TotalAssets: 99519.000
+[2017-02-15 23:59:07.284][    REPORT]     -AvailableMoney: 35649.000
+[2017-02-15 23:59:07.284][    REPORT]     -HoldStock: 000060 3000 11.018 10.920 32760.000
+[2017-02-15 23:59:07.284][    REPORT]     -HoldStock: 000048 1000 31.400 31.110 31110.000
+[2017-02-15 23:59:07.284][    REPORT]     -DealOrder: 10:03:00 BUY 000060 3000 11.000
+[2017-02-15 23:59:07.284][    REPORT]     -DealOrder: 14:45:00 BUY 000048 1000 31.350
+[2017-02-15 23:59:07.284][    REPORT]     -SelectList:[ 000062 ]
+[2017-02-15 23:59:07.289][   ACCOUNT] [2016-03-11 09:27:00] account new day reset 
+[2017-02-15 23:59:08.355][   ACCOUNT]  @MockAccountOpe pushBuyOrder [2016-03-11 09:31:00] [000062 1400 23.151 32410.896(51.857) 3238.104] 
+[2017-02-15 23:59:08.579][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-11 22:30:00]
+[2017-02-15 23:59:08.579][    REPORT]     -TotalAssets: 100240.102
+[2017-02-15 23:59:08.579][    REPORT]     -AvailableMoney: 3238.104
+[2017-02-15 23:59:08.580][    REPORT]     -HoldStock: 000060 3000 11.018 10.870 32610.000
+[2017-02-15 23:59:08.580][    REPORT]     -HoldStock: 000048 1000 31.400 31.800 31800.000
+[2017-02-15 23:59:08.580][    REPORT]     -HoldStock: 000062 1400 23.188 23.280 32591.998
+[2017-02-15 23:59:08.580][    REPORT]     -DealOrder: 09:31:00 BUY 000062 1400 23.151
+[2017-02-15 23:59:08.580][    REPORT]     -SelectList:[ 000045 000017 ]
+[2017-02-15 23:59:08.585][   ACCOUNT] [2016-03-14 09:27:00] account new day reset 
+[2017-02-15 23:59:10.440][   ACCOUNT]  @MockAccountOpe pushSellOrder [2016-03-14 10:12:00] [000062 1400 24.487 34282.438(54.852) 37465.688] 
+[2017-02-15 23:59:10.538][   ACCOUNT]  @MockAccountOpe pushSellOrder [2016-03-14 13:15:00] [000048 1000 33.080 33080.000(52.928) 70492.758] 
+[2017-02-15 23:59:10.646][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-14 22:30:00]
+[2017-02-15 23:59:10.646][    REPORT]     -TotalAssets: 103822.758
+[2017-02-15 23:59:10.647][    REPORT]     -AvailableMoney: 70492.758
+[2017-02-15 23:59:10.647][    REPORT]     -HoldStock: 000060 3000 11.018 11.110 33330.000
+[2017-02-15 23:59:10.647][    REPORT]     -DealOrder: 10:12:00 SELL 000062 1400 24.487
+[2017-02-15 23:59:10.647][    REPORT]     -DealOrder: 13:15:00 SELL 000048 1000 33.080
+[2017-02-15 23:59:10.652][   ACCOUNT] [2016-03-15 09:27:00] account new day reset 
+[2017-02-15 23:59:11.114][   ACCOUNT]  @MockAccountOpe pushSellOrder [2016-03-15 09:30:00] [000060 3000 10.980 32940.000(52.704) 103380.055] 
+[2017-02-15 23:59:11.127][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-15 22:30:00]
+[2017-02-15 23:59:11.127][    REPORT]     -TotalAssets: 103380.055
+[2017-02-15 23:59:11.127][    REPORT]     -AvailableMoney: 103380.055
+[2017-02-15 23:59:11.127][    REPORT]     -DealOrder: 09:30:00 SELL 000060 3000 10.980
+[2017-02-15 23:59:11.128][   ACCOUNT] [2016-03-16 09:27:00] account new day reset 
+[2017-02-15 23:59:11.142][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-16 22:30:00]
+[2017-02-15 23:59:11.142][    REPORT]     -TotalAssets: 103380.055
+[2017-02-15 23:59:11.142][    REPORT]     -AvailableMoney: 103380.055
+[2017-02-15 23:59:11.142][    REPORT]     -SelectList:[ 000048 000045 000150 ]
+[2017-02-15 23:59:11.142][   ACCOUNT] [2016-03-17 09:27:00] account new day reset 
+[2017-02-15 23:59:12.113][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-17 22:30:00]
+[2017-02-15 23:59:12.113][    REPORT]     -TotalAssets: 103380.055
+[2017-02-15 23:59:12.113][    REPORT]     -AvailableMoney: 103380.055
+[2017-02-15 23:59:12.113][   ACCOUNT] [2016-03-18 09:27:00] account new day reset 
+[2017-02-15 23:59:12.127][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-18 22:30:00]
+[2017-02-15 23:59:12.127][    REPORT]     -TotalAssets: 103380.055
+[2017-02-15 23:59:12.127][    REPORT]     -AvailableMoney: 103380.055
+[2017-02-15 23:59:12.128][   ACCOUNT] [2016-03-21 09:27:00] account new day reset 
+[2017-02-15 23:59:12.142][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-21 22:30:00]
+[2017-02-15 23:59:12.142][    REPORT]     -TotalAssets: 103380.055
+[2017-02-15 23:59:12.142][    REPORT]     -AvailableMoney: 103380.055
+[2017-02-15 23:59:12.142][   ACCOUNT] [2016-03-22 09:27:00] account new day reset 
+[2017-02-15 23:59:12.155][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-22 22:30:00]
+[2017-02-15 23:59:12.155][    REPORT]     -TotalAssets: 103380.055
+[2017-02-15 23:59:12.155][    REPORT]     -AvailableMoney: 103380.055
+[2017-02-15 23:59:12.155][    REPORT]     -SelectList:[ 000155 ]
+[2017-02-15 23:59:12.156][   ACCOUNT] [2016-03-23 09:27:00] account new day reset 
+[2017-02-15 23:59:12.355][   ACCOUNT]  @MockAccountOpe pushBuyOrder [2016-03-23 09:31:00] [000155 4400 7.750 34100.000(54.560) 69280.055] 
+[2017-02-15 23:59:12.367][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-23 22:30:00]
+[2017-02-15 23:59:12.367][    REPORT]     -TotalAssets: 104700.055
+[2017-02-15 23:59:12.367][    REPORT]     -AvailableMoney: 69280.055
+[2017-02-15 23:59:12.367][    REPORT]     -HoldStock: 000155 4400 7.762 8.050 35420.000
+[2017-02-15 23:59:12.368][    REPORT]     -DealOrder: 09:31:00 BUY 000155 4400 7.750
+[2017-02-15 23:59:12.368][    REPORT]     -SelectList:[ 000029 000046 000001 ]
+[2017-02-15 23:59:12.368][   ACCOUNT] [2016-03-24 09:27:00] account new day reset 
+[2017-02-15 23:59:13.683][   ACCOUNT]  @MockAccountOpe pushBuyOrder [2016-03-24 10:09:00] [000046 3200 10.782 34503.777(55.206) 34776.277] 
+[2017-02-15 23:59:13.843][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-24 22:30:00]
+[2017-02-15 23:59:13.843][    REPORT]     -TotalAssets: 103484.281
+[2017-02-15 23:59:13.843][    REPORT]     -AvailableMoney: 34776.277
+[2017-02-15 23:59:13.843][    REPORT]     -HoldStock: 000155 4400 7.762 7.870 34628.000
+[2017-02-15 23:59:13.843][    REPORT]     -HoldStock: 000046 3200 10.800 10.650 34080.000
+[2017-02-15 23:59:13.843][    REPORT]     -DealOrder: 10:09:00 BUY 000046 3200 10.782
+[2017-02-15 23:59:13.844][    REPORT]     -SelectList:[ 000001 000029 ]
+[2017-02-15 23:59:13.844][   ACCOUNT] [2016-03-25 09:27:00] account new day reset 
+[2017-02-15 23:59:15.032][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-25 22:30:00]
+[2017-02-15 23:59:15.032][    REPORT]     -TotalAssets: 103164.281
+[2017-02-15 23:59:15.032][    REPORT]     -AvailableMoney: 34776.277
+[2017-02-15 23:59:15.032][    REPORT]     -HoldStock: 000155 4400 7.762 7.870 34628.000
+[2017-02-15 23:59:15.033][    REPORT]     -HoldStock: 000046 3200 10.800 10.550 33760.000
+[2017-02-15 23:59:15.033][    REPORT]     -SelectList:[ 000020 000060 000058 ]
+[2017-02-15 23:59:15.033][   ACCOUNT] [2016-03-28 09:27:00] account new day reset 
+[2017-02-15 23:59:15.432][   ACCOUNT]  @MockAccountOpe pushSellOrder [2016-03-28 09:30:00] [000155 4400 8.260 36344.000(58.150) 71062.133] 
+[2017-02-15 23:59:16.621][   ACCOUNT]  @MockAccountOpe pushBuyOrder [2016-03-28 14:47:00] [000020 1400 23.670 33138.000(53.021) 37924.133] 
+[2017-02-15 23:59:16.642][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-28 22:30:00]
+[2017-02-15 23:59:16.642][    REPORT]     -TotalAssets: 104614.133
+[2017-02-15 23:59:16.642][    REPORT]     -AvailableMoney: 37924.133
+[2017-02-15 23:59:16.642][    REPORT]     -HoldStock: 000046 3200 10.800 10.520 33664.000
+[2017-02-15 23:59:16.642][    REPORT]     -HoldStock: 000020 1400 23.708 23.590 33026.000
+[2017-02-15 23:59:16.642][    REPORT]     -DealOrder: 09:30:00 SELL 000155 4400 8.260
+[2017-02-15 23:59:16.643][    REPORT]     -DealOrder: 14:47:00 BUY 000020 1400 23.670
+[2017-02-15 23:59:16.643][    REPORT]     -SelectList:[ 000019 000058 ]
+[2017-02-15 23:59:16.643][   ACCOUNT] [2016-03-29 09:27:00] account new day reset 
+[2017-02-15 23:59:17.173][   ACCOUNT]  @MockAccountOpe pushSellOrder [2016-03-29 09:30:00] [000046 3200 10.520 33664.000(53.862) 71534.273] 
+[2017-02-15 23:59:17.941][   ACCOUNT]  @MockAccountOpe pushBuyOrder [2016-03-29 09:30:00] [000019 3000 11.533 34600.000(55.360) 36934.273] 
+[2017-02-15 23:59:18.007][   ACCOUNT]  @MockAccountOpe pushBuyOrder [2016-03-29 13:08:00] [000058 2800 11.821 33098.078(52.957) 3836.195] 
+[2017-02-15 23:59:18.055][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-29 22:30:00]
+[2017-02-15 23:59:18.055][    REPORT]     -TotalAssets: 104574.195
+[2017-02-15 23:59:18.055][    REPORT]     -AvailableMoney: 3836.195
+[2017-02-15 23:59:18.055][    REPORT]     -HoldStock: 000020 1400 23.708 23.130 32381.998
+[2017-02-15 23:59:18.055][    REPORT]     -HoldStock: 000019 3000 11.552 11.333 34000.000
+[2017-02-15 23:59:18.055][    REPORT]     -HoldStock: 000058 2800 11.840 12.270 34356.000
+[2017-02-15 23:59:18.055][    REPORT]     -DealOrder: 09:30:00 SELL 000046 3200 10.520
+[2017-02-15 23:59:18.055][    REPORT]     -DealOrder: 09:30:00 BUY 000019 3000 11.533
+[2017-02-15 23:59:18.056][    REPORT]     -DealOrder: 13:08:00 BUY 000058 2800 11.821
+[2017-02-15 23:59:18.056][    REPORT]     -SelectList:[ 000025 000156 000070 ]
+[2017-02-15 23:59:18.056][   ACCOUNT] [2016-03-30 09:27:00] account new day reset 
+[2017-02-15 23:59:20.063][   ACCOUNT]  @MockAccountOpe pushSellOrder [2016-03-30 09:31:00] [000058 2800 12.669 35473.969(56.758) 39253.406] 
+[2017-02-15 23:59:20.304][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-30 22:30:00]
+[2017-02-15 23:59:20.304][    REPORT]     -TotalAssets: 108329.406
+[2017-02-15 23:59:20.304][    REPORT]     -AvailableMoney: 39253.406
+[2017-02-15 23:59:20.304][    REPORT]     -HoldStock: 000020 1400 23.708 24.340 34076.000
+[2017-02-15 23:59:20.304][    REPORT]     -HoldStock: 000019 3000 11.552 11.667 35000.000
+[2017-02-15 23:59:20.304][    REPORT]     -DealOrder: 09:31:00 SELL 000058 2800 12.669
+[2017-02-15 23:59:20.304][   ACCOUNT] [2016-03-31 09:27:00] account new day reset 
+[2017-02-15 23:59:20.972][   ACCOUNT]  @MockAccountOpe pushSellOrder [2016-03-31 09:30:00] [000020 1400 24.570 34398.000(55.037) 73596.367] 
+[2017-02-15 23:59:21.032][    REPORT] TranInfoCollectWorkRequest.doAction [2016-03-31 22:30:00]
+[2017-02-15 23:59:21.032][    REPORT]     -TotalAssets: 108176.375
+[2017-02-15 23:59:21.032][    REPORT]     -AvailableMoney: 73596.367
+[2017-02-15 23:59:21.032][    REPORT]     -HoldStock: 000019 3000 11.552 11.527 34580.004
+[2017-02-15 23:59:21.032][    REPORT]     -DealOrder: 09:30:00 SELL 000020 1400 24.570
+[2017-02-15 23:59:21.032][   ACCOUNT] [2016-04-01 09:27:00] account new day reset 
+[2017-02-15 23:59:21.403][   ACCOUNT]  @MockAccountOpe pushSellOrder [2016-04-01 09:30:00] [000019 3000 11.340 34020.000(54.432) 107561.938] 
+[2017-02-15 23:59:21.419][    REPORT] TranInfoCollectWorkRequest.doAction [2016-04-01 22:30:00]
+[2017-02-15 23:59:21.419][    REPORT]     -TotalAssets: 107561.938
+[2017-02-15 23:59:21.419][    REPORT]     -AvailableMoney: 107561.938
+[2017-02-15 23:59:21.419][    REPORT]     -DealOrder: 09:30:00 SELL 000019 3000 11.340
+[2017-02-15 23:59:21.419][    REPORT]     -SelectList:[ 000028 000049 000020 ]
+[2017-02-15 23:59:21.459][    REPORT] GenerateReportRequest.doAction [2016-04-01 21:30:00]
+[2017-02-15 23:59:21.609][      TEST] --->>> MainEnd

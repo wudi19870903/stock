@@ -85,18 +85,18 @@ public class AccountControlIF {
 	 * 下买单委托
 	 * 时间用于生成交割单
 	 */
-	public int pushBuyOrder(String date, String time, String stockID, float price, int amount)
+	public int pushBuyOrder(String date, String time, String stockID, int amount, float price)
 	{
-		return m_account.pushBuyOrder(date, time, stockID, price, amount);
+		return m_account.pushBuyOrder(date, time, stockID, amount, price);
 	}
 
 	/*
 	 * 下卖单委托
 	 * 时间用于生成交割单
 	 */
-	public int pushSellOrder(String date, String time, String stockID, float price, int amount)
+	public int pushSellOrder(String date, String time, String stockID, int amount, float price)
 	{
-		return m_account.pushSellOrder(date, time, stockID, price, amount);
+		return m_account.pushSellOrder(date, time, stockID, amount, price);
 	}
 	
 	// 获得委托列表（未成交）

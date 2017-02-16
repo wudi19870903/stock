@@ -82,15 +82,15 @@ public class Account {
 	}
 	
 	// 推送买单委托，返回实际下单量
-	public int pushBuyOrder(String date, String time, String id, float price, int amount)
+	public int pushBuyOrder(String date, String time, String id, int amount, float price)
 	{
-		return m_cIAccountOpe.pushBuyOrder(date, time, id, price, amount);
+		return m_cIAccountOpe.pushBuyOrder(date, time, id, amount, price);
 	}
 	
 	// 推送卖单委托，返回实际下单量
-	public int pushSellOrder(String date, String time, String id, float price, int amount)
+	public int pushSellOrder(String date, String time, String id, int amount, float price)
 	{
-		return m_cIAccountOpe.pushSellOrder(date, time, id, price, amount);
+		return m_cIAccountOpe.pushSellOrder(date, time, id, amount, price);
 	}
 	
 	// 获得账户可用资金（现金）
