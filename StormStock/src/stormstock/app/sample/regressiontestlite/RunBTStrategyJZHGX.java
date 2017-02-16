@@ -1,4 +1,4 @@
-package stormstock.app.regressiontestlite;
+package stormstock.app.sample.regressiontestlite;
 
 import java.util.ArrayList;
 import java.util.Arrays;

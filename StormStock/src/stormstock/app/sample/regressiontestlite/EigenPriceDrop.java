@@ -1,4 +1,4 @@
-package stormstock.eigen;
+package stormstock.app.sample.regressiontestlite;
 
 import java.util.List;
 

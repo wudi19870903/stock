@@ -1,4 +1,4 @@
-package stormstock.eigen;
+package stormstock.app.sample.regressiontestlite;
 
 import stormstock.fw.tranengine_lite.ANLEigen;
 import stormstock.fw.tranengine_lite.ANLStock;

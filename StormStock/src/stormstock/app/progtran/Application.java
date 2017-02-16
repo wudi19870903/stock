@@ -12,9 +12,6 @@ public class Application {
 		
 		TranEngine cTranEngine = new TranEngine();
 		
-		cTranEngine.addStockEigen(new StockEigen.EigenSamplePriceLoc());
-		cTranEngine.addStockEigen(new StockEigen.EigenSampleMADeviation());
-		
 		cTranEngine.setStockSet(new TranStockSet());
 		cTranEngine.setSelectStockStrategy(new StrategySelect());
 		cTranEngine.setCreatePositonStrategy(new StrategyCreate());

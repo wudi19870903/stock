@@ -1,12 +1,10 @@
-package stormstock.app.regressiontestlite;
+package stormstock.app.sample.regressiontestlite;
 
 import stormstock.fw.tranengine_lite.ANLBTEngine;
 import stormstock.fw.tranengine_lite.ANLLog;
 import stormstock.fw.tranengine_lite.ANLStock;
 import stormstock.fw.tranengine_lite.ANLStrategy;
 import stormstock.fw.tranengine_lite.ANLStrategy.SelectResult;
-import stormstock.eigen.EigenPriceDrop;
-import stormstock.eigen.EigenPriceLoc;
 
 public class RunBTStrategyX {
 	// ≤ﬂ¬‘StrategySample¿‡
