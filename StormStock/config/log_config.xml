@@ -1,7 +1,7 @@
 <config>
 	<tag name="BASE" output="0" />
 	<tag name="EVENT" output="0" />
-	<tag name="CTRL" output="0" />
+	<tag name="CTRL" output="1" />
 	<tag name="STOCKDATA" output="0" />
 	<tag name="SELECT" output="0" />
 	<tag name="CREATE" output="0" />
