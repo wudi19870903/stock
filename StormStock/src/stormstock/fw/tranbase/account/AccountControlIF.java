@@ -54,10 +54,16 @@ public class AccountControlIF {
 	 */
 	public boolean newDayInit(String date, String time)
 	{
+		boolean bRet = true;
 		BLog.output("ACCOUNT", "[%s %s] account new day reset \n", date, time);
 		// 账户重新初始化
-		m_account.newDayInit(date, time);
-		return true;
+		int err = m_account.newDayInit(date, time);
+		if(0 != err)
+		{
+			bRet = false;
+			BLog.error("ACCOUNT", "[%s %s] m_account.newDayInit err(%d) \n", date, time, err);
+		}
+		return bRet;
 	}
 	
 	// 获取账户总资产（根据日期时间来确定股价）

@@ -6,6 +6,7 @@ import java.util.List;
 
 import stormstock.fw.base.BEventSys;
 import stormstock.fw.base.BLog;
+import stormstock.fw.base.BThread;
 import stormstock.fw.base.BUtilsDateTime;
 import stormstock.fw.base.BWaitObj;
 import stormstock.fw.event.Transaction;
@@ -81,73 +82,91 @@ public class WorkEntity {
 			{
 				bIsTranDate = true;
 			}
+			BLog.output("CTRL", "[%s %s] isTranDate = %b \n", dateStr, timestr, bIsTranDate);
+			
 			
 			if(bIsTranDate)
 			{
 				// 09:27 账户新交易日初始化
+				boolean bAccInit = false;
 				timestr = "09:27:00";
 				if(waitForDateTime(dateStr, timestr))
 				{
 					AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
-					BLog.output("CTRL", "[%s %s] account newDayInit \n", dateStr, timestr);
-					accIF.newDayInit(dateStr, timestr);
+					for(int i=0;i<5;i++) // 试图5次初始化账户
+					{
+						bAccInit = accIF.newDayInit(dateStr, timestr);
+						if(bAccInit)
+						{
+							break;
+						}
+						BThread.sleep(3000);
+					}
 				}
+				BLog.output("CTRL", "[%s %s] account newDayInit = %b \n", dateStr, timestr, bAccInit);
 				
-				// 9:30-11:30 1:00-3:00 定期间隔发送交易信号，等待信号处理完毕通知
-				int interval_min = 1;
-				String timestr_begin = "09:30:00";
-				String timestr_end = "11:30:00";
-				timestr = timestr_begin;
-				while(true)
+				if(bAccInit)
 				{
+					// 9:30-11:30 1:00-3:00 定期间隔发送交易信号，等待信号处理完毕通知
+					int interval_min = 1;
+					String timestr_begin = "09:30:00";
+					String timestr_end = "11:30:00";
+					timestr = timestr_begin;
+					while(true)
+					{
+						if(waitForDateTime(dateStr, timestr))
+						{
+							BLog.output("CTRL", "[%s %s] stockClearAnalysis & stockCreateAnalysis \n", dateStr, timestr);
+							m_entityClear.stockClear(dateStr, timestr);
+							m_entityCreate.stockCreate(dateStr, timestr);
+						}
+						timestr = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(timestr, interval_min);
+						if(timestr.compareTo(timestr_end) > 0) break;
+					}
+					
+					timestr_begin = "13:00:00";
+					timestr_end = "15:00:00";
+					timestr = timestr_begin;
+					while(true)
+					{
+						if(waitForDateTime(dateStr, timestr))
+						{
+							BLog.output("CTRL", "[%s %s] stockClearAnalysis & stockCreateAnalysis \n", dateStr, timestr);
+							m_entityClear.stockClear(dateStr, timestr);
+							m_entityCreate.stockCreate(dateStr, timestr);
+						}
+						timestr = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(timestr, interval_min);
+						if(timestr.compareTo(timestr_end) > 0) break;
+					}
+					
+					// 20:00 更新历史数据通知 等待更新完毕通知
+					timestr = "20:00:00";
 					if(waitForDateTime(dateStr, timestr))
 					{
-						BLog.output("CTRL", "[%s %s] stockClearAnalysis & stockCreateAnalysis \n", dateStr, timestr);
-						m_entityClear.stockClear(dateStr, timestr);
-						m_entityCreate.stockCreate(dateStr, timestr);
+						BLog.output("CTRL", "[%s %s] updateStockData \n", dateStr, timestr);
+						StockDataIF stockDataIF = GlobalUserObj.getCurStockDataIF();
+						stockDataIF.updateAllLocalStocks(dateStr);
 					}
-					timestr = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(timestr, interval_min);
-					if(timestr.compareTo(timestr_end) > 0) break;
-				}
-				
-				timestr_begin = "13:00:00";
-				timestr_end = "15:00:00";
-				timestr = timestr_begin;
-				while(true)
-				{
+					
+					// 22:00 选股 等待选股完毕
+					timestr = "22:00:00";
 					if(waitForDateTime(dateStr, timestr))
 					{
-						BLog.output("CTRL", "[%s %s] stockClearAnalysis & stockCreateAnalysis \n", dateStr, timestr);
-						m_entityClear.stockClear(dateStr, timestr);
-						m_entityCreate.stockCreate(dateStr, timestr);
+						BLog.output("CTRL", "[%s %s] StockSelectAnalysis \n", dateStr, timestr);
+						m_entitySelect.selectStock(dateStr, timestr);
 					}
-					timestr = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(timestr, interval_min);
-					if(timestr.compareTo(timestr_end) > 0) break;
+					
+					// 22:30 当日报告信息收集
+					timestr = "22:30:00";
+					if(waitForDateTime(dateStr, timestr))
+					{
+						BLog.output("CTRL", "[%s %s] transaction info collection \n", dateStr, timestr);
+						m_entityReport.tranInfoCollect(dateStr, timestr);
+					}
 				}
-				
-				// 20:00 更新历史数据通知 等待更新完毕通知
-				timestr = "20:00:00";
-				if(waitForDateTime(dateStr, timestr))
+				else
 				{
-					BLog.output("CTRL", "[%s %s] updateStockData \n", dateStr, timestr);
-					StockDataIF stockDataIF = GlobalUserObj.getCurStockDataIF();
-					stockDataIF.updateAllLocalStocks(dateStr);
-				}
-				
-				// 22:00 选股 等待选股完毕
-				timestr = "22:00:00";
-				if(waitForDateTime(dateStr, timestr))
-				{
-					BLog.output("CTRL", "[%s %s] StockSelectAnalysis \n", dateStr, timestr);
-					m_entitySelect.selectStock(dateStr, timestr);
-				}
-				
-				// 22:30 当日报告信息收集
-				timestr = "22:30:00";
-				if(waitForDateTime(dateStr, timestr))
-				{
-					BLog.output("CTRL", "[%s %s] transaction info collection \n", dateStr, timestr);
-					m_entityReport.tranInfoCollect(dateStr, timestr);
+					BLog.output("CTRL", "[%s %s] account newDayInit failed, continue! \n", dateStr, timestr);
 				}
 			}
 			else
@@ -215,15 +234,16 @@ public class WorkEntity {
 				}
 	        }
 			
-			ResultStockTime cResultStockTime = stockDataIF.getStockTime("999999", date, BUtilsDateTime.GetCurTimeStr());
-			if(0 == cResultStockTime.error)
+			for(int i = 0; i < 5; i++) // 试图5次来确认
 			{
-				return true;
+				ResultStockTime cResultStockTime = stockDataIF.getStockTime("999999", date, BUtilsDateTime.GetCurTimeStr());
+				if(0 == cResultStockTime.error)
+				{
+					return true;
+				}
+				BThread.sleep(3000);
 			}
-			else
-			{
-				return false;
-			}
+			return false;
 		}
 	}
 	

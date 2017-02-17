@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import stormstock.fw.base.BLog;
+import stormstock.fw.base.BThread;
 import stormstock.fw.base.BTypeDefine.RefFloat;
 import stormstock.fw.tranbase.account.AccountPublicDef.ACCOUNTTYPE;
 import stormstock.fw.tranbase.account.AccountPublicDef.CommissionOrder;
@@ -42,40 +43,42 @@ public class Account {
 	public int newDayInit(String date, String time)
 	{
 		int iNewDayInit = m_cIAccountOpe.newDayInit(date, time);
-		
-		// 更新调查天数map
-		Map<String, Integer> newHoldStockInvestigationDaysMap = new HashMap<String, Integer>();
-		
-		List<HoldStock> cHoldStockList = new ArrayList<HoldStock>();
-		int iGetHoldStockList = getHoldStockList(date, time, cHoldStockList);
-		if(0 == iGetHoldStockList)
+		if(0 == iNewDayInit)
 		{
-			for(int i=0; i<cHoldStockList.size();i++)
-			{
-				HoldStock cHoldStock = cHoldStockList.get(i);
-				newHoldStockInvestigationDaysMap.put(cHoldStock.stockID, 0);
-			}
-			for(Map.Entry<String, Integer> entry:newHoldStockInvestigationDaysMap.entrySet()){   
-				String key = entry.getKey();
-				int iInvestigationDays = 0;
-				if(m_holdStockInvestigationDaysMap.containsKey(key))
-				{
-					iInvestigationDays = m_holdStockInvestigationDaysMap.get(key);
-				}
-				entry.setValue(iInvestigationDays);
-			} 
-			for(Map.Entry<String, Integer> entry:newHoldStockInvestigationDaysMap.entrySet()){   
-				int iInvestigationDays = entry.getValue();
-				entry.setValue(iInvestigationDays+1);
-			} 
-			m_holdStockInvestigationDaysMap.clear();
-			m_holdStockInvestigationDaysMap.putAll(newHoldStockInvestigationDaysMap);
-		}
-		else
-		{
-			iNewDayInit = -201;
-		}
+			// 更新调查天数map
+			Map<String, Integer> newHoldStockInvestigationDaysMap = new HashMap<String, Integer>();
 			
+			List<HoldStock> cHoldStockList = new ArrayList<HoldStock>();
+			int iGetHoldStockList = getHoldStockList(date, time, cHoldStockList);
+			if(0 == iGetHoldStockList)
+			{
+				for(int i=0; i<cHoldStockList.size();i++)
+				{
+					HoldStock cHoldStock = cHoldStockList.get(i);
+					newHoldStockInvestigationDaysMap.put(cHoldStock.stockID, 0);
+				}
+				for(Map.Entry<String, Integer> entry:newHoldStockInvestigationDaysMap.entrySet()){   
+					String key = entry.getKey();
+					int iInvestigationDays = 0;
+					if(m_holdStockInvestigationDaysMap.containsKey(key))
+					{
+						iInvestigationDays = m_holdStockInvestigationDaysMap.get(key);
+					}
+					entry.setValue(iInvestigationDays);
+				} 
+				for(Map.Entry<String, Integer> entry:newHoldStockInvestigationDaysMap.entrySet()){   
+					int iInvestigationDays = entry.getValue();
+					entry.setValue(iInvestigationDays+1);
+				} 
+				m_holdStockInvestigationDaysMap.clear();
+				m_holdStockInvestigationDaysMap.putAll(newHoldStockInvestigationDaysMap);
+			}
+			else
+			{
+				iNewDayInit = -201;
+			}
+		}
+		
 		load();
 		
 		return iNewDayInit;
