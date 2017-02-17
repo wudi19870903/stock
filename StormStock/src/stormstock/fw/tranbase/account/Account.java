@@ -345,11 +345,12 @@ public class Account {
 		for(int i=0; i<cHoldStockList.size(); i++ )
 		{
 			HoldStock cHoldStock = cHoldStockList.get(i);
-			BLog.output("ACCOUNT", "    -HoldStock: %s %.3f %.3f %d %.3f\n", 
-					cHoldStock.stockID, 
-					cHoldStock.refPrimeCostPrice, cHoldStock.curPrice, cHoldStock.totalAmount,
-					cHoldStock.curPrice*cHoldStock.totalAmount);
+			BLog.output("REPORT", "    -HoldStock: %s %d %.3f %.3f %.3f %d\n", 
+					cHoldStock.stockID,
+					cHoldStock.totalAmount, cHoldStock.refPrimeCostPrice, cHoldStock.curPrice, 
+					cHoldStock.totalAmount*cHoldStock.curPrice, cHoldStock.investigationDays);
 		}
+		
 		for(int i=0; i<cDealOrderList.size(); i++ )
 		{
 			DealOrder cDealOrder = cDealOrderList.get(i);
