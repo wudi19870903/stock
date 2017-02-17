@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<account ID="mock001" password="mock001_password">
+  <SelectList>
+    <Stock stockID="000062"/>
+  </SelectList>
+  <InitHoldStockInvestigationDaysMap>
+    <StockInvestigation stockID="000062" investigationDays="1"/>
+  </InitHoldStockInvestigationDaysMap>
+</account>

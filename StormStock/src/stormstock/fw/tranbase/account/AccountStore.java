@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -36,16 +38,19 @@ import stormstock.fw.tranbase.account.AccountPublicDef.TRANACT;
 
 public class AccountStore {
 	
+	
+	
 	public static class StoreEntity
 	{
 		public List<String> stockSelectList;
+		public Map<String, Integer> initHoldStockInvestigationDaysMap;
 	}
 	
 	public AccountStore(String accountID, String password)
 	{
 		m_accountID = accountID;
 		m_password = password;
-		m_accXMLFile = "account\\account_" + m_accountID + ".xml";
+		m_accXMLFile = "account\\ACCOUNT_EXTEND_" + m_accountID + ".xml";
 	}
 	
 	public boolean storeInit()
@@ -118,14 +123,32 @@ public class AccountStore {
         if(null != cStoreEntity)
         {
         	// StockSelectList
-        	Element Node_StockSelectList=doc.createElement("SelectList");
-        	root.appendChild(Node_StockSelectList);
-        	for(int i=0;i<cStoreEntity.stockSelectList.size();i++)
+        	if(null != cStoreEntity.stockSelectList)
         	{
-        		String stockID = cStoreEntity.stockSelectList.get(i);
-        		Element Node_Stock = doc.createElement("Stock");
-        		Node_Stock.setAttribute("stockID", stockID);
-        		Node_StockSelectList.appendChild(Node_Stock);
+            	Element Node_StockSelectList=doc.createElement("SelectList");
+            	root.appendChild(Node_StockSelectList);
+            	for(int i=0;i<cStoreEntity.stockSelectList.size();i++)
+            	{
+            		String stockID = cStoreEntity.stockSelectList.get(i);
+            		Element Node_Stock = doc.createElement("Stock");
+            		Node_Stock.setAttribute("stockID", stockID);
+            		Node_StockSelectList.appendChild(Node_Stock);
+            	}
+        	}
+
+        	// initInvestigationDaysMap
+        	if(null != cStoreEntity.initHoldStockInvestigationDaysMap)
+        	{
+            	Element Node_InitHoldStockInvestigationDaysMap=doc.createElement("InitHoldStockInvestigationDaysMap");
+            	root.appendChild(Node_InitHoldStockInvestigationDaysMap);
+            	for (Map.Entry<String, Integer> entry : cStoreEntity.initHoldStockInvestigationDaysMap.entrySet()) {  
+            		String stockID = entry.getKey();
+            		Integer investigationDays = entry.getValue();
+            		Element Node_StockInvestigation = doc.createElement("StockInvestigation");
+            		Node_StockInvestigation.setAttribute("stockID", stockID);
+            		Node_StockInvestigation.setAttribute("investigationDays", investigationDays.toString());
+            		Node_InitHoldStockInvestigationDaysMap.appendChild(Node_StockInvestigation);
+            	} 
         	}
         }
 		
@@ -235,11 +258,13 @@ public class AccountStore {
 			}
 		    
 		    // 选股列表加载
-		    List<String> stockSelectList = new ArrayList<String>();
+		    List<String> stockSelectList = null;
 		    {
 		    	NodeList nodelist_SelectList = rootElement.getElementsByTagName("SelectList");
 		        if(nodelist_SelectList.getLength() == 1)
 	        	{
+		        	stockSelectList = new ArrayList<String>();
+		        	
 		        	Node Node_SelectList = nodelist_SelectList.item(0);
 		        	NodeList nodelist_Stock = Node_SelectList.getChildNodes();
 			        for (int i = 0; i < nodelist_Stock.getLength(); i++) {
@@ -253,9 +278,33 @@ public class AccountStore {
 			        }
 	        	}
 		    }
+		    
+        	// initInvestigationDaysMap
+		    Map<String, Integer> initHoldStockInvestigationDaysMap = null;
+		    {
+		    	NodeList nodelist_HoldStockInvestigationDaysMap = rootElement.getElementsByTagName("InitHoldStockInvestigationDaysMap");
+		    	if(nodelist_HoldStockInvestigationDaysMap.getLength() == 1)
+	        	{
+		    		initHoldStockInvestigationDaysMap = new HashMap<String, Integer>();
+		    		
+		        	Node HoldStockInvestigationDaysMap = nodelist_HoldStockInvestigationDaysMap.item(0);
+		        	NodeList nodelist_StockInvestigation = HoldStockInvestigationDaysMap.getChildNodes();
+			        for (int i = 0; i < nodelist_StockInvestigation.getLength(); i++) {
+			        	Node node_StockInvestigation = nodelist_StockInvestigation.item(i);
+			        	if(node_StockInvestigation.getNodeType() == Node.ELEMENT_NODE)
+			        	{
+			        		String stockID = ((Element)node_StockInvestigation).getAttribute("stockID");
+			        		String investigationDays = ((Element)node_StockInvestigation).getAttribute("investigationDays");
+				        	//BLog.output("ACCOUNT", "stockID:%s \n", stockID);
+			        		initHoldStockInvestigationDaysMap.put(stockID, Integer.parseInt(investigationDays));
+			        	}
+			        }
+	        	}
+		    }
 		 
 		    StoreEntity cStoreEntity = new StoreEntity();
 		    cStoreEntity.stockSelectList = stockSelectList;
+		    cStoreEntity.initHoldStockInvestigationDaysMap = initHoldStockInvestigationDaysMap;
 		    return cStoreEntity;
 		}
 		catch(Exception e)

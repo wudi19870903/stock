@@ -65,10 +65,10 @@ public class TranInfoCollectWorkRequest extends BQThreadRequest {
 		for(int i=0; i<cHoldStockList.size(); i++ )
 		{
 			HoldStock cHoldStock = cHoldStockList.get(i);
-			BLog.output("REPORT", "    -HoldStock: %s %d %.3f %.3f %.3f\n", 
+			BLog.output("REPORT", "    -HoldStock: %s %d %.3f %.3f %.3f %d\n", 
 					cHoldStock.stockID,
 					cHoldStock.totalAmount, cHoldStock.refPrimeCostPrice, cHoldStock.curPrice, 
-					cHoldStock.totalAmount*cHoldStock.curPrice);
+					cHoldStock.totalAmount*cHoldStock.curPrice, cHoldStock.investigationDays);
 		}
 		// 打印当日成交
 		for(int i=0; i<cDealOrderList.size(); i++ )

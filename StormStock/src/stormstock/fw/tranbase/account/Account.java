@@ -33,7 +33,11 @@ public class Account {
 		m_holdStockInvestigationDaysMap = new HashMap<String, Integer>();
 		m_stockSelectList = new ArrayList<String>();
 		m_accountStore = new AccountStore(accountID, password);
-		load();
+		
+		preLoad(); // 加载一次股票调查天数表
+		
+		load(); // 加载选股表
+		store(); // 存储选股表
 	}
 	
 	// ***********************************************************************
@@ -43,6 +47,7 @@ public class Account {
 	public int newDayInit(String date, String time)
 	{
 		int iNewDayInit = m_cIAccountOpe.newDayInit(date, time);
+		
 		if(0 == iNewDayInit)
 		{
 			// 更新调查天数map
@@ -294,16 +299,29 @@ public class Account {
 		return all_asset;
 	}
 	
+	// 只加载股票考察天数表
+	private void preLoad()
+	{
+		StoreEntity cStoreEntity = m_accountStore.load();
+		if(null != cStoreEntity)
+		{
+			m_holdStockInvestigationDaysMap.clear();
+			if(null != cStoreEntity.initHoldStockInvestigationDaysMap)
+		    	m_holdStockInvestigationDaysMap.putAll(cStoreEntity.initHoldStockInvestigationDaysMap);
+		}
+	}
+	// 加载选股表
 	private void load()
 	{
 		StoreEntity cStoreEntity = m_accountStore.load();
 		if(null != cStoreEntity)
 		{
 		    m_stockSelectList.clear();
-		    m_stockSelectList.addAll(cStoreEntity.stockSelectList);
+		    if(null != cStoreEntity.stockSelectList)
+		    	m_stockSelectList.addAll(cStoreEntity.stockSelectList);
 		}
 	}
-	
+	// 保存选股表
 	private void store()
 	{
 		StoreEntity cStoreEntity = new StoreEntity();
@@ -349,7 +367,6 @@ public class Account {
 	 */
 	private IAccountOpe m_cIAccountOpe;
 	private Map<String, Integer> m_holdStockInvestigationDaysMap;
-	
 	private List<String> m_stockSelectList; // 选股列表
 	private AccountStore m_accountStore;
 }

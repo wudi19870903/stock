@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<account ID="mock001" password="mock001_password">
+  <Money total="42804.797"/>
+  <CommissionOrderList/>
+  <HoldStockList>
+    <Stock availableAmount="3700" curPrice="10.920" refPrimeCostPrice="11.018" stockID="000060" totalAmount="3700"/>
+    <Stock availableAmount="1300" curPrice="31.110" refPrimeCostPrice="31.400" stockID="000048" totalAmount="1300"/>
+  </HoldStockList>
+  <DealOrderList/>
+</account>
