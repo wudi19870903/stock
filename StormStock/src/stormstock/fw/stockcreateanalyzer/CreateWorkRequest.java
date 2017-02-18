@@ -79,7 +79,7 @@ public class CreateWorkRequest extends BQThreadRequest {
 					&& 0 == cResultStockTime.error)
 			{
 				// 做成当日股票数据
-				StockTimeDataCache.addStockTime(stockID, m_date, cResultStockTime.stockTime);
+				StockTimeDataCache.addStockTime(stockID, m_date, cResultStockTime.stockTime());
 				
 				List<StockTime> cStockTimeList = StockTimeDataCache.getStockTimeList(stockID, m_date);
 				StockDay curStockDay = new StockDay();
@@ -102,7 +102,7 @@ public class CreateWorkRequest extends BQThreadRequest {
 				// 构造CreateResultWrapper
 				CreateResultWrapper cCreateResultWrapper = new CreateResultWrapper();
 				cCreateResultWrapper.stockId = stockID;
-				cCreateResultWrapper.fPrice = cResultStockTime.stockTime.price;
+				cCreateResultWrapper.fPrice = cResultStockTime.stockTime().price;
 				
 				List<StockTime> stockTimeList = ctx.target().stock().getLatestStockTimeList();
 				if(stockTimeList.size()>0)

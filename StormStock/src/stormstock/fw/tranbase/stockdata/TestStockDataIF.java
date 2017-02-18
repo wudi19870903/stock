@@ -128,45 +128,49 @@ public class TestStockDataIF {
 	public static void test_getStockTime()
 	{
 		boolean bTestSingle = true;
-		boolean bTest9to15 = false;
+		boolean bTest9to15 = true;
 		
 		StockDataIF cStockDataIF = new StockDataIF();
 		
 		if(bTestSingle)
 		{
-			String testDate = "2016-03-01";
-			String testTime = "09:30:00";
+			String testDate = BUtilsDateTime.GetCurDateStr();
+			String testTime = BUtilsDateTime.GetCurTimeStr();
+
 			
-			ResultStockTime cResultStockTime = cStockDataIF.getStockTime("000938", testDate, testTime);
+			ResultStockTime cResultStockTime = cStockDataIF.getStockTime("999999", testDate, testTime);
 		
 			if(0 == cResultStockTime.error)
 			{
-				BLog.output("TEST", "[%s] %.2f\n", cResultStockTime.stockTime.time, cResultStockTime.stockTime.price);
+				BLog.output("TEST", "[%s %s] %.2f (%s %s)\n", testDate, testTime, 
+						cResultStockTime.price, cResultStockTime.date, cResultStockTime.time);
 			}
 			else
 			{
-				BLog.output("TEST", "[%s] error %d\n", cResultStockTime.stockTime.time, cResultStockTime.error);
+				BLog.output("TEST", "[%s %s] error %d\n", testDate, testTime, cResultStockTime.error);
 			}
 		}
 		
 		if(bTest9to15)
 		{
-			
-			String curTime = "09:00:00";
+			String testDate = "2016-03-09";
+			String testTime = "09:00:00";
 			while(true)
 			{
-				ResultStockTime cResultStockTime = cStockDataIF.getStockTime("000985", "2016-03-09", curTime);
+				ResultStockTime cResultStockTime = cStockDataIF.getStockTime("000985", testDate, testTime);
 				
 				if(0 == cResultStockTime.error)
 				{
-					BLog.output("TEST", "[%s] %.2f\n", cResultStockTime.stockTime.time, cResultStockTime.stockTime.price);
+					BLog.output("TEST", "[%s %s] %.2f (%s %s)\n", testDate, testTime, 
+							cResultStockTime.price, cResultStockTime.date, cResultStockTime.time);
 				}
 				
-				if(curTime.compareTo("15:00:00") >= 0)
+				if(testTime.compareTo("15:00:00") >= 0)
 				{
 					break;
 				}
-				curTime = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(curTime, 5);
+			
+				testTime = BUtilsDateTime.getTimeStrForSpecifiedTimeOffsetM(testTime, 5);
 			}
 		}
 
@@ -174,6 +178,7 @@ public class TestStockDataIF {
 	
 	
 	public static void main(String[] args) {
+		BLog.start();
 		BLog.output("TEST", "TestStockDataProvider Begin\n");
 		BLog.config_setTag("STOCKDATA", true);
 		
@@ -185,5 +190,6 @@ public class TestStockDataIF {
 		test_getStockTime();
 		
 		BLog.output("TEST", "TestStockDataProvider End\n");
+		BLog.stop();
 	}
 }

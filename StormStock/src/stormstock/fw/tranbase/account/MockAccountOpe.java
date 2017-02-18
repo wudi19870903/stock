@@ -215,7 +215,7 @@ public class MockAccountOpe extends IAccountOpe {
 				ResultStockTime cResultStockTime = GlobalUserObj.getCurStockDataIF().getStockTime(cHoldStock.stockID, date, time);
 				if(0 == cResultStockTime.error)
 				{
-					cHoldStock.curPrice = cResultStockTime.stockTime.price;
+					cHoldStock.curPrice = cResultStockTime.stockTime().price;
 				}
 			}
 		}

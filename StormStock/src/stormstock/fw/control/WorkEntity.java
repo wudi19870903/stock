@@ -239,7 +239,10 @@ public class WorkEntity {
 				ResultStockTime cResultStockTime = stockDataIF.getStockTime("999999", date, BUtilsDateTime.GetCurTimeStr());
 				if(0 == cResultStockTime.error)
 				{
-					return true;
+					if(cResultStockTime.date.compareTo(date) == 0)
+					{
+						return true;
+					}
 				}
 				BThread.sleep(3000);
 			}

@@ -414,10 +414,18 @@ public class StockDataIF {
 		public ResultStockTime()
 		{
 			error = 0;
-			stockTime = new StockTime();
+		}
+		public StockTime stockTime()
+		{
+			StockTime cStockTime = new StockTime();
+			cStockTime.time = time;
+			cStockTime.price = price;
+			return cStockTime;
 		}
 		public int error;
-		public StockTime stockTime;
+		public String date;
+		public String time;
+		public float price;
 	}
 	public ResultStockTime getStockTime(String id, String date, String time)
 	{
@@ -441,8 +449,10 @@ public class StockDataIF {
 		
 			if(0 == cResultRealTimeInfo.error)
 			{
-				cResultStockTime.stockTime.time = curTime;
-				cResultStockTime.stockTime.price = cResultRealTimeInfo.realTimeInfo.curPrice;
+				cResultStockTime.error = 0;
+				cResultStockTime.date = cResultRealTimeInfo.realTimeInfo.date;
+				cResultStockTime.time = cResultRealTimeInfo.realTimeInfo.time;
+				cResultStockTime.price = cResultRealTimeInfo.realTimeInfo.curPrice;
 				return cResultStockTime;
 			}
 		}
@@ -465,14 +475,27 @@ public class StockDataIF {
 						StockDay cStockDay = cStockDayList.get(0);
 						float open = cStockDay.open();
 						float close = cStockDay.close();
-						cResultStockTime.stockTime.time = time;
-						if(time.compareTo("09:30:00") >= 0 && time.compareTo("13:00:00") < 0)
+						cResultStockTime.error = 0;
+						cResultStockTime.date = cStockDay.date();
+						if(time.compareTo("09:30:00") >= 0 && time.compareTo("11:30:00") <= 0)
 						{
-							cResultStockTime.stockTime.price = open;
+							cResultStockTime.time = time;
+							cResultStockTime.price = open;
 						}
-						else if(time.compareTo("13:00:00") >= 0 && time.compareTo("24:00:00") <= 0)
+						else if(time.compareTo("11:30:00") > 0 && time.compareTo("13:00:00") < 0)
 						{
-							cResultStockTime.stockTime.price = close;
+							cResultStockTime.time = "11:30:00";
+							cResultStockTime.price = open;
+						}
+						else if(time.compareTo("13:00:00") >= 0 && time.compareTo("15:00:00") <= 0)
+						{
+							cResultStockTime.time = time;
+							cResultStockTime.price = close;
+						}
+						else if(time.compareTo("15:00:00") > 0 && time.compareTo("24:00:00") <= 0)
+						{
+							cResultStockTime.time = "15:00:00";
+							cResultStockTime.price = close;
 						}
 						return cResultStockTime;
 					}
@@ -485,8 +508,10 @@ public class StockDataIF {
 					if(cStockDayList.size() > 0)
 					{
 						StockDay cStockDay = cStockDayList.get(0);
-						cResultStockTime.stockTime.time = time;
-						cResultStockTime.stockTime.price = cStockDay.close();
+						cResultStockTime.error = 0;
+						cResultStockTime.date = cStockDay.date();
+						cResultStockTime.time = "15:00:00";
+						cResultStockTime.price = cStockDay.close();
 						return cResultStockTime;
 					}
 				}
@@ -511,8 +536,9 @@ public class StockDataIF {
 							long subTimeMin = BUtilsDateTime.subTime(time, cStockTime.time);
 							if(subTimeMin >=0 && subTimeMin<=120) // 在2分钟以内
 							{
-								cResultStockTime.stockTime.time = cStockTime.time;
-								cResultStockTime.stockTime.price = cStockTime.price;
+								cResultStockTime.date = date;
+								cResultStockTime.time = cStockTime.time;
+								cResultStockTime.price = cStockTime.price;
 								return cResultStockTime;
 							}
 							else
@@ -534,8 +560,9 @@ public class StockDataIF {
 						if(cStockDayList.size() > 0)
 						{
 							StockDay cStockDay = cStockDayList.get(0);
-							cResultStockTime.stockTime.time = time;
-							cResultStockTime.stockTime.price = cStockDay.close();
+							cResultStockTime.date = cStockDay.date();
+							cResultStockTime.time = "15:00:00";
+							cResultStockTime.price = cStockDay.close();
 							return cResultStockTime;
 						}
 					}
@@ -548,8 +575,10 @@ public class StockDataIF {
 					if(cStockDayList.size() > 0)
 					{
 						StockDay cStockDay = cStockDayList.get(0);
-						cResultStockTime.stockTime.time = time;
-						cResultStockTime.stockTime.price = cStockDay.close();
+						cResultStockTime.error = 0;
+						cResultStockTime.date = beforeDate;
+						cResultStockTime.time = "15:00:00";
+						cResultStockTime.price = cStockDay.close();
 						return cResultStockTime;
 					}
 				}
