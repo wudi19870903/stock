@@ -340,18 +340,22 @@ public class Account {
 		List<DealOrder> cDealOrderList = new ArrayList<DealOrder>();
 		this.getDealOrderList(cDealOrderList);
 		
+		// 打印资产
 		BLog.output("ACCOUNT", "    -TotalAssets: %.3f\n", fTotalAssets);
 		BLog.output("ACCOUNT", "    -AvailableMoney: %.3f\n", availableMoney.value);
+		
+		// 打印持股
 		for(int i=0; i<cHoldStockList.size(); i++ )
 		{
 			HoldStock cHoldStock = cHoldStockList.get(i);
-			BLog.output("REPORT", "    -HoldStock: %s %d %d %.3f %.3f %.3f %d\n", 
+			BLog.output("ACCOUNT", "    -HoldStock: %s %d %d %.3f %.3f %.3f %d\n", 
 					cHoldStock.stockID,
 					cHoldStock.totalAmount, cHoldStock.availableAmount,
 					cHoldStock.refPrimeCostPrice, cHoldStock.curPrice, cHoldStock.totalAmount*cHoldStock.curPrice, 
 					cHoldStock.investigationDays);
 		}
 		
+		// 打印成交单
 		for(int i=0; i<cDealOrderList.size(); i++ )
 		{
 			DealOrder cDealOrder = cDealOrderList.get(i);
@@ -361,6 +365,24 @@ public class Account {
 			BLog.output("ACCOUNT", "    -DealOrder: %s %s %s %d %.3f\n", 
 					cDealOrder.time, tranOpe, cDealOrder.stockID, 
 					cDealOrder.amount, cDealOrder.price);
+		}
+		
+		// 选股
+		if(m_stockSelectList.size() > 0)
+		{
+			String logStr = "";
+			logStr += String.format("    -SelectList:[ ");
+			for(int i=0; i<m_stockSelectList.size(); i++ )
+			{
+				String stockId = m_stockSelectList.get(i);
+				logStr += String.format("%s ", stockId);
+				if (i >= 7 && m_stockSelectList.size()-1 > 16) {
+					logStr += String.format("... ", stockId);
+					break;
+				}
+			}
+			logStr += String.format("]");
+			BLog.output("ACCOUNT", "%s\n", logStr);
 		}
 	}
 
