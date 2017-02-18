@@ -21,8 +21,10 @@ public class RealAccountOpe extends IAccountOpe {
 
 	public RealAccountOpe(String accountID, String password)
 	{
-		BLog.output("ACCOUNT", " @RealAccountOpe Construct AccountID:%s Password:%s\n", 
-				accountID, password);
+		int iInitRet = CATHSAccount.initialize();
+		BLog.output("ACCOUNT", " @RealAccountOpe Construct AccountID:%s Password:%s err(%d)\n", 
+				accountID, password, iInitRet);
+		
 	}
 	
 	@Override
