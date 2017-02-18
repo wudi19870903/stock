@@ -16,7 +16,7 @@ public class TestBImageCurve {
 			PoiList.add(new CurvePoint(30.2f,290.3f));
 			PoiList.add(new CurvePoint(40.3f,560.4f));
 			PoiList.add(new CurvePoint(50.4f,300.2f));
-			PoiList.add(new CurvePoint(60.5f,-22.1f));
+			PoiList.add(new CurvePoint(60.5f,-22.1f,"name"));
 			PoiList.add(new CurvePoint(70.6f,-110.3f));
 			PoiList.add(new CurvePoint(80.7f,0.0f));
 			PoiList.add(new CurvePoint(90.8f,110.1f));
@@ -35,7 +35,7 @@ public class TestBImageCurve {
 			PoiList.add(new CurvePoint(70.6f,188.3f));
 			PoiList.add(new CurvePoint(80.7f,266.0f));
 			PoiList.add(new CurvePoint(90.8f,198.1f));
-			PoiList.add(new CurvePoint(100.9f,172.2f));
+			PoiList.add(new CurvePoint(100.9f,172.2f,"mark",true));
 			PoiList.add(new CurvePoint(110.0f,111.9f));
 			cBImageCurve.addLogicCurveSameRatio(PoiList, 2);
 		}
@@ -118,9 +118,9 @@ public class TestBImageCurve {
 	}
 	
 	public static void main(String[] args) {
-		test_writeImagePixelCurve();
-		test_writeUnitCurve();
-		test_writeLogicCurve();
+//		test_writeImagePixelCurve();
+//		test_writeUnitCurve();
+//		test_writeLogicCurve();
 		test_addLogicCurveSameRatio();
 	}
 }

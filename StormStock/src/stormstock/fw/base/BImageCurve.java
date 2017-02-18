@@ -15,14 +15,41 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 public class BImageCurve {
+
 	public static class CurvePoint
 	{
-		public CurvePoint(){ m_x = 0.0f; m_y = 0.0f;m_name = "";}
-		public CurvePoint(float x, float y) { m_x = x; m_y = y;m_name = "";}
-		public CurvePoint(float x, float y, String name) { m_x = x; m_y = y; m_name = name;}
+		public CurvePoint()
+		{ 
+			m_x = 0.0f; 
+			m_y = 0.0f;
+			m_name = "";
+			m_marked = false;
+		}
+		public CurvePoint(float x, float y) 
+		{ 
+			m_x = x; 
+			m_y = y;
+			m_name = "";
+			m_marked = false;
+		}
+		public CurvePoint(float x, float y, String name) 
+		{ 
+			m_x = x; 
+			m_y = y; 
+			m_name = name;
+			m_marked = false;
+		}
+		public CurvePoint(float x, float y, String name, boolean marked) 
+		{ 
+			m_x = x; 
+			m_y = y; 
+			m_name = name;
+			m_marked = marked;
+		}
 		public float m_x;
 		public float m_y;
 		public String m_name;
+		public boolean m_marked;
 	}
 	
 	public void GenerateImage()
@@ -71,6 +98,7 @@ public class BImageCurve {
 			CurvePoint cPoi = LogicPoiList.get(i); 
 			float curX = (cPoi.m_x - beginx)/logic_unit_max_width;
 			float curY = (cPoi.m_y - beginy)/beginy;
+			boolean marked = cPoi.m_marked;
 			String textstr = "";
 			if(cPoi.m_name != "")
 			{
@@ -112,7 +140,7 @@ public class BImageCurve {
 					}
 				}
 			}
-			poiCurList.add(new CurvePoint(curX, curY, textstr));
+			poiCurList.add(new CurvePoint(curX, curY, textstr, marked));
         }
 		
 		m_cMultiUnitCurveMap.put(index, poiCurList);
@@ -176,6 +204,7 @@ public class BImageCurve {
 			CurvePoint cPoi = LogicPoiList.get(i); 
 			float unitX = (cPoi.m_x - beginx)/logic_unit_max_width;
 			float unitY = (cPoi.m_y - beginy)/logic_unit_max_hight;
+			boolean marked = cPoi.m_marked;
 			String textstr = "";
 			if(cPoi.m_name != "")
 			{
@@ -204,7 +233,7 @@ public class BImageCurve {
 					}
 				}
 			}
-			poiUnitList.add(new CurvePoint(unitX, unitY, textstr));
+			poiUnitList.add(new CurvePoint(unitX, unitY, textstr, marked));
         }
 		
 		writeUnitCurve(poiUnitList, index);
@@ -219,9 +248,10 @@ public class BImageCurve {
 			CurvePoint cPoi = poiList.get(i);
 			int newX = (int)(m_padding_x + cPoi.m_x*m_unitWidth);
 			int newY = (int)(m_padding_y +  m_unitHight - cPoi.m_y*m_unitHight);
+			boolean marked = cPoi.m_marked;
 			// ANLLog.outputConsole("%.2f,%.2f ", cPoi.m_x, cPoi.m_y);
 			// ANLLog.outputConsole("New %d,%d \n", newX, newY);
-			poiPixList.add(new CurvePoint(newX, newY, cPoi.m_name));
+			poiPixList.add(new CurvePoint(newX, newY, cPoi.m_name, marked));
         }
 		writeImagePixelCurve(poiPixList, index);
 	}
@@ -229,10 +259,15 @@ public class BImageCurve {
 	// 按实际图片像素描画曲线，图片左上为（0.0），右下角为图片最大长宽，单位是像素
 	public void writeImagePixelCurve(List<CurvePoint> poiList, int index)
 	{
+		// 绘制线段与文字
 		if(index == 0) m_g2.setPaint(Color.BLACK);
-		if(index == 1) m_g2.setPaint(Color.RED);
+		if(index == 1) m_g2.setPaint(Color.BLUE);
 		if(index == 2) m_g2.setPaint(Color.GREEN);
 		if(index == 3) m_g2.setPaint(Color.YELLOW);
+		if(index == 4) m_g2.setPaint(Color.CYAN);
+		if(index == 5) m_g2.setPaint(Color.PINK);
+		if(index == 6) m_g2.setPaint(Color.ORANGE);
+		if(index == 7) m_g2.setPaint(Color.GRAY);
 		for(int i = 0; i < poiList.size(); i++)  
         {  
 			// 绘制线段
@@ -252,8 +287,40 @@ public class BImageCurve {
 				if (cPoi.m_name != "")
 				{
 					m_g2.drawString(cPoi.m_name, (int)cPoi.m_x - 10, (int)cPoi.m_y - 5);
-					m_g2.fillOval((int)cPoi.m_x, (int)cPoi.m_y, 8, 8);
+					m_g2.fillOval((int)cPoi.m_x-3, (int)cPoi.m_y-3, 6, 6);
 				}
+			}
+        }
+		
+		// 绘制标记
+		m_g2.setPaint(Color.RED);
+		for(int i = 0; i < poiList.size(); i++)  
+        {  
+			CurvePoint cPoi = poiList.get(i); 
+			if (cPoi.m_marked)
+			{
+				m_g2.fillOval((int)cPoi.m_x-4, (int)cPoi.m_y-4, 8, 8);
+				
+				int OriX = (int)cPoi.m_x;
+				int OriY = (int)cPoi.m_y;
+				
+				int BeginX = OriX;
+				int BeginY = OriY+8;
+				int EndX = OriX;
+				int EndY = OriY + 28;
+				m_g2.drawLine(BeginX, BeginY, EndX, EndY);
+				
+				BeginX = OriX;
+				BeginY = OriY+8;
+				EndX = BeginX-5;
+				EndY = BeginY+8;
+				m_g2.drawLine(BeginX, BeginY, EndX, EndY);
+				
+				BeginX = OriX;
+				BeginY = OriY+8;
+				EndX = BeginX+5;
+				EndY = BeginY+8;
+				m_g2.drawLine(BeginX, BeginY, EndX, EndY);
 			}
         }
 	}
