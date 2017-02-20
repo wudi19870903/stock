@@ -107,4 +107,43 @@ public class StockUtils {
         }
 		return newStockTimeData;
 	}
+	
+	
+	/*
+	 * ------------------------------------------------------------------------------------------------------
+	 */
+	
+	// 计算i到j日的最高价格的索引
+	static public int indexStockTimeHigh(List<StockTime> list, int i, int j)
+	{
+		int index = i;
+		float high = -100000.0f;
+		for(int k = i; k<=j; k++ )
+		{
+			StockTime cStockTime = list.get(k);
+			if(cStockTime.price > high) 
+			{
+				high = cStockTime.price;
+				index = k;
+			}
+		}
+		return index;
+	}
+	
+	// 计算i到j日的最低价格的索引
+	static public int indexStockTimeLow(List<StockTime> list, int i, int j)
+	{
+		int index = i;
+		float low = 100000.0f;
+		for(int k = i; k<=j; k++ )
+		{
+			StockTime cStockTime = list.get(k);
+			if(cStockTime.price < low) 
+			{
+				low = cStockTime.price;
+				index = k;
+			}
+		}
+		return index;
+	}
 }
