@@ -65,7 +65,7 @@ public class RunSimpleStockTimeListTest {
 		if(bHighLowPos)
 		{
 			float MaxDropRate = (lowPrice-highPrice)/highPrice;
-			if(MaxDropRate < -0.03f)
+			if(MaxDropRate < -0.02f)
 			{
 				bMaxDropRate = true;
 				cResultXiaCuoQiWen.xiacuo = MaxDropRate;
@@ -145,7 +145,7 @@ public class RunSimpleStockTimeListTest {
 		
 		StockDataIF cStockDataIF = new StockDataIF();
 		String stockID = "300163";
-		String date = "2016-12-13";
+		String date = "2011-07-29";
 		ResultDayDetail cResultDayDetail = cStockDataIF.getDayDetail(stockID, date, "09:30:00", "15:00:00");
 		List<StockTime> list = cResultDayDetail.resultList;
 		BLog.output("TEST", "Check stockID(%s) list size(%d)\n", stockID, list.size());

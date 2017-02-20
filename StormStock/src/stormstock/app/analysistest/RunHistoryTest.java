@@ -43,8 +43,9 @@ public class RunHistoryTest {
 				StockDay cStockDayCur = cStockDayList.get(iSize-1);
 				StockDay cStockDayBefore1 = cStockDayList.get(iSize-2);
 	
-				if(cStockDayCur.close() < cStockDayCur.open() && cStockDayCur.close() < cStockDayBefore1.close()
-						&& cStockDayBefore1.close() < cStockDayBefore1.open() 
+				if(cStockDayCur.close() < cStockDayCur.open() 
+//						&& cStockDayCur.close() < cStockDayBefore1.close()
+//						&& cStockDayBefore1.close() < cStockDayBefore1.open() 
 						)
 				{
 					out_sr.bSelect = true;
