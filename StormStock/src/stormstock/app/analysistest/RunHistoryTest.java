@@ -14,6 +14,7 @@ import stormstock.fw.tranbase.com.TranContext;
 import stormstock.fw.tranbase.stockdata.Stock;
 import stormstock.fw.tranbase.stockdata.StockDay;
 import stormstock.fw.tranbase.stockdata.StockInfo;
+import stormstock.fw.tranbase.stockdata.StockTime;
 import stormstock.fw.tranengine.TranEngine;
 import stormstock.fw.tranengine.TranEngine.TRANACCOUNTTYPE;
 import stormstock.fw.tranengine.TranEngine.TRANTIMEMODE;
@@ -23,7 +24,7 @@ public class RunHistoryTest {
 	public static class TranStockSet extends ITranStockSetFilter {
 		@Override
 		public boolean tran_stockset_byLatestStockInfo(StockInfo cStockInfo) {
-			if(cStockInfo.ID.compareTo("000000") >= 0 && cStockInfo.ID.compareTo("0002000") <= 0) {	
+			if(cStockInfo.ID.compareTo("300163") >= 0 && cStockInfo.ID.compareTo("300163") <= 0) {	
 				return true;
 			}
 			return false;
@@ -35,12 +36,20 @@ public class RunHistoryTest {
 		@Override
 		public void strategy_select(TranContext ctx, SelectResult out_sr) {
 			List<StockDay> cStockDayList = ctx.target().stock().getCurStockDayData();
-			
-			ResultCheckStockDayList cResultCheck = RunSimpleStockDayListTest.check(cStockDayList, cStockDayList.size()-1);
-			if(cResultCheck.bCheck)
+			// 连续阴线，选入，选入优先级是最大价格差
+			int iSize = cStockDayList.size();
+			if(iSize > 2)
 			{
-				out_sr.bSelect = true;
-				out_sr.fPriority = -cResultCheck.data;
+				StockDay cStockDayCur = cStockDayList.get(iSize-1);
+				StockDay cStockDayBefore1 = cStockDayList.get(iSize-2);
+	
+				if(cStockDayCur.close() < cStockDayCur.open() && cStockDayCur.close() < cStockDayBefore1.close()
+						&& cStockDayBefore1.close() < cStockDayBefore1.open() 
+						)
+				{
+					out_sr.bSelect = true;
+					out_sr.fPriority = cStockDayBefore1.close() - cStockDayCur.close();
+				}
 			}
 		}
 
@@ -56,12 +65,9 @@ public class RunHistoryTest {
 
 		@Override
 		public void strategy_create(TranContext ctx, CreateResult out_sr) {
-			// 建仓为跌幅一定时
-			float fYesterdayClosePrice = ctx.target().stock().GetLastYesterdayClosePrice();
-			float fNowPrice = ctx.target().stock().getLatestPrice();
-			float fRatio = (fNowPrice - fYesterdayClosePrice)/fYesterdayClosePrice;
-			
-			if(fRatio < -0.02)
+			List<StockTime> list_stockTime = ctx.target().stock().getLatestStockTimeList();
+			// 两次下跌企稳
+			if(RunSimpleStockTimeListTest.checkPoint(list_stockTime))
 			{
 				out_sr.bCreate = true;
 			}
@@ -81,7 +87,7 @@ public class RunHistoryTest {
 			{
 				out_sr.bClear = true;
 			}
-			if(cHoldStock.profitRatio() > 0.03 || cHoldStock.profitRatio() < -0.03) // 止盈止损2个点卖
+			if(cHoldStock.profitRatio() > 0.03 || cHoldStock.profitRatio() < -0.03) // 止盈止损x个点卖
 			{
 				out_sr.bClear = true;
 			}
@@ -98,7 +104,7 @@ public class RunHistoryTest {
 		
 		cTranEngine.setAccountType(TRANACCOUNTTYPE.MOCK); 
 		cTranEngine.setTranMode(TRANTIMEMODE.HISTORYMOCK);
-		cTranEngine.setHistoryTimeSpan("2011-01-01", "2012-01-01");
+		cTranEngine.setHistoryTimeSpan("2016-01-01", "2017-01-01");
 		
 		cTranEngine.run();
 		cTranEngine.mainLoop();
