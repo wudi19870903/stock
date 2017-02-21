@@ -24,7 +24,7 @@ public class RunHistoryTest {
 	public static class TranStockSet extends ITranStockSetFilter {
 		@Override
 		public boolean tran_stockset_byLatestStockInfo(StockInfo cStockInfo) {
-			if(cStockInfo.ID.compareTo("300163") >= 0 && cStockInfo.ID.compareTo("300163") <= 0) {	
+			if(cStockInfo.ID.compareTo("300165") >= 0 && cStockInfo.ID.compareTo("300165") <= 0) {	
 				return true;
 			}
 			return false;
@@ -37,20 +37,10 @@ public class RunHistoryTest {
 		public void strategy_select(TranContext ctx, SelectResult out_sr) {
 			List<StockDay> cStockDayList = ctx.target().stock().getCurStockDayData();
 			// 连续阴线，选入，选入优先级是最大价格差
-			int iSize = cStockDayList.size();
-			if(iSize > 2)
+			RunSimpleStockDayListTest cRunSimpleStockDayListTest = new RunSimpleStockDayListTest();
+			if(cRunSimpleStockDayListTest.checkPoint(cStockDayList))
 			{
-				StockDay cStockDayCur = cStockDayList.get(iSize-1);
-				StockDay cStockDayBefore1 = cStockDayList.get(iSize-2);
-	
-				if(cStockDayCur.close() < cStockDayCur.open() 
-//						&& cStockDayCur.close() < cStockDayBefore1.close()
-//						&& cStockDayBefore1.close() < cStockDayBefore1.open() 
-						)
-				{
-					out_sr.bSelect = true;
-					out_sr.fPriority = cStockDayBefore1.close() - cStockDayCur.close();
-				}
+				out_sr.bSelect =  true;
 			}
 		}
 
@@ -68,7 +58,8 @@ public class RunHistoryTest {
 		public void strategy_create(TranContext ctx, CreateResult out_sr) {
 			List<StockTime> list_stockTime = ctx.target().stock().getLatestStockTimeList();
 			// 两次下跌企稳
-			if(RunSimpleStockTimeListTest.checkPoint(list_stockTime))
+			RunSimpleStockTimeListTest cRunSimpleStockTimeListTest = new RunSimpleStockTimeListTest();
+			if(cRunSimpleStockTimeListTest.checkPoint(list_stockTime))
 			{
 				out_sr.bCreate = true;
 			}

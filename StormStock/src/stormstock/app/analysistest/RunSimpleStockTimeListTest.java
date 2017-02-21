@@ -14,9 +14,13 @@ import stormstock.fw.tranengine_lite.ANLUtils;
 
 public class RunSimpleStockTimeListTest {
 	
-	/*
-	 * ********************************************************************
-	 */
+	public float m_checkDieFu;
+	
+	public RunSimpleStockTimeListTest()
+	{
+		m_checkDieFu = -0.02f;
+	}
+	
 	public static class ResultXiaCuoQiWen
 	{
 		public ResultXiaCuoQiWen()
@@ -29,7 +33,7 @@ public class RunSimpleStockTimeListTest {
 		public float low;
 		public float qiwen;
 	}
-	public static ResultXiaCuoQiWen findXiaCuoQiWen(List<StockTime> list, int iOrigin, int iCheckEnd)
+	public ResultXiaCuoQiWen findXiaCuoQiWen(List<StockTime> list, int iOrigin, int iCheckEnd)
 	{
 		ResultXiaCuoQiWen cResultXiaCuoQiWen = new ResultXiaCuoQiWen();
 		
@@ -65,7 +69,7 @@ public class RunSimpleStockTimeListTest {
 		if(bHighLowPos)
 		{
 			float MaxDropRate = (lowPrice-highPrice)/highPrice;
-			if(MaxDropRate < -0.02f)
+			if(MaxDropRate < m_checkDieFu)
 			{
 				bMaxDropRate = true;
 				cResultXiaCuoQiWen.xiacuo = MaxDropRate;
@@ -95,7 +99,7 @@ public class RunSimpleStockTimeListTest {
 	}
 	
 	
-	public static boolean checkPoint(List<StockTime> list)
+	public boolean checkPoint(List<StockTime> list)
 	{
 		List<ResultXiaCuoQiWen> list_ResultXiaCuoQiWen = new ArrayList<ResultXiaCuoQiWen>();
 
@@ -126,7 +130,6 @@ public class RunSimpleStockTimeListTest {
 			if(check1 < -0.02)
 			{
 				s_StockTimeListCurve.markCurveIndex(cResultXiaCuoQiWenLast.index, "CP");
-				
 				return true;
 			}
 				
@@ -145,17 +148,19 @@ public class RunSimpleStockTimeListTest {
 		
 		StockDataIF cStockDataIF = new StockDataIF();
 		String stockID = "300163";
-		String date = "2011-07-29";
+		String date = "2017-01-16";
 		ResultDayDetail cResultDayDetail = cStockDataIF.getDayDetail(stockID, date, "09:30:00", "15:00:00");
 		List<StockTime> list = cResultDayDetail.resultList;
 		BLog.output("TEST", "Check stockID(%s) list size(%d)\n", stockID, list.size());
 		
-		
 		s_StockTimeListCurve.setCurve(list);
+		
+		RunSimpleStockTimeListTest cRunSimpleStockTimeListTest = new RunSimpleStockTimeListTest();
+		cRunSimpleStockTimeListTest.m_checkDieFu = -0.03f;
 		
 		if(false) // 整个list调用一次
 		{
-			boolean bCheckPoint = checkPoint(list);
+			boolean bCheckPoint = cRunSimpleStockTimeListTest.checkPoint(list);
 			BLog.output("TEST", "CheckPoint %b\n", bCheckPoint);
 		}
 		
@@ -168,10 +173,18 @@ public class RunSimpleStockTimeListTest {
 				String endTime = cCurStockTime.time;
 				List<StockTime> subList = StockUtils.subStockTimeData(list,beginTime,endTime);
 				
-				boolean bCheckPoint = checkPoint(subList);
+				boolean bCheckPoint = cRunSimpleStockTimeListTest.checkPoint(subList);
 				if (bCheckPoint)
 				{
 					BLog.output("TEST", "CheckPoint %s\n", endTime);
+					
+//					i=i+10;
+//					if(i >= list.size() -1)
+//					{
+//						i = list.size() -1;
+//					}
+//					beginTime = list.get(i).time;
+					
 					break;
 				}
 	        } 
