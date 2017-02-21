@@ -24,7 +24,7 @@ public class RunHistoryTest {
 	public static class TranStockSet extends ITranStockSetFilter {
 		@Override
 		public boolean tran_stockset_byLatestStockInfo(StockInfo cStockInfo) {
-			if(cStockInfo.ID.compareTo("300165") >= 0 && cStockInfo.ID.compareTo("300165") <= 0) {	
+			if(cStockInfo.ID.compareTo("000000") >= 0 && cStockInfo.ID.compareTo("001000") <= 0) {	
 				return true;
 			}
 			return false;

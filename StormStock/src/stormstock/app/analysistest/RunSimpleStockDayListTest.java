@@ -1,6 +1,7 @@
 package stormstock.app.analysistest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import stormstock.fw.base.BImageCurve;
@@ -18,7 +19,11 @@ import stormstock.fw.tranbase.stockdata.StockDataIF.ResultHistoryData;
 
 public class RunSimpleStockDayListTest {
 	
-
+	
+	/*
+	 * ********************************************************************
+	 */
+	
 	public static class ResultCheckStockDayList
 	{
 		public ResultCheckStockDayList()
@@ -83,11 +88,9 @@ public class RunSimpleStockDayListTest {
 		return false;
 	}
 	
-	/*
-	 * ********************************************************************
-	 */
 	
-	public static void main(String[] args) {
+	
+	public static void main2(String[] args) {
 		BLog.output("TEST", "Main Begin\n");
 		
 		StockDataIF cStockDataIF = new StockDataIF();
