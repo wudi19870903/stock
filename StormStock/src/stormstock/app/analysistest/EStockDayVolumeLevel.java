@@ -17,7 +17,7 @@ public class EStockDayVolumeLevel {
 		UNKNOWN,
 		INVALID,
 	}
-	public VOLUMELEVEL checkLiangHuoYue(List<StockDay> list, int iCheck)
+	public VOLUMELEVEL checkVolumeLevel(List<StockDay> list, int iCheck)
 	{
 		// 计算60天均量， 去掉最低5个和最高5个后的平均值
 		float aveVol60 = 0.0f;
@@ -98,9 +98,9 @@ public class EStockDayVolumeLevel {
 		
 		StockDataIF cStockDataIF = new StockDataIF();
 		
-		String stockID = "300163"; // 300163 300165
+		String stockID = "000401"; // 300163 300165
 		ResultHistoryData cResultHistoryData = 
-				cStockDataIF.getHistoryData(stockID, "2013-01-01", "2017-01-01");
+				cStockDataIF.getHistoryData(stockID, "2016-01-01", "2017-01-01");
 		List<StockDay> list = cResultHistoryData.resultList;
 		BLog.output("TEST", "Check stockID(%s) list size(%d)\n", stockID, list.size());
 		
@@ -117,17 +117,17 @@ public class EStockDayVolumeLevel {
 			String endDate = cCurStockDay.date();
 			List<StockDay> subList = StockUtils.subStockDayData(list,beginDate,endDate);
 			
-			VOLUMELEVEL volLev = cEStockDayVolumeLevel.checkLiangHuoYue(subList, subList.size()-1);
+			VOLUMELEVEL volLev = cEStockDayVolumeLevel.checkVolumeLevel(subList, subList.size()-1);
 			if (volLev == VOLUMELEVEL.ACTIVITY)
 			{
 				BLog.output("TEST", "CheckPoint %s\n", endDate);
 				s_StockDayListCurve.markCurveIndex(i, "CP");
-				i=i+20;
-				if(i >= list.size() -1)
-				{
-					i = list.size() -1;
-				}
-				beginDate = list.get(i).date();
+//				i=i+20;
+//				if(i >= list.size() -1)
+//				{
+//					i = list.size() -1;
+//				}
+//				beginDate = list.get(i).date();
 			}
         } 
 		

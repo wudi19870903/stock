@@ -2,7 +2,6 @@ package stormstock.app.analysistest;
 
 import java.util.List;
 
-import stormstock.app.analysistest.RunSimpleStockDayListTest.ResultCheckStockDayList;
 import stormstock.fw.base.BLog;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 import stormstock.fw.tranbase.com.IEigenStock;

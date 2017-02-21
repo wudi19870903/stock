@@ -44,7 +44,7 @@ public class StockUtils {
 	static public int indexHigh(List<StockDay> dayklist, int i, int j)
 	{
 		int index = i;
-		float high = 0.0f;
+		float high = -100000.0f;
 		for(int k = i; k<=j; k++ )
 		{
 			StockDay cDayKDataTmp = dayklist.get(k);
