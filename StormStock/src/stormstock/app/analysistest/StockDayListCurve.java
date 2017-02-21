@@ -35,7 +35,7 @@ public class StockDayListCurve {
 			if (i == index)
 			{
 				m_poiList.get(i).m_marked = true;
-				m_poiList.get(i).m_name = name;
+				m_poiList.get(i).m_name = m_poiList.get(i).m_name + name;
 			}
         }
 	}

@@ -18,13 +18,14 @@ public class EStockDayPriceDrop {
 		}
 		public boolean bCheck;
 	}
-	public ResultCheckPriceDrop checkPriceDrop(List<StockDay> list, int i)
+	public ResultCheckPriceDrop checkPriceDrop(List<StockDay> list)
 	{
 		ResultCheckPriceDrop cResultCheck = new ResultCheckPriceDrop();
 		
 		// 检查临近x天
-		int iBegin = i-5;
-		int iEnd = i;
+		int iLast = list.size() - 1;
+		int iBegin = iLast-5;
+		int iEnd = iLast;
 		if(iBegin<0)
 		{
 			return cResultCheck;
@@ -33,47 +34,38 @@ public class EStockDayPriceDrop {
 		float highPrice = list.get(indexHigh).high();
 		int indexLow = StockUtils.indexLow(list, iBegin, iEnd);
 		float lowPrice = list.get(indexLow).low();
-		BLog.output("TEST", " %d %d \n", indexHigh, indexLow);
+		//BLog.output("TEST", " %d %d \n", indexHigh, indexLow);
 		
-		/*
-		 * 1.最低点在最高点后面
-		 * 2.对低点-最高点 在x内
-		 */
-		boolean bHighLowPos = false;
-		if(0 <= indexHigh 
-				&& indexHigh < indexLow)
+		// 最低点在最高点后面 
+		if(0 <= indexHigh && indexHigh < indexLow)
 		{
-			bHighLowPos = true;
+		}
+		else
+		{
+			return cResultCheck;
 		}
 		
-		/*
-		 * 最大跌幅在x点以上
-		 */
-		boolean bMaxDropRate = false;
-		if(bHighLowPos)
+		// 当前日为最低点
+		if(indexLow == iLast)
 		{
-			float MaxDropRate = (lowPrice-highPrice)/highPrice;
-			if(MaxDropRate < -0.03)
-			{
-				s_StockDayListCurve.markCurveIndex(indexHigh, "H");
-				s_StockDayListCurve.markCurveIndex(indexLow, "L");
-				bMaxDropRate = true;
-			}
+		}
+		else
+		{
+			return cResultCheck;
 		}
 		
-		/*
-		 * 最低点产生后x内不创新低
-		 */
-		boolean bQiWen = false;
-		if(bMaxDropRate)
+		// 最大跌幅
+		float MaxDropRate = (lowPrice-highPrice)/highPrice;
+		if(MaxDropRate < -0.15)
 		{
-//			if(iEnd - indexLow >= 1)
-//			{
-//				bQiWen = true;
-//			}
-			cResultCheck.bCheck = true;
+		}
+		else
+		{
+			return cResultCheck;
 		}
 		
+		
+		cResultCheck.bCheck = true;
 		return cResultCheck;
 	}
 	
@@ -88,7 +80,7 @@ public class EStockDayPriceDrop {
 		
 		StockDataIF cStockDataIF = new StockDataIF();
 		
-		String stockID = "300163"; // 300163 300165
+		String stockID = "300166"; // 300163 300165
 		ResultHistoryData cResultHistoryData = 
 				cStockDataIF.getHistoryData(stockID, "2016-01-01", "2017-01-01");
 		List<StockDay> list = cResultHistoryData.resultList;
@@ -98,7 +90,12 @@ public class EStockDayPriceDrop {
 		
 		EStockDayPriceDrop cEStockDayPriceDrop = new EStockDayPriceDrop();
 		
-		//cEStockDayPriceDrop.checkPriceDrop(list, list.size()-1);
+//		ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(list, list.size()-1);
+//		if(cResultCheckPriceDrop.bCheck)
+//		{
+//			BLog.output("TEST", "CheckPoint %s\n", list.get(list.size()-1).date());
+//			s_StockDayListCurve.markCurveIndex(list.size()-1, "CP");
+//		}
 		
 		String beginDate = list.get(0).date();
 		for(int i = 0; i < list.size(); i++)  
@@ -107,10 +104,12 @@ public class EStockDayPriceDrop {
 			String endDate = cCurStockDay.date();
 			List<StockDay> subList = StockUtils.subStockDayData(list,beginDate,endDate);
 			
-			ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(subList, subList.size()-1);
+			ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(subList);
 			if (cResultCheckPriceDrop.bCheck)
 			{
 				BLog.output("TEST", "CheckPoint %s\n", endDate);
+				//s_StockDayListCurve.markCurveIndex(indexHigh, "H");
+				//s_StockDayListCurve.markCurveIndex(iLast, list.get(iLast).date());
 				s_StockDayListCurve.markCurveIndex(i, "CP");
 				
 				i=i+10;

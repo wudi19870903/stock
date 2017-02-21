@@ -22,7 +22,7 @@ public class EStockDayVolumeLevel {
 		// 计算60天均量， 去掉最低5个和最高5个后的平均值
 		float aveVol60 = 0.0f;
 		{
-			int iBegin = iCheck - 60;
+			int iBegin = iCheck - 40;
 			int iEnd = iCheck;
 			if(iBegin < 0)
 			{
@@ -79,7 +79,7 @@ public class EStockDayVolumeLevel {
 		}
 		
 		// 近期放量，进入活跃期
-		if(aveVol10/aveVol60 > 1.5f)
+		if(aveVol10/aveVol60 > 1.3f)
 		{
 			return VOLUMELEVEL.ACTIVITY;
 		}
@@ -98,9 +98,9 @@ public class EStockDayVolumeLevel {
 		
 		StockDataIF cStockDataIF = new StockDataIF();
 		
-		String stockID = "000401"; // 300163 300165
+		String stockID = "000401"; // 300163 300165 000401
 		ResultHistoryData cResultHistoryData = 
-				cStockDataIF.getHistoryData(stockID, "2016-01-01", "2017-01-01");
+				cStockDataIF.getHistoryData(stockID, "2011-01-01", "2014-01-01");
 		List<StockDay> list = cResultHistoryData.resultList;
 		BLog.output("TEST", "Check stockID(%s) list size(%d)\n", stockID, list.size());
 		
