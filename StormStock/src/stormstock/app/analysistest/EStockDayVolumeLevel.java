@@ -11,19 +11,26 @@ import stormstock.fw.tranbase.stockdata.StockUtils;
 import stormstock.fw.tranbase.stockdata.StockDataIF.ResultHistoryData;
 
 public class EStockDayVolumeLevel {
+	
+	/**
+	 * 
+	 * @author wudi
+	 * 检查当前位置是否是量活跃点
+	 */
 	public enum VOLUMELEVEL
 	{
 		ACTIVITY,
 		UNKNOWN,
 		INVALID,
 	}
-	public VOLUMELEVEL checkVolumeLevel(List<StockDay> list, int iCheck)
+	public VOLUMELEVEL checkVolumeLevel(List<StockDay> list)
 	{
-		// 计算60天均量， 去掉最低5个和最高5个后的平均值
+		int iLast = list.size() - 1;
+		// 计算中期均量， 去掉最低5个和最高5个后的平均值
 		float aveVol60 = 0.0f;
 		{
-			int iBegin = iCheck - 40;
-			int iEnd = iCheck;
+			int iBegin = iLast - 40;
+			int iEnd = iLast;
 			if(iBegin < 0)
 			{
 				return VOLUMELEVEL.INVALID;
@@ -53,11 +60,11 @@ public class EStockDayVolumeLevel {
 		}
 		
 		
-		// 计算10日均量 去掉最低1个和最高1个后的平均值
+		// 计算近日均量 去掉最低1个和最高1个后的平均值
 		float aveVol10 = 0.0f;
 		{
-			int iBegin = iCheck - 10;
-			int iEnd = iCheck;
+			int iBegin = iLast - 5;
+			int iEnd = iLast;
 			if(iBegin < 0)
 			{
 				return VOLUMELEVEL.INVALID;
@@ -98,9 +105,9 @@ public class EStockDayVolumeLevel {
 		
 		StockDataIF cStockDataIF = new StockDataIF();
 		
-		String stockID = "000401"; // 300163 300165 000401
+		String stockID = "300166"; // 300163 300165 000401
 		ResultHistoryData cResultHistoryData = 
-				cStockDataIF.getHistoryData(stockID, "2011-01-01", "2014-01-01");
+				cStockDataIF.getHistoryData(stockID, "2012-01-01", "2013-01-01");
 		List<StockDay> list = cResultHistoryData.resultList;
 		BLog.output("TEST", "Check stockID(%s) list size(%d)\n", stockID, list.size());
 		
@@ -110,24 +117,27 @@ public class EStockDayVolumeLevel {
 		
 		//cRunSimpleStockDayListTest.checkLiangHuoYue(list, list.size()-1);
 		
-		String beginDate = list.get(0).date();
+		
 		for(int i = 0; i < list.size(); i++)  
         {  
 			StockDay cCurStockDay = list.get(i);
-			String endDate = cCurStockDay.date();
+			
+			int iCheckBegin = i-60;
+			if(iCheckBegin<0) iCheckBegin = 0;
+			int iCheckEnd = i;
+			
+			String beginDate = list.get(iCheckBegin).date();
+			String endDate = list.get(iCheckEnd).date();
+			
 			List<StockDay> subList = StockUtils.subStockDayData(list,beginDate,endDate);
 			
-			VOLUMELEVEL volLev = cEStockDayVolumeLevel.checkVolumeLevel(subList, subList.size()-1);
+			VOLUMELEVEL volLev = cEStockDayVolumeLevel.checkVolumeLevel(subList);
 			if (volLev == VOLUMELEVEL.ACTIVITY)
 			{
 				BLog.output("TEST", "CheckPoint %s\n", endDate);
 				s_StockDayListCurve.markCurveIndex(i, "CP");
-//				i=i+20;
-//				if(i >= list.size() -1)
-//				{
-//					i = list.size() -1;
-//				}
-//				beginDate = list.get(i).date();
+				
+				//i = i + 10;
 			}
         } 
 		

@@ -2,6 +2,7 @@ package stormstock.app.analysistest;
 
 import java.util.List;
 
+import stormstock.app.analysistest.EStockDayVolumeLevel.VOLUMELEVEL;
 import stormstock.fw.base.BLog;
 import stormstock.fw.tranbase.stockdata.StockDataIF;
 import stormstock.fw.tranbase.stockdata.StockDay;
@@ -20,10 +21,11 @@ public class EStockDayPriceDrop {
 	}
 	public ResultCheckPriceDrop checkPriceDrop(List<StockDay> list)
 	{
+		int iLast = list.size() - 1;
+		
 		ResultCheckPriceDrop cResultCheck = new ResultCheckPriceDrop();
 		
-		// 检查临近x天
-		int iLast = list.size() - 1;
+		// 检查临近日
 		int iBegin = iLast-5;
 		int iEnd = iLast;
 		if(iBegin<0)
@@ -56,7 +58,7 @@ public class EStockDayPriceDrop {
 		
 		// 最大跌幅
 		float MaxDropRate = (lowPrice-highPrice)/highPrice;
-		if(MaxDropRate < -0.15)
+		if(MaxDropRate < -0.10)
 		{
 		}
 		else
@@ -82,7 +84,7 @@ public class EStockDayPriceDrop {
 		
 		String stockID = "300166"; // 300163 300165
 		ResultHistoryData cResultHistoryData = 
-				cStockDataIF.getHistoryData(stockID, "2016-01-01", "2017-01-01");
+				cStockDataIF.getHistoryData(stockID, "2012-01-01", "2013-01-01");
 		List<StockDay> list = cResultHistoryData.resultList;
 		BLog.output("TEST", "Check stockID(%s) list size(%d)\n", stockID, list.size());
 		
@@ -90,34 +92,33 @@ public class EStockDayPriceDrop {
 		
 		EStockDayPriceDrop cEStockDayPriceDrop = new EStockDayPriceDrop();
 		
-//		ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(list, list.size()-1);
+//		ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(list);
 //		if(cResultCheckPriceDrop.bCheck)
 //		{
 //			BLog.output("TEST", "CheckPoint %s\n", list.get(list.size()-1).date());
 //			s_StockDayListCurve.markCurveIndex(list.size()-1, "CP");
 //		}
 		
-		String beginDate = list.get(0).date();
 		for(int i = 0; i < list.size(); i++)  
         {  
 			StockDay cCurStockDay = list.get(i);
-			String endDate = cCurStockDay.date();
+			
+			int iCheckBegin = i-60;
+			if(iCheckBegin<0) iCheckBegin = 0;
+			int iCheckEnd = i;
+			
+			String beginDate = list.get(iCheckBegin).date();
+			String endDate = list.get(iCheckEnd).date();
+			
 			List<StockDay> subList = StockUtils.subStockDayData(list,beginDate,endDate);
 			
 			ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(subList);
 			if (cResultCheckPriceDrop.bCheck)
 			{
 				BLog.output("TEST", "CheckPoint %s\n", endDate);
-				//s_StockDayListCurve.markCurveIndex(indexHigh, "H");
-				//s_StockDayListCurve.markCurveIndex(iLast, list.get(iLast).date());
-				s_StockDayListCurve.markCurveIndex(i, "CP");
+				s_StockDayListCurve.markCurveIndex(i, "D");
 				
-				i=i+10;
-				if(i >= list.size() -1)
-				{
-					i = list.size() -1;
-				}
-				beginDate = list.get(i).date();
+				i = i + 10;
 			}
         } 
 		
