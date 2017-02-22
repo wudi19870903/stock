@@ -2,6 +2,7 @@ package stormstock.app.analysistest;
 
 import java.util.List;
 
+import stormstock.app.analysistest.EStockDayPriceDrop.ResultCheckPriceDrop;
 import stormstock.app.analysistest.EStockDayVolumeLevel.VOLUMELEVEL;
 import stormstock.fw.base.BLog;
 import stormstock.fw.tranbase.stockdata.StockDataIF;
@@ -19,15 +20,14 @@ public class EStockDayPriceDrop {
 		}
 		public boolean bCheck;
 	}
-	public ResultCheckPriceDrop checkPriceDrop(List<StockDay> list)
+	// 单一检查iCheck是否满足短期急跌
+	private ResultCheckPriceDrop checkPriceDrop_single(List<StockDay> list, int iCheck)
 	{
-		int iLast = list.size() - 1;
-		
 		ResultCheckPriceDrop cResultCheck = new ResultCheckPriceDrop();
 		
 		// 检查临近日
-		int iBegin = iLast-5;
-		int iEnd = iLast;
+		int iBegin = iCheck-5;
+		int iEnd = iCheck;
 		if(iBegin<0)
 		{
 			return cResultCheck;
@@ -48,13 +48,24 @@ public class EStockDayPriceDrop {
 		}
 		
 		// 当前日为最低点
-		if(indexLow == iLast)
+		if(indexLow == iEnd)
 		{
 		}
 		else
 		{
 			return cResultCheck;
 		}
+		
+//		// 当日为中阴线
+//		StockDay cStockDay = list.get(iCheck);
+//		float fx = (cStockDay.close() - cStockDay.open())/cStockDay.open();
+//		if(fx<-0.01f)
+//		{
+//		}
+//		else
+//		{
+//			return cResultCheck;
+//		}
 		
 		// 最大跌幅
 		float MaxDropRate = (lowPrice-highPrice)/highPrice;
@@ -69,6 +80,35 @@ public class EStockDayPriceDrop {
 		
 		cResultCheck.bCheck = true;
 		return cResultCheck;
+	}
+	// 附近检查iCheck是否满足短期急跌（排除连续性干扰）
+	public ResultCheckPriceDrop checkPriceDrop(List<StockDay> list, int iCheck)
+	{
+		ResultCheckPriceDrop cResultCheckPriceDrop = new ResultCheckPriceDrop();
+		
+		ResultCheckPriceDrop cResultCheckPriceDropSingle = checkPriceDrop_single(list, iCheck);
+		if(cResultCheckPriceDropSingle.bCheck) // 首先满足iCheck就是CheckPoint
+		{
+			int iCheckOKLast = -1;
+			int iBegin = iCheck - 20;
+			int iEnd = iCheck;
+			for(int i=iBegin; i<=iEnd; i++)
+			{
+				ResultCheckPriceDrop cResultCheckPriceDropBefore = checkPriceDrop_single(list, i);
+				if(cResultCheckPriceDropBefore.bCheck)
+				{
+					iCheckOKLast = i;
+					i=i+10;
+				}
+			}
+			
+			if(iCheckOKLast == iCheck)
+			{
+				cResultCheckPriceDrop.bCheck = true;
+			}
+		}
+
+		return cResultCheckPriceDrop;
 	}
 	
 	/*
@@ -102,23 +142,12 @@ public class EStockDayPriceDrop {
 		for(int i = 0; i < list.size(); i++)  
         {  
 			StockDay cCurStockDay = list.get(i);
-			
-			int iCheckBegin = i-60;
-			if(iCheckBegin<0) iCheckBegin = 0;
-			int iCheckEnd = i;
-			
-			String beginDate = list.get(iCheckBegin).date();
-			String endDate = list.get(iCheckEnd).date();
-			
-			List<StockDay> subList = StockUtils.subStockDayData(list,beginDate,endDate);
-			
-			ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(subList);
+	
+			ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(list, i);
 			if (cResultCheckPriceDrop.bCheck)
 			{
-				BLog.output("TEST", "CheckPoint %s\n", endDate);
-				s_StockDayListCurve.markCurveIndex(i, "D");
-				
-				i = i + 10;
+				BLog.output("TEST", "CheckPoint %s\n", cCurStockDay.date());
+				s_StockDayListCurve.markCurveIndex(i, "D"+cCurStockDay.date());
 			}
         } 
 		

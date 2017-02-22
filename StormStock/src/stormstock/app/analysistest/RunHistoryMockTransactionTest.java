@@ -2,6 +2,7 @@ package stormstock.app.analysistest;
 
 import java.util.List;
 
+import stormstock.app.analysistest.EStockDayPriceDrop.ResultCheckPriceDrop;
 import stormstock.fw.base.BLog;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 import stormstock.fw.tranbase.com.IEigenStock;
@@ -18,12 +19,12 @@ import stormstock.fw.tranengine.TranEngine;
 import stormstock.fw.tranengine.TranEngine.TRANACCOUNTTYPE;
 import stormstock.fw.tranengine.TranEngine.TRANTIMEMODE;
 
-public class RunHistoryTest {
+public class RunHistoryMockTransactionTest {
 	// 测试集
 	public static class TranStockSet extends ITranStockSetFilter {
 		@Override
 		public boolean tran_stockset_byLatestStockInfo(StockInfo cStockInfo) {
-			if(cStockInfo.ID.compareTo("000000") >= 0 && cStockInfo.ID.compareTo("001000") <= 0) {	
+			if(cStockInfo.ID.compareTo("300166") >= 0 && cStockInfo.ID.compareTo("300166") <= 0) {	
 				return true;
 			}
 			return false;
@@ -35,11 +36,18 @@ public class RunHistoryTest {
 		@Override
 		public void strategy_select(TranContext ctx, SelectResult out_sr) {
 			List<StockDay> cStockDayList = ctx.target().stock().getCurStockDayData();
-			// 连续阴线，选入，选入优先级是最大价格差
-			RunSimpleStockDayListTest cRunSimpleStockDayListTest = new RunSimpleStockDayListTest();
-			if(cRunSimpleStockDayListTest.checkPoint(cStockDayList))
+			
+			int iCheckBegin = cStockDayList.size() - 1;
+			int iCheckEnd = cStockDayList.size()-1;
+			EStockDayPriceDrop cEStockDayPriceDrop = new EStockDayPriceDrop();
+			for(int i=iCheckBegin; i<=iCheckEnd; i++)
 			{
-				out_sr.bSelect =  true;
+				ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(cStockDayList, i);
+				if(cResultCheckPriceDrop.bCheck)
+				{
+					BLog.output("TEST", "StrategySelect %s\n", ctx.date());
+					out_sr.bSelect = true;
+				}
 			}
 		}
 
@@ -56,10 +64,15 @@ public class RunHistoryTest {
 		@Override
 		public void strategy_create(TranContext ctx, CreateResult out_sr) {
 			List<StockTime> list_stockTime = ctx.target().stock().getLatestStockTimeList();
-			// 两次下跌企稳
-			RunSimpleStockTimeListTest cRunSimpleStockTimeListTest = new RunSimpleStockTimeListTest();
-			if(cRunSimpleStockTimeListTest.checkPoint(list_stockTime))
+
+			// 建仓为跌幅一定时
+			float fYesterdayClosePrice = ctx.target().stock().GetLastYesterdayClosePrice();
+			float fNowPrice = ctx.target().stock().getLatestPrice();
+			float fRatio = (fNowPrice - fYesterdayClosePrice)/fYesterdayClosePrice;
+			
+			if(fRatio < -0.02)
 			{
+				BLog.output("TEST", "StrategyCreate =====>> %s %s \n", ctx.date(), ctx.time());
 				out_sr.bCreate = true;
 			}
 		}
@@ -95,7 +108,7 @@ public class RunHistoryTest {
 		
 		cTranEngine.setAccountType(TRANACCOUNTTYPE.MOCK); 
 		cTranEngine.setTranMode(TRANTIMEMODE.HISTORYMOCK);
-		cTranEngine.setHistoryTimeSpan("2016-01-01", "2017-01-01");
+		cTranEngine.setHistoryTimeSpan("2012-01-01", "2013-01-01");
 		
 		cTranEngine.run();
 		cTranEngine.mainLoop();

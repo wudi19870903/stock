@@ -19,19 +19,8 @@ import stormstock.fw.tranbase.stockdata.StockDataIF.ResultAllStockID;
 import stormstock.fw.tranbase.stockdata.StockDataIF.ResultDayDetail;
 import stormstock.fw.tranbase.stockdata.StockDataIF.ResultHistoryData;
 
-public class RunSimpleStockDayListTest {
+public class RunSingleTest {
 	
-	public boolean checkPoint(List<StockDay> list)
-	{
-		EStockDayPriceDrop cEStockDayPriceDrop = new EStockDayPriceDrop();
-		ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(list);
-		if (cResultCheckPriceDrop.bCheck)
-		{
-			return true;
-		}
-		return false;
-	}
-
 	public static void main(String[] args) {
 		BLog.output("TEST", "Main Begin\n");
 		
@@ -45,43 +34,30 @@ public class RunSimpleStockDayListTest {
 		
 		s_StockDayListCurve.setCurve(list);
 		
-		RunSimpleStockDayListTest cRunSimpleStockDayListTest = new RunSimpleStockDayListTest();
-		
-		//cRunSimpleStockDayListTest.checkLiangHuoYue(list, list.size()-1);
-		
 		
 		for(int i = 0; i < list.size(); i++)  
         {  
 			StockDay cCurStockDay = list.get(i);
-			
-			int iCheckBegin = i-60;
-			if(iCheckBegin<0) iCheckBegin = 0;
-			int iCheckEnd = i;
-			
-			String beginDate = list.get(iCheckBegin).date();
-			String endDate = list.get(iCheckEnd).date();
-			
-			List<StockDay> subList = StockUtils.subStockDayData(list,beginDate,endDate);
-			
+
 			//1
 			EStockDayPriceDrop cEStockDayPriceDrop = new EStockDayPriceDrop();
-			ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(subList);
+			ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(list, i);
 			if (cResultCheckPriceDrop.bCheck)
 			{
-				BLog.output("TEST", "CheckPoint %s\n", endDate);
+				BLog.output("TEST", "CheckPoint %s\n", cCurStockDay.date());
 				s_StockDayListCurve.markCurveIndex(i, "D");
 				i=i+10;
 			}
 			
-			//2
-			EStockDayVolumeLevel cEStockDayVolumeLevel = new EStockDayVolumeLevel();
-			VOLUMELEVEL volLev = cEStockDayVolumeLevel.checkVolumeLevel(subList);
-			if (volLev == VOLUMELEVEL.ACTIVITY)
-			{
-				BLog.output("TEST", "CheckPoint %s\n", endDate);
-				s_StockDayListCurve.markCurveIndex(i, "A");
-				i = i + 10;
-			}
+//			//2
+//			EStockDayVolumeLevel cEStockDayVolumeLevel = new EStockDayVolumeLevel();
+//			VOLUMELEVEL volLev = cEStockDayVolumeLevel.checkVolumeLevel(subList);
+//			if (volLev == VOLUMELEVEL.ACTIVITY)
+//			{
+//				BLog.output("TEST", "CheckPoint %s\n", endDate);
+//				s_StockDayListCurve.markCurveIndex(i, "A");
+//				i = i + 10;
+//			}
         } 
 		
 		s_StockDayListCurve.generateImage();
