@@ -15,6 +15,12 @@ public class StockDayListCurve {
 		m_imageCurve = new BImageCurve(1600,900,fileName);
 	}
 	
+	public void clear()
+	{
+		m_poiList.clear();
+		m_imageCurve.clear();
+	}
+	
 	public void setCurve(List<StockDay> list)
 	{
 		for(int i = 0; i < list.size(); i++)  

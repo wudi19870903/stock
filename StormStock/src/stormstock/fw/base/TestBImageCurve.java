@@ -117,10 +117,38 @@ public class TestBImageCurve {
 		cBImageCurve.GenerateImage();
 	}
 	
+	public static void test_Clear()
+	{
+		BImageCurve cBImageCurve = new BImageCurve(1600,900,"test_writeImagePixelCurve.jpg");
+		
+		for(int i=0; i<2;i++)
+		{
+			cBImageCurve.clear();
+			
+			List<CurvePoint> PoiList = new ArrayList<CurvePoint>();
+			PoiList.add(new CurvePoint(0.0f,200.1f));
+			PoiList.add(new CurvePoint(100.0f,250.1f + 10*i));
+			PoiList.add(new CurvePoint(200.0f,350.1f + 10*i));
+			PoiList.add(new CurvePoint(300.0f,630.1f + 10*i));
+			PoiList.add(new CurvePoint(400.0f,740.1f + 10*i));
+			PoiList.add(new CurvePoint(500.0f,245.1f + 10*i));
+			PoiList.add(new CurvePoint(600.0f,147.1f + 10*i));
+			PoiList.add(new CurvePoint(700.0f,158.1f + 10*i));
+			PoiList.add(new CurvePoint(800.0f,190.1f + 10*i));
+			PoiList.add(new CurvePoint(900.0f,288.1f + 10*i));
+			PoiList.add(new CurvePoint(1000.0f,328.1f + 10*i));
+			PoiList.add(new CurvePoint(1100.0f,520.2f + 10*i));
+			cBImageCurve.writeImagePixelCurve(PoiList, 1);
+			cBImageCurve.GenerateImage();
+			
+		}
+	}
+	
 	public static void main(String[] args) {
 //		test_writeImagePixelCurve();
 //		test_writeUnitCurve();
 //		test_writeLogicCurve();
-		test_addLogicCurveSameRatio();
+//		test_addLogicCurveSameRatio();
+		test_Clear();
 	}
 }

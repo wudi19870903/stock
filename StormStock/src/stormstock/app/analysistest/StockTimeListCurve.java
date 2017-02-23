@@ -14,6 +14,12 @@ public class StockTimeListCurve {
 		m_imageCurve = new BImageCurve(1600,900,fileName);
 	}
 	
+	public void clear()
+	{
+		m_poiList.clear();
+		m_imageCurve.clear();
+	}
+	
 	public void setCurve(List<StockTime> list)
 	{
 		for(int i = 0; i < list.size(); i++)  
@@ -26,7 +32,6 @@ public class StockTimeListCurve {
 			m_poiList.add(cCurvePoint);
         }
 	}
-	
 	public void markCurveIndex(int index, String name)
 	{
 		for(int i = 0; i < m_poiList.size(); i++)  

@@ -2,8 +2,6 @@ package stormstock.app.analysistest;
 
 import java.util.List;
 
-import stormstock.app.analysistest.EStockDayPriceDrop.ResultCheckPriceDrop;
-import stormstock.app.analysistest.EStockDayVolumeLevel.VOLUMELEVEL;
 import stormstock.fw.base.BLog;
 import stormstock.fw.tranbase.stockdata.StockDataIF;
 import stormstock.fw.tranbase.stockdata.StockDay;
@@ -119,7 +117,6 @@ public class EStockDayPriceDrop {
 	public static void main(String[] args)
 	{
 		BLog.output("TEST", "Main Begin\n");
-		
 		StockDataIF cStockDataIF = new StockDataIF();
 		
 		String stockID = "300166"; // 300163 300165
@@ -131,13 +128,6 @@ public class EStockDayPriceDrop {
 		s_StockDayListCurve.setCurve(list);
 		
 		EStockDayPriceDrop cEStockDayPriceDrop = new EStockDayPriceDrop();
-		
-//		ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(list);
-//		if(cResultCheckPriceDrop.bCheck)
-//		{
-//			BLog.output("TEST", "CheckPoint %s\n", list.get(list.size()-1).date());
-//			s_StockDayListCurve.markCurveIndex(list.size()-1, "CP");
-//		}
 		
 		for(int i = 0; i < list.size(); i++)  
         {  

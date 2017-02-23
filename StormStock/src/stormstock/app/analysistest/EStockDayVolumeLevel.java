@@ -102,9 +102,8 @@ public class EStockDayVolumeLevel {
 	public static void main(String[] args)
 	{
 		BLog.output("TEST", "Main Begin\n");
-		
 		StockDataIF cStockDataIF = new StockDataIF();
-		
+
 		String stockID = "300165"; // 300163 300165 000401
 		ResultHistoryData cResultHistoryData = 
 				cStockDataIF.getHistoryData(stockID, "2016-01-01", "2017-01-01");
@@ -114,9 +113,6 @@ public class EStockDayVolumeLevel {
 		s_StockDayListCurve.setCurve(list);
 		
 		EStockDayVolumeLevel cEStockDayVolumeLevel = new EStockDayVolumeLevel();
-		
-		//cRunSimpleStockDayListTest.checkLiangHuoYue(list, list.size()-1);
-		
 		
 		for(int i = 0; i < list.size(); i++)  
         {  

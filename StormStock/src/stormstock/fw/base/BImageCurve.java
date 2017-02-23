@@ -52,6 +52,12 @@ public class BImageCurve {
 		public boolean m_marked;
 	}
 	
+	public void clear()
+	{
+		m_g2.clearRect(0, 0, m_widthPix, m_hightPix);
+		GenerateImage();
+	}
+	
 	public void GenerateImage()
 	{   
 		// 绘制多条Y同比曲线
