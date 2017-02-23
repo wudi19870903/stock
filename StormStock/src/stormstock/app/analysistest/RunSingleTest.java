@@ -26,9 +26,9 @@ public class RunSingleTest {
 		BLog.output("TEST", "Main Begin\n");
 		StockDataIF cStockDataIF = new StockDataIF();
 		
-		String stockID = "300166"; // 300163 300165 000401
+		String stockID = "300165"; // 300163 300165 000401
 		ResultHistoryData cResultHistoryData = 
-				cStockDataIF.getHistoryData(stockID, "2012-01-01", "2012-01-17");
+				cStockDataIF.getHistoryData(stockID, "2012-01-01", "2013-01-01");
 		List<StockDay> list = cResultHistoryData.resultList;
 		BLog.output("TEST", "Check stockID(%s) list size(%d)\n", stockID, list.size());
 		

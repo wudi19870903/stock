@@ -17,6 +17,7 @@ public class EStockDayPriceDrop {
 			bCheck = false;
 		}
 		public boolean bCheck;
+		public float maxDropRate;
 	}
 	// 单一检查iCheck是否满足短期急跌
 	private ResultCheckPriceDrop checkPriceDrop_single(List<StockDay> list, int iCheck)
@@ -69,6 +70,7 @@ public class EStockDayPriceDrop {
 		float MaxDropRate = (lowPrice-highPrice)/highPrice;
 		if(MaxDropRate < -0.10)
 		{
+			cResultCheck.maxDropRate = MaxDropRate;
 		}
 		else
 		{
@@ -96,6 +98,7 @@ public class EStockDayPriceDrop {
 				if(cResultCheckPriceDropBefore.bCheck)
 				{
 					iCheckOKLast = i;
+					cResultCheckPriceDrop.maxDropRate = cResultCheckPriceDropBefore.maxDropRate;
 					i=i+10;
 				}
 			}
@@ -119,9 +122,9 @@ public class EStockDayPriceDrop {
 		BLog.output("TEST", "Main Begin\n");
 		StockDataIF cStockDataIF = new StockDataIF();
 		
-		String stockID = "300166"; // 300163 300165
+		String stockID = "300165"; // 300163 300165
 		ResultHistoryData cResultHistoryData = 
-				cStockDataIF.getHistoryData(stockID, "2012-01-01", "2013-01-01");
+				cStockDataIF.getHistoryData(stockID, "2011-01-01", "2013-01-01");
 		List<StockDay> list = cResultHistoryData.resultList;
 		BLog.output("TEST", "Check stockID(%s) list size(%d)\n", stockID, list.size());
 		

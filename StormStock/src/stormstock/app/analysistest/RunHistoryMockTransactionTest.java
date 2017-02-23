@@ -3,6 +3,7 @@ package stormstock.app.analysistest;
 import java.util.List;
 
 import stormstock.app.analysistest.EStockDayPriceDrop.ResultCheckPriceDrop;
+import stormstock.app.analysistest.EStockTimePriceDropStable.ResultXiaCuoQiWen;
 import stormstock.fw.base.BLog;
 import stormstock.fw.tranbase.account.AccountPublicDef.HoldStock;
 import stormstock.fw.tranbase.com.IEigenStock;
@@ -24,7 +25,7 @@ public class RunHistoryMockTransactionTest {
 	public static class TranStockSet extends ITranStockSetFilter {
 		@Override
 		public boolean tran_stockset_byLatestStockInfo(StockInfo cStockInfo) {
-			if(cStockInfo.ID.compareTo("300166") >= 0 && cStockInfo.ID.compareTo("300166") <= 0) {	
+			if(cStockInfo.ID.compareTo("000000") >= 0 && cStockInfo.ID.compareTo("002000") <= 0) {	
 				return true;
 			}
 			return false;
@@ -37,17 +38,14 @@ public class RunHistoryMockTransactionTest {
 		public void strategy_select(TranContext ctx, SelectResult out_sr) {
 			List<StockDay> cStockDayList = ctx.target().stock().getCurStockDayData();
 			
-			int iCheckBegin = cStockDayList.size() - 1;
-			int iCheckEnd = cStockDayList.size()-1;
 			EStockDayPriceDrop cEStockDayPriceDrop = new EStockDayPriceDrop();
-			for(int i=iCheckBegin; i<=iCheckEnd; i++)
+			
+			ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(cStockDayList, cStockDayList.size()-1);
+			if(cResultCheckPriceDrop.bCheck)
 			{
-				ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(cStockDayList, i);
-				if(cResultCheckPriceDrop.bCheck)
-				{
-					BLog.output("TEST", "StrategySelect %s\n", ctx.date());
-					out_sr.bSelect = true;
-				}
+				//BLog.output("TEST", "StrategySelect %s\n", ctx.date());
+				out_sr.bSelect = true;
+				out_sr.fPriority = -cResultCheckPriceDrop.maxDropRate;
 			}
 		}
 
@@ -65,16 +63,15 @@ public class RunHistoryMockTransactionTest {
 		public void strategy_create(TranContext ctx, CreateResult out_sr) {
 			List<StockTime> list_stockTime = ctx.target().stock().getLatestStockTimeList();
 
-			// 建仓为跌幅一定时
-			float fYesterdayClosePrice = ctx.target().stock().GetLastYesterdayClosePrice();
-			float fNowPrice = ctx.target().stock().getLatestPrice();
-			float fRatio = (fNowPrice - fYesterdayClosePrice)/fYesterdayClosePrice;
+			EStockTimePriceDropStable cEStockTimePriceDropStable = new EStockTimePriceDropStable();
 			
-			if(fRatio < -0.02)
+			ResultXiaCuoQiWen cResultXiaCuoQiWen = cEStockTimePriceDropStable.checkXiaCuoQiWen_2Times(list_stockTime, list_stockTime.size()-1);
+			if (cResultXiaCuoQiWen.bCheck)
 			{
-				BLog.output("TEST", "StrategyCreate =====>> %s %s \n", ctx.date(), ctx.time());
+				//BLog.output("TEST", "     --->>> StrategyCreate %s %s \n", ctx.date(), ctx.time());
 				out_sr.bCreate = true;
 			}
+	
 		}
 		@Override
 		public int strategy_create_max_count() {
@@ -87,11 +84,11 @@ public class RunHistoryMockTransactionTest {
 		@Override
 		public void strategy_clear(TranContext ctx, ClearResult out_sr) {
 			HoldStock cHoldStock = ctx.target().holdStock();
-			if(cHoldStock.investigationDays >= 5) // 调查天数控制
+			if(cHoldStock.investigationDays >= 10) // 调查天数控制
 			{
 				out_sr.bClear = true;
 			}
-			if(cHoldStock.profitRatio() > 0.03 || cHoldStock.profitRatio() < -0.03) // 止盈止损x个点卖
+			if(cHoldStock.profitRatio() > 0.05 || cHoldStock.profitRatio() < -0.05) // 止盈止损x个点卖
 			{
 				out_sr.bClear = true;
 			}
@@ -108,7 +105,7 @@ public class RunHistoryMockTransactionTest {
 		
 		cTranEngine.setAccountType(TRANACCOUNTTYPE.MOCK); 
 		cTranEngine.setTranMode(TRANTIMEMODE.HISTORYMOCK);
-		cTranEngine.setHistoryTimeSpan("2012-01-01", "2013-01-01");
+		cTranEngine.setHistoryTimeSpan("2013-07-01", "2014-07-01");
 		
 		cTranEngine.run();
 		cTranEngine.mainLoop();

@@ -3,6 +3,7 @@ package stormstock.app.analysistest;
 import java.util.ArrayList;
 import java.util.List;
 
+import stormstock.app.analysistest.EStockDayPriceDrop.ResultCheckPriceDrop;
 import stormstock.fw.base.BLog;
 import stormstock.fw.tranbase.stockdata.StockDataIF;
 import stormstock.fw.tranbase.stockdata.StockDay;
@@ -43,8 +44,8 @@ public class EStockTimePriceDropStable {
 	public ResultXiaCuoQiWen checkXiaCuoQiWen_single(List<StockTime> list, int iCheck)
 	{
 		float param_checkDieFu = -0.02f; // 检查跌幅
-		float param_checkMaxTimeSpan = 30; // 最大检查时间段
-		float param_checkMaxHighLowTimeSpan = 20; // 高低点最大差距时间段
+		float param_checkMaxTimeSpan = 20; // 最大检查时间段
+		float param_checkMaxHighLowTimeSpan = 10; // 高低点最大差距时间段
 		
 		ResultXiaCuoQiWen cResultXiaCuoQiWen = new ResultXiaCuoQiWen();
 		
@@ -119,46 +120,37 @@ public class EStockTimePriceDropStable {
 		return cResultXiaCuoQiWen;
 	}
 	
-	
-//	public boolean checkPoint(List<StockTime> list)
-//	{
-//		List<ResultXiaCuoQiWen> list_ResultXiaCuoQiWen = new ArrayList<ResultXiaCuoQiWen>();
-//
-//		// 从头开始查找下挫企稳点
-//		int iOrigin = 0;
-//		for(int i = 0; i < list.size(); i++)  
-//        {  
-//			StockTime cCurStockTime = list.get(i);
-//			
-//			ResultXiaCuoQiWen cResultXiaCuoQiWen = findXiaCuoQiWen(list, iOrigin, i);
-//		
-//			if(cResultXiaCuoQiWen.bCheck)
-//			{
-//
-//				list_ResultXiaCuoQiWen.add(cResultXiaCuoQiWen);
-//				
-//				iOrigin = i;
-//			}
-//        } 
-//		
-//		int iFindCnt = list_ResultXiaCuoQiWen.size();
-//		if(iFindCnt > 1)
-//		{
-//			ResultXiaCuoQiWen cResultXiaCuoQiWenFirst = list_ResultXiaCuoQiWen.get(0);
-//			ResultXiaCuoQiWen cResultXiaCuoQiWenLast = list_ResultXiaCuoQiWen.get(iFindCnt-1);
-//			
-//			float check1 = (cResultXiaCuoQiWenLast.qiwen - cResultXiaCuoQiWenFirst.low)/cResultXiaCuoQiWenFirst.low;
-//			if(check1 < -0.02)
-//			{
-//				s_StockTimeListCurve.markCurveIndex(cResultXiaCuoQiWenLast.index, "CP");
-//				return true;
-//			}
-//				
-//		}
-//
-//		return false;
-//	}
-
+	// iCheck是二次下挫企稳
+	public ResultXiaCuoQiWen checkXiaCuoQiWen_2Times(List<StockTime> list, int iCheck)
+	{
+		ResultXiaCuoQiWen cResultXiaCuoQiWen = new ResultXiaCuoQiWen();
+		
+		ResultXiaCuoQiWen cResultXiaCuoQiWen_tmp = checkXiaCuoQiWen_single(list, iCheck);
+		if (cResultXiaCuoQiWen_tmp.bCheck) // 首先满足本次就是下挫企稳点
+		{
+			int iCPCnt = 0;
+			int iCheckOKLast = -1;
+			int iBegin = 0;
+			int iEnd = iCheck;
+			for(int i=iBegin; i<=iEnd; i++)
+			{
+				ResultXiaCuoQiWen cResultXiaCuoQiWenBefore = checkXiaCuoQiWen_single(list, i);
+				if(cResultXiaCuoQiWenBefore.bCheck)
+				{
+					iCheckOKLast = i;
+					iCPCnt++;
+					i=i+10;
+				}
+			}
+			
+			if(iCheckOKLast == iCheck && iCPCnt==2)
+			{
+				cResultXiaCuoQiWen.bCheck = true;
+			}
+		}
+		
+		return cResultXiaCuoQiWen;
+	}
 	
 	/*
 	 * ********************************************************************
@@ -170,7 +162,7 @@ public class EStockTimePriceDropStable {
 		StockDataIF cStockDataIF = new StockDataIF();
 		
 		String stockID = "300163";
-		String date = "2016-12-12";
+		String date = "2016-12-13";
 		ResultDayDetail cResultDayDetail = cStockDataIF.getDayDetail(stockID, date, "09:30:00", "15:00:00");
 		List<StockTime> list = cResultDayDetail.resultList;
 		BLog.output("TEST", "Check stockID(%s) list size(%d)\n", stockID, list.size());
@@ -183,9 +175,9 @@ public class EStockTimePriceDropStable {
         {  
 			StockTime cCurStockTime = list.get(i);
 			
-			//if(cCurStockTime.time.equals("14:13:00"))
+			//if(cCurStockTime.time.equals("09:39:00"))
 			{
-				ResultXiaCuoQiWen cResultXiaCuoQiWen = cEStockTimePriceDropStable.checkXiaCuoQiWen_single(list, i);
+				ResultXiaCuoQiWen cResultXiaCuoQiWen = cEStockTimePriceDropStable.checkXiaCuoQiWen_2Times(list, i);
 				if (cResultXiaCuoQiWen.bCheck)
 				{
 					BLog.output("TEST", "CheckPoint %s level:%.3f\n", cCurStockTime.time, cResultXiaCuoQiWen.getLevel());
