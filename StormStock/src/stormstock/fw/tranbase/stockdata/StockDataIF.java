@@ -126,7 +126,7 @@ public class StockDataIF {
 	{
 		public ResultAllStockID()
 		{
-			error = 0;
+			error = -1000;
 			resultList = new ArrayList<String>();
 		}
 		public int error;
@@ -138,6 +138,7 @@ public class StockDataIF {
 		
 		if(null != m_cache_allStockID)
 		{
+			cResultAllStockID.error = 0;
 			cResultAllStockID.resultList = m_cache_allStockID;
 		}
 		else
@@ -152,6 +153,7 @@ public class StockDataIF {
 					String stockId = cResultAllStockList.resultList.get(i).id;
 					m_cache_allStockID.add(stockId);
 				}
+				cResultAllStockID.error = 0;
 				cResultAllStockID.resultList = m_cache_allStockID;
 			}
 			else
@@ -173,7 +175,7 @@ public class StockDataIF {
 	{
 		public ResultLatestStockInfo()
 		{
-			error = 0;
+			error = -1000;
 			stockInfo = new StockInfo();
 		}
 		public int error;
@@ -214,6 +216,7 @@ public class StockDataIF {
 		// 从缓存中取数据
 		if(null != m_cache_latestStockInfo && m_cache_latestStockInfo.containsKey(id))
 		{
+			cResultLatestStockInfo.error = 0;
 			cResultLatestStockInfo.stockInfo = m_cache_latestStockInfo.get(id);
 		}
 		else
@@ -232,7 +235,7 @@ public class StockDataIF {
 	public static class ResultHistoryData {
 		public ResultHistoryData()
 		{
-			error = 0;
+			error = -1000;
 			resultList = new ArrayList<StockDay>();
 		}
 		public int error;
@@ -283,6 +286,7 @@ public class StockDataIF {
 		if(null != s_cache_stockDayData && s_cache_stockDayData.containsKey(stockID))
 		{
 			List<StockDay> cacheList = s_cache_stockDayData.get(stockID);
+			cResultHistoryData.error = 0;
 			cResultHistoryData.resultList = StockUtils.subStockDayData(cacheList, fromDate, endDate);
 		}
 		else
@@ -311,7 +315,7 @@ public class StockDataIF {
 	{
 		public ResultDayDetail()
 		{
-			error = 0;
+			error = -1000;
 			resultList = new ArrayList<StockTime>();
 		}
 		public int error;
@@ -395,6 +399,7 @@ public class StockDataIF {
 		if(null != s_cache_stockTimeData && s_cache_stockTimeData.containsKey(findKey))
 		{
 			List<StockTime> cacheList = s_cache_stockTimeData.get(findKey);
+			cResultDayDetail.error = 0;
 			cResultDayDetail.resultList = StockUtils.subStockTimeData(cacheList, beginTime, endTime);
 		}
 		else
@@ -413,7 +418,7 @@ public class StockDataIF {
 	{
 		public ResultStockTime()
 		{
-			error = 0;
+			error = -1000;
 		}
 		public StockTime stockTime()
 		{
@@ -453,6 +458,11 @@ public class StockDataIF {
 				cResultStockTime.date = cResultRealTimeInfo.realTimeInfo.date;
 				cResultStockTime.time = cResultRealTimeInfo.realTimeInfo.time;
 				cResultStockTime.price = cResultRealTimeInfo.realTimeInfo.curPrice;
+				if(0 == Float.compare(cResultStockTime.price, 0.00f))
+				{
+					cResultStockTime.error = -8;
+					BLog.error("STOCKDATA", "getStockTime %s price 0.00f!", id); // 修正取得实时价格为0则认为错误
+				}
 				return cResultStockTime;
 			}
 		}
@@ -536,6 +546,7 @@ public class StockDataIF {
 							long subTimeMin = BUtilsDateTime.subTime(time, cStockTime.time);
 							if(subTimeMin >=0 && subTimeMin<=120) // 在2分钟以内
 							{
+								cResultStockTime.error = 0;
 								cResultStockTime.date = date;
 								cResultStockTime.time = cStockTime.time;
 								cResultStockTime.price = cStockTime.price;
@@ -560,6 +571,7 @@ public class StockDataIF {
 						if(cStockDayList.size() > 0)
 						{
 							StockDay cStockDay = cStockDayList.get(0);
+							cResultStockTime.error = 0;
 							cResultStockTime.date = cStockDay.date();
 							cResultStockTime.time = "15:00:00";
 							cResultStockTime.price = cStockDay.close();
