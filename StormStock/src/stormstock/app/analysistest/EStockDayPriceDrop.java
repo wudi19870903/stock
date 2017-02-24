@@ -10,6 +10,11 @@ import stormstock.fw.tranbase.stockdata.StockDataIF.ResultHistoryData;
 
 public class EStockDayPriceDrop {
 
+	/**
+	 * 
+	 * @author wudi
+	 * 检查当前位置是否是价格下挫点
+	 */
 	public static class ResultCheckPriceDrop
 	{
 		public ResultCheckPriceDrop()

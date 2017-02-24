@@ -90,6 +90,17 @@ public class Stock {
 		else
 			return "0000-00-00";
 	}
+	
+	// 计算涨跌幅
+	public float GetInreaseRatio(int index)
+	{
+		return StockUtils.GetInreaseRatio(m_stockDayList, index);
+	}
+	public float GetInreaseRatio(String date)
+	{
+		return StockUtils.GetInreaseRatio(m_stockDayList, date);
+	}
+
 
 	// 均线计算，计算date日期前count天均线价格
 	public float GetMA(int count, String date)
@@ -155,7 +166,7 @@ public class Stock {
 	// 获得某天的日数据
 	public StockDay GetDayK(String date)
 	{
-		int i = StockUtils.indexDayKAfterDate(m_stockDayList, date);
+		int i = StockUtils.indexDayK(m_stockDayList, date);
 		if(i>=0)
 		{
 			return m_stockDayList.get(i);

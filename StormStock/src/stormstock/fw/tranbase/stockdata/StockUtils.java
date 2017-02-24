@@ -7,7 +7,79 @@ import java.util.List;
 
 import stormstock.fw.base.BLog;
 
+/**
+ * 
+ * @author wudi
+ *
+ * 股票数据扩展计算类
+ * 1-股票日K机能计算
+ * 2-股票日内分时机能计算
+ */
 public class StockUtils {
+	
+	/*
+	 * 日K基本机能
+	 * ------------------------------------------------------------------------------------------------------
+	 */
+	
+	// 计算某日收盘涨跌幅（参考开盘）
+	static public float GetInreaseRatioRefOpen(List<StockDay> dayklist, int index)
+	{
+		float ratio = 0.0f;
+		if(index >= 0 && index < dayklist.size())
+		{
+			StockDay cStockDayCur = dayklist.get(index);
+			if(cStockDayCur.close() != 0)
+			{
+				ratio = (cStockDayCur.close() - cStockDayCur.open())/cStockDayCur.close();
+			}
+		}
+		return ratio;
+	}
+	static public float GetInreaseRatioRefOpen(List<StockDay> dayklist, String date)
+	{
+		int index = StockUtils.indexDayK(dayklist, date);
+		return GetInreaseRatioRefOpen(dayklist, index);
+	}
+	
+	// 计算某日收盘涨跌幅（参考昨日收盘）
+	static public float GetInreaseRatio(List<StockDay> dayklist, int index)
+	{
+		float ratio = 0.0f;
+		if(index > 0 && index < dayklist.size())
+		{
+			StockDay cStockDayCur = dayklist.get(index);
+			StockDay cStockDayBefore = dayklist.get(index-1);
+			if(cStockDayBefore.close() != 0)
+			{
+				ratio = (cStockDayCur.close() - cStockDayBefore.close())/cStockDayBefore.close();
+			}
+		}
+		return ratio;
+	}
+	static public float GetInreaseRatio(List<StockDay> dayklist, String date)
+	{
+		int index = StockUtils.indexDayK(dayklist, date);
+		return GetInreaseRatio(dayklist, index);
+	}
+
+	
+	// 查找日期索引，返回list中某日期index索引, -1为没有找到
+	static public int indexDayK(List<StockDay> dayklist, String dateStr)
+	{
+		int index = -1;
+		for(int k = 0; k<dayklist.size(); k++ )
+		{
+			StockDay cDayKDataTmp = dayklist.get(k);
+			if(cDayKDataTmp.date().compareTo(dateStr) == 0)
+			{
+				index = k;
+				break;
+			}
+		}
+		return index;
+	}
+	
 	// 查找日期索引，返回list中某日期（含）之后的第一天index索引
 	static public int indexDayKAfterDate(List<StockDay> dayklist, String dateStr)
 	{
@@ -110,6 +182,7 @@ public class StockUtils {
 	
 	
 	/*
+	 * 日内分时基本机能
 	 * ------------------------------------------------------------------------------------------------------
 	 */
 	

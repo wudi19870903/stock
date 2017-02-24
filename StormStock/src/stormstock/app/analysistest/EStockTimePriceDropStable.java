@@ -3,7 +3,6 @@ package stormstock.app.analysistest;
 import java.util.ArrayList;
 import java.util.List;
 
-import stormstock.app.analysistest.EStockDayPriceDrop.ResultCheckPriceDrop;
 import stormstock.fw.base.BLog;
 import stormstock.fw.tranbase.stockdata.StockDataIF;
 import stormstock.fw.tranbase.stockdata.StockDay;
@@ -14,6 +13,12 @@ import stormstock.fw.tranbase.stockdata.StockDataIF.ResultHistoryData;
 import stormstock.fw.tranengine_lite.ANLUtils;
 
 public class EStockTimePriceDropStable {
+	
+	/**
+	 * 
+	 * @author wudi
+	 * 检查日内当前位置是否是下挫企稳点
+	 */
 	
 	public EStockTimePriceDropStable()
 	{

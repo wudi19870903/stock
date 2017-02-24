@@ -104,7 +104,7 @@ public class TestDataEngineBase {
 	}
 	private static void test_updateStock()
 	{
-		ResultUpdateStock cResultUpdateStock = DataEngineBase.updateStock("300428"); 
+		ResultUpdateStock cResultUpdateStock = DataEngineBase.updateStock("300168"); 
 		if(cResultUpdateStock.error < 0)
 		{
 			System.out.println("updateStock ERROR:" + cResultUpdateStock.error);	
