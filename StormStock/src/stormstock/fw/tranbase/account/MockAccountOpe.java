@@ -71,6 +71,14 @@ public class MockAccountOpe extends IAccountOpe {
 	}
 
 	@Override
+	public int newDayTranEnd(String date, String time) {
+		List<HoldStock> list = new ArrayList<HoldStock>();
+		getHoldStockList(date, time, list); // 更新现价
+		store(); // 保存
+		return 0;
+	}
+	
+	@Override
 	public int pushBuyOrder(String date, String time, String stockID, int amount, float price) {
 		
 		// 买入量标准化

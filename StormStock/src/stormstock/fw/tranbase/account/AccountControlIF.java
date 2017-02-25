@@ -66,6 +66,20 @@ public class AccountControlIF {
 		return bRet;
 	}
 	
+	public boolean newDayTranEnd(String date, String time)
+	{
+		boolean bRet = true;
+		BLog.output("ACCOUNT", "[%s %s] account new day tran end \n", date, time);
+		// 账户当日结束
+		int err = m_account.newDayTranEnd(date, time);
+		if(0 != err)
+		{
+			bRet = false;
+			BLog.error("ACCOUNT", "[%s %s] m_account.newDayTranEnd err(%d) \n", date, time, err);
+		}
+		return bRet;
+	}
+	
 	// 获取账户总资产（根据日期时间来确定股价）
 	public float getTotalAssets(String date, String time)
 	{

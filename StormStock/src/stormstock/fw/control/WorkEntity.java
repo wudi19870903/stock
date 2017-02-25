@@ -139,6 +139,15 @@ public class WorkEntity {
 						if(timestr.compareTo(timestr_end) > 0) break;
 					}
 					
+					// 15:10 账户当日交易结束
+					timestr = "15:10:00";
+					if(waitForDateTime(dateStr, timestr))
+					{
+						BLog.output("CTRL", "[%s %s] account newDayTranEnd\n", dateStr, timestr);
+						AccountControlIF accIF = GlobalUserObj.getCurAccountControlIF();
+						accIF.newDayTranEnd(dateStr, timestr);
+					}
+					
 					// 20:00 更新历史数据通知 等待更新完毕通知
 					timestr = "20:00:00";
 					if(waitForDateTime(dateStr, timestr))

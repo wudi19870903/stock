@@ -37,6 +37,12 @@ public class RealAccountOpe extends IAccountOpe {
 	}
 
 	@Override
+	public int newDayTranEnd(String date, String time) {
+		// do nothing
+		return 0;
+	}
+	
+	@Override
 	public int pushBuyOrder(String date, String time, String id, int amount, float price) {
 		int iBuyRet = CATHSAccount.buyStock(id, amount, price);
 		BLog.output("ACCOUNT", " @RealAccountOpe pushBuyOrder err(%d) [%s %s] [%s %d %.3f %.3f] \n", 

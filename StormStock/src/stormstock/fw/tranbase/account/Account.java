@@ -48,7 +48,16 @@ public class Account {
 	{
 		int iNewDayInit = m_cIAccountOpe.newDayInit(date, time);
 		
-		if(0 == iNewDayInit)
+		load();
+		
+		return iNewDayInit;
+	}
+	
+	public int newDayTranEnd(String date, String time)
+	{
+		int iNewDayTranEnd = m_cIAccountOpe.newDayTranEnd(date, time);
+		
+		if(0 == iNewDayTranEnd)
 		{
 			// 更新调查天数map
 			Map<String, Integer> newHoldStockInvestigationDaysMap = new HashMap<String, Integer>();
@@ -80,13 +89,11 @@ public class Account {
 			}
 			else
 			{
-				iNewDayInit = -201;
+				iNewDayTranEnd = -201;
 			}
 		}
 		
-		load();
-		
-		return iNewDayInit;
+		return iNewDayTranEnd; 
 	}
 	
 	// 推送买单委托，返回实际下单量
