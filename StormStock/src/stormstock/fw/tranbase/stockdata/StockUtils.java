@@ -22,6 +22,27 @@ public class StockUtils {
 	 * ------------------------------------------------------------------------------------------------------
 	 */
 	
+	// 均线计算，计算date日期前count天均线价格
+	static public float GetMA(List<StockDay> dayklist, int count, int index)
+	{
+		if(dayklist.size() == 0) return 0.0f;
+		float value = 0.0f;
+		int iE = index;
+		int iB = iE-count+1;
+		if(iB<0) iB=0;
+		float sum = 0.0f;
+		int sumcnt = 0;
+		for(int i = iB; i <= iE; i++)  
+        {  
+			StockDay cDayKData = dayklist.get(i);  
+			sum = sum + cDayKData.close();
+			sumcnt++;
+        }
+		value = sum/sumcnt;
+		return value;
+	}
+	
+	
 	// 计算某日收盘涨跌幅（参考开盘）
 	static public float GetInreaseRatioRefOpen(List<StockDay> dayklist, int index)
 	{

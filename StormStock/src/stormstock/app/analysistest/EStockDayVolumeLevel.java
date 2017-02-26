@@ -122,9 +122,9 @@ public class EStockDayVolumeLevel {
 		
 		// À¿Õˆ≥…Ωª¡ø≈–∂œ
 		StockDay cStockDay = list.get(iCheck);
-		if(cStockDay.volume()/aveVol10 < 0.6
-				&& cStockDay.volume()/aveVol40 < 0.6
-				&& cStockDay.volume()/aveVol60 < 0.6)
+		if(cStockDay.volume()/aveVol10 < 0.8
+				&& cStockDay.volume()/aveVol40 < 0.8
+				&& cStockDay.volume()/aveVol60 < 0.8)
 		{
 			return VOLUMELEVEL.DEATH;
 		}
@@ -153,9 +153,9 @@ public class EStockDayVolumeLevel {
 		BLog.output("TEST", "Main Begin\n");
 		StockDataIF cStockDataIF = new StockDataIF();
 
-		String stockID = "300168"; // 300163 300165 000401
+		String stockID = "002601"; // 300163 300165 000401
 		ResultHistoryData cResultHistoryData = 
-				cStockDataIF.getHistoryData(stockID, "2015-09-01", "2017-03-01");
+				cStockDataIF.getHistoryData(stockID, "2015-09-01", "2017-06-01");
 		List<StockDay> list = cResultHistoryData.resultList;
 		BLog.output("TEST", "Check stockID(%s) list size(%d) end(%s)\n", 
 				stockID, list.size(), list.get(list.size()-1).date());
@@ -169,7 +169,7 @@ public class EStockDayVolumeLevel {
 			StockDay cCurStockDay = list.get(i);
 
 			VOLUMELEVEL volLev = cEStockDayVolumeLevel.checkVolumeLevel(list, i);
-			if (volLev == VOLUMELEVEL.ACTIVE)
+			if (volLev == VOLUMELEVEL.DEATH)
 			{
 				BLog.output("TEST", "CheckPoint %s\n", cCurStockDay.date());
 				s_StockDayListCurve.markCurveIndex(i, "A");

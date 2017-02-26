@@ -28,7 +28,7 @@ public class RunSingleTest {
 		
 		String stockID = "300165"; // 300163 300165 000401
 		ResultHistoryData cResultHistoryData = 
-				cStockDataIF.getHistoryData(stockID, "2012-01-01", "2013-01-01");
+				cStockDataIF.getHistoryData(stockID, "2015-01-01", "2016-01-01");
 		List<StockDay> list = cResultHistoryData.resultList;
 		BLog.output("TEST", "Check stockID(%s) list size(%d)\n", stockID, list.size());
 		
@@ -36,41 +36,42 @@ public class RunSingleTest {
 		
 		EStockDayPriceDrop cEStockDayPriceDrop = new EStockDayPriceDrop();
 		EStockTimePriceDropStable cEStockTimePriceDropStable = new EStockTimePriceDropStable();
+		EStockDayVolumeLevel cEStockDayVolumeLevel = new EStockDayVolumeLevel();
 		
 		// 日检查
 		for(int iDayCheck = 0; iDayCheck < list.size(); iDayCheck++)  
         {  
-			ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(list, iDayCheck);
-			if (cResultCheckPriceDrop.bCheck)
+			VOLUMELEVEL volLev = cEStockDayVolumeLevel.checkVolumeLevel(list, iDayCheck);
+			//ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(list, iDayCheck);
+			if (volLev == VOLUMELEVEL.DEATH)
 			{
 				BLog.output("TEST", "iDayCheck %s ===============>>>>\n", list.get(iDayCheck).date());
 				s_StockDayListCurve.markCurveIndex(iDayCheck, "D");
 				
-				// 日细节检查
-				for(int iDayDetailCheck = iDayCheck+1; 
-						iDayDetailCheck<=iDayCheck+1 && iDayDetailCheck<list.size(); iDayDetailCheck++)
-				{
-					String dateDetail = list.get(iDayDetailCheck).date();
-					BLog.output("TEST", "    iDayDetailCheck %s\n", dateDetail);
-					
-					// 日内分时检查
-					ResultDayDetail cResultDayDetail = cStockDataIF.getDayDetail(stockID, dateDetail, "09:30:00", "15:00:00");
-					List<StockTime> listStockTime = cResultDayDetail.resultList;
-					s_StockTimeListCurve.clear();
-					s_StockTimeListCurve.setCurve(listStockTime);
-					for(int iStockTime = 0; iStockTime < listStockTime.size(); iStockTime++)  
-			        {  
-						StockTime cCurStockTime = listStockTime.get(iStockTime);
-						ResultXiaCuoQiWen cResultXiaCuoQiWen = cEStockTimePriceDropStable.checkXiaCuoQiWen_single(listStockTime, iStockTime);
-						if (cResultXiaCuoQiWen.bCheck)
-						{
-							BLog.output("TEST", "    CheckPoint %s\n", cCurStockTime.time);
-							s_StockTimeListCurve.markCurveIndex(iStockTime, "x");
-							iStockTime=iStockTime+10;
-						}
-			        } 
-					s_StockTimeListCurve.generateImage();
-				}
+//				// 日细节检查
+//				for(int iDayDetailCheck = iDayCheck+1; 
+//						iDayDetailCheck<=iDayCheck+1 && iDayDetailCheck<list.size(); iDayDetailCheck++)
+//				{
+//					String dateDetail = list.get(iDayDetailCheck).date();
+//					BLog.output("TEST", "    iDayDetailCheck %s\n", dateDetail);			
+//					// 日内分时检查
+//					ResultDayDetail cResultDayDetail = cStockDataIF.getDayDetail(stockID, dateDetail, "09:30:00", "15:00:00");
+//					List<StockTime> listStockTime = cResultDayDetail.resultList;
+//					s_StockTimeListCurve.clear();
+//					s_StockTimeListCurve.setCurve(listStockTime);
+//					for(int iStockTime = 0; iStockTime < listStockTime.size(); iStockTime++)  
+//			        {  
+//						StockTime cCurStockTime = listStockTime.get(iStockTime);
+//						ResultXiaCuoQiWen cResultXiaCuoQiWen = cEStockTimePriceDropStable.checkXiaCuoQiWen_single(listStockTime, iStockTime);
+//						if (cResultXiaCuoQiWen.bCheck)
+//						{
+//							BLog.output("TEST", "    CheckPoint %s\n", cCurStockTime.time);
+//							s_StockTimeListCurve.markCurveIndex(iStockTime, "x");
+//							iStockTime=iStockTime+10;
+//						}
+//			        } 
+//					s_StockTimeListCurve.generateImage();
+//				}
 				
 				
 				iDayCheck=iDayCheck+10;
