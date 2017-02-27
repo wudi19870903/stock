@@ -25,7 +25,7 @@ public class RunHistoryMockTransactionTest {
 	public static class TranStockSet extends ITranStockSetFilter {
 		@Override
 		public boolean tran_stockset_byLatestStockInfo(StockInfo cStockInfo) {
-			if(cStockInfo.ID.compareTo("000000") >= 0 && cStockInfo.ID.compareTo("002000") <= 0) {	
+			if(cStockInfo.ID.compareTo("600439") >= 0 && cStockInfo.ID.compareTo("600439") <= 0) {	
 				return true;
 			}
 			return false;
@@ -88,7 +88,7 @@ public class RunHistoryMockTransactionTest {
 			{
 				out_sr.bClear = true;
 			}
-			if(cHoldStock.profitRatio() > 0.05 || cHoldStock.profitRatio() < -0.05) // Ö¹Ó¯Ö¹Ëðx¸öµãÂô
+			if(cHoldStock.profitRatio() > 0.02 || cHoldStock.profitRatio() < -0.02) // Ö¹Ó¯Ö¹Ëðx¸öµãÂô
 			{
 				out_sr.bClear = true;
 			}
@@ -105,7 +105,7 @@ public class RunHistoryMockTransactionTest {
 		
 		cTranEngine.setAccountType(TRANACCOUNTTYPE.MOCK); 
 		cTranEngine.setTranMode(TRANTIMEMODE.HISTORYMOCK);
-		cTranEngine.setHistoryTimeSpan("2013-07-01", "2014-07-01");
+		cTranEngine.setHistoryTimeSpan("2011-01-01", "2012-01-01");
 		
 		cTranEngine.run();
 		cTranEngine.mainLoop();

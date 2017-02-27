@@ -9,6 +9,7 @@ import stormstock.app.analysistest.EStockDayVolumeLevel.VOLUMELEVEL;
 import stormstock.app.analysistest.EStockTimePriceDropStable.ResultXiaCuoQiWen;
 import stormstock.fw.base.BImageCurve;
 import stormstock.fw.base.BLog;
+import stormstock.fw.base.BThread;
 import stormstock.fw.base.BImageCurve.CurvePoint;
 import stormstock.fw.tranbase.com.IEigenStock;
 import stormstock.fw.tranbase.stockdata.Stock;
@@ -26,9 +27,9 @@ public class RunSingleTest {
 		BLog.output("TEST", "Main Begin\n");
 		StockDataIF cStockDataIF = new StockDataIF();
 		
-		String stockID = "300165"; // 300163 300165 000401
+		String stockID = "600439"; // 300163 300165 000401 600439
 		ResultHistoryData cResultHistoryData = 
-				cStockDataIF.getHistoryData(stockID, "2015-01-01", "2016-01-01");
+				cStockDataIF.getHistoryData(stockID, "2011-01-01", "2012-01-01");
 		List<StockDay> list = cResultHistoryData.resultList;
 		BLog.output("TEST", "Check stockID(%s) list size(%d)\n", stockID, list.size());
 		
@@ -41,41 +42,49 @@ public class RunSingleTest {
 		// 日检查
 		for(int iDayCheck = 0; iDayCheck < list.size(); iDayCheck++)  
         {  
-			VOLUMELEVEL volLev = cEStockDayVolumeLevel.checkVolumeLevel(list, iDayCheck);
-			//ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(list, iDayCheck);
-			if (volLev == VOLUMELEVEL.DEATH)
+//			StockDay cCurStockDay = list.get(iDayCheck);
+//			if(cCurStockDay.date().equals("2015-12-29"))
+//			{
+//				BThread.sleep(1);
+//			}
+//			VOLUMELEVEL volLev = cEStockDayVolumeLevel.checkVolumeLevel(list, iDayCheck);
+//			if (volLev == VOLUMELEVEL.DEATH)
+//			{
+//				BLog.output("TEST", "iDayCheck %s ===============>>>>\n", list.get(iDayCheck).date());
+//				s_StockDayListCurve.markCurveIndex(iDayCheck, "I");
+//			}
+			
+			ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(list, iDayCheck);
+			if(cResultCheckPriceDrop.bCheck)
 			{
 				BLog.output("TEST", "iDayCheck %s ===============>>>>\n", list.get(iDayCheck).date());
 				s_StockDayListCurve.markCurveIndex(iDayCheck, "D");
-				
-//				// 日细节检查
-//				for(int iDayDetailCheck = iDayCheck+1; 
-//						iDayDetailCheck<=iDayCheck+1 && iDayDetailCheck<list.size(); iDayDetailCheck++)
-//				{
-//					String dateDetail = list.get(iDayDetailCheck).date();
-//					BLog.output("TEST", "    iDayDetailCheck %s\n", dateDetail);			
-//					// 日内分时检查
-//					ResultDayDetail cResultDayDetail = cStockDataIF.getDayDetail(stockID, dateDetail, "09:30:00", "15:00:00");
-//					List<StockTime> listStockTime = cResultDayDetail.resultList;
-//					s_StockTimeListCurve.clear();
-//					s_StockTimeListCurve.setCurve(listStockTime);
-//					for(int iStockTime = 0; iStockTime < listStockTime.size(); iStockTime++)  
-//			        {  
-//						StockTime cCurStockTime = listStockTime.get(iStockTime);
-//						ResultXiaCuoQiWen cResultXiaCuoQiWen = cEStockTimePriceDropStable.checkXiaCuoQiWen_single(listStockTime, iStockTime);
-//						if (cResultXiaCuoQiWen.bCheck)
-//						{
-//							BLog.output("TEST", "    CheckPoint %s\n", cCurStockTime.time);
-//							s_StockTimeListCurve.markCurveIndex(iStockTime, "x");
-//							iStockTime=iStockTime+10;
-//						}
-//			        } 
-//					s_StockTimeListCurve.generateImage();
-//				}
-				
-				
-				iDayCheck=iDayCheck+10;
 			}
+			
+//			// 日细节检查
+//			for(int iDayDetailCheck = iDayCheck+1; 
+//					iDayDetailCheck<=iDayCheck+1 && iDayDetailCheck<list.size(); iDayDetailCheck++)
+//			{
+//				String dateDetail = list.get(iDayDetailCheck).date();
+//				BLog.output("TEST", "    iDayDetailCheck %s\n", dateDetail);			
+//				// 日内分时检查
+//				ResultDayDetail cResultDayDetail = cStockDataIF.getDayDetail(stockID, dateDetail, "09:30:00", "15:00:00");
+//				List<StockTime> listStockTime = cResultDayDetail.resultList;
+//				s_StockTimeListCurve.clear();
+//				s_StockTimeListCurve.setCurve(listStockTime);
+//				for(int iStockTime = 0; iStockTime < listStockTime.size(); iStockTime++)  
+//		        {  
+//					StockTime cCurStockTime = listStockTime.get(iStockTime);
+//					ResultXiaCuoQiWen cResultXiaCuoQiWen = cEStockTimePriceDropStable.checkXiaCuoQiWen_single(listStockTime, iStockTime);
+//					if (cResultXiaCuoQiWen.bCheck)
+//					{
+//						BLog.output("TEST", "    CheckPoint %s\n", cCurStockTime.time);
+//						s_StockTimeListCurve.markCurveIndex(iStockTime, "x");
+//						iStockTime=iStockTime+10;
+//					}
+//		        } 
+//				s_StockTimeListCurve.generateImage();
+//			}
 			
         } 
 		
