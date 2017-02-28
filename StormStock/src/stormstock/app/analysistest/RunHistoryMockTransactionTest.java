@@ -25,7 +25,7 @@ public class RunHistoryMockTransactionTest {
 	public static class TranStockSet extends ITranStockSetFilter {
 		@Override
 		public boolean tran_stockset_byLatestStockInfo(StockInfo cStockInfo) {
-			if(cStockInfo.ID.compareTo("600439") >= 0 && cStockInfo.ID.compareTo("600439") <= 0) {	
+			if(cStockInfo.ID.compareTo("000000") >= 0 && cStockInfo.ID.compareTo("001000") <= 0) {	
 				return true;
 			}
 			return false;
@@ -52,7 +52,7 @@ public class RunHistoryMockTransactionTest {
 		@Override
 		public int strategy_select_max_count() {
 			// TODO Auto-generated method stub
-			return 5;
+			return 10;
 		}
 
 	}
@@ -84,11 +84,11 @@ public class RunHistoryMockTransactionTest {
 		@Override
 		public void strategy_clear(TranContext ctx, ClearResult out_sr) {
 			HoldStock cHoldStock = ctx.target().holdStock();
-			if(cHoldStock.investigationDays >= 10) // 调查天数控制
+			if(cHoldStock.investigationDays >= 20) // 调查天数控制
 			{
 				out_sr.bClear = true;
 			}
-			if(cHoldStock.profitRatio() > 0.02 || cHoldStock.profitRatio() < -0.02) // 止盈止损x个点卖
+			if(cHoldStock.profitRatio() > 0.03 || cHoldStock.profitRatio() < -0.03) // 止盈止损x个点卖
 			{
 				out_sr.bClear = true;
 			}
@@ -105,7 +105,7 @@ public class RunHistoryMockTransactionTest {
 		
 		cTranEngine.setAccountType(TRANACCOUNTTYPE.MOCK); 
 		cTranEngine.setTranMode(TRANTIMEMODE.HISTORYMOCK);
-		cTranEngine.setHistoryTimeSpan("2011-01-01", "2012-01-01");
+		cTranEngine.setHistoryTimeSpan("2011-01-01", "2011-12-01");
 		
 		cTranEngine.run();
 		cTranEngine.mainLoop();
