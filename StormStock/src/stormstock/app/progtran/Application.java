@@ -10,20 +10,6 @@ public class Application {
 	public static void main(String[] args) {
 		BLog.output("TEST", "--->>> MainBegin\n");
 		
-		TranEngine cTranEngine = new TranEngine();
-		
-		cTranEngine.setStockSet(new TranStockSet());
-		cTranEngine.setSelectStockStrategy(new StrategySelect());
-		cTranEngine.setCreatePositonStrategy(new StrategyCreate());
-		cTranEngine.setClearPositonStrategy(new StrategyClear());
-		
-		cTranEngine.setAccountType(TRANACCOUNTTYPE.MOCK); 
-		
-		cTranEngine.setTranMode(TRANTIMEMODE.REALTIME);
-
-		cTranEngine.run();
-		
-		cTranEngine.mainLoop();
 		BLog.output("TEST", "--->>> MainEnd\n");
 		//BLog.config_output();
 	}
