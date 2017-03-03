@@ -137,7 +137,7 @@ public class EStockDayPriceWave {
 		BLog.output("TEST", "Main Begin\n");
 		StockDataIF cStockDataIF = new StockDataIF();
 		
-		String stockID = "601766"; // 300163 300165
+		String stockID = "002474"; // 300163 300165
 		ResultHistoryData cResultHistoryData = 
 				cStockDataIF.getHistoryData(stockID, "2015-01-01", "2017-01-01");
 		List<StockDay> list = cResultHistoryData.resultList;

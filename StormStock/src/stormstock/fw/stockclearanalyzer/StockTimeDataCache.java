@@ -43,6 +43,25 @@ public class StockTimeDataCache {
 			return new ArrayList<StockTime>();
 		}
 	}
+	public static void checkStockTime(String id, String date, StockTime cStockTime)
+	{
+		if(date.compareTo(s_curDate) != 0)
+		{
+			clearCache();
+		}
+			
+		if(!s_cacheStockTimeMap.containsKey(id))
+		{
+			s_cacheStockTimeMap.put(id, new ArrayList<StockTime>());
+		}
+		
+		s_cacheStockTimeMap.get(id).add(cStockTime);
+		s_curDate = date;
+		if(cStockTime.price == 0.0f)
+		{
+			// error
+		}
+	}
 	public static void clearCache()
 	{
 		BLog.output("CLEAR", "    StockTimeDataCache.clearCache \n");

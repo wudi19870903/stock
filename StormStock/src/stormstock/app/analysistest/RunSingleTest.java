@@ -27,9 +27,9 @@ public class RunSingleTest {
 		BLog.output("TEST", "Main Begin\n");
 		StockDataIF cStockDataIF = new StockDataIF();
 		
-		String stockID = "600439"; // 300163 300165 000401 600439
+		String stockID = "600329"; // 300163 300165 000401 600439
 		ResultHistoryData cResultHistoryData = 
-				cStockDataIF.getHistoryData(stockID, "2011-01-01", "2012-01-01");
+				cStockDataIF.getHistoryData(stockID, "2016-08-01", "2017-01-01");
 		List<StockDay> list = cResultHistoryData.resultList;
 		BLog.output("TEST", "Check stockID(%s) list size(%d)\n", stockID, list.size());
 		
@@ -42,24 +42,9 @@ public class RunSingleTest {
 		// 日检查
 		for(int iDayCheck = 0; iDayCheck < list.size(); iDayCheck++)  
         {  
-//			StockDay cCurStockDay = list.get(iDayCheck);
-//			if(cCurStockDay.date().equals("2015-12-29"))
-//			{
-//				BThread.sleep(1);
-//			}
-//			VOLUMELEVEL volLev = cEStockDayVolumeLevel.checkVolumeLevel(list, iDayCheck);
-//			if (volLev == VOLUMELEVEL.DEATH)
-//			{
-//				BLog.output("TEST", "iDayCheck %s ===============>>>>\n", list.get(iDayCheck).date());
-//				s_StockDayListCurve.markCurveIndex(iDayCheck, "I");
-//			}
+			StockDay cCurStockDay = list.get(iDayCheck);
+
 			
-			ResultCheckPriceDrop cResultCheckPriceDrop = cEStockDayPriceDrop.checkPriceDrop(list, iDayCheck);
-			if(cResultCheckPriceDrop.bCheck)
-			{
-				BLog.output("TEST", "iDayCheck %s ===============>>>>\n", list.get(iDayCheck).date());
-				s_StockDayListCurve.markCurveIndex(iDayCheck, "D");
-			}
 			
 //			// 日细节检查
 //			for(int iDayDetailCheck = iDayCheck+1; 

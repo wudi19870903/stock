@@ -145,6 +145,10 @@ public class StockDay {
 			return low;
 		}
 	}
+	public float midle()
+	{
+		return (open() + close()) / 2;
+	}
 	public float volume()
 	{
 		if(isEndTran())

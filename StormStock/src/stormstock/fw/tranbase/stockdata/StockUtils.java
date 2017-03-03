@@ -22,6 +22,27 @@ public class StockUtils {
 	 * ------------------------------------------------------------------------------------------------------
 	 */
 	
+	// 计算index的临近日平均价（count=1时，表示昨天，今天，明天的均价）
+	static public float GetAveNear(List<StockDay> dayklist, int count, int index)
+	{
+		if(dayklist.size() == 0) return 0.0f;
+		float value = 0.0f;
+		int iB = index-count;
+		int iE = index+count;
+		if(iB<0) iB=0;
+		if(iE>dayklist.size()-1) iB=dayklist.size()-1;
+		float sum = 0.0f;
+		int sumcnt = 0;
+		for(int i = iB; i <= iE; i++)  
+        {  
+			StockDay cDayKData = dayklist.get(i);  
+			sum = sum + cDayKData.midle();
+			sumcnt++;
+        }
+		value = sum/sumcnt;
+		return value;
+	}
+	
 	// 均线计算，计算date日期前count天均线价格
 	static public float GetMA(List<StockDay> dayklist, int count, int index)
 	{
