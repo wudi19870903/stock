@@ -46,6 +46,18 @@ public class StockDayListCurve {
         }
 	}
 	
+	public void clearMark(int index)
+	{
+		for(int i = 0; i < m_poiList.size(); i++)  
+        {  
+			if (i == index)
+			{
+				m_poiList.get(i).m_marked = false;
+				m_poiList.get(i).m_name = "";
+			}
+        }
+	}
+	
 	public void generateImage()
 	{
 		m_imageCurve.writeLogicCurve(m_poiList, 1);

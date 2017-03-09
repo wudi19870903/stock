@@ -26,7 +26,7 @@ public class EStockDayVolumeLevel {
 		UNKNOWN,
 		INVALID,
 	}
-	public VOLUMELEVEL checkVolumeLevel(List<StockDay> list, int iCheck)
+	public static  VOLUMELEVEL checkVolumeLevel(List<StockDay> list, int iCheck)
 	{		
 //		// 计算长期期均量， 去掉最低30和最高30个后的平均值
 //		float aveVol200 = 0.0f;
@@ -152,8 +152,8 @@ public class EStockDayVolumeLevel {
 		// 死亡成交量判断
 		StockDay cStockDay = list.get(iCheck);
 		if(cStockDay.volume()/aveVol5 < 0.8
-				&& cStockDay.volume()/aveVol20 < 1
-				&& cStockDay.volume()/aveVol60 < 1.2
+				&& cStockDay.volume()/aveVol20 < 0.8
+				&& cStockDay.volume()/aveVol60 < 0.8
 //				&& cStockDay.volume()/aveVol200 < 1.5
 				)
 			
@@ -185,22 +185,20 @@ public class EStockDayVolumeLevel {
 		BLog.output("TEST", "Main Begin\n");
 		StockDataIF cStockDataIF = new StockDataIF();
 
-		String stockID = "600439"; // 300163 300165 000401 300439
+		String stockID = "000151"; // 300163 300165 000401 300439
 		ResultHistoryData cResultHistoryData = 
-				cStockDataIF.getHistoryData(stockID, "2011-01-01", "2013-01-01");
+				cStockDataIF.getHistoryData(stockID, "2010-09-01", "2012-01-01");
 		List<StockDay> list = cResultHistoryData.resultList;
 		BLog.output("TEST", "Check stockID(%s) list size(%d) end(%s)\n", 
 				stockID, list.size(), list.get(list.size()-1).date());
 		
 		s_StockDayListCurve.setCurve(list);
 		
-		EStockDayVolumeLevel cEStockDayVolumeLevel = new EStockDayVolumeLevel();
-		
 		for(int i = 0; i < list.size(); i++)  
         {  
 			StockDay cCurStockDay = list.get(i);
 
-			VOLUMELEVEL volLev = cEStockDayVolumeLevel.checkVolumeLevel(list, i);
+			VOLUMELEVEL volLev = EStockDayVolumeLevel.checkVolumeLevel(list, i);
 			if (volLev == VOLUMELEVEL.DEATH)
 			{
 				BLog.output("TEST", "CheckPoint %s\n", cCurStockDay.date());

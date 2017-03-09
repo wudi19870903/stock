@@ -187,7 +187,7 @@ public class EStockDayPriceDrop {
 		
 		String stockID = "000151"; // 300163 300165
 		ResultHistoryData cResultHistoryData = 
-				cStockDataIF.getHistoryData(stockID, "2010-09-01", "2012-01-01");
+				cStockDataIF.getHistoryData(stockID, "2010-09-01", "2014-01-01");
 		List<StockDay> list = cResultHistoryData.resultList;
 		BLog.output("TEST", "Check stockID(%s) list size(%d)\n", stockID, list.size());
 		
